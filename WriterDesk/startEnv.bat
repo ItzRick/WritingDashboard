@@ -1,0 +1,1 @@
+start cmd.exe /k frontend\\backend\\env\\Scripts\\activate
