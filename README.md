@@ -3,6 +3,7 @@
 
 ## Installation Guide
 Make sure you have at least py3.8.1 (with paths enabled) and [nodeJS LTS](https://nodejs.org/en/download/) (*important, must be LTS*).
+Additionally you need 
 
 
 First clone the repository from github. Next navigate to the frontend folder in your file explorer. (SEP2021\WriterDesk\frontend)
@@ -16,6 +17,7 @@ Then go back to the frontend folder in you file explorer and run `startEnv.bat`
 
 `pip install flask`
 `npm install`
+`pip install psycopg2`
 
 Now open 2 instances of `startEnv.bat` (by clicking them):
 
