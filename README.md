@@ -2,6 +2,7 @@
 
 
 ## Installation Guide
+> This section discusses the initial installation of the tool
 Make sure you have at least py3.8.1 (with paths enabled) and [nodeJS LTS](https://nodejs.org/en/download/) (*important, must be LTS*).
 Additionally you need 
 
@@ -25,6 +26,10 @@ In one instance, run `npm run start-backend`
 In the other instance run `npm start`
 
 Now, if it did not happen already, go to your browser and open [this link](http://localhost:3000)
+
+
+## Coding Guide
+> This section discusses coding support
 
 
 
