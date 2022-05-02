@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import axios from "axios";
 import logo from './logo.svg';
 import './App.css';
@@ -8,7 +8,25 @@ function App() {
 
     // new line start
    const [profileData, setProfileData] = useState(null)
- 
+   const [text, setText] = useState(null)
+
+   function getDataText() {
+    axios({
+      method: "GET",
+      url:"/text",
+    })
+    .then((response) => {
+      const resText =response.data
+      setText(({
+        message: resText.text}))
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+        }
+    })}
+
    function getData() {
      axios({
        method: "GET",
@@ -26,8 +44,11 @@ function App() {
          console.log(error.response.headers)
          }
      })}
-     //end of new line 
- 
+     //end of new line
+   useEffect(()=>{
+        getDataText();
+    }, [])
+
    return (
      <div className="App">
        <header className="App-header">
@@ -43,8 +64,13 @@ function App() {
          >
            Learn React
          </a>
- 
+
          {/* new line start*/}
+         {text && <div>
+            <p> {text.message}</p>
+          </div>
+         }
+
          <p>To get your profile details: </p><button onClick={getData}>Click me</button>
          {profileData && <div>
                <p>Profile name: {profileData.profile_name}</p>
