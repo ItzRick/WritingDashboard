@@ -43,6 +43,14 @@ List of good tutorials:
 
 
 ## Code Style Guide
-> Required by the course, usefull for use
+> [Required by the course](https://canvas.tue.nl/courses/18931/files/folder/SEP%20Materials/Assessment_and_Guidelines?preview=3982997), usefull for use
+
+Code should not be too complex, for this there is a measure _Software Lines of Code (SLOC)_, these are effective lines (excluding comments and whitespace).
+- Modules, SLOC <= 400
+
+More than 15% of lines, should be comments
+
+No cyclic dependencies between classes
+
 
 
