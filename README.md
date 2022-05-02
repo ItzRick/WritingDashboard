@@ -9,6 +9,7 @@ Additionally you need
 
 First clone the repository from github. Next navigate to the frontend folder in your file explorer. (SEP2021\WriterDesk\frontend)
 
+Now do `pip install virtualenv`
 click the file `startEnv.bat` 
 `pip install virtualenv`
 `cd backend` 
@@ -17,8 +18,10 @@ click the file `startEnv.bat`
 Then go back to the frontend folder in you file explorer and run `startEnv.bat` 
 
 `pip install flask`
-`npm install`
 `pip install psycopg2`
+`npm install`
+`pip install flask_sqlalchemy`
+`pip install flask_migrate`
 
 Now open 2 instances of `startEnv.bat` (by clicking them):
 
@@ -26,7 +29,6 @@ In one instance, run `npm run start-backend`
 In the other instance run `npm start`
 
 Now, if it did not happen already, go to your browser and open [this link](http://localhost:3000)
-
 
 ## Coding Guide
 > This section discusses coding support
