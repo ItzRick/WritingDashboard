@@ -39,5 +39,10 @@ List of good tutorials:
 - [Easy Flask Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 - [Flask and SQL, databases](https://flask-sqlalchemy.palletsprojects.com/en/2.x/quickstart/)
 - [React Tutorial](https://reactjs.org/tutorial/tutorial.html)
+- [Better React Tutorial](https://www.youtube.com/watch?v=b9eMGE7QtTk)
+
+
+## Code Style Guide
+> Required by the course, usefull for use
 
 
