@@ -41,6 +41,7 @@ List of good tutorials:
 - [React Tutorial](https://reactjs.org/tutorial/tutorial.html)
 - [Better React Tutorial](https://www.youtube.com/watch?v=b9eMGE7QtTk)
 
+- [Long, but good react tutorial](https://www.youtube.com/watch?v=w7ejDZ8SWv8), can be watched at 1.25 speed
 
 ## Code Style Guide
 > [Required by the course](https://canvas.tue.nl/courses/18931/files/folder/SEP%20Materials/Assessment_and_Guidelines?preview=3982997), usefull for use
@@ -51,6 +52,4 @@ Code should not be too complex, for this there is a measure _Software Lines of C
 More than 15% of lines, should be comments
 
 No cyclic dependencies between classes
-
-
 
