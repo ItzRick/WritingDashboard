@@ -1,4 +1,6 @@
+from flask import request
 from app import app
+from app import uploadFile
 
 @app.route('/')
 @app.route('/index')
@@ -13,3 +15,11 @@ def my_profile():
     }
 
     return response_body
+
+@app.route('/fileUpload', methods = ['POST'])
+def fileUpload():
+    data = request.form
+    file = request.files['file']
+    uploadFile.fileUpload(data, file)
+
+    return "has been processed"
