@@ -22,4 +22,4 @@ def fileUpload():
     file = request.files['file']
     uploadFile.fileUpload(data, file)
 
-    return "has been processed"
+    return "Success!"

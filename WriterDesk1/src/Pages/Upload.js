@@ -12,14 +12,12 @@ const Upload = () => {
     };
 
     const onButtonClick = event => {
-        console.log("this button has been clicked");
         event.preventDefault();
+        // Connnection to the backend, URL to be changed later:
         const url = 'http://localhost:5000/fileUpload';
         const formData = new FormData();
         formData.append('file', file);
         formData.append('fileName', file.name);
-        console.log(formData);
-        console.log(file);
         const headers = {
             Accept: 'application/json',
             'Content-Type': 'multipart/form-data',

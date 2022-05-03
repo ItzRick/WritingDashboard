@@ -1,19 +1,17 @@
 import React from 'react';
-import { NavLink, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
-// import Home from './Pages/Home';
+// Import pages if you want to add them to the routes:
+import Home from './Pages/Home';
+import Upload from './Pages/Upload';
 
-const Home = () => {
-    <div className='home'>
-    <h1>Welcome to my portfolio website</h1>
-    <p> Feel free to browse around and learn more about me.</p>
-  </div>
-}
 
 const Main = () => {
     return (
+        // Add routes here:
         <Routes>
-            <Route exact path='/' element={<Home/>}/>
+            <Route path='/' element={<Home/>}/>
+            <Route path='/upload' element={<Upload/>}/>
         </Routes>
        
     );   

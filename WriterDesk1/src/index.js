@@ -1,19 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import Home from './Pages/Home';
-import Upload from './Pages/Upload';
+import Main from './Main';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter} from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
-    <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/upload' element={<Upload/>}/>
-    </Routes>
+    <Main/>
   </BrowserRouter>
 );
 
