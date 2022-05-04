@@ -15,4 +15,4 @@ class Files(db.Model):
     filename = db.Column(db.String(256), unique=False)
 
     def __repr__(self):
-        return '<File {}>'.format(self.path)
+        return '<File {}>'.format(self.filename)

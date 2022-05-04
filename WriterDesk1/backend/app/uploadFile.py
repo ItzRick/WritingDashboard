@@ -6,12 +6,10 @@ from app.models import Files
 from app import db
 from app.database import uploadToDatabase
 
-def fileUpload(data, file):
-    # print(data.keys())
-    # Check if we have received the correct file:
-    filename = secure_filename(data.get('fileName'))
-    filename1 = secure_filename(file.filename)
-    if (filename == filename1):
+def fileUpload(files):
+    for file in files:
+        # Check if we have received the correct file:
+        filename = secure_filename(file.filename)
         # Path to save the file to:
         file_location = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         # print(file_location)
@@ -19,7 +17,7 @@ def fileUpload(data, file):
         file.save(file_location)
         # Add it to the database:
         addFileToDatabase(filename, file_location)
-        print(Files.query.first().filename)
+        print(Files.query.filter_by(filename=filename).first().filename)
         print("done")
 
 def addFileToDatabase(filename, file_location):

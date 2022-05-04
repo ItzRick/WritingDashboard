@@ -18,8 +18,9 @@ def myProfile():
 
 @app.route('/fileUpload', methods = ['POST'])
 def fileUpload():
-    data = request.form
-    file = request.files['file']
-    uploadFile.fileUpload(data, file)
+    # Retrieve the files as send by the react frontend and give this to the fileUpload function, 
+    # which does all the work:
+    files = request.files.getlist('files')
+    uploadFile.fileUpload(files)
 
-    return "Success!"
+    return "success"
