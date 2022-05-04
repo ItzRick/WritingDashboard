@@ -30,6 +30,8 @@ In the other instance run `npm start`
 
 Now, if it did not happen already, go to your browser and open [this link](http://localhost:3000)
 
+(note that the `npm start` might not work when you have a vpn activated)
+
 ## Coding Guide
 > This section provides some usefull coding tools and tutoriols for flask and ReactJS
 
