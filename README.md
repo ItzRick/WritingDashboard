@@ -23,6 +23,7 @@ Then go back to the frontend folder in you file explorer and run `startEnv.bat`
 `pip install flask_sqlalchemy`
 `pip install flask_migrate`
 `pip install flask_cors`
+`pip install flask-login`
 
 Now open 2 instances of `startEnv.bat` (by clicking them):
 
