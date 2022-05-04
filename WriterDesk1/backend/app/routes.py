@@ -1,6 +1,7 @@
 from flask import request
 from app import app
 from app import uploadFile
+from app import signUp
 
 @app.route('/')
 @app.route('/index')
@@ -26,6 +27,6 @@ def fileUpload():
 
 @app.route('/signUpStudent', methods = ['POST'])
 def signUpStudent():
-    #data = request.get_json()
-
+    data = request.get_json()
+    signUp(data)
     return "Success!"
