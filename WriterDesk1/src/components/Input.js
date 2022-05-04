@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 
-const SignUpInput = ({text, type, onChange}) => {
+const Input = ({text, type, onChange}) => {
     return (
     <label>
         <p>{text}</p>
@@ -9,9 +9,9 @@ const SignUpInput = ({text, type, onChange}) => {
     );
 }
 
-SignUpInput.propTypes = {
+Input.propTypes = {
     text: PropTypes.string,
     type: PropTypes.elementType,
 }
 
-export default SignUpInput;
+export default Input;

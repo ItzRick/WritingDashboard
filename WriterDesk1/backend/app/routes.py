@@ -23,3 +23,9 @@ def fileUpload():
     uploadFile.fileUpload(data, file)
 
     return "Success!"
+
+@app.route('/signUpStudent', methods = ['POST'])
+def signUpStudent():
+    #data = request.get_json()
+
+    return "Success!"
