@@ -1,0 +1,1 @@
+start cmd.exe /k WriterDesk1\\backend\\env\\Scripts\\activate
