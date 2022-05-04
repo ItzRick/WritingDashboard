@@ -7,7 +7,7 @@ Make sure you have at least py3.8.1 (with paths enabled) and [nodeJS LTS](https:
 Additionally you need 
 
 
-First clone the repository from github. Next navigate to the frontend folder in your file explorer. (SEP2021\WriterDesk\frontend)
+First clone the repository from github. Next navigate to the main folder in your file explorer. (SEP2021\WriterDesk1)
 
 Now do `pip install virtualenv`
 click the file `startEnv.bat` 
