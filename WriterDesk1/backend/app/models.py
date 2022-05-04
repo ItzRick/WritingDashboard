@@ -8,3 +8,11 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+class Files(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    path = db.Column(db.String, unique=False)
+    filename = db.Column(db.String(256), unique=False)
+
+    def __repr__(self):
+        return '<File {}>'.format(self.path)
