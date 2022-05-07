@@ -8,6 +8,7 @@ from app.database import uploadToDatabase
 
 def fileUpload(files):
     for file in files:
+        print(file)
         # Check if we have received the correct file:
         filename = secure_filename(file.filename)
         # Path to save the file to:

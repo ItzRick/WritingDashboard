@@ -1,5 +1,6 @@
 import React, {useState, useRef} from 'react';
 import axios from 'axios';
+import useDynamicRefs from 'use-dynamic-refs';
 
 import '../App.css';
 
@@ -43,7 +44,7 @@ const Upload = () => {
         event.preventDefault();
         console.log(files[0]);
         // Connnection to the backend, URL to be changed later:
-        const url = 'http://localhost:5000/fileUpload';
+        const url = 'https://localhost:5000/fileUpload';
         const formData = new FormData();
         // formData.append('files', files[0])
         files.forEach(file => formData.append('files',file));
@@ -56,9 +57,13 @@ const Upload = () => {
         }
         axios.post(url, formData, headers).then((response) => {
             if (response.data === 'success') {
+                let oldLength = files.length;
                 // Reset the upload selectors to not have a file displayed:
                 setFiles(['']);
-                reset();
+                files.forEach((_file, index) => {
+                    reset(index);
+                }
+                )
             } 
         });
       
@@ -69,10 +74,10 @@ const Upload = () => {
     const [hasError, setError] = useState(-1);
 
     // To be able to reset the things at the end:
-    const ref = useRef();
+    const [getRef, setRef] =  useDynamicRefs();
 
-    const reset = () => {
-        ref.current.value = "";
+    const reset = (index) => {
+        getRef(index.toString()).current.value = "";
     };
 
     const [files, setFiles] = useState(['']);
@@ -84,13 +89,12 @@ const Upload = () => {
                 {console.log(files)}
                 {files.map((_file, index) => {
                     return (<div key={index}>
-                        <input type = "file" onChange={event => onFileChange(index, event)} ref = {ref} 
+                        <input type = "file" onChange={event => onFileChange(index, event)} ref = {setRef(index.toString())} 
                         accept="application/pdf, application/msword, 
                         application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain"/>
-                        <button type = "button" onClick={() => removeFileSelector(index)}>Remove</button>
+                        {files.length !== 1 && <button type = "button" onClick={() => removeFileSelector(index.toString())}>Remove</button>}
                         {index === hasError && <p style={{ color: 'red' }}>{`${receivedFileType} is not a supported filetype, please use a supported file.`}</p>}
                     </div>
-                    
                     )
                 })}
                 <button type= "submit" onClick={submitFiles}>Upload </button>

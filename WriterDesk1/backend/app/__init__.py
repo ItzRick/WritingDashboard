@@ -6,7 +6,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 # Prevent CORS errors, make sure we can retrieve things from the react front-end without errors:
-CORS(app, origins=['http://localhost:3000'])
+CORS(app, origins=['https://localhost:3000'])
 # Retrieve stuff from the config file:
 app.config.from_object(Config)
 # Start the database:
