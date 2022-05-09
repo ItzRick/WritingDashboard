@@ -1,10 +1,10 @@
 import os
 from werkzeug.utils import secure_filename
-from flask import current_app, request
+from flask import current_app, request, session
 from app.models import Files
 from app.fileapi import bp
 # from app import db
-from app.database import uploadToDatabase
+from app.database import uploadToDatabase, getFilesByUser
 
 @bp.route('/upload', methods = ['POST'])
 def fileUpload():
@@ -30,3 +30,15 @@ def fileUpload():
     if (len(files) == 0):
         return 'failure'
     return 'success'
+
+@bp.route('/fileretrieve', methods = ['GET'])
+def fileRetrieve():
+    print(request.args.get('sortingAttribute'))
+    # Retrieve list of files that were uploaded by the current user
+    if "user_id" in session:
+        sortingAttribute = request.args.get('sortingAttribute')
+        #TODO change session["user_id"] to actual reference to user
+        files = database.getFilesByUser(session["user_id"], sortingAttribute)
+        return jsonify(files)
+    else:
+        return "no user"
