@@ -44,7 +44,7 @@ const Upload = () => {
         event.preventDefault();
         console.log(files[0]);
         // Connnection to the backend, URL to be changed later:
-        const url = 'https://localhost:5000/fileUpload';
+        const url = 'https://localhost:5000/fileapi/upload';
         const formData = new FormData();
         // formData.append('files', files[0])
         files.forEach(file => formData.append('files',file));
