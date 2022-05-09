@@ -19,12 +19,13 @@ def my_profile():
 
 @app.route('/text')
 def my_text():
+    background = "0,1,2,3,4,12,13,14,15,16"
     text_file = open("Test text.txt", "r")
     text = text_file.read()
     text_file.close()
-
     response_body = {
-        "text": text
+        "text": text,
+        "background": background,
     }
 
     return response_body
