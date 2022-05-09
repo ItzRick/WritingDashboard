@@ -50,7 +50,7 @@ const Upload = () => {
         files.forEach(file => formData.append('files',file));
         // formData.append('files', files);
         console.log(formData);
-        // formData.append('fileName', files.name);
+        files.forEach(file => formData.append('fileName', file.name));
         const headers = {
             Accept: 'application/json',
             'Content-Type': 'multipart/form-data',
