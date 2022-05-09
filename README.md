@@ -57,3 +57,4 @@ More than 15% of lines, should be comments
 
 No cyclic dependencies between classes
 
+Install PostgreSQL ([This link](https://www.postgresql.org/download/)), set a system environment variable called "DATABASE_URL" to postgresql://postgres:{password}@localhost:5432/database1, where this password is the password you have chosen in the postgresql installation. 
