@@ -34,6 +34,8 @@ Now, if it did not happen already, go to your browser and open [this link](http:
 
 (note that the `npm start` might not work when you have a vpn activated)
 
+Install PostgreSQL ([This link](https://www.postgresql.org/download/)), set a system environment variable called "DATABASE_URL" to <postgresql://postgres:{password}@localhost:5432/database1>, where this password is the password you have chosen in the postgresql installation. 
+
 ## Coding Guide
 > This section provides some usefull coding tools and tutoriols for flask and ReactJS
 
@@ -57,4 +59,3 @@ More than 15% of lines, should be comments
 
 No cyclic dependencies between classes
 
-Install PostgreSQL ([This link](https://www.postgresql.org/download/)), set a system environment variable called "DATABASE_URL" to <postgresql://postgres:{password}@localhost:5432/database1>, where this password is the password you have chosen in the postgresql installation. 
