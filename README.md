@@ -15,15 +15,7 @@ click the file `startEnv.bat`
 `cd backend` 
 `py -m venv env`
 
-Then go back to the frontend folder in you file explorer and run `startEnv.bat` 
-
-`pip install flask`
-`pip install psycopg2`
-`npm install`
-`pip install flask_sqlalchemy`
-`pip install flask_migrate`
-`pip install flask_cors`
-`pip install flask-login`
+Then go back to the WriterDesk1 folder in you file explorer and run `startEnv.bat`. Then run the following command to install all packages 'pip install -r requirements.txt'
 
 Now open 2 instances of `startEnv.bat` (by clicking them):
 
@@ -35,6 +27,9 @@ Now, if it did not happen already, go to your browser and open [this link](http:
 (note that the `npm start` might not work when you have a vpn activated)
 
 Install PostgreSQL ([This link](https://www.postgresql.org/download/)), set a system environment variable called "DATABASE_URL" to <postgresql://postgres:{password}@localhost:5432/database1>, where this password is the password you have chosen in the postgresql installation. 
+
+### Adding Requirements
+If you add a package, you have to update the requirements document. Make sure you are located in WriterDesk1 and run `pip freeze > requirements.txt`
 
 ## Coding Guide
 > This section provides some usefull coding tools and tutoriols for flask and ReactJS
