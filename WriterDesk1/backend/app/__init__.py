@@ -13,7 +13,7 @@ def create_app(config_class=Config):
     # Prevent CORS errors, make sure we can retrieve things from the react front-end without errors:
     CORS(app, origins=['https://localhost:3000'])
     # Retrieve stuff from the config file:
-    app.config.from_object(Config)
+    app.config.from_object(config_class)
     # Start the database:
     db.init_app(app)
     migrate.init_app(app, db)

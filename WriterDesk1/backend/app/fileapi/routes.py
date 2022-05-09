@@ -13,18 +13,20 @@ def fileUpload():
     files = request.files.getlist('files')
     # Handle each file separately:
     for file in files:
-        print(file)
         # Check if we have received the correct file:
         filename = secure_filename(file.filename)
+        print(filename)
         # Path to save the file to:
         file_location = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
         # print(file_location)
         # Save the file to this path:
         file.save(file_location)
+        print(file_location)
         # Add it to the database:
         fileInDatabase = Files(path=file_location, filename=filename)
         uploadToDatabase(fileInDatabase)
         print(Files.query.filter_by(filename=filename).first().filename)
         print("done")
-
+    if (len(files) == 0):
+        return 'failure'
     return 'success'

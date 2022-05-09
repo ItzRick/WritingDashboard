@@ -56,6 +56,7 @@ const Upload = () => {
             'Content-Type': 'multipart/form-data',
         }
         axios.post(url, formData, headers).then((response) => {
+            console.log(response.data)
             if (response.data === 'success') {
                 let oldLength = files.length;
                 // Reset the upload selectors to not have a file displayed:
