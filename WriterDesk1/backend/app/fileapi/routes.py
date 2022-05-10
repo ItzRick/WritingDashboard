@@ -1,6 +1,6 @@
 import os
 from werkzeug.utils import secure_filename
-from flask import current_app, request, session
+from flask import current_app, request, session, jsonify
 from app.models import Files
 from app.fileapi import bp
 # from app import db
@@ -53,7 +53,7 @@ def fileRetrieve():
     if 'user_id' in session:
         sortingAttribute = request.args.get('sortingAttribute')
         #TODO change session["user_id"] to actual reference to user
-        files = database.getFilesByUser(session['user_id'], sortingAttribute)
+        files = getFilesByUser(session['user_id'], sortingAttribute)
         return jsonify(files)
     else:
         return 'No user available', 400
