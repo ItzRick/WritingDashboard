@@ -17,12 +17,11 @@ const ListFiles = () => {
     };
 
     // Call getFiles() on refresh page 
-    useEffect(() => {getFiles()}, []);
+    useEffect(() => {getFiles()});
 
     // Perform GET request to retrieve files of current user from backend
     // Puts response in variable 'files'
     const getFiles = () => {
-        console.log("GET FILES")
         const url = 'https://localhost:5000/fileapi/fileretrieve';
         const data = {
             params: {sortingAttribute: sortingAttribute}
@@ -31,35 +30,30 @@ const ListFiles = () => {
             Accept: 'application/json',
             'Content-Type': 'application/json',
         }
+
+        //Perform GET request
         axios.get(url, data, headers).then((response) => {
-            if (response.data !== 'no user') {
-                // Reset the upload selectors to not have a file displayed:
-                console.log(response.data)
-                setFiles(response.json().data);
-            } else {
-                console.log("No user");
-            }
+            setFiles(response.data);
+        }).catch(err => {
+            console.log(err.response.data);
         });
     }
 
     return (
     <div className='ListFiles'>
         <h1>List Files</h1>
-        <form>
-            <button type="button" onClick={getFiles}>Get Files</button>
-        </form>
+        <button type="button" onClick={getFiles}>Get Files</button>
         <div>
             <label>
-                What do we eat?
+                Sort by: 
                 <select value={sortingAttribute} onChange={changeSortingAttribute}>
                     {sortingAttributes && sortingAttributes.map(sortingAttribute =>
                         <option key={sortingAttribute} value={sortingAttribute}>{sortingAttribute}</option>
                     )}
                 </select>
             </label>
-            <p>We eat {sortingAttribute}</p>
         </div>
-        <table className="table table-striped table-bordered">
+        <table>
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -70,7 +64,7 @@ const ListFiles = () => {
                 <tbody>
                     {files && files.map(file =>
                         <tr key={file.id}>
-                            <td><a href='http://localhost:5000/'>{file.fileName}</a></td>
+                            <td><a href='https://localhost:3000/'>{file.fileName}</a></td>
                             <td>{file.course}</td>
                             <td>{file.date}</td>
                         </tr>

@@ -48,11 +48,12 @@ def fileUpload():
 
 @bp.route('/fileretrieve', methods = ['GET'])
 def fileRetrieve():
-    # Retrieve list of files that were uploaded by the current user
-    if "user_id" in session:
+    # Retrieve list of files that were uploaded by the current user,
+    # ordered by the sorting attribute in the request
+    if 'user_id' in session:
         sortingAttribute = request.args.get('sortingAttribute')
         #TODO change session["user_id"] to actual reference to user
-        files = database.getFilesByUser(session["user_id"], sortingAttribute)
+        files = database.getFilesByUser(session['user_id'], sortingAttribute)
         return jsonify(files)
     else:
-        return "no user"
+        return 'No user available', 400
