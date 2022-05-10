@@ -48,7 +48,6 @@ def fileUpload():
 
 @bp.route('/fileretrieve', methods = ['GET'])
 def fileRetrieve():
-    print(request.args.get('sortingAttribute'))
     # Retrieve list of files that were uploaded by the current user
     if "user_id" in session:
         sortingAttribute = request.args.get('sortingAttribute')

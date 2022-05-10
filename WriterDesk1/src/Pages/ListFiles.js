@@ -17,18 +17,21 @@ const ListFiles = () => {
     };
 
     // Call getFiles() on refresh page 
-    //useEffect(() => {getFiles()}, );
+    useEffect(() => {getFiles()}, []);
 
     // Perform GET request to retrieve files of current user from backend
     // Puts response in variable 'files'
     const getFiles = () => {
         console.log("GET FILES")
         const url = 'https://localhost:5000/fileapi/fileretrieve';
+        const data = {
+            params: {sortingAttribute: sortingAttribute}
+        }
         const headers = {
             Accept: 'application/json',
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
         }
-        axios.get(url, {sortingAttribute: sortingAttribute}, headers).then((response) => {
+        axios.get(url, data, headers).then((response) => {
             if (response.data !== 'no user') {
                 // Reset the upload selectors to not have a file displayed:
                 console.log(response.data)
