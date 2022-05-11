@@ -11,8 +11,11 @@ class User(db.Model):
 
 class Files(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    userId = db.Column(db.Integer, unique=False)
     path = db.Column(db.String, unique=False)
     filename = db.Column(db.String(256), unique=False)
+    course = db.Column(db.String(7), unique=False)
+    date = db.Column(db.DateTime, unique=False)
 
     def __repr__(self):
         return '<File {}>'.format(self.filename)

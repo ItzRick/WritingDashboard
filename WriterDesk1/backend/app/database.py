@@ -9,7 +9,6 @@ def uploadToDatabase(toUpload):
 # Retrieves all files of user,
 # Order on sortingAttribute
 def getFilesByUser(user, sortingAttribute):
-    #TODO change userId to actual column name
     files = models.Files.query.filter_by(userId=user)
 
     if sortingAttribute == "filename.asc":
