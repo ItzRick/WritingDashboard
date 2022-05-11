@@ -4,7 +4,7 @@ from flask import current_app, request, session, jsonify
 from app.models import Files
 from app.fileapi import bp
 # from app import db
-from app.database import uploadToDatabase, getFilesByUser
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from magic import from_buffer 
 from app.exceptions import InvalidUsage
 from datetime import date
@@ -40,7 +40,6 @@ def fileUpload():
         filename = secure_filename(file.filename)
         print(filename)
         # Path to save the file to:
-        # fileLocation = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
         userFileLocation = os.path.join(current_app.config['UPLOAD_FOLDER'], userIds[idx])
         fileLocation = os.path.join(userFileLocation, filename)
         if not os.path.exists(userFileLocation):
@@ -55,6 +54,9 @@ def fileUpload():
         date1 = date.fromisoformat(dates[idx])
         # Add it to the database:
         fileInDatabase = Files(path=fileLocation, filename=filename, userId=userIds[idx], courseCode=courseCodes[idx], date=date1)
+        existing = Files.query.filter_by(userId=userIds[idx], filename=filename).all()
+        for file in existing:
+            removeFromDatabase(file)
         uploadToDatabase(fileInDatabase)
         print(Files.query.filter_by(filename=filename).first().filename)
         print("done")
