@@ -16,6 +16,7 @@ def testValidFile(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
     '''
+    del testClient, initDatabase
     # Retrieve the files:
     files = Files.query.all()
     # Test if all attributes for the first file are still currently there:
@@ -44,6 +45,7 @@ def testUploadToDatabase(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
     '''
+    del testClient, initDatabase
     # Create a file instance of Files:
     file = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/ScrumAndXpFromTheTrenchesonline07-31.pdf', 
     filename='ScrumAndXpFromTheTrenchesonline07-31.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0')
@@ -71,6 +73,7 @@ def testCreateDatabase(testClient):
         Arguments:
             testClient:  The test client we test this for.
     '''
+    del testClient
     db.create_all()
 
 def testFiles(testClient, initDatabase):
@@ -82,6 +85,7 @@ def testFiles(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
     '''
+    del testClient, initDatabase
     files = Files.query.all()
     assert str(files[0]) == '<File URD_Group3_vers03_Rc.pdf>'
     assert str(files[1]) == '<File SEP.pdf>'
@@ -96,6 +100,7 @@ def testRemoveFromDatabase(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
     '''
+    del testClient, initDatabase
     # Create the file instance to be added:
     file = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/ScrumAndXpFromTheTrenchesonline07-31.pdf', 
     filename='ScrumAndXpFromTheTrenchesonline07-31.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0')

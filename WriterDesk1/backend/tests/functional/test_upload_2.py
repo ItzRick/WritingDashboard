@@ -18,6 +18,7 @@ def testDirsCreated(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
     '''
+    del initDatabase
     # Create the actual file:
     fileName = 'test.txt'
     userId = 578900
@@ -54,6 +55,7 @@ def testUploadTextFileIncorrect(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
     '''
+    del initDatabase
     # Get the location of this specific file:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'SEP202122Q4.xlsx')
@@ -77,6 +79,7 @@ def testUploadTextFileNoFile(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
     '''
+    del initDatabase
     # Create this data, with no file attached:
     data = {
         'files': '',

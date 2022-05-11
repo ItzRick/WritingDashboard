@@ -62,6 +62,7 @@ def testUploadTextStream(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
     '''
+    del initDatabase
     # Create the attributes for the fileName, userId, courseCode and date:
     fileName = 'fake-text-stream.txt'
     userId = 123
@@ -103,13 +104,14 @@ def testUploadTextFile(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
     '''
+    del initDatabase
     fileName = 'test.txt'
     userId = 256
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
     generalTestStuff(testClient, fileName, userId, courseCode, date1)
 
-def testUploadTxtMultile(testClient, initDatabase):
+def testUploadTxtMultiple(testClient, initDatabase):
     '''
         Test the file upload with multiple (2) txt files for one user.
         Attributes:
@@ -123,6 +125,7 @@ def testUploadTxtMultile(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
     '''
+    del initDatabase
     # Upload the first file:
     fileName1 = 'test.txt'
     userId = 256
@@ -167,6 +170,7 @@ def testUploadPDFFile(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
     '''
+    del initDatabase
     fileName = 'SEP intro.pdf'
     userId = 789
     courseCode = '1ABC2'
@@ -205,6 +209,7 @@ def testUploadPDFMultiple(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
     '''
+    del initDatabase
     # Upload the first file:
     fileName1 = 'SEP intro.pdf'
     userId = 789
@@ -251,6 +256,7 @@ def testUploadDOCXFile(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
     '''
+    del initDatabase
     fileName = 'test.docx'
     userId = 78267
     courseCode = '9ABCEHJDHD20'
@@ -295,6 +301,7 @@ def testUploadDOCXFileAgain(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
     '''
+    del initDatabase
     # Upload the file for the first time:
     fileName = 'test.docx'
     userId = 78267
@@ -317,6 +324,7 @@ def testUploadDOCFile(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
     '''
+    del initDatabase
     fileName = 'test.doc'
     userId = 12345
     courseCode = '3ASE0'
@@ -337,6 +345,7 @@ def testUploadDOCFileMultiple(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
     '''
+    del initDatabase
     # Upload the first file:
     fileName1 = 'test.doc'
     userId = 12345
@@ -361,6 +370,7 @@ def testUploadDOCFileAgain(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
     '''
+    del initDatabase
     # Upload the document for the first time:
     fileName = 'test.doc'
     userId = 12345
