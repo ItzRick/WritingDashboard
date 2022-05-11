@@ -1,16 +1,15 @@
-import {Component, useEffect, useState} from 'react'
-import axios from "axios";
+//import {Component, useEffect, useState} from 'react'
+//import axios from "axios";
 import './../css/App.css';
 import Base from './../components/Base.js'
 
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 
 function App() {
 
   return (
-    <Base pageName='Awesome Home Page'>       
+    <Base pageName='Lorem Ipsum' enableNav={true}>       
         <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
           tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non

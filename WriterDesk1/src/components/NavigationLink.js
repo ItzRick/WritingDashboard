@@ -7,33 +7,44 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Tooltip from '@mui/material/Tooltip';
 
 /**
- * 
- * @param {*} param0 
+ * Icon with text linking to a page
+ * @param {string} text Text next to the button icon
+ * @param {Icon} Icon Icon of the 
+ * @param {bool} open Whether the Drawer (left side bar) is open
  * @returns 
  */
 const NavigationLink = ({text, Icon, open}) => {
     return (
         <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-            sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-            }}
-            >
-            <ListItemIcon
+            <Tooltip 
+                title={text} 
+                placement="right"
+                disableHoverListener={open}
                 sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
+                    display: open ? 'initial' : 'none',
                 }}
             >
-                <Icon />
-            </ListItemIcon>
-            <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
+                <ListItemButton
+                sx={{
+                    minHeight: 48,
+                    px: 2.5,
+                }}
+                >
+                    <ListItemIcon
+                        sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                        }}
+                    >
+                        <Icon />
+                    </ListItemIcon>
+                    <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+            </Tooltip>
         </ListItem>
     );
 }
@@ -41,7 +52,8 @@ const NavigationLink = ({text, Icon, open}) => {
 NavigationLink.propTypes = {
     text: PropTypes.string,
     open: PropTypes.bool,
-    
+    //func:
+    //Icon : PropTypes.
 }
 
 

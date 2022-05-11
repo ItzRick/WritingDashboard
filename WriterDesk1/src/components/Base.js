@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Navigation from './Navigation.js';
 import NavigationLink from "./NavigationLink";
 
 
@@ -14,11 +13,10 @@ import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 
 // icons
-import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import FileUpload from '@mui/icons-material/Upload';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import ArticleIcon from '@mui/icons-material/Article';
@@ -26,15 +24,15 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import GroupIcon from '@mui/icons-material/Group';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 //replace with logo
 import LogoDevIcon from '@mui/icons-material/LogoDev';
 
-const DRAWERWIDTHOPEN = 240;
-const DRAWERWIDTHCLOSE = 65;
+const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
-  width: DRAWERWIDTHOPEN,
+  width: drawerWidth,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
@@ -72,8 +70,8 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: DRAWERWIDTHOPEN,
-    width: `calc(100% - ${DRAWERWIDTHOPEN}px)`,
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -83,7 +81,7 @@ const AppBar = styled(MuiAppBar, {
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
-    width: DRAWERWIDTHOPEN,
+    width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
@@ -98,83 +96,105 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-const Base = ({children, pageName="ERROR: no name provided", enableNav=true}) => {
-    const [open, setOpen] = React.useState(false);
-    const drawerWidth = DRAWERWIDTHCLOSE;
+const Base = ({
+  children, 
+  pageName="ERROR: no name provided, <Base pageName>", 
+  enableNav=true,
+}) => {
+  const [open, setOpen] = React.useState(false);
 
-    const handleDrawer = () => {
-        setOpen(!open);
-        drawerWidth = open ? DRAWERWIDTHOPEN : DRAWERWIDTHCLOSE;
-    };
-
+  const theme = useTheme();
+  
+  const handleDrawer = () => {
+      setOpen(!open);
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar 
-            sx={{ 
-                ...(open && {width: `calc(100% - ${DRAWERWIDTHOPEN}px)`, ml: `${DRAWERWIDTHOPEN}px`}),
-                ...(!open && {width: `calc(100% - ${DRAWERWIDTHCLOSE}px)`, ml: `${DRAWERWIDTHCLOSE}px`}),
-                alignItems: 'center',
+      <CssBaseline />
+      <AppBar 
+        sx={{ 
+          ...(open && {width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px`}),
+          ...(!open && {
+            width: enableNav ? `calc(100% - ${theme.spacing(7)} + 1px)` : `100%`,
+            [theme.breakpoints.up('sm')]: {
+              width: enableNav ? `calc(100% - ${theme.spacing(8)} + 1px)` : `100%`,
+            },
+          }),
+        }}
+      >
+        <Toolbar sx={{
+          width: '100%',
+          display:'flex',
+          flexDirection: 'row',
+          justifyContent:'space-between',
+        }}>
+          <div></div>
+          <Typography variant="h6" component="div"> {pageName} </Typography>
+          <IconButton 
+            color="inherit"
+            sx={{
+              justifySelf:"flex-end",
             }}
-        >
-            <Toolbar
-                sx = {{
-                    
-                }}
-            >
-                <Typography variant="h6" noWrap component="div" sx={{justify:'center'}}> {pageName} </Typography>
-                <IconButton
-                     sx = {{
-                        justify: 'flex-end'
-                    }}
-                >
-                    <MenuIcon />
-                </IconButton>
-            </Toolbar>
-        </AppBar>
+          >
+            <SettingsIcon />
+          </IconButton>
+        </Toolbar>
+        
+      </AppBar>
 
-        <Drawer variant="permanent" open={open}>
-            <DrawerHeader>
-                <IconButton
-                    color="inherit"
-                    aria-label="open drawer"
-                    onClick={handleDrawer}
-                >
-                    <MenuIcon />
-                </IconButton>
-            </DrawerHeader>
+
+
+      <Drawer 
+        variant="permanent" 
+        open={open}
+        sx={{display: enableNav ? 'initial' : 'none',}}
+      >
+        <DrawerHeader justify="center">
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawer}
+            edge={false}
+            justify="center"
+            sx={{
+              mr:'2px',
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+          
+        </DrawerHeader>
+        <Divider />
+        <List>
+          <NavigationLink open={open} text="Main" Icon={LogoDevIcon}/>  
+          <NavigationLink open={open} text="Upload" Icon={FileUpload}/>
+          <NavigationLink open={open} text="Progress" Icon={TimelineIcon}/>
+          <NavigationLink open={open} text="Documents" Icon={ArticleIcon}/>
           <Divider />
-          <List>
-          <NavigationLink text="Main" Icon={LogoDevIcon} open={open}/>  
-            <NavigationLink text="Upload" Icon={FileUpload} open={open}/>
-            <NavigationLink text="Progress" Icon={TimelineIcon} open={open}/>
-            <NavigationLink text="Documents" Icon={ArticleIcon} open={open}/>
-            <Divider />
-            <NavigationLink text="File Download" Icon={FileDownloadIcon} open={open}/>
-            <NavigationLink text="Participants" Icon={GroupIcon} open={open}/>
-            <NavigationLink text="Feedback Models" Icon={BuildIcon} open={open}/>
-            <Divider />
-            <NavigationLink text="Users" Icon={PersonIcon} open={open}/>
+          <NavigationLink open={open} text="File Download" Icon={FileDownloadIcon}/>
+          <NavigationLink open={open} text="Participants" Icon={GroupIcon}/>
+          <NavigationLink open={open} text="Feedback Models" Icon={BuildIcon}/>
+          <Divider />
+          <NavigationLink open={open} text="Users" Icon={PersonIcon}/>
+        </List>
+      </Drawer>
 
-
-          </List>
-        </Drawer>
-
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-            <DrawerHeader />
-            {children}
-        </Box>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <DrawerHeader />
+        {children}
+      </Box>
     </Box>
   );
 }
 
 
 
-/*
-Base.PropTypes = {
-    //children:
-}*/
+
+Base.propTypes = {
+  pageName: PropTypes.string,
+  //children:
+}
 
 
 export default Base
