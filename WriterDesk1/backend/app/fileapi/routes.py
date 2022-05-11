@@ -5,19 +5,26 @@ from app.models import Files
 from app.fileapi import bp
 # from app import db
 from app.database import uploadToDatabase, getFilesByUser
-import magic
+from magic import from_buffer 
 from app.exceptions import InvalidUsage
+from datetime import date
 
 @bp.route('/upload', methods = ['POST'])
 def fileUpload():
     # Retrieve the files as send by the react frontend and give this to the fileUpload function, 
     # which does all the work:
     files = request.files.getlist('files')
-    data = request.form
+    if (len(files) == 0):
+        return 'No file uploaded', 400
+    fileNames = request.form.getlist('fileName')
+    courseCodes = request.form.getlist('courseCode')
+    userIds = request.form.getlist('userId')
+    dates = request.form.getlist('date')
+    # print(fileNames)
     # Handle each file separately:
-    for file in files:
+    for idx, file in enumerate(files):
         try:
-            fileType = magic.from_buffer(file.read(), mime = True)
+            fileType = from_buffer(file.read(), mime = True)
             isPdf = (fileType == 'application/pdf')
             isDocx = (fileType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
             isDoc = (fileType == 'application/msword')
@@ -26,24 +33,31 @@ def fileUpload():
             if (not (isPdf or isDoc or isDocx or isTxt)):
                 raise InvalidUsage('Incorrect file type!')
         except InvalidUsage:
-            return 'No correct filetype', 400
+            return 'Incorrect filetype ' + str(idx + 1), 400
 
+        # print(fileNames)
         # Check if we have received the correct file:
         filename = secure_filename(file.filename)
         print(filename)
         # Path to save the file to:
-        file_location = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        # fileLocation = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        userFileLocation = os.path.join(current_app.config['UPLOAD_FOLDER'], userIds[idx])
+        fileLocation = os.path.join(userFileLocation, filename)
+        if not os.path.exists(userFileLocation):
+            os.makedirs(userFileLocation)
+        if os.path.isfile(fileLocation):
+            os.remove(fileLocation)
         # print(file_location)
         # Save the file to this path:
-        file.save(file_location)
-        print(file_location)
+        file.stream.seek(0)
+        file.save(fileLocation)
+        print(fileLocation)
+        date1 = date.fromisoformat(dates[idx])
         # Add it to the database:
-        fileInDatabase = Files(path=file_location, filename=filename)
+        fileInDatabase = Files(path=fileLocation, filename=filename, userId=userIds[idx], courseCode=courseCodes[idx], date=date1)
         uploadToDatabase(fileInDatabase)
         print(Files.query.filter_by(filename=filename).first().filename)
         print("done")
-    if (len(files) == 0):
-        return 'No file uploaded', 400
     return 'success'
 
 @bp.route('/fileretrieve', methods = ['GET'])

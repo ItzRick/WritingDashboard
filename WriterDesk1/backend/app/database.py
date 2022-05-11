@@ -2,7 +2,9 @@ from app import db
 from app import models
 
 def uploadToDatabase(toUpload):
-    db.create_all()
+    # db.session.commit()
+    # db.drop_all()
+    # db.create_all()
     db.session.add(toUpload)
     db.session.commit()
 
@@ -16,9 +18,9 @@ def getFilesByUser(user, sortingAttribute):
     elif sortingAttribute == "filename.desc":
         files = files.order_by(models.Files.filename.desc())
     elif sortingAttribute == "course.asc":
-        files = files.order_by(models.Files.course)
+        files = files.order_by(models.Files.courseCode)
     elif sortingAttribute == "course.desc":
-        files = files.order_by(models.Files.course.desc())
+        files = files.order_by(models.Files.courseCode.desc())
     elif sortingAttribute == "date.asc":
         files = files.order_by(models.Files.date)
     elif sortingAttribute == "date.desc":
