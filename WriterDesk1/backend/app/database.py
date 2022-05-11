@@ -7,9 +7,10 @@ def uploadToDatabase(toUpload):
     db.session.commit()
 
 # Retrieves all files of user,
-# Order on sortingAttribute
+# Orders on sortingAttribute
+# Returns list of Files objects as dictionary
 def getFilesByUser(user, sortingAttribute):
-    files = models.Files.query.filter_by(userId=user)
+    files = db.session.query(models.Files).filter_by(userId=user)
 
     if sortingAttribute == "filename.asc":
         files = files.order_by(models.Files.filename)
@@ -23,5 +24,5 @@ def getFilesByUser(user, sortingAttribute):
         files = files.order_by(models.Files.date)
     elif sortingAttribute == "date.desc":
         files = files.order_by(models.Files.date.desc())
-    
-    return files
+
+    return models.Files.serializeList(files.all())
