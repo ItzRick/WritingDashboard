@@ -64,10 +64,15 @@ def fileUpload():
 def fileRetrieve():
     # Retrieve list of files that were uploaded by the current user,
     # ordered by the sorting attribute in the request
-    if 'user_id' in session:
+    if 'user_id' in session or True:
         sortingAttribute = request.args.get('sortingAttribute')
         #TODO change session["user_id"] to actual reference to user
-        files = getFilesByUser(session['user_id'], sortingAttribute)
+        files = getFilesByUser(0, sortingAttribute)
+        
+        # Put dates in format
+        for file in files:
+            file['date'] = file.get('date').strftime('%d/%m/%y %H:%M')
+        # Return list of Files objects as json
         return jsonify(files)
     else:
         return 'No user available', 400
