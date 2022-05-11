@@ -42,7 +42,9 @@ def testClient():
         and a new directory is created, since this is normally done in the config file of the application. Then the testing_client is created, 
         using the TestConfig configuration, and the tests are then executed. 
     '''
+    # Create an app with this configuration:
     app = create_app(TestConfig())
+    # Remove the test-directory with the saved files and create this folder again, which is usually done at the first run of the application:
     if os.path.isdir(app.config['UPLOAD_FOLDER']):
         shutil.rmtree(app.config['UPLOAD_FOLDER'])
     os.makedirs(app.config['UPLOAD_FOLDER'])
@@ -70,7 +72,8 @@ def initDatabase(testClient):
             date: 2020-10-2
             userId: 567
             courseCode: 3NAB0
-        Afterwards, the database is empties again, so no entries can influence a next test run.
+        Afterwards, the database is empties again, so no entries can influence a next test run. This is run each time
+        a test case is run, so that one test case does not influence the database of another test case. 
     '''
     # Create the database:
     db.create_all()
