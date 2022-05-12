@@ -14,11 +14,14 @@ import Tooltip from '@mui/material/Tooltip';
  * @param {string} text Text next to the button icon
  * @param {Icon} Icon Icon of the 
  * @param {bool} open Whether the Drawer (left side bar) is open
+ * @param {bool} visible The menu item should be visible for the current, logged on user
  * @returns 
  */
-const NavigationLink = ({text, Icon, open}) => {
+const NavigationLink = ({text, Icon, open, allowed=false}) => {
     return (
-        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+        <ListItem key={text} disablePadding sx={{ 
+            display: allowed ? 'block' : 'none'
+        }}>
             <Tooltip 
                 title={text} 
                 placement="right"

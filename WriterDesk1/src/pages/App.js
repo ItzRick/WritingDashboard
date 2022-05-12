@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 function App() {
 
   return (
-    <Base pageName='Lorem Ipsum' enableNav={true}>       
+    <Base pageName='Lorem Ipsum' enableNav={true} researcher={true} admin={true}>       
         <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
           tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non

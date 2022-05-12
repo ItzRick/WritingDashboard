@@ -28,6 +28,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 //replace with logo
 import LogoDevIcon from '@mui/icons-material/LogoDev';
+import { Tooltip } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -96,10 +97,21 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+/**
+ * 
+ * @param {*} children Children nodes of <base> </base> 
+ * @param {bool} enableNav The navigation drawer, on the left, is visible
+ * @param {bool} researcher The user is a researcher
+ * @param {bool} admin The user is an admin
+ * @returns <base></base> wrapper
+ */
+
 const Base = ({
   children, 
   pageName="ERROR: no name provided, <Base pageName>", 
   enableNav=true,
+  researcher=false,
+  admin=false,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -151,32 +163,37 @@ const Base = ({
         sx={{display: enableNav ? 'initial' : 'none',}}
       >
         <DrawerHeader justify="center">
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawer}
-            edge={false}
-            justify="center"
-            sx={{
-              mr:'2px',
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          
+          <Tooltip title="Menu">
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawer}
+              edge={false}
+              justify="center"
+              sx={{
+                mr:'2px',
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Tooltip>
         </DrawerHeader>
         <Divider />
         <List>
-          <NavigationLink open={open} text="Main" Icon={LogoDevIcon}/>  
-          <NavigationLink open={open} text="Upload" Icon={FileUpload}/>
-          <NavigationLink open={open} text="Progress" Icon={TimelineIcon}/>
-          <NavigationLink open={open} text="Documents" Icon={ArticleIcon}/>
-          <Divider />
-          <NavigationLink open={open} text="File Download" Icon={FileDownloadIcon}/>
-          <NavigationLink open={open} text="Participants" Icon={GroupIcon}/>
-          <NavigationLink open={open} text="Feedback Models" Icon={BuildIcon}/>
-          <Divider />
-          <NavigationLink open={open} text="Users" Icon={PersonIcon}/>
+          <NavigationLink open={open} text="Main" Icon={LogoDevIcon} allowed={enableNav}/>  
+          <NavigationLink open={open} text="Upload" Icon={FileUpload} allowed={enableNav}/>
+          <NavigationLink open={open} text="Progress" Icon={TimelineIcon} allowed={enableNav}/>
+          <NavigationLink open={open} text="Documents" Icon={ArticleIcon} allowed={enableNav}/>
+          <Divider sx={{
+            display: admin || researcher ? 'block' : 'none'
+          }} />
+          <NavigationLink open={open} text="File Download" Icon={FileDownloadIcon} allowed={researcher | admin}/>
+          <NavigationLink open={open} text="Participants" Icon={GroupIcon} allowed={researcher | admin}/>
+          <NavigationLink open={open} text="Feedback Models" Icon={BuildIcon} allowed={researcher | admin}/>
+          <Divider sx={{
+            display: admin ? 'block' : 'none'
+          }} />
+          <NavigationLink open={open} text="Users" Icon={PersonIcon} allowed={admin}/>
         </List>
       </Drawer>
 
@@ -190,9 +207,11 @@ const Base = ({
 
 
 
-
 Base.propTypes = {
   pageName: PropTypes.string,
+  enableNav: PropTypes.bool,
+  researcher: PropTypes.bool,
+  admin: PropTypes.bool,
   //children:
 }
 
