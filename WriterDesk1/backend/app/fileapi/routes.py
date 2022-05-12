@@ -5,7 +5,6 @@ from app.models import Files
 from app.fileapi import bp
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from magic import from_buffer 
-from app.exceptions import InvalidUsage
 from datetime import date
 
 @bp.route('/upload', methods = ['POST'])
