@@ -30,7 +30,7 @@ class Files(db.Model, Serializer):
             filename: Filename of the current file that is added to the datbase.
             courseCode: Coursecode corresponding to the current file that is added to the database.
             date: Date the current file that is uploaded to the database has been created. 
-    ''''
+    '''
     id = db.Column(db.Integer, primary_key=True)
     userId = db.Column(db.Integer, unique=False)
     path = db.Column(db.String, unique=False)
