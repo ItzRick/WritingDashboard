@@ -1,6 +1,6 @@
 from distutils.command.upload import upload
 from app.models import Files
-from app.database import uploadToDatabase, getFilesByUser removeFromDatabase
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from app import db
 from datetime import datetime
 
