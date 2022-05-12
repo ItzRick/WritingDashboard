@@ -68,11 +68,12 @@ def fileRetrieve():
         sortingAttribute = request.args.get('sortingAttribute')
         #TODO change session["user_id"] to actual reference to user
         files = getFilesByUser(0, sortingAttribute)
-        
+
         # Put dates in format
         for file in files:
             file['date'] = file.get('date').strftime('%d/%m/%y %H:%M')
-        # Return list of Files objects as json
+            
+        # Return http response with list as json in response body
         return jsonify(files)
     else:
         return 'No user available', 400
