@@ -8,6 +8,10 @@ def uploadToDatabase(toUpload):
     db.session.add(toUpload)
     db.session.commit()
 
+def removeFromDatabase(toRemove):
+    db.session.delete(toRemove)
+    db.session.commit()
+
 # Retrieves all files of user,
 # Orders on sortingAttribute
 # Returns list of Files objects as dictionary
