@@ -31,6 +31,9 @@ Install PostgreSQL ([This link](https://www.postgresql.org/download/)), set a sy
 ### Adding Requirements
 If you add a package, you have to update the requirements document. Make sure you are located in WriterDesk1 and run `pip freeze > requirements.txt`
 
+### Test cases
+A nice tutorial for flask test cases can be found in [This link](https://testdriven.io/blog/flask-pytest/). In short we use pytest for the test cases. In the tests folder one can define setup stuff before the test cases needed to be run and cleanup stuff after the test cases are done in the conftest.py folder. We do this by having the line `@pytest.fixture(scope='module')` above the function. Or with scope='function' if this needs to be run before every function is run. Then one can define instructions to be run before the test case, followed by yield at which the test cases will be run, followed by stuff that cleans up this stuff. The atual test cases are defined in the unit or functional folder respectively. These test cases consist of functions with assert's, which should be satisfied. Stuff from the 'conftest.py' file should be passed as function arguments if this is required in the test cases. 
+
 ## Coding Guide
 > This section provides some usefull coding tools and tutoriols for flask and ReactJS
 
