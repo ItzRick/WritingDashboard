@@ -141,7 +141,7 @@ const Base = ({
           flexDirection: 'row',
           justifyContent:'space-between',
         }}>
-          <div></div>
+          <SettingsIcon style={{opacity:'0', margin:'8'}}/>
           <Typography variant="h6" component="div"> {pageName} </Typography>
           <IconButton 
             color="inherit"
