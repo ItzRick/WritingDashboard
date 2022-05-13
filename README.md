@@ -15,7 +15,7 @@ click the file `startEnv.bat`
 `cd backend` 
 `py -m venv env`
 
-Then go back to the WriterDesk1 folder in you file explorer and run `startEnv.bat`. Then run the following command to install all packages 'pip install -r requirements.txt' and 'npm install'. 
+Then go back to the WriterDesk1 folder in you file explorer and run `startEnv.bat`. Then run the following command to install all packages `pip install -r requirements.txt` and `npm install`. 
 
 Now open 2 instances of `startEnv.bat` (by clicking them):
 
