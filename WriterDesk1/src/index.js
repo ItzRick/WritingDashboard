@@ -5,11 +5,59 @@ import App from './pages/App.js';
 import LoginSignUp from './pages/LoginSignUp';
 import Login from './pages/Login';
 import reportWebVitals from './reportWebVitals';
+import {createTheme, ThemeProvider} from "@mui/material";
+import SignUp from "./pages/SignUp";
+
+const theme = createTheme({
+  // dark blue: #44749D
+  // light blue: #C6D4E1
+  palette: {
+    primary: {
+      main: '#44749D',
+      contrastText: "#ffffff", // white
+    },
+    secondary: {
+      main: '#C6D4E1',
+      contrastText: '#000000', // black
+    },
+    navigation: {
+      main: '#44749D',
+      text: '#44749D',
+      contrastText: "#44749D", // white
+    },
+    navigation1: {
+      main: '#C6D4E1',
+      contrastText: "#ffffff", // white
+    },
+    error: {
+      main: '#ff0015', // red
+    },
+
+    //fontFamily: font
+  },
+
+  //overriding themes
+  components: {
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          background: '#C6D4E1',
+        },
+        colorPrimary: {
+          background: '#44749D',
+          color: 'red'
+        }
+      }
+    }
+  }
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Login />
+    <ThemeProvider theme={theme}>
+      <SignUp />
+    </ThemeProvider>
   </React.StrictMode>
 );
 

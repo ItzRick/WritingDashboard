@@ -18,25 +18,29 @@ function App() {
                 <IconButton style={{float:'left'}}>
                     <img className='logo' src={testImage} />
                 </IconButton>
-                <Typography variant='h3'>Login</Typography>
+                <Typography variant='h3'>Signup</Typography>
                 <div className='filler2'></div>
             </div>
             <div className='div2'>
                 <div className='text_boxes'>
-                    <Typography>Username:</Typography>
-                    <TextField id='username' label='Username' variant='outlined' />
-                    <br />
+                    <Typography>Email:</Typography>
+                    <TextField id='email' label='example@mail.com' variant='outlined' />
+                    <br /><br />
+                    <Typography>Repeat email:</Typography>
+                    <TextField id='email2' label='example@mail.com' variant='outlined' />
+                    <br /><br />
                     <Typography>Password:</Typography>
                     <TextField id='password' label='Password' variant='outlined' type='password' />
+                    <br /><br />
+                    <Typography>Repeat password:</Typography>
+                    <TextField id='password2' label='Password' variant='outlined' type='password' />
                 </div>
                 <br />
-                <Button variant="contained">Log in</Button>
+                <Button variant="contained">Sign up</Button>
             </div>
             <div className='div3'>
                 <br />
-                <Typography>Don't have an account yet? Sign up <a href='google.com'>here</a>.</Typography>
-                <br />
-                Note: the TU/e mail is the username of TU/e students.
+                <Typography>Already have an account? Log in <a href='google.com'>here</a>.</Typography>
             </div>
         </div>
     </Base>
