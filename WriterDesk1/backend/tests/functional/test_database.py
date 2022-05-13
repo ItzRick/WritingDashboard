@@ -1,6 +1,6 @@
 from distutils.command.upload import upload
 from app.models import Files
-from app.database import uploadToDatabase, removeFromDatabase
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from app import db
 from datetime import datetime
 
@@ -66,6 +66,21 @@ def testUploadToDatabase(testClient, initDatabase):
     assert file2.date == datetime(2019, 2, 12)
     assert file2.userId == 123
     assert file2.courseCode == "2IPE0"
+    
+def testGetFilesByUser(testClient, initDatabase):
+    db.session.commit()
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file)
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 2, 12), userId = 201, courseCode = '2IPE0')
+    db.session.add(file2)
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file3)
+    db.session.commit()
+    
+    files = getFilesByUser(200, 'date.asc')
+    assert len(files) == 2
+    assert files[0].get('filename') == 'File-3.pdf'
+    assert files[0].get('userId') == 200
 
 def testCreateDatabase(testClient):
     '''

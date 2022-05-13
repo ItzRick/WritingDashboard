@@ -32,7 +32,6 @@ const ListFiles = () => {
             Accept: 'application/json',
             'Content-Type': 'application/json',
         }
-
         //Perform GET request
         axios.get(url, data, headers).then((response) => {
             setFiles(response.data);
@@ -67,7 +66,7 @@ const ListFiles = () => {
                     {files && files.map(file =>
                         <tr key={file.id}>
                             <td><a href='https://localhost:3000/'>{file.filename}</a></td>
-                            <td>{file.course}</td>
+                            <td>{file.courseCode}</td>
                             <td>{file.date}</td>
                         </tr>
                     )}
