@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
+// components
 import NavigationLink from "./NavigationLink";
 
-
-
+// mui components
 import { styled, useTheme } from '@mui/material/styles';
+import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
@@ -25,11 +27,10 @@ import GroupIcon from '@mui/icons-material/Group';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
-
 //replace with logo
 import LogoDevIcon from '@mui/icons-material/LogoDev';
-import { Tooltip } from '@mui/material';
 
+//Width of the opened drawer
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -98,6 +99,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 /**
+ * Makes the BasePage
  * 
  * @param {*} children Children nodes of <base> </base> 
  * @param {bool} enableNav The navigation drawer, on the left, is visible
