@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import reportWebVitals from './reportWebVitals';
 import {createTheme, ThemeProvider} from "@mui/material";
 import SignUp from "./pages/SignUp";
+import Home from "./pages/Home";
 
 const theme = createTheme({
   // dark blue: #44749D
@@ -56,7 +57,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <SignUp />
+      <Home />
     </ThemeProvider>
   </React.StrictMode>
 );
