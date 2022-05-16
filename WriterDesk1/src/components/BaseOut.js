@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom';
 
 
 // mui components
-import { styled, useTheme, useStyles } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
@@ -16,7 +16,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 //Width of the opened drawer
 const drawerWidth = 240;
-
 
 const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -88,10 +87,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
  * 
  * @returns Base page, for non-authenticated user
  */
-const Base = ({
-}) => {
+const Base = () => {
     const theme = useTheme();
-    const classes = useStyles();
 
     return (
         <Box sx={{ display: 'flex', color: 'primary' }}>

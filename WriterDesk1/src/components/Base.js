@@ -122,8 +122,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const Base = ({
   pageName = "ERROR: no name provided, <Base pageName>",
   enableNav = true,
-  researcher = false,
-  admin = false,
+  researcher = true,
+  admin = true,
 }) => {
   const [open, setOpen] = React.useState(false);
 

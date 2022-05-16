@@ -11,7 +11,6 @@ import testImage from '../images/placeholder_image.png'
 import { Button, TextField } from "@mui/material";
 
 function App() {
-
     return (
         <>
             <div className='parent'>
@@ -31,7 +30,7 @@ function App() {
                         <TextField id='password' label='Password' variant='outlined' type='password' />
                     </div>
                     <br />
-                    <Button variant="contained">Log in</Button>
+                    <Button variant="contained" component={Link} to='/Main'>Log in</Button>
                 </div>
                 <div className='div3'>
                     <br />

@@ -37,7 +37,8 @@ function App() {
                     <TextField id='password2' label='Password' variant='outlined' type='password' />
                 </div>
                 <br />
-                <Button variant="contained">Sign up</Button>
+                {/* TODO: do we want to go to main or to login */}
+                <Button variant="contained" component={Link} to='/Main'>Sign up</Button>
             </div>
             <div className='div3'>
                 <br />

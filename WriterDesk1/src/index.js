@@ -42,12 +42,12 @@ const ThemeColors = {
   black: '#000000',
   red: '#ff0015',
 };
-
+/*
 const useStyles = makeStyles({
   drawerOut: {
     background: ThemeColors.darkBlue,
   },
-});
+});*/
 
 const theme = createTheme({
   //
