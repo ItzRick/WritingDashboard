@@ -18,9 +18,9 @@ function LandingPage() {
       <Typography variant='h5'>Improve your academic writing.</Typography>
       <br />
       <div className='center'>
-          <Button size='large' variant='contained' component={Link}  to={'Login'}>Log in</Button>
+          <Button size='large' variant='contained' component={Link}  to={'/Login'}>Log in</Button>
           <div className='filler'></div>
-          <Button size='large' variant='contained' component={Link}  to={'SignUp'}>Sign up</Button>
+          <Button size='large' variant='contained' component={Link}  to={'/SignUp'}>Sign up</Button>
       </div>
       <br /><br />
       <div className='center'>

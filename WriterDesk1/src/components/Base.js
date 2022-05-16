@@ -35,7 +35,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoDevIcon from '@mui/icons-material/LogoDev';
 
 //routing
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 //Width of the opened drawer
@@ -116,11 +116,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
  * @param {bool} enableNav The navigation drawer, on the left, is visible
  * @param {bool} researcher The user is a researcher
  * @param {bool} admin The user is an admin
- * @returns <base></base> wrapper
+ * @returns Base page for logged in user
  */
 
 const Base = ({
-  children,
   pageName = "ERROR: no name provided, <Base pageName>",
   enableNav = true,
   researcher = false,
@@ -156,14 +155,14 @@ const Base = ({
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-          <SettingsIcon style={{opacity:'0', margin:'8'}}/>
+          <SettingsIcon style={{ opacity: '0', margin: '8' }} />
           <Typography variant="h6" component="div"> {pageName} </Typography>
           <IconButton
             color="inherit"
             sx={{
               justifySelf: "flex-end",
             }}
-            component={Link}  to='settings'
+            component={Link} to='settings'
           >
             <PersonIcon />
           </IconButton>
@@ -197,18 +196,18 @@ const Base = ({
         <List>
           <NavigationLink open={open} text="Main" Icon={LogoDevIcon} allowed={enableNav} pageLink='Main' />
           <NavigationLink open={open} text="Upload" Icon={FileUpload} allowed={enableNav} pageLink='Upload' />
-          <NavigationLink open={open} text="Progress" Icon={TimelineIcon} allowed={enableNav} pageLink='Progress'/>
-          <NavigationLink open={open} text="Documents" Icon={ArticleIcon} allowed={enableNav} pageLink='Documents'/>
+          <NavigationLink open={open} text="Progress" Icon={TimelineIcon} allowed={enableNav} pageLink='Progress' />
+          <NavigationLink open={open} text="Documents" Icon={ArticleIcon} allowed={enableNav} pageLink='Documents' />
           <Divider sx={{
             display: admin || researcher ? 'block' : 'none'
           }} />
-          <NavigationLink open={open} text="File Download" Icon={FileDownloadIcon} allowed={researcher | admin} pageLink='FileDownload'/>
-          <NavigationLink open={open} text="Participants" Icon={GroupIcon} allowed={researcher | admin} pageLink='Participants'/>
-          <NavigationLink open={open} text="Feedback Models" Icon={BuildIcon} allowed={researcher | admin} pageLink='FeedbackModels'/>
+          <NavigationLink open={open} text="File Download" Icon={FileDownloadIcon} allowed={researcher | admin} pageLink='FileDownload' />
+          <NavigationLink open={open} text="Participants" Icon={GroupIcon} allowed={researcher | admin} pageLink='Participants' />
+          <NavigationLink open={open} text="Feedback Models" Icon={BuildIcon} allowed={researcher | admin} pageLink='FeedbackModels' />
           <Divider sx={{
             display: admin ? 'block' : 'none'
           }} />
-          <NavigationLink open={open} text="Users" Icon={SettingsIcon} allowed={admin} pageLink='Users'/>
+          <NavigationLink open={open} text="Users" Icon={SettingsIcon} allowed={admin} pageLink='Users' />
         </List>
       </Drawer>
 

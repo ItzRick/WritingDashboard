@@ -1,7 +1,8 @@
 //import {Component, useEffect, useState} from 'react'
 //import axios from "axios";
 import './../css/main.css';
-import Base from './../components/Base.js';
+
+import {Link} from 'react-router-dom';
 
 
 import Typography from '@mui/material/Typography';
@@ -12,7 +13,7 @@ import {Button, TextField} from "@mui/material";
 function App() {
 
   return (
-    <Base pageName='' enableNav={false} researcher={true} admin={true}>
+      <>
         <div className='parent'>
             <div className='div1'>
                 <IconButton style={{float:'left'}}>
@@ -40,10 +41,10 @@ function App() {
             </div>
             <div className='div3'>
                 <br />
-                <Typography>Already have an account? Log in <a href='google.com'>here</a>.</Typography>
+                <Typography>Already have an account? Log in <Link to={'/Login'}>here</Link>.</Typography>
             </div>
         </div>
-    </Base>
+    </>
   );
  }
 
