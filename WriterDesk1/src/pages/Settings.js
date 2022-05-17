@@ -5,7 +5,7 @@
  * 
  * @returns Settings Page
  */
-function Settings() {
+const Settings = () => {
 
     return (
         <>

@@ -9,7 +9,7 @@ import chartImg from '../images/chartImage.png';
 import { Link } from 'react-router-dom';
 
 
-function Main() {
+const Main = () => {
   return (
     <div className='home_grid'>
       <div className='home1'>

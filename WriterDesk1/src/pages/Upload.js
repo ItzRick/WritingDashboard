@@ -5,7 +5,7 @@
  * 
  * @returns Upload Page
  */
-function Upload() {
+const Upload = () => {
 
     return (
         <>
