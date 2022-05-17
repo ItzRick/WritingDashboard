@@ -142,11 +142,12 @@ grid-row-gap: 0px;
     text-align: center;
 }
 
-.innerUploadButton {
-    display: inline;
-}
-
 .upload {
     display: inline;
     padding: 5px;
+    border-style: dashed;
+    background-color: #EBE7E0;
+    color: #BDB8AD;
+    border-color: black;
+    margin-right: 1vw;
 }
