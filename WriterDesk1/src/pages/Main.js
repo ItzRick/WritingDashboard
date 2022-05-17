@@ -6,10 +6,16 @@ import Typography from '@mui/material/Typography';
 import { Button } from "@mui/material";
 import chartImg from '../images/chartImage.png';
 
-import { Link } from 'react-router-dom';
-
+import { Link, useOutletContext } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Main = () => {
+  //set title in parent 'base' 
+  const {setTitle} = useOutletContext();
+  useEffect(() => {
+    setTitle('Homepage');
+  });
+  
   return (
     <div className='home_grid'>
       <div className='home1'>

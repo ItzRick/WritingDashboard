@@ -1,5 +1,10 @@
+import { useOutletContext } from 'react-router-dom';
+import { useEffect } from 'react';
+
+
+
 /**
- *
+ * 
  * @returns Upload Page
  */
 import Typography from "@mui/material/Typography";
@@ -8,6 +13,11 @@ import {useState} from "react";
 
 
 const Upload = () => {
+    //set title in parent 'base'
+    const { setTitle } = useOutletContext();
+    useEffect(() => {
+        setTitle('Upload');
+    });
 
     const [rowList, setRowList] = useState([]);
 

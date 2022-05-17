@@ -1,4 +1,4 @@
-import React from 'react';
+import {useState} from 'react';
 import PropTypes from 'prop-types';
 
 // routing
@@ -42,8 +42,6 @@ import { Link } from 'react-router-dom';
 const drawerWidth = 240;
 
 
-
-
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -65,18 +63,26 @@ const closedMixin = (theme) => ({
   },
 });
 
-const DrawerHeader = styled('div')(({ theme }) => ({
+// make DrawerHeader style
+const DrawerHeader = styled('div', { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
+  alignItems: 'center',  
   padding: theme.spacing(0, 1),
+  justifyContent: 'center',
+  ...(open && {
+    justifyContent: 'flex-end',
+  }),
+  ...(!open && {
+    justifyContent: 'center',
+  }),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
+// make AppBar style
+const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
@@ -92,6 +98,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
+// make Drawer style
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     width: drawerWidth,
@@ -124,13 +131,13 @@ const Base = ({
   admin = true,
 }) => {
   //handle opening and closing the drawer (left side menu)
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleDrawer = () => {
     setOpen(!open);
   };
 
   // provides title to the base page using the context of the 
-  const [title, setTitle] = React.useState("ERROR: no name provided, <Base pageName>");
+  const [title, setTitle] = useState("");
 
 
   // general theme, defined in index.js
@@ -178,17 +185,13 @@ const Base = ({
           display: enableNav ? 'initial' : 'none',
         }}
       >
-        <DrawerHeader justify="center">
+        <DrawerHeader open={open}>
           <Tooltip title="Menu">
             <IconButton
               color="inherit"
               aria-label="open drawer"
               onClick={handleDrawer}
               edge={false}
-              justify="center"
-              sx={{
-                mr: '2px',
-              }}
             >
               <MenuIcon />
             </IconButton>
@@ -215,7 +218,7 @@ const Base = ({
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Outlet context={{ setTitle }}/>
+        <Outlet context={{ setTitle }} />
       </Box>
     </Box>
   );

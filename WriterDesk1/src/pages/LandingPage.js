@@ -10,7 +10,7 @@ import {Link} from 'react-router-dom';
 
 
 function LandingPage() {
-
+  
   return (
     <>
       <Typography variant='h2'>Writing Dashboard</Typography>
