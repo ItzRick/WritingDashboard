@@ -3,6 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './css/index.css';
 import reportWebVitals from './reportWebVitals';
 
+// routing
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+//theme and style
+import { ThemeProvider, createTheme, makeStyles } from '@mui/material/styles';
+
 //pages
 import Base from './components/Base.js'
 import BaseOut from './components/BaseOut.js';
@@ -22,17 +28,6 @@ import Participants from './pages/Participants';
 import Users from './pages/Users';
 
 import FeedbackModels from './pages/FeedbackModels';
-
-
-import ExamplePage from './pages/ExamplePage';
-
-
-// routing
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
-//theme and style
-import { ThemeProvider, createTheme, makeStyles } from '@mui/material/styles';
-
 
 // theme and style
 const ThemeColors = {
@@ -96,15 +91,18 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
+      {/* Router encapsules the application */}
       <BrowserRouter>
         <Routes>
+          {/* public part of the router, accessible for public */}
           <Route path='/' element={<BaseOut />}>
             <Route name='LandingPage' path='LandingPage' element={<LandingPage />} />
             <Route name='Login' path='Login' element={<Login />} />
             <Route name='SignUp' path='SignUp' element={<SignUp />} />
             <Route path='/' element={<LandingPage />} />
           </Route>
-          {/* Route element below has to be authenticated (only for fans) */}
+          {/* TODO: add authentication */}
+          {/* Private part of the router, requires authentication */}
           <Route path='/' element={<Base />}>
             <Route name='Settings' path='Settings' element={<Settings />} />
 
@@ -120,8 +118,6 @@ root.render(
             <Route name='Users' path='Users' element={<Users />} />
 
             <Route path='/' element={<Main />} />
-
-            <Route name='ExamplePage' path='ExamplePage' element={<ExamplePage />} />
           </Route>
         </Routes>
       </BrowserRouter>
