@@ -56,22 +56,8 @@ const theme = createTheme({
       text: ThemeColors.white,
       icon: ThemeColors.white,
     },
-    primary: {
-      main: ThemeColors.darkBlue,
-      text: ThemeColors.red,
-      contrastText: ThemeColors.white,
-    },
-    secondary: {
-      main: ThemeColors.lightBlue,
-      contrastText: ThemeColors.black,
-    },
-    navigation: {
-      main: ThemeColors.darkBlue,
-      text: ThemeColors.darkBlue,
-      contrastText: ThemeColors.white,
-    },
-    error: {
-      main: ThemeColors.red,
+    drawerOut: {
+      background: ThemeColors.darkBlue,
     },
 
     //fontFamily: font

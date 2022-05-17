@@ -104,6 +104,7 @@ const Base = () => {
             <AppBar
                 position='fixed'
                 sx={{
+                    bgcolor: 'drawerOut.background',
                     ...({
                         width: `calc(100% - ${theme.spacing(7)} + 1px)`,
                         [theme.breakpoints.up('sm')]: {
@@ -128,10 +129,15 @@ const Base = () => {
                 open={false}
                 sx={{
                     display: 'initial',
-                    color: 'main.primary',
+                    bgcolor: 'drawerOut.background',
+                    height: '100%',
+                    zIndex: 100
                 }}
             >
-                <DrawerHeader justify="center">
+                <DrawerHeader justify="center" sx={{
+                    bgcolor: 'drawerOut.background',
+                    height: '100%'
+                }}>
                 </DrawerHeader>
             </Drawer>
 
