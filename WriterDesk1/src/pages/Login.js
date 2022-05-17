@@ -2,7 +2,7 @@
 //import axios from "axios";
 import './../css/main.css';
 
-import { Link, useOutletContext } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 import Typography from '@mui/material/Typography';
@@ -12,9 +12,6 @@ import { Button, TextField } from "@mui/material";
 
 
 const Login = () => {
-    const { setTitle } = useOutletContext();
-    console.log("weare");
-    setTitle('Login');
 
     return (
         <>

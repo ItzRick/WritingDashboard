@@ -35,7 +35,7 @@ function App() {
                     <Typography style={{fontSize: '2vw'}}><u>Progress</u></Typography>
                 </div>
                 <div className='vertCenter'>
-                    <img class='graph' src={chartImg} />
+                    <img className='graph' src={chartImg} />
                 </div>
             </div>
         </div>
