@@ -38,6 +38,8 @@ import { ThemeProvider, createTheme, makeStyles } from '@mui/material/styles';
 const ThemeColors = {
   darkBlue: '#44749D',
   lightBlue: '#C6D4E1',
+  lightGray: '#EBE7E0',
+  darkGray: '#BDB8AD',
   white: '#ffffff',
   black: '#000000',
   red: '#ff0015',

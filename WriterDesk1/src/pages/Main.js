@@ -1,4 +1,3 @@
-
 //import {Component, useEffect, useState} from 'react'
 //import axios from "axios";
 import './../css/App.css';
@@ -7,8 +6,10 @@ import Typography from '@mui/material/Typography';
 import { Button } from "@mui/material";
 import chartImg from '../images/chartImage.png';
 
-function Main() {
+import { Link } from 'react-router-dom';
 
+
+function Main() {
   return (
     <div className='home_grid'>
       <div className='home1'>
@@ -18,7 +19,7 @@ function Main() {
         <div className='vertCenter'>
           <Button variant='contained' className='uploadButton' style={{
             fontSize: '2vw', textTransform: 'none'
-          }}>Upload a document</Button>
+          }} component={Link} to='/Upload'>Upload a document</Button>
         </div>
       </div>
       <div className='home3'>

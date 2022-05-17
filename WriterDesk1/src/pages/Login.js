@@ -15,7 +15,7 @@ function App() {
         <>
             <div className='parent'>
                 <div className='div1'>
-                    <IconButton style={{ float: 'left' }}>
+                    <IconButton style={{ float: 'left' }} component={Link} to='/LandingPage'>
                         <img className='logo' src={testImage} />
                     </IconButton>
                     <Typography variant='h3'>Login</Typography>
