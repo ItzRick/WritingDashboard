@@ -11,7 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Tooltip from '@mui/material/Tooltip';
 
 // routing
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 /**
  * Icon with text linking to a page, to be used in a Drawer
@@ -21,43 +21,50 @@ import {Link} from 'react-router-dom';
  * @param {bool} visible The menu item should be visible for the current, logged on user
  * @returns NavigationLink Component
  */
-const NavigationLink = ({text, Icon, open, allowed=false, pageLink}) => {
+const NavigationLink = ({ text, Icon, open, allowed = false, pageLink }) => {
     return (
-        <ListItem 
-            key={text} 
-            disablePadding 
-            sx={{ 
+        <ListItem
+            key={text}
+            disablePadding
+            sx={{
                 display: allowed ? 'block' : 'none'
             }}
         >
-            { /* Tooltip == text that only displays when the drawer is closed */ }
-            <Tooltip 
-                title={text} 
+            { /* Tooltip == text that only displays when the drawer is closed */}
+            <Tooltip
+                title={text}
                 placement="right"
                 disableHoverListener={open}
                 sx={{
                     display: open ? 'initial' : 'none',
                 }}
             >
-                
-                <ListItem button 
+
+                <ListItem button
                     sx={{
                         minHeight: 48,
                         px: 2.5,
                     }}
-                    component={Link}  to={{pathname: pageLink }}   color='secondary'
+                    component={Link} to={{ pathname: pageLink }}
                 >
-                        <ListItemIcon
-                            sx={{
+                    <ListItemIcon
+                        sx={{
+                            color: 'drawer.icon',
                             minWidth: 0,
                             mr: open ? 3 : 'auto',
                             justifyContent: 'center',
-                            }}
-                        >
-                            <Icon color='navigation'/>
-                        </ListItemIcon>
-                        
-                        <ListItemText primary={text} color='navigation' sx={{ opacity: open ? 1 : 0 }} />
+                        }}
+                    >
+                        <Icon/>
+                    </ListItemIcon>
+
+                    <ListItemText
+                        primary={text}
+                        sx={{
+                            opacity: open ? 1 : 0, 
+                            color: 'drawer.text'
+                        }}
+                    />
                 </ListItem>
             </Tooltip>
         </ListItem>

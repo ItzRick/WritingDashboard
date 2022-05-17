@@ -128,6 +128,7 @@ const Base = () => {
                 open={false}
                 sx={{
                     display: 'initial',
+                    color: 'main.primary',
                 }}
             >
                 <DrawerHeader justify="center">

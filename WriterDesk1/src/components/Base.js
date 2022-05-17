@@ -25,7 +25,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import FileUpload from '@mui/icons-material/Upload';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import ArticleIcon from '@mui/icons-material/Article';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import GroupIcon from '@mui/icons-material/Group';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
@@ -65,37 +64,37 @@ const closedMixin = (theme) => ({
 // make DrawerHeader style
 const DrawerHeader = styled('div', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
-  display: 'flex',
-  alignItems: 'center',  
-  padding: theme.spacing(0, 1),
-  justifyContent: 'center',
-  ...(open && {
-    justifyContent: 'flex-end',
-  }),
-  ...(!open && {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
     justifyContent: 'center',
-  }),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
+    ...(open && {
+      justifyContent: 'flex-end',
+    }),
+    ...(!open && {
+      justifyContent: 'center',
+    }),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+  }));
 
 // make AppBar style
 const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.leavingScreen,
     }),
-  }),
-}));
+    ...(open && {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+  }));
 
 // make Drawer style
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -147,6 +146,7 @@ const Base = ({
       <AppBar
         position='fixed'
         sx={{
+          bgcolor: 'appBar.background',
           ...(open && { width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }),
           ...(!open && {
             width: enableNav ? `calc(100% - ${theme.spacing(7)} + 1px)` : `100%`,
@@ -163,11 +163,11 @@ const Base = ({
           justifyContent: 'space-between',
         }}>
           <SettingsIcon style={{ opacity: '0', margin: '8' }} />
-          <Typography variant="h6" component="div"> {title} </Typography>
+          <Typography variant="h6" component="div" sx={{color: "appBar.text",}}> {title} </Typography>
           <IconButton
-            color="inherit"
             sx={{
               justifySelf: "flex-end",
+              color: "appBar.icon",
             }}
             component={Link} to='settings'
           >
@@ -181,12 +181,22 @@ const Base = ({
         open={open}
         sx={{
           display: enableNav ? 'initial' : 'none',
+          bgcolor: 'drawer.background',
+          height: '100%',
         }}
       >
-        <DrawerHeader open={open}>
+        <DrawerHeader
+          open={open}
+          sx={{
+            bgcolor: 'drawer.background',
+          }}
+        >
           <Tooltip title="Menu">
             <IconButton
-              color="inherit"
+              sx={{
+                color: 'drawer.burger',
+                bgcolor: 'inherit',
+              }}
               aria-label="open drawer"
               onClick={handleDrawer}
               edge={false}
@@ -195,26 +205,31 @@ const Base = ({
             </IconButton>
           </Tooltip>
         </DrawerHeader>
-        <Divider />
-        <List>
+        <Divider sx={{bgcolor:'drawer.divider',}} />
+        <List
+          sx={{
+            bgcolor: 'drawer.background',
+            height: '100%',
+          }}>
           <NavigationLink open={open} text="Main" Icon={LogoDevIcon} allowed={enableNav} pageLink='Main' />
           <NavigationLink open={open} text="Upload" Icon={FileUpload} allowed={enableNav} pageLink='Upload' />
           <NavigationLink open={open} text="Progress" Icon={TimelineIcon} allowed={enableNav} pageLink='Progress' />
           <NavigationLink open={open} text="Documents" Icon={ArticleIcon} allowed={enableNav} pageLink='Documents' />
           <Divider sx={{
+            bgcolor:'drawer.divider',
             display: admin || researcher ? 'block' : 'none'
           }} />
-          <NavigationLink open={open} text="File Download" Icon={FileDownloadIcon} allowed={researcher | admin} pageLink='FileDownload' />
           <NavigationLink open={open} text="Participants" Icon={GroupIcon} allowed={researcher | admin} pageLink='Participants' />
           <NavigationLink open={open} text="Feedback Models" Icon={BuildIcon} allowed={researcher | admin} pageLink='FeedbackModels' />
           <Divider sx={{
+            bgcolor:'drawer.divider',
             display: admin ? 'block' : 'none'
           }} />
           <NavigationLink open={open} text="Users" Icon={SettingsIcon} allowed={admin} pageLink='Users' />
         </List>
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }} >
         <DrawerHeader />
         <Outlet context={{ setTitle }} />
       </Box>

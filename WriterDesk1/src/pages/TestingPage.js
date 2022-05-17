@@ -2,22 +2,21 @@ import { useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
 
 
-
 /**
  * 
- * @returns FileDownload Page
+ * @returns Documents Page
  */
-function FileDownload() {
+const TestingPage = () => {
     //set title in parent 'base' 
     const { setTitle } = useOutletContext();
     useEffect(() => {
-        setTitle('File Download');
+        setTitle('TestingPage');
     });
     return (
         <>
-            FileDownload
+            
         </>
     );
 }
 
-export default FileDownload;
+export default TestingPage;

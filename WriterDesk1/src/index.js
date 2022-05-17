@@ -7,7 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 //theme and style
-import { ThemeProvider, createTheme, makeStyles } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 //pages
 import Base from './components/Base.js'
@@ -23,11 +23,11 @@ import Upload from './pages/Upload';
 import Progress from './pages/Progress';
 import Documents from './pages/Documents';
 
-import FileDownload from './pages/FileDownload';
 import Participants from './pages/Participants';
 import Users from './pages/Users';
 
 import FeedbackModels from './pages/FeedbackModels';
+import TestingPage from './pages/TestingPage';
 
 // theme and style
 const ThemeColors = {
@@ -39,18 +39,26 @@ const ThemeColors = {
   black: '#000000',
   red: '#ff0015',
 };
-/*
-const useStyles = makeStyles({
-  drawerOut: {
-    background: ThemeColors.darkBlue,
-  },
-});*/
+
 
 const theme = createTheme({
   //
   palette: {
+    drawer: {
+      burger: ThemeColors.darkBlue,
+      icon: ThemeColors.darkBlue,
+      text: ThemeColors.darkBlue,
+      background: ThemeColors.lightBlue,
+      divider: ThemeColors.darkGray,
+    },
+    appBar: {
+      background: ThemeColors.darkBlue,
+      text: ThemeColors.white,
+      icon: ThemeColors.white,
+    },
     primary: {
       main: ThemeColors.darkBlue,
+      text: ThemeColors.red,
       contrastText: ThemeColors.white,
     },
     secondary: {
@@ -111,14 +119,19 @@ root.render(
             <Route name='Progress' path='Progress' element={<Progress />} />
             <Route name='Documents' path='Documents' element={<Documents />} />
 
-            <Route name='FileDownload' path='FileDownload' element={<FileDownload />} />
             <Route name='Participants' path='Participants' element={<Participants />} />
             <Route name='FeedbackModels' path='FeedbackModels' element={<FeedbackModels />} />
 
             <Route name='Users' path='Users' element={<Users />} />
 
             <Route path='/' element={<Main />} />
+
+
+            {/* Testing Page, for checking out new stuff */}
+            <Route name='TestingPage' path='TestingPage' element={<TestingPage />} />
           </Route>
+
+
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
