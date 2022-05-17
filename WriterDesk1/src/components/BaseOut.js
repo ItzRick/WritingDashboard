@@ -17,6 +17,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 //Width of the opened drawer
 const drawerWidth = 240;
 
+// Below functions were made by
+// https://mui.com/material-ui/react-drawer/
 const openedMixin = (theme) => ({
     width: drawerWidth,
     transition: theme.transitions.create('width', {
@@ -89,7 +91,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
  */
 const Base = () => {
     const theme = useTheme();
-
+    
     return (
         <Box sx={{ display: 'flex', color: 'primary' }}>
             <CssBaseline />
