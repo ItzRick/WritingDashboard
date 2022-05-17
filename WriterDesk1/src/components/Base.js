@@ -1,9 +1,8 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 // routing
-import { Outlet } from 'react-router-dom';
-
+import { Link, Outlet } from 'react-router-dom';
 
 // components
 import NavigationLink from "./NavigationLink";
@@ -31,17 +30,16 @@ import GroupIcon from '@mui/icons-material/Group';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
-//replace with logo
+//replace with logo?
 import LogoDevIcon from '@mui/icons-material/LogoDev';
-
-//routing
-import { Link } from 'react-router-dom';
 
 
 //Width of the opened drawer
 const drawerWidth = 240;
 
-
+// Below functions were made by
+// https://mui.com/material-ui/react-drawer/
+// open drawer animation
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -51,6 +49,7 @@ const openedMixin = (theme) => ({
   overflowX: 'hidden',
 });
 
+// close drawer animation
 const closedMixin = (theme) => ({
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -136,9 +135,8 @@ const Base = ({
     setOpen(!open);
   };
 
-  // provides title to the base page using the context of the 
+  // provides title to the base page using the context of the outlet
   const [title, setTitle] = useState("");
-
 
   // general theme, defined in index.js
   const theme = useTheme();
