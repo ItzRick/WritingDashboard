@@ -12,13 +12,15 @@ import {useState} from "react";
 
 const FileUpload = () => {
     return(
-        <div className='vertCenter'>
-            <div className='upload'>
-                <button className='innerUploadButton'>Choose a file</button>
-                or drag it here.
+        <div style={{marginBottom: '1vw'}}>
+            <div className='vertCenter'>
+                <div className='upload'>
+                    <Button variant='contained' style={{marginRight: '8px'}}>Choose a file</Button>
+                    or drag it here.
+                </div>
+                <TextField label='dd/mm/yy' variant='outlined' style={{marginRight: '1vw'}}/>
+                <TextField label='course' variant='outlined'/>
             </div>
-            <TextField label='dd/mm/yy' variant='outlined'/>
-            <TextField label='course' variant='outlined'/>
         </div>
 )};
 
@@ -40,10 +42,18 @@ const Upload = () => {
             <div className='title'>
                 <Typography variant='h3'>Upload</Typography>
             </div>
-            {FileUpload()}
-            <div id='uploadRows'></div>
-            {rowList}
-            <Button onClick={addRow}>add</Button>
+            <br />
+            <div className='center'>
+                {FileUpload()}
+                {rowList}
+                <Button variant='contained' color='secondary' onClick={addRow}>Add</Button>
+            </div>
+            <br />
+            <div className='title'>
+                <Button variant='contained' className='uploadButton' style={{fontSize: '2vw', textTransform: 'none'}}>
+                    Upload your document(s)
+                </Button>
+            </div>
         </>
     );
 }
