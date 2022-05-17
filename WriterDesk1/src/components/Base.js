@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+// routing
+import { Outlet } from 'react-router-dom';
+
+
 // components
 import NavigationLink from "./NavigationLink";
 
@@ -30,8 +34,15 @@ import SettingsIcon from '@mui/icons-material/Settings';
 //replace with logo
 import LogoDevIcon from '@mui/icons-material/LogoDev';
 
+//routing
+import { Link } from 'react-router-dom';
+
+
 //Width of the opened drawer
 const drawerWidth = 240;
+
+
+
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -105,64 +116,65 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
  * @param {bool} enableNav The navigation drawer, on the left, is visible
  * @param {bool} researcher The user is a researcher
  * @param {bool} admin The user is an admin
- * @returns <base></base> wrapper
+ * @returns Base page for logged in user
  */
 
 const Base = ({
-  children, 
-  pageName="ERROR: no name provided, <Base pageName>", 
-  enableNav=true,
-  researcher=false,
-  admin=false,
+  pageName = "ERROR: no name provided, <Base pageName>",
+  enableNav = true,
+  researcher = true,
+  admin = true,
 }) => {
   const [open, setOpen] = React.useState(false);
 
+
   const theme = useTheme();
-  
+
   const handleDrawer = () => {
-      setOpen(!open);
+    setOpen(!open);
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex' }} color="textPrimary">
       <CssBaseline />
-      <AppBar 
-        sx={{ 
-          ...(open && {width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px`}),
+      <AppBar
+        position='fixed'
+        sx={{
+          ...(open && { width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }),
           ...(!open && {
             width: enableNav ? `calc(100% - ${theme.spacing(7)} + 1px)` : `100%`,
             [theme.breakpoints.up('sm')]: {
               width: enableNav ? `calc(100% - ${theme.spacing(8)} + 1px)` : `100%`,
             },
-          }),
+          })
         }}
       >
         <Toolbar sx={{
           width: '100%',
-          display:'flex',
+          display: 'flex',
           flexDirection: 'row',
-          justifyContent:'space-between',
+          justifyContent: 'space-between',
         }}>
-          <SettingsIcon style={{opacity:'0', margin:'8'}}/>
+          <SettingsIcon style={{ opacity: '0', margin: '8' }} />
           <Typography variant="h6" component="div"> {pageName} </Typography>
-          <IconButton 
+          <IconButton
             color="inherit"
             sx={{
-              justifySelf:"flex-end",
+              justifySelf: "flex-end",
             }}
+            component={Link} to='settings'
           >
-            <SettingsIcon />
+            <PersonIcon />
           </IconButton>
         </Toolbar>
-        
       </AppBar>
 
-
-
-      <Drawer 
-        variant="permanent" 
+      <Drawer
+        variant="permanent"
         open={open}
-        sx={{display: enableNav ? 'initial' : 'none',}}
+        sx={{
+          display: enableNav ? 'initial' : 'none',
+        }}
       >
         <DrawerHeader justify="center">
           <Tooltip title="Menu">
@@ -173,7 +185,7 @@ const Base = ({
               edge={false}
               justify="center"
               sx={{
-                mr:'2px',
+                mr: '2px',
               }}
             >
               <MenuIcon />
@@ -182,26 +194,26 @@ const Base = ({
         </DrawerHeader>
         <Divider />
         <List>
-          <NavigationLink open={open} text="Main" Icon={LogoDevIcon} allowed={enableNav}/>  
-          <NavigationLink open={open} text="Upload" Icon={FileUpload} allowed={enableNav}/>
-          <NavigationLink open={open} text="Progress" Icon={TimelineIcon} allowed={enableNav}/>
-          <NavigationLink open={open} text="Documents" Icon={ArticleIcon} allowed={enableNav}/>
+          <NavigationLink open={open} text="Main" Icon={LogoDevIcon} allowed={enableNav} pageLink='Main' />
+          <NavigationLink open={open} text="Upload" Icon={FileUpload} allowed={enableNav} pageLink='Upload' />
+          <NavigationLink open={open} text="Progress" Icon={TimelineIcon} allowed={enableNav} pageLink='Progress' />
+          <NavigationLink open={open} text="Documents" Icon={ArticleIcon} allowed={enableNav} pageLink='Documents' />
           <Divider sx={{
             display: admin || researcher ? 'block' : 'none'
           }} />
-          <NavigationLink open={open} text="File Download" Icon={FileDownloadIcon} allowed={researcher | admin}/>
-          <NavigationLink open={open} text="Participants" Icon={GroupIcon} allowed={researcher | admin}/>
-          <NavigationLink open={open} text="Feedback Models" Icon={BuildIcon} allowed={researcher | admin}/>
+          <NavigationLink open={open} text="File Download" Icon={FileDownloadIcon} allowed={researcher | admin} pageLink='FileDownload' />
+          <NavigationLink open={open} text="Participants" Icon={GroupIcon} allowed={researcher | admin} pageLink='Participants' />
+          <NavigationLink open={open} text="Feedback Models" Icon={BuildIcon} allowed={researcher | admin} pageLink='FeedbackModels' />
           <Divider sx={{
             display: admin ? 'block' : 'none'
           }} />
-          <NavigationLink open={open} text="Users" Icon={PersonIcon} allowed={admin}/>
+          <NavigationLink open={open} text="Users" Icon={SettingsIcon} allowed={admin} pageLink='Users' />
         </List>
       </Drawer>
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {children}
+        <Outlet />
       </Box>
     </Box>
   );
