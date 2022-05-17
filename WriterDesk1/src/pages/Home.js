@@ -31,6 +31,7 @@ function App() {
             </div>
             <div className='home4'>
                 <div className='subTitle'>
+                    <br />
                     <Typography style={{fontSize: '2vw'}}><u>Progress</u></Typography>
                 </div>
                 <div className='vertCenter'>
