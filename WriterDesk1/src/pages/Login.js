@@ -2,7 +2,7 @@
 //import axios from "axios";
 import './../css/main.css';
 
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 
 
 import Typography from '@mui/material/Typography';
@@ -10,7 +10,12 @@ import IconButton from "@mui/material/IconButton";
 import testImage from '../images/placeholder_image.png'
 import { Button, TextField } from "@mui/material";
 
-function App() {
+
+const Login = () => {
+    const { setTitle } = useOutletContext();
+    console.log("weare");
+    setTitle('Login');
+
     return (
         <>
             <div className='parent'>
@@ -43,4 +48,4 @@ function App() {
     );
 }
 
-export default App;
+export default Login;

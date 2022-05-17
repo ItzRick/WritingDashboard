@@ -5,7 +5,7 @@
  * 
  * @returns Users Page
  */
-function Users() {
+const Users = () => {
 
     return (
         <>

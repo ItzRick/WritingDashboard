@@ -112,7 +112,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 /**
  * Makes the BasePage
  * 
- * @param {*} children Children nodes of <base> </base> 
  * @param {bool} enableNav The navigation drawer, on the left, is visible
  * @param {bool} researcher The user is a researcher
  * @param {bool} admin The user is an admin
@@ -120,19 +119,22 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
  */
 
 const Base = ({
-  pageName = "ERROR: no name provided, <Base pageName>",
   enableNav = true,
   researcher = true,
   admin = true,
 }) => {
+  //handle opening and closing the drawer (left side menu)
   const [open, setOpen] = React.useState(false);
-
-
-  const theme = useTheme();
-
   const handleDrawer = () => {
     setOpen(!open);
   };
+
+  // provides title to the base page using the context of the 
+  const [title, setTitle] = React.useState("ERROR: no name provided, <Base pageName>");
+
+
+  // general theme, defined in index.js
+  const theme = useTheme();
 
   return (
     <Box sx={{ display: 'flex' }} color="textPrimary">
@@ -156,7 +158,7 @@ const Base = ({
           justifyContent: 'space-between',
         }}>
           <SettingsIcon style={{ opacity: '0', margin: '8' }} />
-          <Typography variant="h6" component="div"> {pageName} </Typography>
+          <Typography variant="h6" component="div"> {title} </Typography>
           <IconButton
             color="inherit"
             sx={{
@@ -213,7 +215,7 @@ const Base = ({
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Outlet />
+        <Outlet context={{ setTitle }}/>
       </Box>
     </Box>
   );
@@ -222,7 +224,6 @@ const Base = ({
 
 
 Base.propTypes = {
-  pageName: PropTypes.string,
   enableNav: PropTypes.bool,
   researcher: PropTypes.bool,
   admin: PropTypes.bool,
