@@ -32,7 +32,8 @@ function Main() {
       </div>
       <div className='home4'>
         <div className='subTitle'>
-          <Typography style={{ fontSize: '2vw' }}><u>Progress</u></Typography>
+            <br />
+            <Typography style={{ fontSize: '2vw' }}><u>Progress</u></Typography>
         </div>
         <div className='vertCenter'>
           <img class='graph' src={chartImg} />
