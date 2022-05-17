@@ -1,4 +1,4 @@
-import React from 'react';
+import {useState} from 'react';
 import PropTypes from 'prop-types';
 
 // routing
@@ -124,13 +124,13 @@ const Base = ({
   admin = true,
 }) => {
   //handle opening and closing the drawer (left side menu)
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleDrawer = () => {
     setOpen(!open);
   };
 
   // provides title to the base page using the context of the 
-  const [title, setTitle] = React.useState("ERROR: no name provided, <Base pageName>");
+  const [title, setTitle] = useState("");
 
 
   // general theme, defined in index.js
@@ -186,9 +186,6 @@ const Base = ({
               onClick={handleDrawer}
               edge={false}
               justify="center"
-              sx={{
-                mr: '2px',
-              }}
             >
               <MenuIcon />
             </IconButton>
@@ -215,7 +212,7 @@ const Base = ({
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Outlet context={{ setTitle }}/>
+        <Outlet context={{ setTitle }} />
       </Box>
     </Box>
   );

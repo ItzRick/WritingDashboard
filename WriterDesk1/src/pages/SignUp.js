@@ -38,7 +38,7 @@ function App() {
                 </div>
                 <br />
                 {/* TODO: do we want to go to main or to login */}
-                <Button variant="contained" component={Link} to='/Main'>Sign up</Button>
+                <Button variant="contained" component={Link} to='/Login'>Sign up</Button>
             </div>
             <div className='div3'>
                 <br />

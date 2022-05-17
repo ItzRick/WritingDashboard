@@ -6,13 +6,10 @@ import Typography from '@mui/material/Typography';
 import {Button} from "@mui/material";
 
 //linking
-import {Link, useOutletContext} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 
 function LandingPage() {
-
-  const setTitle = useOutletContext();
-  setTitle('Login');
   
   return (
     <>
