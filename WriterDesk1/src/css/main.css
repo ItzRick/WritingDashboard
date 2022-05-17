@@ -89,6 +89,7 @@ grid-row-gap: 0px;
 .home1 {
     grid-area: 1 / 1 / 2 / 3;
     text-align: center;
+    padding-bottom: 2vw;
 }
 .home2 {
     grid-area: 2 / 1 / 3 / 2;
@@ -96,9 +97,13 @@ grid-row-gap: 0px;
     border-right-style: solid;
     border-color: #BDB8AD;
     border-width: 1px;
+    padding-bottom: 2vw;
+    padding-top: 2vw;
 }
 .home3 {
     grid-area: 2 / 2 / 3 / 3;
+    padding-bottom: 2vw;
+    padding-top: 2vw;
 }
 .home4 {
     grid-area: 3 / 1 / 4 / 3;
@@ -131,4 +136,17 @@ grid-row-gap: 0px;
 .subTitle {
     text-align: center;
     color: #44749D;
+}
+
+.title {
+    text-align: center;
+}
+
+.innerUploadButton {
+    display: inline;
+}
+
+.upload {
+    display: inline;
+    padding: 5px;
 }

@@ -24,7 +24,7 @@ const Main = () => {
       </div>
       <div className='home3'>
         <div className='vertCenter'>
-          <Typography class='recent'><u style={{ color: 'blue' }}>Recent files</u>
+          <Typography className='recent'><u style={{ color: 'blue' }}>Recent files</u>
             <br />TheFirstFile.docx
             <br />TheSecondFile.txt
             <br />TheThirdFile.pdf</Typography>
@@ -36,7 +36,7 @@ const Main = () => {
             <Typography style={{ fontSize: '2vw' }}><u>Progress</u></Typography>
         </div>
         <div className='vertCenter'>
-          <img class='graph' src={chartImg} />
+          <img className='graph' src={chartImg} />
         </div>
       </div>
     </div>
