@@ -67,6 +67,10 @@ const theme = createTheme({
     drawerOut: {
       background: ThemeColors.darkBlue,
     },
+    button: {
+      main: ThemeColors.darkBlue,
+      text: ThemeColors.white
+    }
 
     //fontFamily: font
   },

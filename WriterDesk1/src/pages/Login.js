@@ -38,7 +38,7 @@ const Login = () => {
                         <TextField id='password' label='Password' variant='outlined' type='password' />
                     </div>
                     <br />
-                    <Button variant="contained" component={Link} to='/Main'>Log in</Button>
+                    <Button variant="contained" component={Link} to='/Main' sx={{bgcolor: 'button.main', color: 'button.text'}}>Log in</Button>
                 </div>
                 <div className='div3'>
                     <br />

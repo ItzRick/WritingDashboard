@@ -13,7 +13,7 @@ import {
         <div style={{marginBottom: '1vw'}}>
             <div className='vertCenter'>
                 <div className='upload'>
-                    <Button variant='contained' style={{marginRight: '8px'}}>Choose a file</Button>
+                    <Button variant='contained' sx={{mr: '8px', bgcolor: 'button.main', color: 'button.text'}}>Choose a file</Button>
                     or drag it here.
                 </div>
                 <TextField label='dd/mm/yy' variant='outlined' style={{marginRight: '1vw'}}/>
