@@ -4,29 +4,35 @@ import {
     Button
 } from "@mui/material";
 import UploadSingleFile from "./../components/UploadSingleFile";
+import useDynamicRefs from 'use-dynamic-refs';
 
 
 // routing
 import { useOutletContext } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, createRef } from 'react';
 
 /**
  * 
  * @returns File Upload page
  */
 const Upload = () => {
+    const [getRef, setRef] = useDynamicRefs();
+
+    const refs = useRef([]);
+
     //set title in parent 'base'
     const { setTitle } = useOutletContext();
     useEffect(() => {
         setTitle('Upload');
     });
 
+
     // list of UploadSingleFile objects
-    const [uploadSingleFiles, setUploadSingleFiles] = useState([<UploadSingleFile key={0}/>]);
+    const [uploadSingleFiles, setUploadSingleFiles] = useState([<UploadSingleFile ref={(el) => (refs.current[0] = el)} key={0}/>]);
 
     // add UploadSingleFile object to rowList
     const addRow = e => {
-        setUploadSingleFiles(uploadSingleFiles.concat(<UploadSingleFile key={uploadSingleFiles.length} />));
+        setUploadSingleFiles(uploadSingleFiles.concat(<UploadSingleFile ref={(el) => (refs.current[uploadSingleFiles.length] = el)} key={uploadSingleFiles.length} />));
     };
 
     return (
@@ -41,7 +47,12 @@ const Upload = () => {
             </div>
             <br />
             <div className='title'>
-                <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} className='uploadButton' style={{fontSize: '2vw', textTransform: 'none'}}>
+                <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} className='uploadButton' onClick={() => {
+                    uploadSingleFiles.forEach((_uploadSingleFile, index) => {
+                        refs.current[index].uploadFile();
+                    })
+                }}
+                 style={{fontSize: '2vw', textTransform: 'none'}}>
                     Upload your document(s)
                 </Button>
             </div>

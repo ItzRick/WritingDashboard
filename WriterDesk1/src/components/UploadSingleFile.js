@@ -2,7 +2,7 @@
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, forwardRef, useImperativeHandle  } from 'react';
 // materials
 import {
     Button,
@@ -15,7 +15,14 @@ import {
  * 
  * @returns Single File Upload Object
  */
- const UploadSingleFile = () => {
+ const UploadSingleFile = forwardRef((props, ref) => {
+
+    useImperativeHandle(ref, () => ({
+        uploadFile() {
+          console.log("Hello from Child Component")
+          console.log(file.name);
+        },
+    }))
 
     const [file, setFile] = useState('or drag it here.');
 
@@ -58,6 +65,6 @@ import {
                 <TextField label='course' variant='outlined'/>
             </div>
         </div>
-)};
+)});
 
 export default UploadSingleFile;
