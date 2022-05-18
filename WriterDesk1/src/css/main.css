@@ -1,0 +1,157 @@
+h2 {
+    text-align: center;
+    color: #44749D;
+}
+
+h3 {
+    color: #44749D;
+    clear: both;
+    display: inline-block;
+}
+
+h5 {
+    text-align: center;
+}
+
+button {
+    background: #44749D;
+    border-radius: 20px;
+    border-style: none;
+    color: white;
+}
+
+.filler {
+    width: 10vw;
+    display: inline-block;
+}
+
+.center {
+    margin: auto;
+    width: fit-content;
+}
+
+.textbox {
+    width: 70vw;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.logo {
+    max-width: 20vw;
+    width: 75px;
+    display: block;
+}
+
+.filler2 {
+    max-width: 20vw;
+    width: 75px;
+    display: block;
+    margin: 8px;
+    float: right;
+}
+
+.parent {
+display: grid;
+grid-template-columns: 1fr;
+grid-template-rows: repeat(3, 0fr);
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}
+
+.div1 {
+    grid-area: 1 / 1 / 2 / 2;
+    text-align: center;
+    justify-content: space-between;
+}
+.div2 {
+    grid-area: 2 / 1 / 3 / 2;
+    text-align: center;
+    margin: 0 auto;
+}
+.div3 {
+    grid-area: 3 / 1 / 4 / 2;
+    text-align: center;
+}
+
+.text_boxes {
+    width: fit-content;
+    text-align: left;
+}
+
+.home_grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+grid-template-rows: repeat(3, 0fr);
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}
+
+.home1 {
+    grid-area: 1 / 1 / 2 / 3;
+    text-align: center;
+    padding-bottom: 2vw;
+}
+.home2 {
+    grid-area: 2 / 1 / 3 / 2;
+    text-align: center;
+    border-right-style: solid;
+    border-color: #BDB8AD;
+    border-width: 1px;
+    padding-bottom: 2vw;
+    padding-top: 2vw;
+}
+.home3 {
+    grid-area: 2 / 2 / 3 / 3;
+    padding-bottom: 2vw;
+    padding-top: 2vw;
+}
+.home4 {
+    grid-area: 3 / 1 / 4 / 3;
+    border-top-style: solid;
+    border-color: #BDB8AD;
+    border-width: 1px;
+}
+
+.uploadButton {
+    width: 20vw;
+    height: 7vw;
+}
+
+.recent {
+    font-size: 2vw;
+}
+
+.graph {
+    width: 60vw;
+}
+
+.vertCenter {
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.subTitle {
+    text-align: center;
+    color: #44749D;
+}
+
+.title {
+    text-align: center;
+}
+
+.upload {
+    display: inline;
+    padding: 5px;
+    border-style: dashed;
+    background-color: #EBE7E0;
+    color: #BDB8AD;
+    border-color: black;
+    margin-right: 1vw;
+}
+
+.graph2 {
+    height: 35vh;
+}

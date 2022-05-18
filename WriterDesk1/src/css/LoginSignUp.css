@@ -1,0 +1,31 @@
+h2 {
+    text-align: center;
+    color: #44749D;
+}
+
+h5 {
+    text-align: center;
+}
+
+button {
+    background: #44749D;
+    border-radius: 20px;
+    border-style: none;
+    color: white;
+}
+
+.filler {
+    width: 10vw;
+    display: inline-block;
+}
+
+.center {
+    margin: auto;
+    width: fit-content;
+}
+
+.textbox {
+    width: 70vw;
+    display: inline-block;
+    font-size: 14px;
+}
