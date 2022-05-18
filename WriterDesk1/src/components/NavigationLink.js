@@ -17,10 +17,10 @@ import { Link } from 'react-router-dom';
 
 /**
  * Icon with text linking to a page, to be used in a Drawer
- * @param {string} text Text next to the button icon
- * @param {Icon} Icon Icon of the 
- * @param {bool} open Whether the Drawer (left side bar) is open
- * @param {bool} visible The menu item should be visible for the current, logged on user
+ * @param {string} text - Text next to the button icon
+ * @param {Icon} Icon - Icon of the link
+ * @param {bool} open - Whether the Drawer (left side bar) is open
+ * @param {bool} visible - The menu item should be visible for the current, logged on user
  * @returns NavigationLink Component
  */
 const NavigationLink = ({ text, Icon, open, allowed = false, pageLink }) => {

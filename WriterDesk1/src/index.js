@@ -9,7 +9,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 // theme and style
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-/*  pages  */
+//    PAGES
+// base pages
 import Base from './components/Base.js'
 import BaseOut from './components/BaseOut.js';
 
@@ -47,6 +48,7 @@ const ThemeColors = {
 const theme = createTheme({
   //main color palatte
   palette: {
+    // colors for the drawer
     drawer: {
       burger: ThemeColors.darkBlue,
       icon: ThemeColors.darkBlue,
@@ -54,11 +56,13 @@ const theme = createTheme({
       background: ThemeColors.lightBlue,
       divider: ThemeColors.darkGray,
     },
+    // colors for the appbar
     appBar: {
       background: ThemeColors.darkBlue,
       text: ThemeColors.white,
       icon: ThemeColors.white,
     },
+    // colors for the drawer in logged out version
     drawerOut: {
       background: ThemeColors.darkBlue,
     },

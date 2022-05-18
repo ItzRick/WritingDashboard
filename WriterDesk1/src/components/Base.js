@@ -39,7 +39,7 @@ const drawerWidth = 240;
 // https://mui.com/material-ui/react-drawer/
 /**
  * 
- * @param {theme} theme Given by theme provider in index
+ * @param {theme} theme - Given by theme provider in index
  * @returns transition when open
  */
 const openedMixin = (theme) => ({
@@ -53,7 +53,7 @@ const openedMixin = (theme) => ({
 
 /**
  * 
- * @param {theme} theme Given by theme provider in index
+ * @param {theme} theme - Given by theme provider in index
  * @returns transition when closed
  */
 const closedMixin = (theme) => ({
@@ -130,9 +130,9 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
 /**
  * Makes the BasePage
  * 
- * @param {bool} enableNav The navigation drawer, on the left, is visible
- * @param {bool} researcher The user is a researcher
- * @param {bool} admin The user is an admin
+ * @param {bool} enableNav - The navigation drawer, on the left, is visible
+ * @param {bool} researcher - The user is a researcher
+ * @param {bool} admin - The user is an admin
  * @returns Base page for logged in user
  */
 const Base = ({
