@@ -24,15 +24,15 @@ const Upload = () => {
 
     const removeSingleFileInstance = (event) => {
         console.log(event.currentTarget.value);
-        console.log("henk");
+        // console.log("henk");
         // console.log(uploadSingleFiles.length)
-        // let currentSingleFiles = [...uploadSingleFiles]
+        let currentSingleFiles = [...uploadSingleFiles]
         // console.log(currentSingleFiles)
-        let filteredUploadSingleFiles = uploadSingleFiles.filter(item => item !== event.currentTarget.value)
-        // currentSingleFiles.splice(event.currentTarget.value, 1)
-        console.log(filteredUploadSingleFiles)
-        setUploadSingleFiles(filteredUploadSingleFiles)
-        console.log(uploadSingleFiles.length)
+        // let filteredUploadSingleFiles = uploadSingleFiles.filter(item => item !== event.currentTarget.value)
+        // console.log(currentSingleFiles.splice(event.currentTarget.value, 1))
+        // console.log(filteredUploadSingleFiles)
+        setUploadSingleFiles(currentSingleFiles)
+        // console.log(uploadSingleFiles.length)
     } 
 
 
