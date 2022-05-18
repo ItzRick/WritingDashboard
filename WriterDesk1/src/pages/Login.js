@@ -1,16 +1,22 @@
-//import {Component, useEffect, useState} from 'react'
-//import axios from "axios";
 import './../css/main.css';
 
+// materials 
+import { 
+    Button, 
+    TextField, 
+    Typography,
+    IconButton 
+} from "@mui/material";
+import testImage from '../images/placeholder_image.png'
+
+// routing
 import { Link } from 'react-router-dom';
 
 
-import Typography from '@mui/material/Typography';
-import IconButton from "@mui/material/IconButton";
-import testImage from '../images/placeholder_image.png'
-import { Button, TextField } from "@mui/material";
-
-
+/**
+ * 
+ * @returns login page
+ */
 const Login = () => {
 
     return (

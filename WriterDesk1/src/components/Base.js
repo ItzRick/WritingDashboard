@@ -1,36 +1,35 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-// routing
-import { Link, Outlet } from 'react-router-dom';
-
 // components
 import NavigationLink from "./NavigationLink";
-
-// mui components
 import { styled, useTheme } from '@mui/material/styles';
-import Tooltip from '@mui/material/Tooltip';
-import Box from '@mui/material/Box';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
+import {
+  Tooltip,
+  Box,
+  Drawer,
+  AppBar,
+  Toolbar,
+  List,
+  CssBaseline,
+  Typography,
+  Divider,
+  IconButton,
+} from '@mui/material';
+import {
+  Menu,
+  FileUpload,
+  Timeline,
+  Article,
+  Group,
+  Build,
+  Person,
+  Settings,
+} from '@mui/icons-material';
+import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 
-// icons
-import MenuIcon from '@mui/icons-material/Menu';
-import FileUpload from '@mui/icons-material/Upload';
-import TimelineIcon from '@mui/icons-material/Timeline';
-import ArticleIcon from '@mui/icons-material/Article';
-import GroupIcon from '@mui/icons-material/Group';
-import BuildIcon from '@mui/icons-material/Build';
-import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
-//replace with logo?
-import LogoDevIcon from '@mui/icons-material/LogoDev';
+// routing
+import { Link, Outlet } from 'react-router-dom';
 
 
 //Width of the opened drawer
@@ -38,7 +37,11 @@ const drawerWidth = 240;
 
 // Below functions were made by
 // https://mui.com/material-ui/react-drawer/
-// open drawer animation
+/**
+ * 
+ * @param {theme} theme Given by theme provider in index
+ * @returns transition when open
+ */
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -48,7 +51,11 @@ const openedMixin = (theme) => ({
   overflowX: 'hidden',
 });
 
-// close drawer animation
+/**
+ * 
+ * @param {theme} theme Given by theme provider in index
+ * @returns transition when closed
+ */
 const closedMixin = (theme) => ({
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -61,8 +68,10 @@ const closedMixin = (theme) => ({
   },
 });
 
-// make DrawerHeader style
-const DrawerHeader = styled('div', { shouldForwardProp: (prop) => prop !== 'open' })(
+/**
+ * Makes styled DrawerHeader
+ */
+const CustomDrawerHeader = styled('div', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -78,8 +87,10 @@ const DrawerHeader = styled('div', { shouldForwardProp: (prop) => prop !== 'open
     ...theme.mixins.toolbar,
   }));
 
-// make AppBar style
-const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open' })(
+/**
+ * Makes styled AppBar
+ */
+const CustomAppBar = styled(AppBar, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -96,8 +107,10 @@ const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
   }));
 
-// make Drawer style
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+/**
+ * Makes styled Drawer
+ */
+const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     width: drawerWidth,
     flexShrink: 0,
@@ -122,7 +135,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
  * @param {bool} admin The user is an admin
  * @returns Base page for logged in user
  */
-
 const Base = ({
   enableNav = true,
   researcher = true,
@@ -143,7 +155,7 @@ const Base = ({
   return (
     <Box sx={{ display: 'flex' }} color="textPrimary">
       <CssBaseline />
-      <AppBar
+      <CustomAppBar
         position='fixed'
         sx={{
           bgcolor: 'appBar.background',
@@ -162,7 +174,7 @@ const Base = ({
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-          <SettingsIcon style={{ opacity: '0', margin: '8' }} />
+          <Settings style={{ opacity: '0', margin: '8' }} />
           <Typography variant="h6" component="div" sx={{color: "appBar.text",}}> {title} </Typography>
           <IconButton
             sx={{
@@ -171,12 +183,12 @@ const Base = ({
             }}
             component={Link} to='settings'
           >
-            <PersonIcon />
+            <Person />
           </IconButton>
         </Toolbar>
-      </AppBar>
+      </CustomAppBar>
 
-      <Drawer
+      <CustomDrawer
         variant="permanent"
         open={open}
         sx={{
@@ -185,7 +197,7 @@ const Base = ({
           height: '100%',
         }}
       >
-        <DrawerHeader
+        <CustomDrawerHeader
           open={open}
           sx={{
             bgcolor: 'drawer.background',
@@ -201,10 +213,10 @@ const Base = ({
               onClick={handleDrawer}
               edge={false}
             >
-              <MenuIcon />
+              <Menu />
             </IconButton>
           </Tooltip>
-        </DrawerHeader>
+        </CustomDrawerHeader>
         <Divider sx={{bgcolor:'drawer.divider',}} />
         <List
           sx={{
@@ -213,24 +225,24 @@ const Base = ({
           }}>
           <NavigationLink open={open} text="Main" Icon={LogoDevIcon} allowed={enableNav} pageLink='Main' />
           <NavigationLink open={open} text="Upload" Icon={FileUpload} allowed={enableNav} pageLink='Upload' />
-          <NavigationLink open={open} text="Progress" Icon={TimelineIcon} allowed={enableNav} pageLink='Progress' />
-          <NavigationLink open={open} text="Documents" Icon={ArticleIcon} allowed={enableNav} pageLink='Documents' />
+          <NavigationLink open={open} text="Progress" Icon={Timeline} allowed={enableNav} pageLink='Progress' />
+          <NavigationLink open={open} text="Documents" Icon={Article} allowed={enableNav} pageLink='Documents' />
           <Divider sx={{
             bgcolor:'drawer.divider',
             display: admin || researcher ? 'block' : 'none'
           }} />
-          <NavigationLink open={open} text="Participants" Icon={GroupIcon} allowed={researcher | admin} pageLink='Participants' />
-          <NavigationLink open={open} text="Feedback Models" Icon={BuildIcon} allowed={researcher | admin} pageLink='FeedbackModels' />
+          <NavigationLink open={open} text="Participants" Icon={Group} allowed={researcher | admin} pageLink='Participants' />
+          <NavigationLink open={open} text="Feedback Models" Icon={Build} allowed={researcher | admin} pageLink='FeedbackModels' />
           <Divider sx={{
             bgcolor:'drawer.divider',
             display: admin ? 'block' : 'none'
           }} />
-          <NavigationLink open={open} text="Users" Icon={SettingsIcon} allowed={admin} pageLink='Users' />
+          <NavigationLink open={open} text="Users" Icon={Settings} allowed={admin} pageLink='Users' />
         </List>
-      </Drawer>
+      </CustomDrawer>
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }} >
-        <DrawerHeader />
+        <CustomDrawerHeader />
         <Outlet context={{ setTitle }} />
       </Box>
     </Box>

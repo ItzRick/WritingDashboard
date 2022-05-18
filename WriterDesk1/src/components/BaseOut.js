@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
+
 
 // routing
 import { Outlet } from 'react-router-dom';
@@ -147,12 +148,6 @@ const Base = () => {
             </Box>
         </Box>
     );
-}
-
-
-
-Base.propTypes = {
-    //children:
 }
 
 

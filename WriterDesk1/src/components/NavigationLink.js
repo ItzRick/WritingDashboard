@@ -4,11 +4,13 @@ import PropTypes from 'prop-types';
 // css
 import "./../css/NavigationLink.css";
 
-// mui components
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Tooltip from '@mui/material/Tooltip';
+// components
+import { 
+    ListItem,
+    ListItemText,
+    Tooltip,
+    ListItemIcon
+} from '@mui/material';
 
 // routing
 import { Link } from 'react-router-dom';
@@ -70,14 +72,11 @@ const NavigationLink = ({ text, Icon, open, allowed = false, pageLink }) => {
         </ListItem>
     );
 }
-//                    <Link to={{pathname: pageLink }} color='secondary'>
 
 NavigationLink.propTypes = {
     text: PropTypes.string,
     open: PropTypes.bool,
     visible: PropTypes.bool,
-    //Icon : PropTypes.
 }
-
 
 export default NavigationLink
