@@ -22,11 +22,11 @@ const Upload = () => {
     });
 
     // list of UploadSingleFile objects
-    const [rowList, setRowList] = useState([]);
+    const [uploadSingleFiles, setUploadSingleFiles] = useState([<UploadSingleFile key={0}/>]);
 
     // add UploadSingleFile object to rowList
     const addRow = e => {
-        setRowList(rowList.concat(<UploadSingleFile key={rowList.length} />));
+        setUploadSingleFiles(uploadSingleFiles.concat(<UploadSingleFile key={uploadSingleFiles.length} />));
     };
 
     return (
@@ -36,8 +36,7 @@ const Upload = () => {
             </div>
             <br />
             <div className='center'>
-                {UploadSingleFile()}
-                {rowList}
+                {uploadSingleFiles}
                 <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} onClick={addRow}>Add</Button>
             </div>
             <br />
