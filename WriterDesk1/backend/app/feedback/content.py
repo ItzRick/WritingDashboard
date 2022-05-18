@@ -9,6 +9,10 @@ from bs4 import BeautifulSoup
 from requests_html import HTMLSession
 import requests
 from bs4 import BeautifulSoup
+from flask import current_app
+from scidownl import scihub_download
+import os
+
 
 
 
@@ -19,19 +23,29 @@ def sourceIntegration(text, input_words):
     return counts
 
 
-def findWords(text):
+def findWords(text, tokens_wo_stopwords):
     text = re.sub('[,\.!?]', '', text)
     english_stopwords = stopwords.words('english')
     
     # text = text.lower()
     tokens = word_tokenize(text.lower())
-    tokens_wo_stopwords = set()
     for t in tokens:
         if t not in english_stopwords:
             tokens_wo_stopwords.add(t)
 
-    
     return tokens_wo_stopwords
+
+def download_papers(doi):
+    userId = 123
+    basePath = os.path.join(current_app.config['UPLOAD_FOLDER'], userId)
+    filePath = os.path.join(basePath, 'temp.pdf')
+    if not os.isdir(basePath):
+        os.makedirs(basePath)
+    scihub_download(doi, paper_type='doi', out=filePath)
+    # TODO: Requires pdf file retrieval. 
+
+
+
 
 def scrape_page(url):
     # session = HTMLSession()
@@ -92,6 +106,6 @@ def scrape_page(url):
 
     return output
 
-print(sourceIntegration("This is some nice text, is this the correct format?",findWords("This is some nice text, is this the correct format?, some more formatting is required as is the followng format.")))
-# print(findWords(scrape_page("https://dictionary.cambridge.org/dictionary/english/multitasking")))
-print(scrape_page("https://www.pewresearch.org/internet/2013/01/28/tracking-for-health/"))
+# print(sourceIntegration("This is some nice text, is this the correct format?",findWords("This is some nice text, is this the correct format?, some more formatting is required as is the followng format.")))
+print(findWords(scrape_page("https://dictionary.cambridge.org/dictionary/english/multitasking"), set()))
+# print(scrape_page("https://www.pewresearch.org/internet/2013/01/28/tracking-for-health/"))
