@@ -15,7 +15,10 @@ function FeedbackModels() {
   });
   return (
     <>
-      FeedbackModels
+      <div className='vertCenter' style={{textAlign: 'center'}}>
+          To change the feedback model, go to github.com/XXXX and
+          commit your changes there.
+      </div>
     </>
   );
 }

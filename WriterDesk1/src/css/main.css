@@ -151,3 +151,7 @@ grid-row-gap: 0px;
     border-color: black;
     margin-right: 1vw;
 }
+
+.graph2 {
+    height: 35vh;
+}
