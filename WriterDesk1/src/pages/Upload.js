@@ -38,11 +38,11 @@ const Upload = () => {
             <div className='center'>
                 {UploadSingleFile()}
                 {rowList}
-                <Button variant='contained' color='secondary' onClick={addRow}>Add</Button>
+                <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} onClick={addRow}>Add</Button>
             </div>
             <br />
             <div className='title'>
-                <Button variant='contained' className='uploadButton' style={{fontSize: '2vw', textTransform: 'none'}}>
+                <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} className='uploadButton' style={{fontSize: '2vw', textTransform: 'none'}}>
                     Upload your document(s)
                 </Button>
             </div>
