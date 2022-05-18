@@ -24,15 +24,8 @@ const Upload = () => {
 
     const removeSingleFileInstance = (event) => {
         console.log(event.currentTarget.value);
-        // console.log("henk");
-        // console.log(uploadSingleFiles.length)
         let currentSingleFiles = [...uploadSingleFiles]
-        // console.log(currentSingleFiles)
-        // let filteredUploadSingleFiles = uploadSingleFiles.filter(item => item !== event.currentTarget.value)
-        // console.log(currentSingleFiles.splice(event.currentTarget.value, 1))
-        // console.log(filteredUploadSingleFiles)
         setUploadSingleFiles(currentSingleFiles)
-        // console.log(uploadSingleFiles.length)
     } 
 
 
@@ -57,7 +50,7 @@ const Upload = () => {
             <br />
             <div className='title'>
                 <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} className='uploadButton' onClick={() => {
-                    refs.current.forEach((_uploadSingleFile, index) => {
+                    uploadSingleFiles.forEach((_uploadSingleFile, index) => {
                         refs.current[index].uploadFile();
                     })
                 }}
