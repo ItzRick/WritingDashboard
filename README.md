@@ -26,7 +26,7 @@ Now, if it did not happen already, go to your browser and open [this link](http:
 
 (note that the `npm start` might not work when you have a vpn activated)
 
-Install PostgreSQL ([This link](https://www.postgresql.org/download/)), set a system environment variable called "DATABASE_URL" to <postgresql://postgres:{password}@localhost:5432/database1>, where this password is the password you have chosen in the postgresql installation. 
+Install PostgreSQL ([This link](https://www.postgresql.org/download/)), set a system environment variable called "DATABASE_URL" to <postgresql://postgres:{password}@localhost:5432/database1>, where this password is the password you have chosen in the postgresql installation. To create a database, [follow this link](https://www.guru99.com/postgresql-create-database.html), with ```create database database1;```.
 
 ### Adding Requirements
 If you add a package, you have to update the requirements document. Make sure you are located in WriterDesk1 and run `pip freeze > requirements.txt`
