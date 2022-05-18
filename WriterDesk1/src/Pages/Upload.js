@@ -85,24 +85,23 @@ const Upload = () => {
     const [files, setFiles] = useState(['']);
 
     return (
-        <div className='FileUploadButtons'>
-            <h1>File Upload!</h1>
-            <form>
-                {console.log(files)}
-                {files.map((_file, index) => {
-                    return (<div key={index}>
-                        <input type = "file" onChange={event => onFileChange(index, event)} ref = {setRef(index.toString())} 
-                        accept="application/pdf, application/msword, 
-                        application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain"/>
-                        {files.length !== 1 && <button type = "button" onClick={() => removeFileSelector(index.toString())}>Remove</button>}
-                        {index === hasError && <p style={{ color: 'red' }}>{`${receivedFileType} is not a supported filetype, please use a supported file.`}</p>}
-                    </div>
-                    )
-                })}
-                <button type= "submit" onClick={submitFiles}>Upload </button>
-                <button type= "button" onClick={addFileSelector}>add another file </button>
-            </form>
-        </div>
+        <>
+            <div className='title'>
+                <Typography variant='h3'>Upload</Typography>
+            </div>
+            <br />
+            <div className='center'>
+                {UploadSingleFile()}
+                {rowList}
+                <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} onClick={addRow}>Add</Button>
+            </div>
+            <br />
+            <div className='title'>
+                <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} className='uploadButton' style={{fontSize: '2vw', textTransform: 'none'}}>
+                    Upload your document(s)
+                </Button>
+            </div>
+        </>
     );
 }
 
