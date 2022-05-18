@@ -15,7 +15,7 @@ import {
  * 
  * @returns Single File Upload Object
  */
- const UploadSingleFile = forwardRef((props, ref) => {
+ const UploadSingleFile = forwardRef(({props, removeInstance, thisIndex}, ref) => {
 
     useImperativeHandle(ref, () => ({
         uploadFile() {
@@ -63,6 +63,7 @@ import {
                 
                 <TextField label='dd/mm/yy' variant='outlined' style={{marginRight: '1vw'}}/>
                 <TextField label='course' variant='outlined'/>
+                <Button variant='contained' sx={{bgcolor: 'red', color: 'button.text'}} value={thisIndex} onClick={removeInstance}>Remove</Button>
             </div>
         </div>
 )});
