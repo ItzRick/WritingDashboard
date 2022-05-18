@@ -53,6 +53,9 @@ const Upload = () => {
                     uploadSingleFiles.forEach((_uploadSingleFile, index) => {
                         refs.current[index].uploadFile();
                     })
+                    let currentSingleFiles = [...uploadSingleFiles]
+                    currentSingleFiles.splice(1, 1);
+                    setUploadSingleFiles(currentSingleFiles)
                 }}
                  style={{fontSize: '2vw', textTransform: 'none'}}>
                     Upload your document(s)

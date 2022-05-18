@@ -21,10 +21,20 @@ import {
         uploadFile() {
           console.log("Hello from Child Component")
           console.log(file.name);
+          console.log(date);
+          console.log(course);
+          setFile('or drag it here.');
+          setDate('');
+          setCourse('');
         },
     }))
 
     const [file, setFile] = useState('or drag it here.');
+
+    const [date, setDate] = useState('');
+
+    const [course, setCourse] = useState('');
+    
 
     const onFileChange = (event) => {
         if (event.target.files[0] === undefined) {
@@ -61,8 +71,8 @@ import {
                    {file.name !== undefined ? file.name : 'or drag it here.'}
                 </div>
                 
-                <TextField label='dd/mm/yy' variant='outlined' style={{marginRight: '1vw'}}/>
-                <TextField label='course' variant='outlined'/>
+                <TextField label='dd/mm/yy' variant='outlined' value={date} style={{marginRight: '1vw'}} onChange={event => setDate(event.target.value)}/>
+                <TextField label='course' variant='outlined' value={course} onChange={event => setCourse(event.target.value)}/>
                 <Button variant='contained' sx={{bgcolor: 'red', color: 'button.text'}} value={thisIndex} onClick={removeInstance}>Remove</Button>
             </div>
         </div>
