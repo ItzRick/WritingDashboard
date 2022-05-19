@@ -17,7 +17,7 @@ function App() {
             </div>
             <div className='home2'>
                 <div className='vertCenter'>
-                    <Button variant='contained' className='uploadButton' style={{
+                    <Button color='button' variant='contained' className='uploadButton' style={{
                         fontSize: '2vw', textTransform: 'none'}}>Upload a document</Button>
                 </div>
             </div>
