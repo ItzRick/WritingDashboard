@@ -93,7 +93,7 @@ const rows = [
   {id: 3, filename: 'Test Name3', type: 'PDF', course: 'Test Course3', h1: 5, h2: 7, h3: 2, h4: 10, date: '11/2/2020'},
   {id: 4, filename: 'Test Name4', type: 'txt', course: 'Test Course4', h1: 7, h2: 8, h3: 1, h4: 4, date: '11/2/2020'},
   {id: 5, filename: 'Test Name5', type: 'PDF', course: 'Test Course5', h1: 2, h2: 8, h3: 7, h4: 6, date: '11/2/2020'}
-]
+];
 
 function Documents() {
   //set title in parent 'base' 
