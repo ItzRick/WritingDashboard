@@ -71,6 +71,7 @@ def getDOCXText(path):
     Attributes:
         fullText: String of extracted text
         stylesToRemove: List of styles to exclude from fullText
+        referencesParagraph: Boolean which is true if the current paragraph consists of references
         doc: Word document
         para: Paragraph of text
         documentXML: document.xml of docx file
@@ -80,7 +81,8 @@ def getDOCXText(path):
     """
 
     fullText = ""
-    stylesToRemove = ["Title", "Subtitle", "List Paragraph", "Quote", "Intense Quote"]
+    stylesToRemove = ["Title", "Subtitle", "List Paragraph", "Quote", "Intense Quote", "Caption"]
+    referencesParagraph = False
 
     try:
         # Read docx file
@@ -88,21 +90,34 @@ def getDOCXText(path):
 
         # iterate over paragraphs
         for para in doc.paragraphs:
-            # Remove titles, headings, lists, quotes
-            if not (para.style.name.startswith("Heading") or para.style.name in stylesToRemove):
+            # Remove titles, headings, lists, quotes, captions and references
+            if not (para.style.name.startswith("Heading") or para.style.name in stylesToRemove) and not referencesParagraph:
                 # Get document.xml from word file
-                documentXML = bs.BeautifulSoup(para._p.xml)
+                documentXML = bs.BeautifulSoup(para._p.xml, 'lxml')
+
+                # Find and remove textboxes
+                for textbox in documentXML.find_all('w:txbxcontent'):
+                    textbox.decompose()
+
+                # Find text and line breaks
                 for tag in documentXML.findAll(["w:t", "w:br"]):
                     if tag.name == "w:t":
                         fullText += tag.text
                     else:
                         fullText += '\n'  # Add newline
-
                 fullText += "\n"  # Add newline
+
+            elif para.style.name.startswith('Heading'):
+                if 'references' in para.text.lower() or 'bibliography' in para.text.lower():
+                    referencesParagraph = True  # Next paragraph is references
+                else:
+                    referencesParagraph = False
+
     except Exception as e:
         # Invalid file or filename
         print("caught", repr(e), "when calling getDOCXText")
 
+    # Remove redundant newlines
     fullText = re.sub(r'\n+', '\n\n', fullText).strip()
     return fullText
 
