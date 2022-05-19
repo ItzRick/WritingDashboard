@@ -3,6 +3,8 @@ from app.models import Files
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from app import db
 from datetime import datetime
+import os
+from werkzeug.utils import secure_filename
 
 def testValidFile(testClient, initDatabase):
     '''
@@ -68,6 +70,16 @@ def testUploadToDatabase(testClient, initDatabase):
     assert file2.courseCode == "2IPE0"
     
 def testGetFilesByUser(testClient, initDatabase):
+    '''
+        Test if we get the correct display if we run getFilesByUser(200, 'date.asc'), so the representation of '<File <filename>>'. 
+        Attributes: 
+            file, file2, fil3: File to be added to the database.
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+    # This test case also includes testing getting files sorted by date ascending
+    # We add three files to the database session
     db.session.commit()
     file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
     db.session.add(file)
@@ -76,11 +88,190 @@ def testGetFilesByUser(testClient, initDatabase):
     file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
     db.session.add(file3)
     db.session.commit()
-    
+    # We retrieve the files of the user with date ascending
     files = getFilesByUser(200, 'date.asc')
-    assert len(files) == 2
+    # Check if the number of files is 3,
+    # that the first file is the oldest file 
+    # and that the userId for that file is correct.
+    assert len(files) == 3
     assert files[0].get('filename') == 'File-3.pdf'
     assert files[0].get('userId') == 200
+
+def testGetFilesSortedByFilenameAscending(testClient, initDatabase):
+    '''
+        Test if we get the correct display if we run getFilesByUser(200, 'filename.asc'), so the representation of '<File <filename>>'. 
+        Attributes: 
+            file, file2, file1, fil3, file4: File to be added to the database.
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+    # We add five files to the database session
+    db.session.commit()
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file)
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0')
+    db.session.add(file2)
+    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file1)
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0')
+    db.session.add(file3)
+    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50')
+    db.session.add(file4)
+    db.session.commit()
+    # We retrieve the files of the user with filename ascending
+    files = getFilesByUser(200, 'filename.asc')
+    # Check if the number of files is 4, 
+    # that the first file is the file with alphabetically the first name, 
+    # that the last file is the file with alphabetically the last name,
+    # and that the userId for those files is correct.
+    assert len(files) == 5
+    assert files[0].get('filename') == 'File-1.pdf'
+    assert files[0].get('userId') == 200
+    assert files[4].get('filename') == 'File-4.pdf'
+    assert files[4].get('userId') == 201
+
+def testGetFilesSortedByFilenameDescending(testClient, initDatabase):
+    '''
+        Test if we get the correct display if we run getFilesByUser(200, 'filename.desc'), so the representation of '<File <filename>>'. 
+        Attributes: 
+            file, file2, file1, fil3, file4: File to be added to the database.
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+    # We add five files to the database session
+    db.session.commit()
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file)
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0')
+    db.session.add(file2)
+    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file1)
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0')
+    db.session.add(file3)
+    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50')
+    db.session.add(file4)
+    db.session.commit()
+    # We retrieve the files of the user with filename descending
+    files = getFilesByUser(200, 'filename.desc')
+    # Check if the number of files is 5, 
+    # that the first file is the file with alphabetically the last name, 
+    # that the last file is the file with alphabetically the first name,
+    # and that the userId for those files is correct.
+    assert len(files) == 5
+    assert files[4].get('filename') == 'File-1.pdf'
+    assert files[4].get('userId') == 200
+    assert files[0].get('filename') == 'File-4.pdf'
+    assert files[0].get('userId') == 201
+
+def testGetFilesSortedByCourseNameAscending(testClient, initDatabase):
+    '''
+        Test if we get the correct display if we run getFilesByUser(200, 'course.asc'), so the representation of '<File <filename>>'. 
+        Attributes: 
+            file, file2, file1, fil3, file4: File to be added to the database.
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+    # We add five files to the database session
+    db.session.commit()
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file)
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0')
+    db.session.add(file2)
+    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file1)
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0')
+    db.session.add(file3)
+    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50')
+    db.session.add(file4)
+    db.session.commit()
+    # We retrieve the files of the user with course descending
+    files = getFilesByUser(200, 'course.asc')
+    # Check if the number of files is 5, 
+    # that the first file is the file with alphabetically the first name, 
+    # that the last file is the file with alphabetically the last name,
+    # and that the userId for those files is correct.
+    assert len(files) == 5
+    assert files[4].get('filename') == 'File-4.pdf'
+    assert files[4].get('userId') == 201
+    assert files[4].get('courseCode') == '1ZV50'
+    assert files[0].get('filename') == 'File-1.pdf'
+    assert files[0].get('userId') == 200
+    assert files[0].get('courseCode') == '2IPE0'
+
+def testGetFilesSortedByCourseNameAscending(testClient, initDatabase):
+    '''
+        Test if we get the correct display if we run getFilesByUser(200, 'course.desc'), so the representation of '<File <filename>>'. 
+        Attributes: 
+            file, file2, file1, fil3, file4: File to be added to the database.
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+    # We add five files to the database session
+    db.session.commit()
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file)
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0')
+    db.session.add(file2)
+    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file1)
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0')
+    db.session.add(file3)
+    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50')
+    db.session.add(file4)
+    db.session.commit()
+    # We retrieve the files of the user with course ascending
+    files = getFilesByUser(200, 'course.desc')
+    # Check if the number of files is 5, 
+    # that the first file is the file with alphabetically the first name, 
+    # that the last file is the file with alphabetically the last name,
+    # and that the userId for those files is correct.
+    assert len(files) == 5
+    assert files[0].get('filename') == 'File-4.pdf'
+    assert files[0].get('userId') == 201
+    assert files[0].get('courseCode') == '1ZV50'
+    assert files[4].get('filename') == 'File-1.pdf'
+    assert files[4].get('userId') == 200
+    assert files[4].get('courseCode') == '2IPE0'
+
+def testGetFilesSortedByDateDescending(testClient, initDatabase):
+    '''
+        Test if we get the correct display if we run getFilesByUser(200, 'date.desc'), so the representation of '<File <filename>>'. 
+        Attributes: 
+            file, file2, file1, fil3, file4: File to be added to the database.
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+    # We add five files to the database session
+    db.session.commit()
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file)
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0')
+    db.session.add(file2)
+    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    db.session.add(file1)
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0')
+    db.session.add(file3)
+    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50')
+    db.session.add(file4)
+    db.session.commit()
+    # We retrieve the files of the user with date descending
+    files = getFilesByUser(200, 'date.desc')
+    # Check if the number of files is 5, 
+    # that the first file is the file with alphabetically the first name, 
+    # that the last file is the file with alphabetically the last name,
+    # and that the userId for those files is correct.
+    assert len(files) == 5
+    assert files[0].get('filename') == 'File-3.pdf'
+    assert files[0].get('userId') == 200
+    assert files[0].get('date') == datetime(2020, 5, 6)
+    assert files[4].get('filename') == 'File-4.pdf'
+    assert files[4].get('userId') == 201
+    assert files[4].get('date') == datetime(1980, 2, 12)
 
 def testCreateDatabase(testClient):
     '''
@@ -133,3 +324,59 @@ def testRemoveFromDatabase(testClient, initDatabase):
     removeFromDatabase(file)
     # Check if we can indeed not retrieve this file anymore:
     assert Files.query.filter_by(filename='ScrumAndXpFromTheTrenchesonline07-31.pdf').first() == None
+
+def testRouteRemoveFileFromDatabase(testClient, fileName, userId, courseCode, date1):
+    '''
+        A general method to test when we uploaded a file to the correct location with the correct information, 
+        that we can remove the file from the database as well. 
+        Note: The first part of this test case is from the test generalTestStuff in test_upload_1 which 
+              is about uploading a file to the correct location with the correct information. 
+        Attributes: 
+            BASEDIR: Location of the conftest.py file.
+            fileDir: Location of the file we are testing the upload of.
+            data: The data we are trying to test the upload with.
+            response: Response of the post request.
+        Arguments:
+            testClient:  The test client we test this for.
+            fileName: fileName of the file to be deleted (which needs to be put in the correct location, so in the same folder as the conftest.py file).
+            userId: userId of the user for which to test to delete the current file.
+            courseCode: courseCode of the course for which we test to delete the current file.
+            date1: date of the file which we are currently testing to delete.
+
+    '''
+    
+    ### This part is already from test case test_upload_1 
+    # Get the BASEDIR and set the fileDir with that:
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, fileName)
+    # Create the data packet:
+    data = {
+        'files': (open(fileDir, 'rb'), fileName),
+        'fileName': fileName,
+        'courseCode': courseCode,
+        'userId': userId,
+        'date': date1
+    }
+    # Create the response by means of the post request:
+    response = testClient.post('/fileapi/upload', data=data)
+    # See if we indeed get code 200 and the correct message from this request:
+    assert response.data == b'success'
+    assert response.status_code == 200
+    # See if the correct data has been added to the database which we retrieve by the filename:
+    file = Files.query.filter_by(filename=secure_filename(fileName)).first()
+    assert file.filename == secure_filename(fileName)
+    assert file.courseCode == courseCode
+    assert file.userId == userId
+    assert file.date == datetime.combine(date1, datetime.min.time())
+    # Check if the file has indeed been added to the disk:
+    assert os.path.exists(file.path)
+    # See if we can also retrieve the file by querying by userId:
+    assert Files.query.filter_by(filename= secure_filename(fileName)).first() in Files.query.filter_by(userId=userId).all()
+    ###
+
+    # Delete the file 
+    response = testClient.post('/fileapi/filedelete', data=data)
+    # Check if the file has been deleted of the disk
+    assert not os.path.exists(file.path)
+    # See if we also cannot retrieve the file by querying the userId
+    assert Files.query.filter_by(filename= secure_filename(fileName)).first() not in Files.query.filter_by(userId=userId).all()

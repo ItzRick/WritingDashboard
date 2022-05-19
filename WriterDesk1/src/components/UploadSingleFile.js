@@ -17,7 +17,14 @@ import {
  * 
  * @returns Single File Upload Object
  */
- const UploadSingleFile = forwardRef(({props, removeInstance, thisIndex}, ref) => {
+const UploadSingleFile = forwardRef(({ props, setUploadSingleFiles, thisIndex }, ref) => {
+
+    /**
+     * Update uploadSingleFiles in parent Upload.js
+     */
+    const removeInstance = () => {
+        setUploadSingleFiles((list) => list.filter(item => item.props.thisIndex !== thisIndex));
+    }
 
     useImperativeHandle(ref, () => ({
         uploadFile() {
@@ -102,23 +109,23 @@ import {
     }
 
     const fileInput = useRef();
-    return(
-        <div style={{marginBottom: '1vw'}}>
+    return (
+        <div style={{ marginBottom: '1vw' }}>
             <div className='vertCenter'>
                 <div className='upload'
-                onDragEnter={(event)=>event.preventDefault()}
-                onDragOver={(event)=>event.preventDefault()}
-                onDrop = {onFileDrop}>
-                    <Button variant='contained' sx={{mr: '8px', bgcolor: 'button.main', color: 'button.text'}} onClick={()=>fileInput.current.click()}>Choose a file</Button>
-                    <input 
-                        ref={fileInput} 
-                        type="file" 
+                    onDragEnter={(event) => event.preventDefault()}
+                    onDragOver={(event) => event.preventDefault()}
+                    onDrop={onFileDrop}>
+                    <Button variant='contained' sx={{ mr: '8px', bgcolor: 'button.main', color: 'button.text' }} onClick={() => fileInput.current.click()}>Choose a file</Button>
+                    <input
+                        ref={fileInput}
+                        type="file"
                         style={{ display: 'none' }}
                         accept="application/pdf, application/msword, 
                         application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain"
                         onChange={onFileChange} 
                     />
-                   {file.name !== undefined ? file.name : 'or drag it here.'}
+                    {file.name !== undefined ? file.name : 'or drag it here.'}
                 </div>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -139,6 +146,7 @@ import {
             {displayAlertType? <Alert severity="error">Upload a file with a .txt, .pdf, .docx or .doc filetype!</Alert> : null}
             {displayAlertSize? <Alert severity="error">The uploaded file was too big, upload a file that is not larger than 10 MB!</Alert> : null}
         </div>
-)});
+    )
+});
 
 export default UploadSingleFile;
