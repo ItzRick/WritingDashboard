@@ -67,10 +67,7 @@ const Upload = () => {
                     })
                     //remove all files except index = 0
                     setUploadSingleFiles((list) => list.filter(item => item.props.thisIndex == 0));
-                    setId(0);
-
-
-                    
+                    setId(1);
                 }}
                  style={{fontSize: '2vw', textTransform: 'none'}}>
                     Upload your document(s)
