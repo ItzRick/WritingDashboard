@@ -38,13 +38,13 @@
   }
   
   .react-pdf__Page__canvas {
-    margin: 0 auto;
+    margin: 0;
   }
   
   /* For all pages */
   .all-page-container {
     height: 100%;
-    max-height: 500px;
+    max-height: 100vh;
     overflow: auto;
   }
   

@@ -12,17 +12,16 @@ import samplePDF from "../example2.pdf";
 import "../css/styles.css";
 
 
-// /**
-//  * 
-//  * @returns Documents Page
-//  */
-// function Documents() {
-//   //set title in parent 'base' 
-//   const { setTitle } = useOutletContext();
-//   useEffect(() => {
-//     setTitle('Documents');
-//   });
-export default function Documents() {  
+/**
+ * 
+ * @returns Documents Page
+ */
+function Documents() {
+  //set title in parent 'base' 
+  const { setTitle } = useOutletContext();
+  useEffect(() => {
+    setTitle('Documents');
+  });
   return (
     <div className="App">
       <div className="all-page-container">
@@ -32,4 +31,4 @@ export default function Documents() {
   );
 }
 
-//export default Documents;
+export default Documents;
