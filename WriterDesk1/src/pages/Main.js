@@ -1,15 +1,23 @@
-//import {Component, useEffect, useState} from 'react'
-//import axios from "axios";
 import './../css/App.css';
 
-import Typography from '@mui/material/Typography';
-import { Button } from "@mui/material";
+// materials 
+import { 
+  Button, 
+  Typography 
+} from "@mui/material";
 import chartImg from '../images/chartImage.png';
 
+// routing
 import { Link, useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
 
+
+/**
+ * 
+ * @returns homepage
+ */
 const Main = () => {
+  
   //set title in parent 'base' 
   const {setTitle} = useOutletContext();
   useEffect(() => {

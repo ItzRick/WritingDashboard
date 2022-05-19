@@ -1,7 +1,13 @@
+// materials
+import { 
+    Typography 
+} from "@mui/material";
+import graphPlaceholder from '../images/chartImage.png';
+
+// routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
-import graphPlaceholder from '../images/chartImage.png';
-import Typography from "@mui/material/Typography";
+
 
 
 /**

@@ -1,29 +1,19 @@
-import { useOutletContext } from 'react-router-dom';
-import { useEffect } from 'react';
+// materials
+import { 
+    Typography,
+    Button
+} from "@mui/material";
+import UploadSingleFile from "./../components/UploadSingleFile";
 
+
+// routing
+import { useOutletContext } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 /**
  * 
- * @returns Upload Page
+ * @returns File Upload page
  */
-import Typography from "@mui/material/Typography";
-import {Button, TextField} from "@mui/material";
-import {useState} from "react";
-
-const FileUpload = () => {
-    return(
-        <div style={{marginBottom: '1vw'}}>
-            <div className='vertCenter'>
-                <div className='upload'>
-                    <Button variant='contained' style={{marginRight: '8px'}}>Choose a file</Button>
-                    or drag it here.
-                </div>
-                <TextField label='dd/mm/yy' variant='outlined' style={{marginRight: '1vw'}}/>
-                <TextField label='course' variant='outlined'/>
-            </div>
-        </div>
-)};
-
 const Upload = () => {
     //set title in parent 'base'
     const { setTitle } = useOutletContext();
@@ -31,10 +21,12 @@ const Upload = () => {
         setTitle('Upload');
     });
 
+    // list of UploadSingleFile objects
     const [rowList, setRowList] = useState([]);
 
+    // add UploadSingleFile object to rowList
     const addRow = e => {
-        setRowList(rowList.concat(<FileUpload key={rowList.length} />));
+        setRowList(rowList.concat(<UploadSingleFile key={rowList.length} />));
     };
 
     return (
@@ -44,7 +36,7 @@ const Upload = () => {
             </div>
             <br />
             <div className='center'>
-                {FileUpload()}
+                {UploadSingleFile()}
                 {rowList}
                 <Button variant='contained' color='secondary' onClick={addRow}>Add</Button>
             </div>

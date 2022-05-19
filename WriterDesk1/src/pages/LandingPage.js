@@ -1,15 +1,19 @@
-//import {Component, useEffect, useState} from 'react'
-//import axios from "axios";
 import './../css/LoginSignUp.css';
 
-import Typography from '@mui/material/Typography';
-import {Button} from "@mui/material";
+// materials
+import { 
+  Button, 
+  Typography 
+} from "@mui/material";
 
-//linking
-import {Link} from 'react-router-dom';
+// routing
+import { Link } from 'react-router-dom';
 
-
-function LandingPage() {
+/**
+ * 
+ * @returns landing page, main page when not logged in
+ */
+const LandingPage = () => {
   
   return (
     <>

@@ -6,27 +6,32 @@ import reportWebVitals from './reportWebVitals';
 // routing
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-//theme and style
+// theme and style
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-//pages
+//    PAGES
+// base pages
 import Base from './components/Base.js'
 import BaseOut from './components/BaseOut.js';
 
+// pages outside login
 import Settings from './pages/Settings';
 import LandingPage from './pages/LandingPage';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
-
+// pages for all users
 import Main from './pages/Main.js';
 import Upload from './pages/Upload';
 import Progress from './pages/Progress';
 import Documents from './pages/Documents';
-
+// pages for researchers (and admin)
 import Participants from './pages/Participants';
+import FeedbackModels from './pages/FeedbackModels';
+// page just for admin
 import Users from './pages/Users';
 
-import FeedbackModels from './pages/FeedbackModels';
+
+//testing page, to be removed later
 import TestingPage from './pages/TestingPage';
 
 // theme and style
@@ -40,10 +45,10 @@ const ThemeColors = {
   red: '#ff0015',
 };
 
-
 const theme = createTheme({
-  //
+  //main color palatte
   palette: {
+    // colors for the drawer
     drawer: {
       burger: ThemeColors.darkBlue,
       icon: ThemeColors.darkBlue,
@@ -51,11 +56,13 @@ const theme = createTheme({
       background: ThemeColors.lightBlue,
       divider: ThemeColors.darkGray,
     },
+    // colors for the appbar
     appBar: {
       background: ThemeColors.darkBlue,
       text: ThemeColors.white,
       icon: ThemeColors.white,
     },
+    // colors for the drawer in logged out version
     drawerOut: {
       background: ThemeColors.darkBlue,
     },
@@ -68,23 +75,6 @@ const theme = createTheme({
 
     //fontFamily: font
   },
-
-  //overriding themes
-  /*
-  components: {
-    MuiDrawer: {
-      styleOverrides: {
-        paper: {
-          background: '#C6D4E1',
-        },
-        colorPrimary: {
-          background: '#44749D',
-          color: 'red'
-        }
-      }
-    }
-  }
-  */
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -104,6 +94,7 @@ root.render(
           {/* TODO: add authentication */}
           {/* Private part of the router, requires authentication */}
           <Route path='/' element={<Base />}>
+            {/* For all users */}
             <Route name='Settings' path='Settings' element={<Settings />} />
 
             <Route name='Main' path='Main' element={<Main />} />
@@ -111,9 +102,11 @@ root.render(
             <Route name='Progress' path='Progress' element={<Progress />} />
             <Route name='Documents' path='Documents' element={<Documents />} />
 
+            {/* For researchers and admin users */}
             <Route name='Participants' path='Participants' element={<Participants />} />
             <Route name='FeedbackModels' path='FeedbackModels' element={<FeedbackModels />} />
 
+            {/* For admin users */}
             <Route name='Users' path='Users' element={<Users />} />
 
             <Route path='/' element={<Main />} />

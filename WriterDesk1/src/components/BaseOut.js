@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
+
 
 // routing
 import { Outlet } from 'react-router-dom';
@@ -19,7 +20,11 @@ const drawerWidth = 240;
 
 // Below functions were made by
 // https://mui.com/material-ui/react-drawer/
-// open drawer animation
+/**
+ * 
+ * @param {theme} theme - Given by theme provider in index
+ * @returns transition when open
+ */
 const openedMixin = (theme) => ({
     width: drawerWidth,
     transition: theme.transitions.create('width', {
@@ -29,7 +34,11 @@ const openedMixin = (theme) => ({
     overflowX: 'hidden',
 });
 
-// close drawer animation
+/**
+ * 
+ * @param {theme} theme - Given by theme provider in index
+ * @returns transition when closed
+ */
 const closedMixin = (theme) => ({
     transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
@@ -42,7 +51,9 @@ const closedMixin = (theme) => ({
     },
 });
 
-// make DrawerHeader style
+/**
+ * Makes styled DrawerHeader
+ */
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -52,7 +63,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     ...theme.mixins.toolbar,
 }));
 
-// make AppBar style
+/**
+ * Makes styled AppBar
+ */
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -71,7 +84,9 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-// make Drawer style
+/**
+ * Makes styled Drawer
+ */
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
         width: drawerWidth,
@@ -147,12 +162,6 @@ const Base = () => {
             </Box>
         </Box>
     );
-}
-
-
-
-Base.propTypes = {
-    //children:
 }
 
 
