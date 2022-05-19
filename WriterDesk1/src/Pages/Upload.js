@@ -23,9 +23,10 @@ const Upload = () => {
     });
 
     const removeSingleFileInstance = (event) => {
-        console.log(event.currentTarget.value);
+        // console.log(event.currentTarget.value);
         let currentSingleFiles = [...uploadSingleFiles]
         currentSingleFiles.splice(1, 1);
+        console.log(currentSingleFiles);
         setUploadSingleFiles(currentSingleFiles)
     } 
 
