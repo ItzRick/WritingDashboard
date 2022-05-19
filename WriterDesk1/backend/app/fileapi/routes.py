@@ -97,3 +97,13 @@ def fileRetrieve():
         return jsonify(files)
     else:
         return 'No user available', 400
+
+@bp.route('/filedelete', methods = ['GET', 'DELETE'])
+def fileDelete(): 
+    # Delete the file specified, which can be either with id or file name
+    if 'file_id' in session: 
+        fileToDelete = request.args.get('file_id')
+        removeFromDatabase(fileToDelete)
+        return 'success'
+    else: 
+        return 'No file available', 400
