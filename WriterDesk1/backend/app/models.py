@@ -1,3 +1,5 @@
+from asyncio.windows_events import NULL
+from datetime import datetime
 from app import db
 from sqlalchemy.inspection import inspect
 
@@ -32,11 +34,12 @@ class Files(db.Model, Serializer):
             date: Date the current file that is uploaded to the database has been created. 
     '''
     id = db.Column(db.Integer, primary_key=True)
-    userId = db.Column(db.Integer, unique=False)
+    # userId = db.Column(db.Integer, unique=False)
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'))
     path = db.Column(db.String, unique=False)
-    filename = db.Column(db.String(256), unique=False)
-    courseCode = db.Column(db.String(16), unique=False)
-    date = db.Column(db.DateTime, unique=False)
+    filename = db.Column(db.String(256), index=True, unique=False)
+    courseCode = db.Column(db.String(16), unique=False, default=NULL)
+    date = db.Column(db.DateTime, unique=False, default=datetime.utcnow)
 
     def __repr__(self):
         return '<File {}>'.format(self.filename)

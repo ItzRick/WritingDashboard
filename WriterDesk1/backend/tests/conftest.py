@@ -54,8 +54,6 @@ def testClient():
         with app.app_context():
             yield testing_client  # this is where the testing happens!
 
-
-
 @pytest.fixture(scope='function')
 def initDatabase(testClient):
     '''
@@ -93,4 +91,52 @@ def initDatabase(testClient):
     db.session.commit()
     db.drop_all()
 
+# @pytest.fixture(scope='function')
+# def initDatabase2(testClient):
+#     '''
+#         Creates a database, with tables such as defined in the models of the application. Adds one files to this database, 
+#         The attributes of the file are:
+#             path: C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/URD_Group3_vers03_Rc.pdf
+#             filename: URD_Group3_vers03_Rc.pdf
+#             date: 2018-5-20
+#             userId: 256
+#             courseCode: 2ILH0
+#         Afterwards, the database is empties again, so no entries can influence a next test run. This is run each time
+#         a test case is run, so that one test case does not influence the database of another test case. 
+#     '''
+#     # Get the BASEDIR and set the fileDir with that:
+#     BASEDIR = os.path.abspath(os.path.dirname(__file__))
+#     fileDir = os.path.join(BASEDIR, fileName)
+#     # Create the data packet:
+#     data = {
+#         'files': (open(fileDir, 'rb'), fileName),
+#         'fileName': fileName,
+#         'courseCode': courseCode,
+#         'userId': userId,
+#         'date': date1
+#     }
+#     # Create the database:
+#     db.create_all()
 
+#     # Add the file:
+#     data = {
+#         path : 'C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/URD_Group3_vers03_Rc.pdf',
+#         'fileName': 'URD_Group3_vers03_Rc.pdf',
+#         'courseCode': '2IPE0',
+#         'userId': 123,
+#         'date': datetime(2019, 2, 12)
+#     }
+#     # Create the response by means of the post request:
+#     response = testClient.post('/fileapi/upload', data=data)
+
+#     # Upload the
+#     file = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/URD_Group3_vers03_Rc.pdf', 
+#     filename='URD_Group3_vers03_Rc.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0')
+#     db.session.add(file)
+#     db.session.commit()
+
+#     yield   # This is where the testing happens!
+    
+#     # Empties the database after the application has finished testing:
+#     db.session.commit()
+#     db.drop_all()
