@@ -42,12 +42,9 @@ const Upload = () => {
                 thisIndex={id}
                 key={id} 
                 setUploadSingleFiles={setUploadSingleFiles} 
-                ref={(el) => (refs.current[uploadSingleFiles.length] = el)} 
-                
+                ref={(el) => (refs.current[id] = el)}
             />
         ]));
-        //TODO?? maybe change above .current[..] to .current[id]
-
         // update id so we have a fresh id ready for the next instance
         setId((i) => i + 1);
     };
@@ -65,13 +62,15 @@ const Upload = () => {
             <br />
             <div className='title'>
                 <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} className='uploadButton' onClick={() => {
-                    uploadSingleFiles.forEach((_uploadSingleFile, index) => {
-                        refs.current[index].uploadFile();
+                    uploadSingleFiles.forEach(item => {
+                        refs.current[item.props.thisIndex].uploadFile();
                     })
-                    let currentSingleFiles = [...uploadSingleFiles];
-                    currentSingleFiles.splice(1, 1);
-                    console.log(currentSingleFiles);
-                    setUploadSingleFiles(currentSingleFiles);
+                    //remove all files except index = 0
+                    setUploadSingleFiles((list) => list.filter(item => item.props.thisIndex == 0));
+                    setId(0);
+
+
+                    
                 }}
                  style={{fontSize: '2vw', textTransform: 'none'}}>
                     Upload your document(s)
