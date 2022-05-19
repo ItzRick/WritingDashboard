@@ -2,7 +2,7 @@ from decimal import ROUND_HALF_UP, Decimal
 
 def getParagraphScore(text):
     '''
-        Return the score from 0 to 10 based on the averages of the amount of words in each paragraph.
+        Return: scoreRounded: the score from 0 to 10 based on the average of the scores based on the amount of words in each paragraph.
         Attributes:
             paragraphScores: List that contains the scores of each paragraph.
             paragraphScore: The score of a paragraph.
@@ -13,10 +13,11 @@ def getParagraphScore(text):
             text: The text on which this will be run.
 
     '''
-    # If the input text is empty
+    # If the input text is empty.
     if len(text) == 0:
         return None
 
+    # A list containing the scores for each paragraph in the text.
     paragraphScores = []
 
     # Split the text on white space to get each paragraph.
@@ -26,12 +27,16 @@ def getParagraphScore(text):
             continue
         # If the paragraph is more than 300 words.
         elif len(paragraph.split()) > 300:
-            paragraphScore = (100.0 - 0.4 * max(0.0, len(paragraph.split()) - 300)) / 10.0
+            # paragraphScore is calculated by taking the max between 0.0 and (100.0 - 0.4 * (the amount of words - 300)) / 10.0 
+            # to get a grade between 0.0 and 10.0. Having a high amount of words is worse than having a low amount of words.
+            paragraphScore = max((100.0 - 0.4 * (len(paragraph.split()) - 300)) / 10.0, 0.0)
             paragraphScoreRounded = Decimal(paragraphScore).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP) 
             paragraphScores.append(paragraphScoreRounded)
         # If the paragraph is less than 100 words.
         elif len(paragraph.split()) < 100:
-            paragraphScore = (100.0 - 0.6 * max(0.0, 100 - len(paragraph.split()))) / 10.0
+            # paragraphScore is calculated by taking the max between 0.0 and (100.0 - 0.6 * (100 - the amount of words)) / 10.0 
+            # to get a grade between 0.0 and 10.0. Having a low amount of words is not as bad as having a high amount of words.
+            paragraphScore = max((100.0 - 0.6 * (100 - len(paragraph.split()))) / 10.0, 0.0)
             paragraphScoreRounded = Decimal(paragraphScore).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
             paragraphScores.append(paragraphScoreRounded)        
         else:
@@ -48,7 +53,7 @@ def getParagraphScore(text):
 
 def getStructureScore(text):
     '''
-        Gets the score for the structure writing skill (in this case based on paragraph size only).
+        Return: scoreRouned: the score for the structure writing skill (in this case based on paragraph size only).
         Attributes:
             scores: a list of scores that contains the scores of all different structure aspects (in this case paragraph size only).
             score: the score for the structure writing skill.
@@ -71,6 +76,6 @@ def getStructureScore(text):
 
     return scoreRounded
 
-# text to be obtained from other piece of code
+# TODO remove after more implementation is done.
 text = 'Lorem ipsum dolor sit amet, \n consectetur adipiscing elit, \n sed do eiusmod tempor incididunt \n ut labore et dolore magna aliqua.'
 getStructureScore(text)
