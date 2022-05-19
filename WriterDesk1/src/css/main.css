@@ -155,3 +155,12 @@ grid-row-gap: 0px;
 .graph2 {
     height: 35vh;
 }
+
+.topBorder {
+    border-top-style: solid;
+    border-color: #BDB8AD;
+    border-width: 1px;
+    padding-top: 1vh;
+    text-align: center;
+    margin-bottom: 1vh;
+}
