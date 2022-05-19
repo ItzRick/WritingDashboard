@@ -1,5 +1,5 @@
 // materials
-import { } from "@mui/material";
+import {Typography} from "@mui/material";
 
 // routing
 import { useOutletContext } from 'react-router-dom';
@@ -10,6 +10,8 @@ import React from 'react';
 import AllPagesPDFViewer from "../components/all-pages";
 import samplePDF from "../example2.pdf";
 import "../css/styles.css";
+import "../css/main.css";
+import placeholder from '../images/chartImage.png';
 
 
 /**
@@ -23,11 +25,19 @@ function Documents() {
     setTitle('Documents');
   });
   return (
-    <div className="App">
-      <div className="all-page-container">
-        <AllPagesPDFViewer pdf={samplePDF} />
-      </div>
-    </div>
+      <>
+          <div className="pdfContainer">
+            <AllPagesPDFViewer pdf={samplePDF} />
+          </div>
+          <div className='rightFloat'>
+              <img className='smallGraph' src={placeholder} />
+              <br />
+              <div className='textBoxExpl'>
+                  <Typography>Sample text</Typography>
+              </div>
+          </div>
+      </>
+
   );
 }
 

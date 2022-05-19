@@ -155,3 +155,25 @@ grid-row-gap: 0px;
 .graph2 {
     height: 35vh;
 }
+
+.pdfContainer {
+    display: inline;
+    display: inline-flex;
+    float: left;
+    padding: 0;
+}
+
+.rightFloat {
+    float: right;
+}
+
+.textBoxExpl {
+    border-style: solid;
+    border-radius: 5px;
+    width: 30vw;
+    padding: 3px;
+}
+
+.smallGraph {
+    width: 30vw;
+}
