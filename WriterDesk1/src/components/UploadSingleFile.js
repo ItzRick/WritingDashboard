@@ -39,7 +39,9 @@ const UploadSingleFile = forwardRef(({ props, setUploadSingleFiles, thisIndex },
                 Accept: 'application/json',
                 'Content-Type': 'multipart/form-data',
             }
-            axios.post(url, formData, headers);
+            axios.post(url, formData, headers).catch((error) => {
+                console.log(error.response.data);
+            });
                 
         //   console.log("Hello from Child Component")
         //   console.log(file.name);
