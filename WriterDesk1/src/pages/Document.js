@@ -41,4 +41,4 @@ function Document() {
   );
 }
 
-export default Documents;
+export default Document;
