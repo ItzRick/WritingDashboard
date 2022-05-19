@@ -15,7 +15,11 @@ import {
  * 
  * @returns Single File Upload Object
  */
- const UploadSingleFile = forwardRef(({props, removeInstance, thisIndex}, ref) => {
+ const UploadSingleFile = forwardRef(({props, setUploadSingleFiles, thisIndex}, ref) => {
+
+    const removeInstance = () => {
+        setUploadSingleFiles((instanceList) => instanceList.filter(item => item.props.thisIndex !== thisIndex));
+    }
 
     useImperativeHandle(ref, () => ({
         uploadFile() {
