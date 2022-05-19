@@ -25,6 +25,7 @@ const Upload = () => {
     const removeSingleFileInstance = (event) => {
         console.log(event.currentTarget.value);
         let currentSingleFiles = [...uploadSingleFiles]
+        currentSingleFiles.splice(1, 1);
         setUploadSingleFiles(currentSingleFiles)
     } 
 
@@ -53,9 +54,10 @@ const Upload = () => {
                     uploadSingleFiles.forEach((_uploadSingleFile, index) => {
                         refs.current[index].uploadFile();
                     })
-                    let currentSingleFiles = [...uploadSingleFiles]
+                    let currentSingleFiles = [...uploadSingleFiles];
                     currentSingleFiles.splice(1, 1);
-                    setUploadSingleFiles(currentSingleFiles)
+                    console.log(currentSingleFiles);
+                    setUploadSingleFiles(currentSingleFiles);
                 }}
                  style={{fontSize: '2vw', textTransform: 'none'}}>
                     Upload your document(s)

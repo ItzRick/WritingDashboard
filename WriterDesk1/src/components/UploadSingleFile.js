@@ -23,9 +23,9 @@ import {
           console.log(file.name);
           console.log(date);
           console.log(course);
-          setFile('or drag it here.');
-          setDate('');
-          setCourse('');
+        //   setFile('or drag it here.');
+        //   setDate('');
+        //   setCourse('');
         },
     }))
 
