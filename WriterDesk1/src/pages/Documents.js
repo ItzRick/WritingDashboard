@@ -21,7 +21,7 @@ import {GridCellValue} from "@mui/x-data-grid";
  * @returns Documents Page
  */
 
-const columns: GridColDef[] = [
+const columns = [
   {
     field: 'filename',
     headerName: 'Filename',
@@ -81,21 +81,21 @@ const columns: GridColDef[] = [
     sortable: false,
     flex:1, 
     renderCell: (params) => {
-      const onClick = (e) => {
-        e.stopPropagation(); // don't select this row after clicking
+    //   const onClick = (e) => {
+    //     e.stopPropagation(); // don't select this row after clicking
 
-        const api: GridApi = params.api;
-        const thisRow: Record<string, GridCellValue> = {};
+    //     const api: GridApi = params.api;
+    //     const thisRow: Record<string, GridCellValue> = {};
 
-        api
-          .getAllColumns()
-          .filter((c) => c.field !== "__check__" && !!c)
-          .forEach(
-            (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-          );
+    //     api
+    //       .getAllColumns()
+    //       .filter((c) => c.field !== "__check__" && !!c)
+    //       .forEach(
+    //         (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+    //       );
 
-        return alert(JSON.stringify(thisRow, null, 4));
-      };
+    //     return alert(JSON.stringify(thisRow, null, 4));
+    //   };
 
       return <div><IconButton><GradingIcon /></IconButton><IconButton><DeleteOutlineIcon /></IconButton></div>;
     }
@@ -128,8 +128,7 @@ function Documents() {
     }
     axios.get(url, { params })
         .then((response) => {setTableData(response.data)
-        console.log(response.data)})
-        console.log(tableData);
+    })
   }, []);
   
   return (
@@ -139,7 +138,7 @@ function Documents() {
           rows={tableData}
           columns={columns}
           pageSize={12}
-        //   rowsPerPageOptions={[5]}
+          rowsPerPageOptions={[12]}
           checkboxSelection
           disableSelectionOnClick
         />

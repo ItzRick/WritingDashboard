@@ -31,7 +31,7 @@ def newFile():
             courseCode: 2ILH0
     '''
     file = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/URD_Group3_vers03_Rc.pdf', filename='URD_Group3_vers03_Rc.pdf', 
-    date=datetime(2018, 5, 20), userId = 256, courseCode = '2ILH0')
+    date=datetime(2018, 5, 20), userId = 256, courseCode = '2ILH0', fileType=".pdf")
     return file
 
 
@@ -78,9 +78,9 @@ def initDatabase(testClient):
 
     # Add the 2 files:
     file1 = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/URD_Group3_vers03_Rc.pdf', 
-    filename='URD_Group3_vers03_Rc.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0')
+    filename='URD_Group3_vers03_Rc.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0', fileType = '.pdf')
     file2 = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/SEP.pdf', 
-    filename='SEP.pdf', date=datetime(2020, 10, 2), userId = 567, courseCode = '3NAB0')
+    filename='SEP.pdf', date=datetime(2020, 10, 2), userId = 567, courseCode = '3NAB0', fileType = '.pdf')
     db.session.add(file1)
     db.session.add(file2)
     db.session.commit()

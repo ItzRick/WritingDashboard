@@ -28,6 +28,7 @@ def testValidFile(testClient, initDatabase):
     assert file.date == datetime(2019, 2, 12)
     assert file.userId == 123
     assert file.courseCode == "2IPE0"
+    assert file.fileType == '.pdf'
     # Test if all attributes for the file are still currently there: 
     file = files[1]
     assert file.filename=='SEP.pdf'
@@ -35,6 +36,7 @@ def testValidFile(testClient, initDatabase):
     assert file.date == datetime(2020, 10, 2)
     assert file.userId == 567
     assert file.courseCode == "3NAB0"
+    assert file.fileType == '.pdf'
 
 def testUploadToDatabase(testClient, initDatabase):
     '''
@@ -50,7 +52,7 @@ def testUploadToDatabase(testClient, initDatabase):
     del testClient, initDatabase
     # Create a file instance of Files:
     file = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/ScrumAndXpFromTheTrenchesonline07-31.pdf', 
-    filename='ScrumAndXpFromTheTrenchesonline07-31.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0')
+    filename='ScrumAndXpFromTheTrenchesonline07-31.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0', fileType = '.pdf')
     # Call the uploadToDatabase function:
     uploadToDatabase(file)
     # Retrieve this file with query.filter_by and check if all attributes are retrieved correctly:
@@ -60,6 +62,7 @@ def testUploadToDatabase(testClient, initDatabase):
     assert file1.date == datetime(2019, 2, 12)
     assert file1.userId == 123
     assert file1.courseCode == "2IPE0"
+    assert file1.fileType == '.pdf'
     # Check if we can also retrieve this with query.all() and can then retrieve it with the second element, 
     # check if all attributes are retrieved correctly:
     file2 = Files.query.all()[2]
@@ -68,6 +71,7 @@ def testUploadToDatabase(testClient, initDatabase):
     assert file2.date == datetime(2019, 2, 12)
     assert file2.userId == 123
     assert file2.courseCode == "2IPE0"
+    assert file2.fileType == '.pdf'
     
 def testGetFilesByUser(testClient, initDatabase):
     '''
@@ -81,11 +85,11 @@ def testGetFilesByUser(testClient, initDatabase):
     # This test case also includes testing getting files sorted by date ascending
     # We add three files to the database session
     db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 2, 12), userId = 201, courseCode = '2IPE0')
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 2, 12), userId = 201, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file2)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file3)
     db.session.commit()
     # We retrieve the files of the user with date ascending
@@ -108,15 +112,15 @@ def testGetFilesSortedByFilenameAscending(testClient, initDatabase):
     '''
     # We add five files to the database session
     db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0')
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file2)
-    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file1)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0')
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0', fileType = '.pdf')
     db.session.add(file3)
-    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50')
+    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50', fileType = '.pdf')
     db.session.add(file4)
     db.session.commit()
     # We retrieve the files of the user with filename ascending
@@ -142,15 +146,15 @@ def testGetFilesSortedByFilenameDescending(testClient, initDatabase):
     '''
     # We add five files to the database session
     db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0')
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file2)
-    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file1)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0')
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0', fileType = '.pdf')
     db.session.add(file3)
-    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50')
+    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50', fileType = '.pdf')
     db.session.add(file4)
     db.session.commit()
     # We retrieve the files of the user with filename descending
@@ -176,15 +180,15 @@ def testGetFilesSortedByCourseNameAscending(testClient, initDatabase):
     '''
     # We add five files to the database session
     db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0')
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file2)
-    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file1)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0')
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0', fileType = '.pdf')
     db.session.add(file3)
-    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50')
+    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50', fileType = '.pdf')
     db.session.add(file4)
     db.session.commit()
     # We retrieve the files of the user with course descending
@@ -212,15 +216,15 @@ def testGetFilesSortedByCourseNameAscending(testClient, initDatabase):
     '''
     # We add five files to the database session
     db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0')
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file2)
-    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file1)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0')
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0', fileType = '.pdf')
     db.session.add(file3)
-    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50')
+    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50', fileType = '.pdf')
     db.session.add(file4)
     db.session.commit()
     # We retrieve the files of the user with course ascending
@@ -248,15 +252,15 @@ def testGetFilesSortedByDateDescending(testClient, initDatabase):
     '''
     # We add five files to the database session
     db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0')
+    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file2)
-    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
     db.session.add(file1)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0')
+    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0', fileType = '.pdf')
     db.session.add(file3)
-    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50')
+    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50', fileType = '.pdf')
     db.session.add(file4)
     db.session.commit()
     # We retrieve the files of the user with date descending
@@ -309,7 +313,7 @@ def testRemoveFromDatabase(testClient, initDatabase):
     del testClient, initDatabase
     # Create the file instance to be added:
     file = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/ScrumAndXpFromTheTrenchesonline07-31.pdf', 
-    filename='ScrumAndXpFromTheTrenchesonline07-31.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0')
+    filename='ScrumAndXpFromTheTrenchesonline07-31.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0', fileType = '.pdf')
     # Add the file to the database:
     db.session.add(file)
     db.session.commit()
@@ -320,12 +324,13 @@ def testRemoveFromDatabase(testClient, initDatabase):
     assert file.date == datetime(2019, 2, 12)
     assert file.userId == 123
     assert file.courseCode == "2IPE0"
+    assert file.fileType == '.pdf'
     # Remove this file instance from the database:
     removeFromDatabase(file)
     # Check if we can indeed not retrieve this file anymore:
     assert Files.query.filter_by(filename='ScrumAndXpFromTheTrenchesonline07-31.pdf').first() == None
 
-def testRouteRemoveFileFromDatabase(testClient, fileName, userId, courseCode, date1):
+def testRouteRemoveFileFromDatabase(testClient, fileName, userId, courseCode, date1, filetype):
     '''
         A general method to test when we uploaded a file to the correct location with the correct information, 
         that we can remove the file from the database as well. 
@@ -368,6 +373,7 @@ def testRouteRemoveFileFromDatabase(testClient, fileName, userId, courseCode, da
     assert file.courseCode == courseCode
     assert file.userId == userId
     assert file.date == datetime.combine(date1, datetime.min.time())
+    assert file.fileType == filetype
     # Check if the file has indeed been added to the disk:
     assert os.path.exists(file.path)
     # See if we can also retrieve the file by querying by userId:

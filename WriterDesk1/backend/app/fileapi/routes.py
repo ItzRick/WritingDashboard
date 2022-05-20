@@ -95,7 +95,7 @@ def fileRetrieve():
 
         # Put dates in format
         for file in files:
-            file['date'] = file.get('date').strftime('%d/%m/%y %H:%M')
+            file['date'] = file.get('date').strftime('%d/%m/%y')
             
         # Return http response with list as json in response body
         return jsonify(files)

@@ -12,6 +12,7 @@ def testNewFile(newFile):
     assert newFile.date == datetime(2018, 5, 20)
     assert newFile.userId == 256
     assert newFile.courseCode == "2ILH0"
+    assert newFile.fileType == '.pdf'
 
 def testFileId(newFile):
     '''
