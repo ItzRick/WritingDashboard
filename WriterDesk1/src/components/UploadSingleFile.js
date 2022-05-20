@@ -51,6 +51,8 @@ const UploadSingleFile = forwardRef(({ props, setUploadSingleFiles, thisIndex },
           setFile('or drag it here.');
           setDate(new Date());
           setCourse('');
+          setDisplayAlertSize(false);
+          setDisplayAlertType(false);
         },
     }))
 
