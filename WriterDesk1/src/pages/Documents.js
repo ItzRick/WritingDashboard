@@ -2,7 +2,7 @@
 import {Typography} from "@mui/material";
 
 // routing
-import { useOutletContext } from 'react-router-dom';
+import {Link, useOutletContext} from 'react-router-dom';
 import { useEffect } from 'react';
 import {Button} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
@@ -94,7 +94,7 @@ const columns: GridColDef[] = [
         return alert(JSON.stringify(thisRow, null, 4));
       };
 
-      return <div><IconButton><GradingIcon /></IconButton><IconButton><DeleteOutlineIcon /></IconButton></div>;
+      return <div><IconButton component={Link} to='/Document'><GradingIcon /></IconButton><IconButton><DeleteOutlineIcon /></IconButton></div>;
     }
   }
 ];
