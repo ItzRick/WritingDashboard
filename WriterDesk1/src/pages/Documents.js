@@ -26,50 +26,60 @@ const columns: GridColDef[] = [
     field: 'filename',
     headerName: 'Filename',
     editable: false,
+    flex:1, 
+    minWidth: 250
   },
   {
-    field: 'type',
-    headerName: 'Type',
+    field: 'fileType',
+    headerName: 'FileType',
     editable: false,
+    flex:1 
   },
   {
-    field: 'course',
+    field: 'courseCode',
     headerName: 'Course',
     editable: false,
+    flex:1 
   },
   {
     field: 'h1',
     headerName: 'h1',
     type: "number",
     editable: false,
+    flex:1 
   },
   {
     field: 'h2',
     headerName: 'h2',
     type: "number",
     editable: false,
+    flex:1 
   },
   {
     field: 'h3',
     headerName: 'h3',
     type: "number",
     editable: false,
+    flex:1 
   },
   {
     field: 'h4',
     headerName: 'h4',
     type: "number",
     editable: false,
+    flex:1 
   },
   {
     field: 'date',
     headerName: 'Date ',
     editable: false,
+    flex:1 
   },
   {
     field: "actions",
     headerName: "Actions",
     sortable: false,
+    flex:1, 
     renderCell: (params) => {
       const onClick = (e) => {
         e.stopPropagation(); // don't select this row after clicking
@@ -117,9 +127,8 @@ function Documents() {
         sortingAttribute: '',
     }
     axios.get(url, { params })
-        .then((response) => { response.data.json()
+        .then((response) => {setTableData(response.data)
         console.log(response.data)})
-        .then((data) => setTableData(data))
         console.log(tableData);
   }, []);
   
