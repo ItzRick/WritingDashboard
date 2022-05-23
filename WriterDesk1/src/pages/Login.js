@@ -13,6 +13,8 @@ import testImage from '../images/placeholder_image.png'
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 
+import axios from 'axios';
+const BASE_URL = "http://localhost:5000";
 
 /**
  * 
@@ -24,25 +26,16 @@ const Login = () => {
     const [password, setPassword] = useState("");
 
     const handleClick = () => {
-        let url = "http://localhost:5000/token"
-
-        fetch(url,{
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
+        axios.post(`${BASE_URL}/token`,{
                 "username": username,
                 "password": password,
-            }),
-        }).then( res => res.json())
-        .then(data =>{
-            localStorage.setItem('access_token', data.access_token);
+            }).then(response =>{
+                localStorage.setItem('access_token', response.data.access_token);
 
-            if (localStorage.getItem("access_token") !== null && localStorage.getItem("access_token")!=="undefined") {
+                if (localStorage.getItem("access_token") !== null && localStorage.getItem("access_token")!=="undefined") {
                 console.log("Inloggen gelukt!")
               }else{
-                  alert(data.error);
+                  alert(response.data.error);
               }
         })
         .catch(error => {
