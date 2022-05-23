@@ -84,7 +84,6 @@ def testGetFilesByUser(testClient, initDatabase):
     # This test case also includes testing getting files sorted by date ascending
     del testClient, initDatabase
     # We add three files to the database session
-<<<<<<< HEAD
     try:
         db.session.commit()
     except:
@@ -99,16 +98,6 @@ def testGetFilesByUser(testClient, initDatabase):
         db.session.commit()
     except: 
         db.session.rollback()
-=======
-    db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 2, 12), userId = 201, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file2)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file3)
-    db.session.commit()
->>>>>>> da900144ca6250a1057a1db62cd111bd7ac5b584
     # We retrieve the files of the user with date ascending
     files = getFilesByUser(200, 'date.asc')
     # Check if the number of files is 2,
@@ -129,7 +118,6 @@ def testGetFilesSortedByFilenameAscending(testClient, initDatabaseEmpty):
     '''
     del testClient, initDatabaseEmpty
     # We add five files to the database session
-<<<<<<< HEAD
     try:
         db.session.commit()
     except:
@@ -148,20 +136,6 @@ def testGetFilesSortedByFilenameAscending(testClient, initDatabaseEmpty):
         db.session.commit()
     except:
         db.session.rollback()
-=======
-    db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file2)
-    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file1)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0', fileType = '.pdf')
-    db.session.add(file3)
-    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50', fileType = '.pdf')
-    db.session.add(file4)
-    db.session.commit()
->>>>>>> da900144ca6250a1057a1db62cd111bd7ac5b584
     # We retrieve the files of the user with filename ascending
     files = getFilesByUser(200, 'filename.asc')
     # Check if the number of files is 4, 
@@ -185,7 +159,6 @@ def testGetFilesSortedByFilenameDescending(testClient, initDatabaseEmpty):
     '''
     del testClient, initDatabaseEmpty
     # We add five files to the database session
-<<<<<<< HEAD
     try:
         db.session.commit()
     except:
@@ -204,20 +177,6 @@ def testGetFilesSortedByFilenameDescending(testClient, initDatabaseEmpty):
         db.session.commit()
     except: 
         db.session.rollback() 
-=======
-    db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file2)
-    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file1)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0', fileType = '.pdf')
-    db.session.add(file3)
-    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50', fileType = '.pdf')
-    db.session.add(file4)
-    db.session.commit()
->>>>>>> da900144ca6250a1057a1db62cd111bd7ac5b584
     # We retrieve the files of the user with filename descending
     files = getFilesByUser(200, 'filename.desc')
     # Check if the number of files is 4, 
@@ -241,7 +200,6 @@ def testGetFilesSortedByCourseNameDescending(testClient, initDatabaseEmpty):
     '''
     del testClient, initDatabaseEmpty
     # We add five files to the database session
-<<<<<<< HEAD
     try:
         db.session.commit()
     except:
@@ -260,20 +218,6 @@ def testGetFilesSortedByCourseNameDescending(testClient, initDatabaseEmpty):
         db.session.commit()
     except:
         db.session.rollback()
-=======
-    db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file2)
-    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file1)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0', fileType = '.pdf')
-    db.session.add(file3)
-    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50', fileType = '.pdf')
-    db.session.add(file4)
-    db.session.commit()
->>>>>>> da900144ca6250a1057a1db62cd111bd7ac5b584
     # We retrieve the files of the user with course descending
     files = getFilesByUser(200, 'course.desc')
     # Check if the number of files is 5, 
@@ -299,7 +243,6 @@ def testGetFilesSortedByCourseNameAscending(testClient, initDatabaseEmpty):
     '''
     del testClient, initDatabaseEmpty
     # We add five files to the database session
-<<<<<<< HEAD
     try:
         db.session.commit()
     except:
@@ -318,20 +261,6 @@ def testGetFilesSortedByCourseNameAscending(testClient, initDatabaseEmpty):
         db.session.commit()
     except:
         db.session.rollback() 
-=======
-    db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 3, 4), userId = 201, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file2)
-    file1 = Files(path='C:/normal/path/File-3.pdf', filename='File-1.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0', fileType = '.pdf')
-    db.session.add(file1)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(2020, 5, 6), userId = 200, courseCode = '2INC0', fileType = '.pdf')
-    db.session.add(file3)
-    file4 = Files(path='C:/normal/path/File-4.pdf', filename='File-4.pdf', date=datetime(1980, 2, 12), userId = 201, courseCode = '1ZV50', fileType = '.pdf')
-    db.session.add(file4)
-    db.session.commit()
->>>>>>> da900144ca6250a1057a1db62cd111bd7ac5b584
     # We retrieve the files of the user with course ascending
     files = getFilesByUser(200, 'course.asc')
     # Check if the number of files is 4, 
@@ -442,11 +371,7 @@ def testRemoveFromDatabase(testClient, initDatabase):
     # Check if we can indeed not retrieve this file anymore:
     assert Files.query.filter_by(filename='ScrumAndXpFromTheTrenchesonline07-31.pdf').first() == None
 
-<<<<<<< HEAD
 def testRouteRemoveFileFromDatabase(testClient, initDatabaseEmpty):
-=======
-def testRouteRemoveFileFromDatabase(testClient, fileName, userId, courseCode, date1, filetype):
->>>>>>> da900144ca6250a1057a1db62cd111bd7ac5b584
     '''
         A general method to test when we uploaded a file to the correct location with the correct information, 
         that we can remove the file from the database as well. 
@@ -498,19 +423,6 @@ def testRouteRemoveFileFromDatabase(testClient, fileName, userId, courseCode, da
 
     # See if the correct data has been added to the database which we retrieve by the filename:
     file = Files.query.filter_by(filename=secure_filename(fileName)).first()
-<<<<<<< HEAD
-=======
-    assert file.filename == secure_filename(fileName)
-    assert file.courseCode == courseCode
-    assert file.userId == userId
-    assert file.date == datetime.combine(date1, datetime.min.time())
-    assert file.fileType == filetype
-    # Check if the file has indeed been added to the disk:
-    assert os.path.exists(file.path)
-    # See if we can also retrieve the file by querying by userId:
-    assert Files.query.filter_by(filename= secure_filename(fileName)).first() in Files.query.filter_by(userId=userId).all()
-    ###
->>>>>>> da900144ca6250a1057a1db62cd111bd7ac5b584
 
     # assert file.filename == secure_filename(fileName)
     # assert file.id == id
