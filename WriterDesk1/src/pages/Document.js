@@ -57,7 +57,7 @@ function Document() {
                     console.log("data", data.points[0].pointNumber)
                 }}
                 useResizeHandler={true}
-                style={{width: '100%', height: '50vh'}}
+                style={{width: '40vw', height: '50vh'}}
                 />
               {/* <img className='smallGraph' src={placeholder} /> */}
               <br />

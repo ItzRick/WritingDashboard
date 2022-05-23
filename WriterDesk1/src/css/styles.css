@@ -32,6 +32,8 @@
   
   /* For all pages */
   .allPageContainer {
+    display: flex;
+    justify-content: center;
     height: 85vh;
     width:50vw;
     max-height: 85vh;
@@ -40,6 +42,8 @@
   }
 
   .sideBar { 
+      /* display: flex; */
+      /* justify-content: center; */
       width:40vw;
       float: left;
       overflow: auto;
