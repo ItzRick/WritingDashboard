@@ -51,11 +51,11 @@ button {
 }
 
 .parent {
-display: grid;
-grid-template-columns: 1fr;
-grid-template-rows: repeat(3, 0fr);
-grid-column-gap: 0px;
-grid-row-gap: 0px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 0fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
 }
 
 .div1 {
@@ -79,11 +79,11 @@ grid-row-gap: 0px;
 }
 
 .home_grid {
-display: grid;
-grid-template-columns: repeat(2, 1fr);
-grid-template-rows: repeat(3, 0fr);
-grid-column-gap: 0px;
-grid-row-gap: 0px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 0fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
 }
 
 .home1 {
@@ -178,6 +178,7 @@ grid-row-gap: 0px;
     width: 30vw;
 
 }
+
 .topBorder {
     border-top-style: solid;
     border-color: #BDB8AD;

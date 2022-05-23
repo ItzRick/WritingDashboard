@@ -34,8 +34,7 @@
   .allPageContainer {
     display: flex;
     justify-content: center;
-    height: 85vh;
-    width:50vw;
+    width: 50%;
     max-height: 85vh;
     overflow: auto;
     float: left;
@@ -45,8 +44,9 @@
       /* display: flex; */
       /* justify-content: center; */
       width:40vw;
-      float: left;
+      float: right;
       overflow: auto;
+      width: 50%;
       height: 85vh;
    }
   
