@@ -30,7 +30,7 @@ function removeTextLayerOffset() {
 
     >
       {Array.from(new Array(numPages), (el, index) => (
-        <Page key={`page_${index + 1}`} pageNumber={index + 1} renderAnnotationLayer={false}  onLoadSuccess={removeTextLayerOffset} />
+        <Page key={`page_${index + 1}`} pageNumber={index + 1} renderAnnotationLayer={false} renderTextLayer={false}  onLoadSuccess={removeTextLayerOffset} />
       ))}
     </Document>
   );

@@ -169,9 +169,13 @@ grid-row-gap: 0px;
 
 .textBoxExpl {
     border-style: solid;
-    border-radius: 5px;
+    border-width: 2px;
+    border-radius: 10px;
     width: 30vw;
     padding: 3px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    display: none;
 }
 
 .smallGraph {
