@@ -76,6 +76,38 @@ def getStructureScore(text):
 
     return scoreRounded
 
+def getExplanationsStructure(text):
+    '''
+        Returns the wrong parts of text and their corresponding explanations in a dictionary.
+        Attributes:
+            explanations: a dictionary containing explanations for certain piece of text that are wrong.
+        Arguments:
+            text: the text on which explanations should be generated
+    '''
+
+    # A dictionary that contains the paragraphs that are not good as keys and their corresponding explanations as value.
+    explanations = dict()
+
+    # If the input text is empty.
+    if len(text) == 0:
+        return None
+
+    # Split the text on white space to get each paragraph.
+    for paragraph in text.splitlines():
+        # If there are multiple white spaces in a row, continue.
+        if len(paragraph.split()) == 0:
+            continue
+        # If the paragraph is more than 300 words.
+        elif len(paragraph.split()) > 300:
+            explanations[paragraph] = 'This paragraph is too long, try to make paragraphs with less words.'
+        # If the paragraph is less than 100 words.
+        elif len(paragraph.split()) < 100:
+            explanations[paragraph] = 'This paragraph is too short, try to make paragraphs with more words.'     
+    
+    return explanations
+
+
 # TODO remove after more implementation is done.
 text = 'Lorem ipsum dolor sit amet, \n consectetur adipiscing elit, \n sed do eiusmod tempor incididunt \n ut labore et dolore magna aliqua.'
 getStructureScore(text)
+getExplanationsStructure(text)
