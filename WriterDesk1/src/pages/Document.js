@@ -78,6 +78,7 @@ function Document() {
               <Typography className='textBoxExpl'>Sample text</Typography>
           </div>
     </div>
+     </>
   );
 }
 
