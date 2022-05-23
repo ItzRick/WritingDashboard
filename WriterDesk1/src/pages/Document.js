@@ -28,10 +28,14 @@ function Document() {
     // State to save the data to display in the barchart in: 
     const [currentData, setCurrentData] = useState([2, 6, 3, 4])
 
-  const path = 'C:\\Users\\20192435\\Downloads\\SEP2021\\WriterDesk1\\src\\example3.docx'
+  const path = 'C:\\Users\\20192543\\Documents\\GitHub\\SEP2021\\WriterDesk1\\src\\example3.docx'
   const type = 'docx'
   return (
-      <>
+      <div sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}>
           <div className="allPageContainer" >
             <AllPagesPDFViewer pdf={`http://127.0.0.1:5000/converttopdf/convert?filepath=${path}&filetype=${type}`} />
           </div>
@@ -61,11 +65,9 @@ function Document() {
                 />
               {/* <img className='smallGraph' src={placeholder} /> */}
               <br />
-              <div className='textBoxExpl'>
-                  <Typography>Sample text</Typography>
-              </div>
+              <Typography className='textBoxExpl'>Sample text</Typography>
           </div>
-    </>
+    </div>
   );
 }
 
