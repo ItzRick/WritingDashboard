@@ -117,13 +117,32 @@ def fileDelete():
     # courseCode = request.form.getlist('courseCode')
     fileID = request.args.get('id')
     # date = request.form.getlist('date')
-    fileToBeRemoved = Files.query.filter_by(id=fileID).all()
+    fileToBeRemoved = Files.query.filter_by(id=fileID).first()
+    path = fileToBeRemoved.path
+    basepath = os.path.dirname(path)
+    if os.path.isfile(path):
+        os.remove(path)
+        removeFromDatabase(fileToBeRemoved)
+        if not os.listdir(basepath):
+            os.rmdir(basepath)
+    else: 
+        return 'file does not exist', 400
+    print(os.path.dirname(path))
+    return 'succes', 200
 
     # Delete the file specified, which can be either with id or file name
     # if fileToBeRemoved in session: 
         # fileToDelete = request.args.get('fileID')
         # print(hello)
-    removeFromDatabase(fileToBeRemoved)
+    # removeFromDatabase(fileToBeRemoved)
         # return 'success'
     # else: 
     #     return 'No file available', 400
+
+@bp.route('/searchId', methods = ['GET', 'DELETE'])
+def searchId(): 
+    files = Files.query.all()
+    list = ""
+    for file in files:
+        list += (str(file.id) + '    ')
+    return list, 200
