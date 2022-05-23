@@ -32,31 +32,33 @@ function Document() {
   const type = 'docx'
   return (
       <>
-          <div className="all-page-container">
+          <div className="allPageContainer" >
             <AllPagesPDFViewer pdf={`http://127.0.0.1:5000/converttopdf/convert?filepath=${path}&filetype=${type}`} />
           </div>
-          <div className='rightFloat'>
-          <Plot
-            data={[
-                {
-                x: ['Source integration & <br> content', 'Cohesion', 'Structure', "Language & style"],
-                y: currentData,
-                marker: {color: ['#F5793A', '#A95AA1', '#85C0F9', '#0F2080']},
-                type: 'bar',
-                },
-            ]}
-            layout={ {title: 'Scores', 
-            yaxis: {
-                range: [0, 10],
-                type: 'linear'
-              }} }
-            config= {{
-                displayModeBar: false, // this is the line that hides the bar.
-            }}
-            onClick={(data) => {
-                console.log("data", data.points[0].pointNumber)
-            }}
-            />
+          <div className='sideBar'>
+            <Plot
+                data={[
+                    {
+                    x: ['Source integration & <br> content', 'Cohesion', 'Structure', "Language & style"],
+                    y: currentData,
+                    marker: {color: ['#F5793A', '#A95AA1', '#85C0F9', '#0F2080']},
+                    type: 'bar',
+                    },
+                ]}
+                layout={ {title: 'Scores', 
+                yaxis: {
+                    range: [0, 10],
+                    type: 'linear'
+                }} }
+                config= {{
+                    displayModeBar: false, // this is the line that hides the bar.
+                }}
+                onClick={(data) => {
+                    console.log("data", data.points[0].pointNumber)
+                }}
+                useResizeHandler={true}
+                style={{width: '100%', height: '50vh'}}
+                />
               {/* <img className='smallGraph' src={placeholder} /> */}
               <br />
               <div className='textBoxExpl'>

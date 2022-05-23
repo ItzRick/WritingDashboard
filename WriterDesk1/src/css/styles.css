@@ -31,10 +31,18 @@
   }
   
   /* For all pages */
-  .all-page-container {
-    height: 100%;
-    max-height: 100vh;
+  .allPageContainer {
+    height: 85vh;
+    width:50vw;
+    max-height: 85vh;
     overflow: auto;
     float: left;
   }
+
+  .sideBar { 
+      width:40vw;
+      float: left;
+      overflow: auto;
+      height: 85vh;
+   }
   
