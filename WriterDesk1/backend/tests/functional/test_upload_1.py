@@ -4,7 +4,7 @@ from datetime import date, datetime
 from app.models import Files
 from werkzeug.utils import secure_filename
 
-def generalTestStuff(testClient, fileName, userId, courseCode, date1):
+def generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype):
     '''
         A general method to test if we can upload a file to the correct location and if we can then see that this has been added to the 
         disk in the correct location and if we can find the correct files, so the fileName, userId, courseCode and path in the datbase.
@@ -43,6 +43,7 @@ def generalTestStuff(testClient, fileName, userId, courseCode, date1):
     assert file.courseCode == courseCode
     assert file.userId == userId
     assert file.date == datetime.combine(date1, datetime.min.time())
+    assert file.fileType == filetype
     # Check if the file has indeed been added to the disk:
     assert os.path.exists(file.path)
     # See if we can also retrieve the file by querying by userId:
@@ -68,6 +69,7 @@ def testUploadTextStream(testClient, initDatabase):
     userId = 123
     courseCode = '2IPE0'
     date1 = date(2022, 5, 11)
+    filetype = '.txt'
     # Create the data packet:
     data = {
         'files': (io.BytesIO(b"some initial text data"), fileName),
@@ -87,6 +89,7 @@ def testUploadTextStream(testClient, initDatabase):
     assert file.courseCode == courseCode
     assert file.userId == userId
     assert file.date == datetime.combine(date1, datetime.min.time())
+    assert file.fileType == filetype
     # See if we can also retrieve the file by querying by userId:
     assert Files.query.filter_by(filename= secure_filename(fileName)).first() in Files.query.filter_by(userId=userId).all()
     # Check if the file has indeed been added to the disk:
@@ -109,7 +112,8 @@ def testUploadTextFile(testClient, initDatabase):
     userId = 256
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
-    generalTestStuff(testClient, fileName, userId, courseCode, date1)
+    filetype = '.txt'
+    generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype)
 
 def testUploadTxtMultiple(testClient, initDatabase):
     '''
@@ -131,11 +135,12 @@ def testUploadTxtMultiple(testClient, initDatabase):
     userId = 256
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
-    generalTestStuff(testClient, fileName1, userId, courseCode, date1)
+    filetype = '.txt'
+    generalTestStuff(testClient, fileName1, userId, courseCode, date1, filetype)
     # Upload the second file:
     fileName2 = 'test1.txt'
     date2 = date(2008, 10, 30)
-    generalTestStuff(testClient, fileName2, userId, courseCode, date2)
+    generalTestStuff(testClient, fileName2, userId, courseCode, date2, filetype)
     
 def testUploadTxtAgain(testClient, initDatabase):
     '''
@@ -154,9 +159,10 @@ def testUploadTxtAgain(testClient, initDatabase):
     userId = 256
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
-    generalTestStuff(testClient, fileName, userId, courseCode, date1)
+    filetype = '.txt'
+    generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype)
     date2 = date(2000, 10, 30)
-    generalTestStuff(testClient, fileName, userId, courseCode, date2)
+    generalTestStuff(testClient, fileName, userId, courseCode, date2, filetype)
 
 def testUploadPDFFile(testClient, initDatabase):
     '''
@@ -175,7 +181,8 @@ def testUploadPDFFile(testClient, initDatabase):
     userId = 789
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
-    generalTestStuff(testClient, fileName, userId, courseCode, date1)
+    filetype = '.pdf'
+    generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype)
 
 def testUploadPDFFileExtra(testClient, initDatabase):
     '''
@@ -193,7 +200,8 @@ def testUploadPDFFileExtra(testClient, initDatabase):
     userId = 564527
     courseCode = '5ABCBDHEH8'
     date1 = date(2005, 2, 27)
-    generalTestStuff(testClient, fileName, userId, courseCode, date1)
+    filetype = '.pdf'
+    generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype)
 
 def testUploadPDFMultiple(testClient, initDatabase):
     '''
@@ -215,11 +223,13 @@ def testUploadPDFMultiple(testClient, initDatabase):
     userId = 789
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
-    generalTestStuff(testClient, fileName1, userId, courseCode, date1)
+    filetype = '.pdf'
+    generalTestStuff(testClient, fileName1, userId, courseCode, date1, filetype)
     # Upload the second file:
     fileName2 = 'SEP_1.pdf'
     date2 = date(2008, 2, 1)
-    generalTestStuff(testClient, fileName2, userId, courseCode, date2)
+    filetype = '.pdf'
+    generalTestStuff(testClient, fileName2, userId, courseCode, date2, filetype)
 
 def testUploadPDFAgain(testClient, initDatabase):
     '''
@@ -239,10 +249,11 @@ def testUploadPDFAgain(testClient, initDatabase):
     userId = 789
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
-    generalTestStuff(testClient, fileName, userId, courseCode, date1)
+    filetype = '.pdf'
+    generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype)
     # Upload the file again with updated date:
     date2 = date(2008, 2, 1)
-    generalTestStuff(testClient, fileName, userId, courseCode, date2)
+    generalTestStuff(testClient, fileName, userId, courseCode, date2, filetype)
 
 def testUploadDOCXFile(testClient, initDatabase):
     '''
@@ -261,7 +272,8 @@ def testUploadDOCXFile(testClient, initDatabase):
     userId = 78267
     courseCode = '9ABCEHJDHD20'
     date1 = date(2016, 11, 8)
-    generalTestStuff(testClient, fileName, userId, courseCode, date1)
+    filetype = '.docx'
+    generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype)
 
 def testUploadDOCXFileMultiple(testClient, initDatabase):
     '''
@@ -282,11 +294,12 @@ def testUploadDOCXFileMultiple(testClient, initDatabase):
     userId = 78267
     courseCode = '9ABCEHJDHD20'
     date1 = date(2016, 11, 8)
-    generalTestStuff(testClient, fileName1, userId, courseCode, date1)
+    filetype = '.docx'
+    generalTestStuff(testClient, fileName1, userId, courseCode, date1, filetype)
     # Upload the second file:
     fileName2 = 'test_1.docx'
     date2 = date(2018, 11, 8)
-    generalTestStuff(testClient, fileName2, userId, courseCode, date2)
+    generalTestStuff(testClient, fileName2, userId, courseCode, date2, filetype)
 
 def testUploadDOCXFileAgain(testClient, initDatabase):
     '''
@@ -307,10 +320,11 @@ def testUploadDOCXFileAgain(testClient, initDatabase):
     userId = 78267
     courseCode = '9ABCEHJDHD20'
     date1 = date(2016, 11, 8)
-    generalTestStuff(testClient, fileName, userId, courseCode, date1)
+    filetype = '.docx'
+    generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype)
     # Update the file by uploading the file again:
     date2 = date(2018, 11, 8)
-    generalTestStuff(testClient, fileName, userId, courseCode, date2)
+    generalTestStuff(testClient, fileName, userId, courseCode, date2, filetype)
 
 def testUploadDOCFile(testClient, initDatabase):
     '''
@@ -329,7 +343,8 @@ def testUploadDOCFile(testClient, initDatabase):
     userId = 12345
     courseCode = '3ASE0'
     date1 = date(2009, 12, 27)
-    generalTestStuff(testClient, fileName, userId, courseCode, date1)
+    filetype = '.doc'
+    generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype)
 
 def testUploadDOCFileMultiple(testClient, initDatabase):
     '''
@@ -351,11 +366,12 @@ def testUploadDOCFileMultiple(testClient, initDatabase):
     userId = 12345
     courseCode = '3ASE0'
     date1 = date(2009, 12, 27)
-    generalTestStuff(testClient, fileName1, userId, courseCode, date1)
+    filetype = '.doc'
+    generalTestStuff(testClient, fileName1, userId, courseCode, date1, filetype)
     # Upload the second file:
     fileName2 = 'test_1.doc'
     date2 = date(2018, 3, 27)
-    generalTestStuff(testClient, fileName2, userId, courseCode, date1)
+    generalTestStuff(testClient, fileName2, userId, courseCode, date1, filetype)
 
 def testUploadDOCFileAgain(testClient, initDatabase):
     '''
@@ -376,10 +392,11 @@ def testUploadDOCFileAgain(testClient, initDatabase):
     userId = 12345
     courseCode = '3ASE0'
     date1 = date(2009, 12, 27)
-    generalTestStuff(testClient, fileName, userId, courseCode, date1)
+    filetype = '.doc'
+    generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype)
     # Upload the document for the second time, with an updated date:
     date2 = date(2018, 3, 27)
-    generalTestStuff(testClient, fileName, userId, courseCode, date2)
+    generalTestStuff(testClient, fileName, userId, courseCode, date2, filetype)
 
 
 

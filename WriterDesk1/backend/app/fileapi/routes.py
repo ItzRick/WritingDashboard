@@ -6,6 +6,7 @@ from app.fileapi import bp
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from magic import from_buffer 
 from datetime import date
+from mimetypes import guess_extension
 
 # @bp.before_first_request
 # def create_tables():
@@ -52,6 +53,7 @@ def fileUpload():
         isDocx = (fileType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
         isDoc = (fileType == 'application/msword')
         isTxt = (fileType == 'text/plain')
+        extension = guess_extension(fileType)
 
         # If the filetype is not accepted, indicate this by returning this in a message and a 400 code:
         if (not (isPdf or isDoc or isDocx or isTxt)):
@@ -74,7 +76,7 @@ def fileUpload():
         # Put the date in the correct object, by getting it from the isoformat as given by the frontend:
         date1 = date.fromisoformat(dates[idx])
         # Add it to the database:
-        fileInDatabase = Files(path=fileLocation, filename=filename, userId=userIds[idx], courseCode=courseCodes[idx], date=date1)
+        fileInDatabase = Files(path=fileLocation, filename=filename, userId=userIds[idx], courseCode=courseCodes[idx], date=date1, fileType=extension)
         # If it already exists in the database for this user and filename, remove it:
         existing = Files.query.filter_by(userId=userIds[idx], filename=filename).all()
         for file in existing:
@@ -89,13 +91,15 @@ def fileRetrieve():
     # Retrieve list of files that were uploaded by the current user,
     # ordered by the sorting attribute in the request
     if 'user_id' in session or True:
+        userId = request.args.get('userId')
+        print(userId)
         sortingAttribute = request.args.get('sortingAttribute')
         #TODO change session["user_id"] to actual reference to user
-        files = getFilesByUser(0, sortingAttribute)
+        files = getFilesByUser(userId, sortingAttribute)
 
         # Put dates in format
         for file in files:
-            file['date'] = file.get('date').strftime('%d/%m/%y %H:%M')
+            file['date'] = file.get('date').strftime('%d/%m/%y')
             
         # Return http response with list as json in response body
         return jsonify(files)

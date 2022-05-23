@@ -38,6 +38,7 @@ class Files(db.Model, Serializer):
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))
     path = db.Column(db.String, unique=False)
     filename = db.Column(db.String(256), index=True, unique=False)
+    fileType = db.Column(db.String(4), unique=False)
     courseCode = db.Column(db.String(16), unique=False, default=NULL)
     date = db.Column(db.DateTime, unique=False, default=datetime.today())
 
