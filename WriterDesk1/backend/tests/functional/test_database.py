@@ -397,7 +397,7 @@ def testRouteRemoveFileFromDatabase(testClient, initDatabaseEmpty):
     date1=date(2019, 2, 12)
     userId = 123
     courseCode = '2IPE0'
-    id = 1
+    id1 = 1
 
     # Get the BASEDIR and set the fileDir with that:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
@@ -406,7 +406,7 @@ def testRouteRemoveFileFromDatabase(testClient, initDatabaseEmpty):
     # Create the data packet:
     data = {
         'files': (open(fileDir, 'rb'), fileName),
-        'id': id,
+        'id': id1,
         'fileName': fileName,
         'courseCode': courseCode,
         'userId': userId,
@@ -423,16 +423,18 @@ def testRouteRemoveFileFromDatabase(testClient, initDatabaseEmpty):
 
     # See if the correct data has been added to the database which we retrieve by the filename:
     file = Files.query.filter_by(filename=secure_filename(fileName)).first()
+    
 
-    # assert file.filename == secure_filename(fileName)
-    # assert file.id == id
-    # assert file.courseCode == courseCode
-    # assert file.userId == userId
-    # assert file.date == datetime.combine(date1, datetime.min.time())
-    # # Check if the file has indeed been added to the disk:
-    # assert os.path.exists(file.path)
-    # # See if we can also retrieve the file by querying by userId:
-    # assert Files.query.filter_by(filename= secure_filename(fileName)).first() in Files.query.filter_by(userId=userId).all()
+    assert file.filename == secure_filename(fileName)
+    assert file.id == id1
+    assert file.courseCode == courseCode
+    assert file.userId == userId
+    assert file.date == datetime.combine(date1, datetime.min.time())
+    # Check if the file has indeed been added to the disk:
+    assert os.path.exists(file.path)
+    # See if we can also retrieve the file by querying by userId:
+    assert Files.query.filter_by(filename= secure_filename(fileName)).first() in Files.query.filter_by(userId=userId).all()
+    assert Files.query.filter_by(filename= secure_filename(fileName)).first() in Files.query.filter_by(id=id1).all()
     ###
     # print(file)
     # print("HEEYY1")
@@ -442,10 +444,15 @@ def testRouteRemoveFileFromDatabase(testClient, initDatabaseEmpty):
     # else:
     #     print("uuuh")
     # Delete the file
-    print(data) 
-    response2 = testClient.post('/fileapi/filedelete', data=data)
-    print("HEEYY2")
-    # Check if the file has been deleted of the disk
+    # print(data) 
+    string = {
+        'id': id1,
+    }
+    # assert data1 == 'hi'
+    response2 = testClient.delete('/fileapi/filedelete', query_string=string)
+    # assert response2.data == ''
+    # print("HEEYY2")
+    # # Check if the file has been deleted of the disk
     assert not os.path.exists(file.path)
-    # See if we also cannot retrieve the file by querying the userId
+    # # See if we also cannot retrieve the file by querying the userId
     assert Files.query.filter_by(filename= secure_filename(fileName)).first() not in Files.query.filter_by(userId=userId).all()

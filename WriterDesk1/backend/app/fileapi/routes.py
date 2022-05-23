@@ -106,9 +106,9 @@ def fileRetrieve():
     else:
         return 'No user available', 400
 
-@bp.route('/filedelete', methods = ['GET', 'DELETE'])
+@bp.route('/filedelete', methods = ['DELETE'])
 def fileDelete(): 
-    print("HEEYY1.1")
+    # print("HEEYY1.1")
     # Check if there are even files to delete
     # files = request.files.getlist('files')
     # if (len(files) == 0):
@@ -127,8 +127,9 @@ def fileDelete():
             os.rmdir(basepath)
     else: 
         return 'file does not exist', 400
-    print(os.path.dirname(path))
+    # print(os.path.dirname(path))
     return 'succes', 200
+    # return str(fileID), 200
 
     # Delete the file specified, which can be either with id or file name
     # if fileToBeRemoved in session: 
@@ -139,7 +140,7 @@ def fileDelete():
     # else: 
     #     return 'No file available', 400
 
-@bp.route('/searchId', methods = ['GET', 'DELETE'])
+@bp.route('/searchId', methods = ['GET'])
 def searchId(): 
     files = Files.query.all()
     list = ""
