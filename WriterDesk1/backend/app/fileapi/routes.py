@@ -7,6 +7,10 @@ from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from magic import from_buffer 
 from datetime import date
 
+# @bp.before_first_request
+# def create_tables():
+#     bp.create_all()
+
 @bp.route('/upload', methods = ['POST'])
 def fileUpload():
     '''
@@ -100,10 +104,22 @@ def fileRetrieve():
 
 @bp.route('/filedelete', methods = ['GET', 'DELETE'])
 def fileDelete(): 
+    print("HEEYY1.1")
+    # Check if there are even files to delete
+    # files = request.files.getlist('files')
+    # if (len(files) == 0):
+    #     return 'No file uploaded', 400
+    # Get the data as sent by the react frontend:
+    # courseCode = request.form.getlist('courseCode')
+    fileID = request.args.get('id')
+    # date = request.form.getlist('date')
+    fileToBeRemoved = Files.query.filter_by(id=fileID).all()
+
     # Delete the file specified, which can be either with id or file name
-    if 'file_id' in session: 
-        fileToDelete = request.args.get('file_id')
-        removeFromDatabase(fileToDelete)
-        return 'success'
-    else: 
-        return 'No file available', 400
+    # if fileToBeRemoved in session: 
+        # fileToDelete = request.args.get('fileID')
+        # print(hello)
+    removeFromDatabase(fileToBeRemoved)
+        # return 'success'
+    # else: 
+    #     return 'No file available', 400
