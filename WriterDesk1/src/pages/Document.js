@@ -4,7 +4,6 @@ import {Typography} from "@mui/material";
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import React from 'react';
 import AllPagesPDFViewer from "../components/all-pages";
@@ -21,7 +20,6 @@ function Document() {
   //set title in parent 'base'
   const { setTitle } = useOutletContext();
 
-    const [file, setFile] = useState('');
   useEffect(() => {
     setTitle('Document');    
   });

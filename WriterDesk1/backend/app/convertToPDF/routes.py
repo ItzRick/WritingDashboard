@@ -6,7 +6,7 @@ from fpdf import FPDF
 
 
 @bp.route('/convert', methods= ['GET'])
-def convertDocx():
+def convertToPDF():
     filepath = request.args.get('filepath')
     filetype = request.args.get('filetype')
     print(filepath)
