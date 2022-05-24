@@ -1,4 +1,5 @@
 import os
+# from types import NoneType
 from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify
 from app.models import Files
@@ -7,10 +8,6 @@ from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from magic import from_buffer 
 from datetime import date
 from mimetypes import guess_extension
-
-# @bp.before_first_request
-# def create_tables():
-#     bp.create_all()
 
 @bp.route('/upload', methods = ['POST'])
 def fileUpload():
@@ -92,9 +89,7 @@ def fileRetrieve():
     # ordered by the sorting attribute in the request
     if 'user_id' in session or True:
         userId = request.args.get('userId')
-        print(userId)
         sortingAttribute = request.args.get('sortingAttribute')
-        #TODO change session["user_id"] to actual reference to user
         files = getFilesByUser(userId, sortingAttribute)
 
         # Put dates in format
@@ -108,37 +103,27 @@ def fileRetrieve():
 
 @bp.route('/filedelete', methods = ['DELETE'])
 def fileDelete(): 
-    # print("HEEYY1.1")
-    # Check if there are even files to delete
-    # files = request.files.getlist('files')
-    # if (len(files) == 0):
-    #     return 'No file uploaded', 400
     # Get the data as sent by the react frontend:
-    # courseCode = request.form.getlist('courseCode')
     fileID = request.args.get('id')
-    # date = request.form.getlist('date')
     fileToBeRemoved = Files.query.filter_by(id=fileID).first()
+    # Check if the file is nonexistent
+    # And if so, throw an error message 
+    if fileToBeRemoved == None: 
+        return 'file does not exist', 404
+    # Retrieve the paths of the file to be removed
     path = fileToBeRemoved.path
     basepath = os.path.dirname(path)
+    # If the path exists, remove the file from the database
+    # Else, throw an error message
     if os.path.isfile(path):
         os.remove(path)
         removeFromDatabase(fileToBeRemoved)
         if not os.listdir(basepath):
             os.rmdir(basepath)
     else: 
-        return 'file does not exist', 400
-    # print(os.path.dirname(path))
+        return 'file does not exist', 404
+    # Return a success message when done
     return 'succes', 200
-    # return str(fileID), 200
-
-    # Delete the file specified, which can be either with id or file name
-    # if fileToBeRemoved in session: 
-        # fileToDelete = request.args.get('fileID')
-        # print(hello)
-    # removeFromDatabase(fileToBeRemoved)
-        # return 'success'
-    # else: 
-    #     return 'No file available', 400
 
 @bp.route('/searchId', methods = ['GET'])
 def searchId(): 
