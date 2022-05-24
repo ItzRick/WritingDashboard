@@ -52,7 +52,8 @@ def create_token():
         return jsonify({"msg": "Bad username or password"}), 401
     
     access_token = create_access_token(identity=username)
-    return jsonify(access_token=access_token)
+    userid = user.id
+    return jsonify(access_token=access_token, user_id = userid)
 
 @app.route("/protected", methods=["GET"])
 @jwt_required()
