@@ -3,6 +3,7 @@ import {
     Typography 
 } from "@mui/material";
 import graphPlaceholder from '../images/chartImage.png';
+import Plot from 'react-plotly.js';
 
 // routing
 import { useOutletContext } from 'react-router-dom';
