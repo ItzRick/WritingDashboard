@@ -8,6 +8,10 @@ from magic import from_buffer
 from datetime import date
 from mimetypes import guess_extension
 
+# @bp.before_first_request
+# def create_tables():
+#     bp.create_all()
+
 @bp.route('/upload', methods = ['POST'])
 def fileUpload():
     '''
@@ -102,12 +106,44 @@ def fileRetrieve():
     else:
         return 'No user available', 400
 
-@bp.route('/filedelete', methods = ['GET', 'DELETE'])
+@bp.route('/filedelete', methods = ['DELETE'])
 def fileDelete(): 
-    # Delete the file specified, which can be either with id or file name
-    if 'file_id' in session: 
-        fileToDelete = request.args.get('file_id')
-        removeFromDatabase(fileToDelete)
-        return 'success'
+    # print("HEEYY1.1")
+    # Check if there are even files to delete
+    # files = request.files.getlist('files')
+    # if (len(files) == 0):
+    #     return 'No file uploaded', 400
+    # Get the data as sent by the react frontend:
+    # courseCode = request.form.getlist('courseCode')
+    fileID = request.args.get('id')
+    # date = request.form.getlist('date')
+    fileToBeRemoved = Files.query.filter_by(id=fileID).first()
+    path = fileToBeRemoved.path
+    basepath = os.path.dirname(path)
+    if os.path.isfile(path):
+        os.remove(path)
+        removeFromDatabase(fileToBeRemoved)
+        if not os.listdir(basepath):
+            os.rmdir(basepath)
     else: 
-        return 'No file available', 400
+        return 'file does not exist', 400
+    # print(os.path.dirname(path))
+    return 'succes', 200
+    # return str(fileID), 200
+
+    # Delete the file specified, which can be either with id or file name
+    # if fileToBeRemoved in session: 
+        # fileToDelete = request.args.get('fileID')
+        # print(hello)
+    # removeFromDatabase(fileToBeRemoved)
+        # return 'success'
+    # else: 
+    #     return 'No file available', 400
+
+@bp.route('/searchId', methods = ['GET'])
+def searchId(): 
+    files = Files.query.all()
+    list = ""
+    for file in files:
+        list += (str(file.id) + '    ')
+    return list, 200
