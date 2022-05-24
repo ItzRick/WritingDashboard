@@ -14,6 +14,7 @@ import { useEffect, useState, useRef } from 'react';
  * @returns File Upload page
  */
 const Upload = () => {
+    // list of references
     const refs = useRef([]);
 
     //set title in parent 'base'
@@ -24,7 +25,6 @@ const Upload = () => {
 
     // id provider
     const [id, setId] = useState(1);
-
 
     // list of UploadSingleFile objects
     const [uploadSingleFiles, setUploadSingleFiles] = useState([
