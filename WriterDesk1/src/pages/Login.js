@@ -22,9 +22,16 @@ const BASE_URL = "http://localhost:5000";
  */
 const Login = () => {
 
+    // Set username from textfield
     const [username, setUsername] = useState("");
+
+    // Set password from textfield
     const [password, setPassword] = useState("");
 
+    // Change page using formError when we find an error
+    const [formError, setFormError] = useState(false);
+
+    // Do POST request containing username and password variable, recieve data when username and password are correct
     const handleClick = () => {
         axios.post(`${BASE_URL}/token`,{
                 "username": username,
@@ -36,10 +43,12 @@ const Login = () => {
                 console.log("Inloggen gelukt!")
               }else{
                   alert(response.data.error);
+                  setFormError(true);
               }
         })
-        .catch(error => {
-            console.error("Error:",error);
+        .catch(error =>{
+            console.error("Something went wrong:",error);
+            setFormError(true);
         });
     }
     
@@ -62,6 +71,7 @@ const Login = () => {
                         <TextField id='password' label='Password' variant='outlined' type='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
                     </div>
                     <br />
+                    {formError && <Typography color="red">Invalid username and/or password</Typography>}
                     <Button variant="contained" sx={{bgcolor: 'button.main', color: 'button.text'}} onClick={handleClick}>Log in</Button>
                 </div>
                 <div className='div3'>
