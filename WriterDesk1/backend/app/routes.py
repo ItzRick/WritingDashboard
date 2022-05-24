@@ -44,6 +44,16 @@ def my_text():
 
 @app.route('/token', methods=['POST'])
 def create_token():
+    '''
+        This function handles the login request. When a correct combination of an username and password are given we
+        respond with an access token (created using Flask_JWT). 
+        Attributes:
+            username: username as given in frontend
+            password: password as given in frontend
+            user: instance of User class from database, empty when there isn't a corresponding user for given username
+            userid: id of user attribute
+            access_token: JWT access token
+    '''
     username = request.json.get("username", None)
     password = request.json.get("password", None)
 
@@ -55,6 +65,8 @@ def create_token():
     userid = user.id
     return jsonify(access_token=access_token, user_id = userid)
 
+
+#TODO: used for authentication:
 @app.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
