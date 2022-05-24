@@ -51,12 +51,11 @@ def fileUpload():
         fileType = from_buffer(file.read(), mime = True)
         isPdf = (fileType == 'application/pdf')
         isDocx = (fileType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-        isDoc = (fileType == 'application/msword')
         isTxt = (fileType == 'text/plain')
         extension = guess_extension(fileType)
-
+       
         # If the filetype is not accepted, indicate this by returning this in a message and a 400 code:
-        if (not (isPdf or isDoc or isDocx or isTxt)):
+        if (not (isPdf or isDocx or isTxt)):
             return 'Incorrect filetype ' + str(idx + 1), 400
         # Run secure_filename on the file to protect against sql_injections etc and to make sure the filename does not
         # contain any spaces:
