@@ -9,23 +9,23 @@ class User(db.Model):
             type: used as discrimator, indicates type of object in row
             id: Unique primary key User ID 
             username: email address or username from user
-            password_hash: hashed password from user, hashed using werkzeug.security
+            passwordHash: hashed password from user, hashed using werkzeug.security
     '''
     __tablename__ = "user"
     type = db.Column(db.String(32))
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
+    passwordHash = db.Column(db.String(128))
     
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.passwordHash = generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.passwordHash, password)
 
     __mapper_args__ = {
         'polymorphic_on': type,
