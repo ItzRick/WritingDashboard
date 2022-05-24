@@ -7,18 +7,47 @@ import re
 import bs4 as bs
 
 
-# Methods used for extracting text from pdf and docx files and converting them to text files.
+# Methods used for extracting text from txt, pdf and docx files and converting them to strings or text files.
 # Usage: call extract_string_from_file(path) or convert_file_to_txt(pathIn, pathOut) in a try/catch to catch type/value errors
 # All paths should be absolute paths
 
 # Retrieves text from a text file at path, returns a string with the text
 def getTXTText(path):
-    text = ""
-    doc = open(path)
-    text = doc.read()
-    doc.close()
-    return text
-
+    fullText = ""
+    try: 
+        # Define array that will contain the document
+        linesDocument = []
+        with open(path, 'rt') as document: 
+            # Split the document into lines
+            document = document.read().splitlines()
+            for line in document: 
+                # If there is a whiteline
+                # that line should turn into "\n"
+                # If the last element of a string is not a space
+                # then that should be added
+                if line == "": 
+                    line = "\n"
+                elif line[-1] != " ":
+                    line = line+" "
+                linesDocument.append(line)
+        # Ensure that before a newline character (\n)
+        # there is no space at the end of the previous line
+        i = 0
+        while i < len(linesDocument):
+            if i > 0 and linesDocument[i] == "\n":
+                linesDocument[i-1] = linesDocument[i-1][:-1]
+            i = i + 1
+        # Ensure that the last character of a string
+        # is not a space 
+        last = len(linesDocument) - 1
+        linesDocument[last] = linesDocument[last][:-1]
+        fullText = ''.join(linesDocument)
+    except Exception as e:
+        # Invalid file or filename
+        print("caught", repr(e), "when calling getTXTText")
+    # Remove redundant newlines
+    # fullText = re.sub(r'\n+', '\n\n', fullText).strip()
+    return fullText
 
 # Retrieves text from a pdf file at path, returns a string with the text
 def getPDFText(path):
