@@ -1,23 +1,23 @@
 
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import {Alert} from '@mui/material';
 import { useEffect, useState, useRef, forwardRef, useImperativeHandle  } from 'react';
 import axios from 'axios';
+
 // materials
 import {
+    Alert,
     Button,
     TextField
 } from "@mui/material";
-
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 
 /**
  * 
+ * @param {} 
  * @returns Single File Upload Object
  */
-const UploadSingleFile = forwardRef(({ props, setUploadSingleFiles, thisIndex }, ref) => {
+const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) => {
 
     /**
      * Update uploadSingleFiles in parent Upload.js
@@ -26,8 +26,12 @@ const UploadSingleFile = forwardRef(({ props, setUploadSingleFiles, thisIndex },
         setUploadSingleFiles((list) => list.filter(item => item.props.thisIndex !== thisIndex));
     }
 
+    /**
+     * 
+     */
     useImperativeHandle(ref, () => ({
         uploadFile() {
+            // url of the file api
             const url = 'https://localhost:5000/fileapi/upload';
             const formData = new FormData();
             formData.append('files',file);
@@ -43,11 +47,6 @@ const UploadSingleFile = forwardRef(({ props, setUploadSingleFiles, thisIndex },
                 console.log(error.response.data);
             });
                 
-        //   console.log("Hello from Child Component")
-        //   console.log(file.name);
-        //   console.log(date);
-        //   console.log(course);
-        //   console.log(date.toISOString().substring(0, 10));
           setFile('or drag it here.');
           setDate(new Date());
           setCourse('');
@@ -66,6 +65,11 @@ const UploadSingleFile = forwardRef(({ props, setUploadSingleFiles, thisIndex },
 
     const [date, setDate] = useState(new Date());
     
+
+    /**
+     * Checks if the file is of the correct type, and correct size
+     * @param {file} file Some file
+     */
     const checkCorrectFile = (file) => {
         const fileType = file.type
         const isPDF = fileType === 'application/pdf';
@@ -98,12 +102,18 @@ const UploadSingleFile = forwardRef(({ props, setUploadSingleFiles, thisIndex },
 
     const onFileChange = (event) => {
         if (event.target.files[0] === undefined) {
+            // no file here
             setFile('or drag it here.')
         } else {
+            // there is a file here, check if it is correct
             checkCorrectFile(event.target.files[0])
         }
     }
 
+    /**
+     * Handle a file being dragged and dropped into file field
+     * @param {event} event 
+     */
     const onFileDrop = (event) => {
         event.stopPropagation();
         event.preventDefault();
