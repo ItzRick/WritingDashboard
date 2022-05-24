@@ -30,7 +30,12 @@ function Document() {
   const path = 'C:\\Users\\20183163\\PycharmProjects\\SEP2021\\WriterDesk1\\src\\example2.pdf'
   const type = 'pdf'
 
+  const handleScroll = (e) => {
 
+    console.log("scrollTop", e.target.scrollTop);
+    console.log("scrollHeight", e.target.scrollHeight);
+    console.log("scrollWidth", e.target.scrollWidth);
+  }
 
   const mistakes = [
   {name: 1, explanation: 'expl1', color: 'rgba(200, 0, 0, 0.3)', coords: [156.9016876220703, 157.89927673339844, 183.29876708984375, 169.56455993652344]},
@@ -87,7 +92,7 @@ function Document() {
 
   return (
     <>
-      <div className="all-page-container" id="all-page-container" onClick={e=>handleClick(e)} onMouseMove={(e) => mousePointer(e)}>
+      <div className="all-page-container" id="all-page-container" onClick={e=>handleClick(e)} onScroll={(e) => handleScroll(e)} onMouseMove={(e) => mousePointer(e)}>
         <AllPagesPDFViewer pdf={`http://127.0.0.1:5000/converttopdf/convert?filepath=${path}&filetype=${type}`} />
       </div>
       <div className='rightFloat'>
