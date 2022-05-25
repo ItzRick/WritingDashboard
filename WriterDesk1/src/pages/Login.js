@@ -13,10 +13,13 @@ import testImage from '../images/placeholder_image.png'
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 
+// Login request setup
 import axios from 'axios';
 const BASE_URL = "http://localhost:5000";
 
 /**
+ * Request login to server based on form on page
+ * 
  * 
  * @returns login page
  */
@@ -33,7 +36,7 @@ const Login = () => {
 
     // Do POST request containing username and password variable, recieve data when username and password are correct
     const handleClick = () => {
-        axios.post(`${BASE_URL}/token`,{
+        axios.post(`${BASE_URL}/login`,{
                 "username": username,
                 "password": password,
             }).then(response =>{
