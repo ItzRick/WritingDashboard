@@ -1,4 +1,4 @@
-from app import db, login
+from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from asyncio.windows_events import NULL
@@ -65,7 +65,7 @@ class Participant(User):
     __mapper_args__ = {
         'polymorphic_identity': "participant",
     }
-    
+
 class Files(db.Model, Serializer):
     '''
         Class to enter files in the database. 

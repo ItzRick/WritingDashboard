@@ -15,7 +15,7 @@ import React, { useState } from 'react';
 
 // Login request setup
 import axios from 'axios';
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://localhost:5000/loginapi";
 
 /**
  * Request login to server based on form on page
