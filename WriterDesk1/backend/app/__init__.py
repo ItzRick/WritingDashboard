@@ -4,13 +4,25 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 
-from flask_login import LoginManager
+# Database instance:
+db = SQLAlchemy()
+migrate = Migrate()
 
-app = Flask(__name__)
-CORS(app, origins=['http://localhost:3000'])
-app.config.from_object(Config)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-login = LoginManager(app)
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    # Prevent CORS errors, make sure we can retrieve things from the react front-end without errors:
+    CORS(app, origins=['https://localhost:3000'])
+    # Retrieve stuff from the config file:
+    app.config.from_object(config_class)
+    # Start the database:
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-from app import routes, models
+    from app.fileapi import bp as fileapi_db
+    app.register_blueprint(fileapi_db, url_prefix='/fileapi')
+
+    # Return the app:
+    return app
+
+
+from app import models
