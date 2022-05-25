@@ -30,6 +30,11 @@ class User(db.Model):
     username = db.Column(db.String(120), index=True, unique=True)
     passwordHash = db.Column(db.String(128))
     
+    def __init__(self, username: str, password_plaintext: str):
+        self.type = "user"
+        self.username = username
+        self.passwordHash = self.set_password(password_plaintext)
+
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
