@@ -31,9 +31,6 @@ const Upload = () => {
 
     return (
         <>
-            <div className='title'>
-                <Typography variant='h3'>Upload</Typography>
-            </div>
             <br />
             <div className='center'>
                 {UploadSingleFile()}

@@ -26,7 +26,6 @@ const Login = () => {
                     <IconButton style={{ float: 'left' }} component={Link} to='/LandingPage'>
                         <img className='logo' src={testImage} />
                     </IconButton>
-                    <Typography variant='h3'>Login</Typography>
                     <div className='filler2'></div>
                 </div>
                 <div className='div2'>
