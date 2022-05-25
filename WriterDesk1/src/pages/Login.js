@@ -7,7 +7,7 @@ import {
     Typography,
     IconButton 
 } from "@mui/material";
-import testImage from '../images/placeholder_image.png'
+import logo from '../images/logo.png'
 
 // routing
 import { Link } from 'react-router-dom';
@@ -24,7 +24,7 @@ const Login = () => {
             <div className='parent'>
                 <div className='div1'>
                     <IconButton style={{ float: 'left' }} component={Link} to='/LandingPage'>
-                        <img className='logo' src={testImage} />
+                        <img className='logo' src={logo} />
                     </IconButton>
                     <div className='filler2'></div>
                 </div>
