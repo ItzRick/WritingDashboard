@@ -54,7 +54,7 @@ def getTXTText(path):
 
 # Retrieves text from a pdf file at path, returns a string with the text
 # If returnReferences is True, also returns a string with the references
-def getPDFText(path, returnReferences=False, includeTables=False, includeCaptions=False):
+def getPDFText(path, returnReferences=False, includeTables=False, includeCaptions=False, includeLists=True):
     text = referenceText = ""
     try:
         doc = fitz.open(path)
@@ -69,7 +69,7 @@ def getPDFText(path, returnReferences=False, includeTables=False, includeCaption
             for i, block in enumerate(blocks):
                 #Check for potential tables
                 if isBlockTable(block, xNormal):
-                    table.append(getBlockText(block))
+                    table.append(getBlockText(block, includeLists))
                     continue
                 else:
                     if len(table) < 2 or includeTables:
@@ -78,7 +78,7 @@ def getPDFText(path, returnReferences=False, includeTables=False, includeCaption
                     table = []
 
                 #Retrieve text from block
-                blockText = getBlockText(block)
+                blockText = getBlockText(block, includeLists)
 
                 #Ignore empty blocks and captions
                 if blockText == "" or (isTextCaption(blockText) and not includeCaptions):
@@ -86,14 +86,14 @@ def getPDFText(path, returnReferences=False, includeTables=False, includeCaption
                 
                 #Append text from block to the text of the page
                 #No new line if this is the first block or the first sentence was started in previous block 
-                if firstBlock or not regex.search("^[\P{L}]*\p{Lu}", blockText):
+                if firstBlock or not regex.search(r"^[\P{L}]*\p{Lu}", blockText):
                     firstBlock = False
                     pageText = "".join([pageText, blockText])
                 else:
                     pageText = "\n".join([pageText, blockText])
 
             #Append text from page to the text of the document
-            if regex.search("[^\.\?\!\p{Pf}]$", text.rstrip()):
+            if regex.search(r"[^\.\?\!\p{Pf}\p{N}]$", text.rstrip()):
                 text = "".join([text.rstrip(), " ", pageText])
             else:
                 text = "".join([text, "\n", pageText])
@@ -103,7 +103,7 @@ def getPDFText(path, returnReferences=False, includeTables=False, includeCaption
 
     text = postProcessText(text)
     #Split references
-    referenceSplit = regex.split("\n\P{L}*([Rr]eferences|[Bb]ibliography)\P{L}*\n", text)
+    referenceSplit = regex.split(r"\n\P{L}*((?i)references|(?i)bibliography)[\n\s]", text)
     if len(referenceSplit) > 1:
         text = referenceSplit[0]
         referenceText = referenceSplit[len(referenceSplit)-1]
@@ -242,18 +242,18 @@ def getFrequencyX(doc):
 # using regular expressions
 def postProcessText(text):     
     #Combine broken words together
-    text = regex.sub("-\s*\n\s*", "", text)
+    text = regex.sub(r"-\s*\n\s*", "", text)
     #Remove number references
-    text = regex.sub("\s\[\d*\]", "", text)
+    text = regex.sub(r"\s\[\d*\]", "", text)
     #Remove empty lines
-    text = regex.sub("^(\s)*\n", "", text)
-    text = regex.sub("\n(\s)*\n", "\n", text)
+    text = regex.sub(r"^(\s)*\n", "", text)
+    text = regex.sub(r"\n(\s)*\n", "\n", text)
     #Remove Excess spaces
-    text = regex.sub(" ( )+", " ", text)
+    text = regex.sub(r" ( )+", " ", text)
     #Remove in-text citations
-    oneSource = "([^\)]*(\n[^\)]*)?,[\s\n]*)?(\d{4}|n\.d\.)"
-    multipleSources = "(("+ oneSource +"|\setc\.)(;[\s\n]*)?)+"
-    text = regex.sub("(?<=[^\.])\s\((" + oneSource + "|" + multipleSources + ")\)", "", text)
+    oneSource = r"([^\)]*(\n[^\)]*)?,[\s\n]*)?(\d{4}|n\.d\.)"
+    multipleSources = r"(("+ oneSource +r"|\setc\.)(;[\s\n]*)?)+"
+    text = regex.sub(r"(?<=[^\.])\s\((" + oneSource + "|" + multipleSources + r")\)", "", text)
     return text
 
 # Retrieves text from a pdf line as string
@@ -266,26 +266,33 @@ def getLineText(line):
         lineText = "".join([lineText, spanText])
     return lineText
 
+def filterLineList(lineText, includeLists=True):
+    listRegex = r"^\s*(\p{N}+\.|\p{L}\.|[^\p{L}\p{N}&%#])(\p{N}+)*((\.|:))?\s(?=\p{L})"
+    if regex.search(listRegex, lineText):
+        if includeLists:
+            lineText = regex.sub(listRegex, "", lineText)
+        else:
+            lineText = ""
+    return lineText
+
+def filterLineNoLetters(lineText):
+    #Remove lines without letters and punctuation
+    noLetterRegex = r"^[^,:\(\)\p{L}]*$"
+    if regex.search(noLetterRegex, lineText):
+        lineText = regex.sub(noLetterRegex, "", lineText)
+    return lineText
+
 # Retrieves text from a pdf block as string,
 # with list symbols, lines without letters and punctuation out
-def getBlockText(block):
+def getBlockText(block, includeLists):
     blockText = ""
     lines = block["lines"]
     for i, line in enumerate(lines):
-        lineText = getLineText(line)
-        #Remove list symbols
-        listRegex = "^\s*(\p{N}+\.|\p{L}\.|[^\p{L}\p{N}&%#])(\p{N}+)*((\.|:))?\s(?=\p{L})"
-        if regex.search(listRegex, lineText):
-            lineText = regex.sub(listRegex, "", lineText)
+        unfilteredLineText = getLineText(line)
+        lineText = filterLineList(unfilteredLineText, includeLists)
+        lineText = filterLineNoLetters(lineText)
+        if unfilteredLineText != lineText:
             blockText = "".join([blockText, "\n", lineText])
-            continue
-
-        #Remove lines without letters and punctuation
-        noLetterRegex = "^[^,:\(\)\p{L}]*$"
-        if regex.search(noLetterRegex, lineText):
-            lineText = regex.sub(noLetterRegex, "", lineText)
-            if lineText != "":
-                blockText = "".join([blockText, "\n", lineText])
             continue
 
         #Start line with different fontsize on new line
@@ -306,7 +313,10 @@ def isBlockTable(block, xNormal, yTolerance=3):
     lines = block["lines"]
     if len(lines) > 0:
         if lines[0]["bbox"][0] == xNormal:
-            return False 
+            return False
+        lineText = getLineText(lines[0]) 
+        if lineText != filterLineList(lineText) or regex.search(r"^[^\p{L}\p{N}]*$", lineText):
+            return False
         if len(lines) > 1:
             y = lines[0]["bbox"][1]
             for line in lines:
@@ -318,5 +328,5 @@ def isBlockTable(block, xNormal, yTolerance=3):
 #Checks if block is caption
 #Assumes captions start with Figure, Fig. or Table
 def isTextCaption(block):
-    reg = "^(Table|Figure|Fig\.)\s*\d*(\.\d*)*(\.|:)?\s*(?=\p{Lu})"
+    reg = r"^(T(?i)able|F(?i)igure|F(?i)ig\.)\s*\d*(\.\d*)*(\.|:)?\s*(?=\p{Lu})"
     return regex.search(reg, block.lstrip())
