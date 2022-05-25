@@ -175,6 +175,10 @@ grid-row-gap: 0px;
     padding: 3px;
     margin-bottom: 5px;
     margin-top: 5px;
+    /*display: none;*/
+}
+
+.hidden {
     display: none;
 }
 
