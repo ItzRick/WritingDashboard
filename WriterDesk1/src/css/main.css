@@ -178,6 +178,45 @@ grid-row-gap: 0px;
     /*display: none;*/
 }
 
+.textBoxWord {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 19vw;
+    float: left;
+    position: absolute;
+    white-space: nowrap;
+
+}
+
+.textBoxType {
+    float: right;
+    /*position: absolute;*/
+    user-select: none;
+    width: 16vw;
+    text-align: right;
+}
+
+.textBoxReplacements {
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+    /*width: 5vw;*/
+    display: inline-block;
+    border-radius: 5px;
+    padding-right: 4px;
+    padding-left: 4px;
+    margin-left: 10px;
+}
+
+.clickableTextDiv {
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+    /*width: 5vw;*/
+    display: inline-block;
+    position: absolute;
+    cursor: pointer;
+}
+
+
 .hidden {
     display: none;
 }
