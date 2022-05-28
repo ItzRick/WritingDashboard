@@ -197,20 +197,19 @@ grid-row-gap: 0px;
 }
 
 .textBoxReplacements {
-    /*overflow: hidden;*/
-    /*text-overflow: ellipsis;*/
-    /*width: 5vw;*/
     display: inline-block;
-    border-radius: 5px;
-    padding-right: 4px;
-    padding-left: 4px;
+    border-radius: 4px;
+    padding-right: 7px;
+    padding-left: 7px;
     margin-left: 10px;
 }
 
+.replacementsText {
+    display: inline-block;
+    font-style: italic;
+}
+
 .clickableTextDiv {
-    /*overflow: hidden;*/
-    /*text-overflow: ellipsis;*/
-    /*width: 5vw;*/
     display: inline-block;
     position: absolute;
     cursor: pointer;
