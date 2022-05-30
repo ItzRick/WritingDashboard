@@ -176,17 +176,13 @@ grid-row-gap: 0px;
     margin-bottom: 5px;
     margin-top: 5px;
     position: relative;
-    /*display: none;*/
 }
 
 .textBoxWord {
     overflow: hidden;
     text-overflow: ellipsis;
     width: 19vw;
-    float: left;
-    position: absolute;
     white-space: nowrap;
-
 }
 
 .textBoxType {
