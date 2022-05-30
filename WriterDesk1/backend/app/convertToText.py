@@ -55,6 +55,28 @@ def getTXTText(path):
 # Retrieves text from a pdf file at path, returns a string with the text
 # If returnReferences is True, also returns a string with the references
 def getPDFText(path, returnReferences=False, includeTables=False, includeCaptions=False, includeLists=True):
+    """
+    Retrieves text from a pdf file at path and returns a string with the text
+    Attributes:
+        returnReferences: Whether a string with the references should be returned
+        includeTables: Whether text from tables should be included in the returned string
+        includeCaptions: Whether text from captions should be included in the returned string
+        includeLists: Whether text from lists should be included in the returned string
+        text: String of extracted text
+        doc: PDF document
+        xNormal: Most frequent x-coordinate of lines of text
+        pageText: String of text of a single page
+        firstBlock: Whether an extracted block is the first on the page
+        table: Holder of blocks which potentially are a table
+        dictionary: PDF document in a python dictionary form
+        blocks: Assumed paragraphs of document text
+        blockText: String of text of a single block
+        referenceSplit: Split of the extracted string into normal text and reference text
+        referenceText: String of text containing references
+    :param path: Path of pdf file which will be extracted
+    :return: Text of pdf file as a string
+    """
+
     text = referenceText = ""
     try:
         doc = fitz.open(path)
@@ -171,6 +193,16 @@ def getDOCXText(path):
 # Extracts text from pdf, docx and txt files. Returns text as string
 # If file at path has a different extension, a type error is thrown
 def extractStringFromFile(path):
+    """
+    Retrieves text from a pdf, docx or txt file at path and returns a string with the text
+    Attributes:
+        name: Name of file at path without file extension
+        fileExtension: File extension of file at path
+        text: String of text extracted from file at path
+    :param path: Path of file which will be extracted
+    :return: Text of file as a string
+    """
+
     name, fileExtension = os.path.splitext(path)
     text = ""
 
@@ -188,6 +220,12 @@ def extractStringFromFile(path):
 # Writes a string to a txt file at path
 # If this is not possible an exception is thrown
 def convertStringToTXT(string, path):
+    """
+    Writes string to txt file at path
+    :param string: String to write
+    :param path: Path of file to which the string is written
+    """
+
     try:
         with open(path, 'w') as f:
             f.write(string)
@@ -199,6 +237,14 @@ def convertStringToTXT(string, path):
 # If input file has a wrong type, a type error is thrown
 # If writing to output file fails, a value error is thrown
 def convertFileToTXT(pathIn, pathOut):
+    """
+    Retrieves text from a pdf, docx or txt file at path as string and writes to txt file
+    Attributes:
+        string: String of text extracted from file at pathIn
+    :param pathIn: Path of file which will be extracted
+    :param pathOut: Path of file to which result will be written
+    """
+
     try:
         string = extractStringFromFile(pathIn)
         convertStringToTXT(string, pathOut)
@@ -210,6 +256,17 @@ def convertFileToTXT(pathIn, pathOut):
 #Split blocks at empty lines, as they are separate paragraphs
 #Returns list of new blocks 
 def splitBlocks(blocks):
+    """
+    Splits blocks with empty lines into separate blocks
+    Attributes:
+        blocksNew: Holder of new blocks
+        newBlock: Block with lines between empty lines
+        lastBreak: Index of last empty line
+        lineText: Text of a single line
+    :param blocks: List of original blocks
+    :return: List of new blocks
+    """
+
     blocksNew = []
     for block in blocks:
         if block["type"] == 0:
@@ -230,6 +287,14 @@ def splitBlocks(blocks):
 
 # Gets frequencies of x-coordinates of blocks in a Python Counter object
 def getFrequencyX(doc):
+    """
+    Gets x-coordinates of blocks in doc with their frequency
+    Attributes:
+        xlist: List of x-coordinates
+    :param doc: PDF document to get blocks from
+    :return: Counter object with x-coordinates and their frequency
+    """
+    
     xlist = []
     for page in doc:
         blocks = page.get_text("dict")["blocks"]
@@ -240,7 +305,17 @@ def getFrequencyX(doc):
 
 # Combines broken words, filters out number references, in-text citations and empty lines
 # using regular expressions
-def postProcessText(text):     
+def postProcessText(text):  
+    """
+    Filters string on hyphenated words, number references, empty lines, excess spaces and in-text citations
+    Attributes:
+        text: String that is filtered
+        oneSource: Regex for finding in-text citations with one source
+        multipleSources: Regex for finding in-text citations with multiple sources
+    :param text: String that needs to be filtered
+    :return: String that is filtered
+    """   
+
     #Combine broken words together
     text = regex.sub(r"-\s*\n\s*", "", text)
     #Remove number references
@@ -258,6 +333,16 @@ def postProcessText(text):
 
 # Retrieves text from a pdf line as string
 def getLineText(line):
+    """
+    Retrieves text from a line in a pdf and returns a string with the text
+    Attributes:
+        lineText: Text from a single line
+        spans: List of spans from line
+        spanText: Text from a single span
+    :param line: Line of which text is extracted
+    :return: Text of line as a string
+    """
+
     lineText = ""
     spans = line["spans"]
     #Retrieve text from a line
@@ -266,7 +351,17 @@ def getLineText(line):
         lineText = "".join([lineText, spanText])
     return lineText
 
+# Remove list symbols from a line, or entire line if includeLists is False
 def filterLineList(lineText, includeLists=True):
+    """
+    Removes list symbols from a line, or entire line if includeLists is False
+    Attributes:
+        listRegex: Regex to find list symbols
+    :param lineText: Text to filter
+    :param includeLists: Whether text after list symbols should be included in the text
+    :return: Text of line as a string
+    """
+
     listRegex = r"^\s*(\p{N}+\.|\p{L}\.|[^\p{L}\p{N}&%#])(\p{N}+)*((\.|:))?\s(?=\p{L})"
     if regex.search(listRegex, lineText):
         if includeLists:
@@ -275,8 +370,16 @@ def filterLineList(lineText, includeLists=True):
             lineText = ""
     return lineText
 
+#Remove lines without letters and punctuation
 def filterLineNoLetters(lineText):
-    #Remove lines without letters and punctuation
+    """
+    Removes a line if it contains no letters or punctuation
+    Attributes:
+        noLetterRegex: Regex to find absence of letters and punctuation
+    :param lineText: Text to filter
+    :return: Text of line as a string
+    """
+
     noLetterRegex = r"^[^,:\(\)\p{L}]*$"
     if regex.search(noLetterRegex, lineText):
         lineText = regex.sub(noLetterRegex, "", lineText)
@@ -285,6 +388,18 @@ def filterLineNoLetters(lineText):
 # Retrieves text from a pdf block as string,
 # with list symbols, lines without letters and punctuation out
 def getBlockText(block, includeLists):
+    """
+    Retrieves text from a block in a pdf and returns a string with the text
+    Attributes:
+        blockText: Text from a single block
+        lines: List of lines from block
+        unfilteredLineText: Raw text from a single line
+        lineText: Text from a single line, filtered
+        previousLineSpans: List of spans from previous line
+    :param line: Line of which text is extracted
+    :return: Text of line as a string
+    """
+
     blockText = ""
     lines = block["lines"]
     for i, line in enumerate(lines):
@@ -310,6 +425,17 @@ def getBlockText(block, includeLists):
 #Assumes row in table has 2+ columns at same y coordinate
 #and does not start at normal x coordinate 
 def isBlockTable(block, xNormal, yTolerance=3):
+    """
+    Checks whether a block is potentially part of a table
+    Attributes:
+        lines: List of lines from block
+        y: Y-coordinate of first line from block
+    :param block: Block to check
+    :param xNormal: X-coordinate of normal text
+    :param yTolerance: Maximum difference lines can have to be considered a table row
+    :return: Whether a block is potentially part of a table
+    """
+
     lines = block["lines"]
     if len(lines) > 0:
         if lines[0]["bbox"][0] == xNormal:
@@ -328,5 +454,12 @@ def isBlockTable(block, xNormal, yTolerance=3):
 #Checks if block is caption
 #Assumes captions start with Figure, Fig. or Table
 def isTextCaption(block):
+    """
+    Checks whether a block contains a caption
+    Attributes:
+        reg: Regex to find captions
+    :param block: Block to filter for captions
+    :return: Whether block contains a caption
+    """
     reg = r"^(T(?i)able|F(?i)igure|F(?i)ig\.)\s*\d*(\.\d*)*(\.|:)?\s*(?=\p{Lu})"
     return regex.search(reg, block.lstrip())
