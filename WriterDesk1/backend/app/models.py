@@ -31,6 +31,7 @@ class User(db.Model):
     passwordHash = db.Column(db.String(128))
     
     def __init__(self, username: str, password_plaintext: str):
+        ''' Create new user, use set_password to create hashed password for plaintext password'''
         self.type = "user"
         self.username = username
         self.set_password(password_plaintext)
