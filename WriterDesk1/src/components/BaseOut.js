@@ -1,6 +1,4 @@
-import React from 'react';
-
-
+import {React, useState} from 'react';
 
 // routing
 import { Outlet } from 'react-router-dom';
@@ -8,11 +6,14 @@ import { Outlet } from 'react-router-dom';
 
 // mui components
 import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import CssBaseline from '@mui/material/CssBaseline';
+import {
+    Box,
+    Drawer,
+    AppBar,
+    Toolbar,
+    CssBaseline,
+    Typography
+} from '@mui/material';
 
 
 //Width of the opened drawer
@@ -66,7 +67,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 /**
  * Makes styled AppBar
  */
-const AppBar = styled(MuiAppBar, {
+const CustomAppBar = styled(AppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
     zIndex: theme.zIndex.drawer + 1,
@@ -87,7 +88,7 @@ const AppBar = styled(MuiAppBar, {
 /**
  * Makes styled Drawer
  */
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
         width: drawerWidth,
         flexShrink: 0,
@@ -113,10 +114,13 @@ const Base = () => {
     // general theme, defined in index.js
     const theme = useTheme();
     
+    // provides title to the base page using the context of the outlet
+    const [title, setTitle] = useState("");
+
     return (
         <Box sx={{ display: 'flex', color: 'primary' }}>
             <CssBaseline />
-            <AppBar
+            <CustomAppBar
                 position='fixed'
                 sx={{
                     bgcolor: 'drawerOut.background',
@@ -132,13 +136,13 @@ const Base = () => {
                     width: '100%',
                     display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'space-between',
+                    justifyContent: 'center',
                 }}>
-
+                    <Typography variant="h6" component="div" sx={{color: "appBar.text",}}> {title} </Typography>
                 </Toolbar>
-            </AppBar>
+            </CustomAppBar>
 
-            <Drawer
+            <CustomDrawer
                 className='classes.drawerOut'
                 variant="permanent"
                 open={false}
@@ -154,11 +158,11 @@ const Base = () => {
                     height: '100%'
                 }}>
                 </DrawerHeader>
-            </Drawer>
+            </CustomDrawer>
 
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
-                <Outlet />
+                <Outlet context={{ setTitle }} />
             </Box>
         </Box>
     );

@@ -10,14 +10,19 @@ import {
 import testImage from '../images/placeholder_image.png'
 
 // routing
-import { Link } from 'react-router-dom';
-
+import { Link, useOutletContext } from 'react-router-dom';
+import { useEffect } from 'react';
 
 /**
  * 
  * @returns login page
  */
 const Login = () => {
+    //set title in parent 'base' 
+    const { setTitle } = useOutletContext();
+    useEffect(() => {
+        setTitle('Login');
+    });
 
     return (
         <>
@@ -26,8 +31,6 @@ const Login = () => {
                     <IconButton style={{ float: 'left' }} component={Link} to='/LandingPage'>
                         <img className='logo' src={testImage} />
                     </IconButton>
-                    <Typography variant='h3'>Login</Typography>
-                    <div className='filler2'></div>
                 </div>
                 <div className='div2'>
                     <div className='text_boxes'>
