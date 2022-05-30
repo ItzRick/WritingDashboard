@@ -100,8 +100,8 @@ def fileRetrieve():
     # Retrieve list of files that were uploaded by the current user,
     # ordered by the sorting attribute in the request
     if 'user_id' in session or True:
-        userId = request.args.get('userId')
-        sortingAttribute = request.args.get('sortingAttribute')
+        userId = request.form.get('userId')
+        sortingAttribute = request.form.get('sortingAttribute')
         files = getFilesByUser(userId, sortingAttribute)
 
         # Put dates in format
@@ -161,5 +161,5 @@ def searchId():
     files = Files.query.all()
     list = ""
     for file in files:
-        list += (str(file.id) + '    ')
+        list += (str(file.id) + ' ')
     return list, 200
