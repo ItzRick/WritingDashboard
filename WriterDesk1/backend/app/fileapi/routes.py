@@ -84,6 +84,19 @@ def fileUpload():
 
 @bp.route('/fileretrieve', methods = ['GET'])
 def fileRetrieve():
+    '''
+    This function handles the retrieval of files in a specified order from a 
+    specific user in the form of a json file. 
+    This is done by identifying the user and retrieving the preferred sorting. 
+    Attributes: 
+        userId: user id as given by the frontend
+        sortingAttribute: chosen sorting of files as given by the frontend
+    Arguments:
+        files: the files of the user corresponding to the user id, 
+               which are sorted based on the sortingAttribute
+        file: one of the files of the list files
+    '''
+
     # Retrieve list of files that were uploaded by the current user,
     # ordered by the sorting attribute in the request
     if 'user_id' in session or True:
@@ -102,6 +115,15 @@ def fileRetrieve():
 
 @bp.route('/filedelete', methods = ['DELETE'])
 def fileDelete(): 
+    '''
+    This function handles the deletion of files using the corresponding file id. 
+    Attributes: 
+        fileID: file id as given by the frontend
+    Arguments: 
+        fileToBeRemoved: file that is to be removed, using the given file id
+        path: path of the file that is to be removed
+        basepath: basepath of the path of the file to be removed
+    '''
     # Get the data as sent by the react frontend:
     fileID = request.args.get('id')
     fileToBeRemoved = Files.query.filter_by(id=fileID).first()
@@ -126,6 +148,15 @@ def fileDelete():
 
 @bp.route('/searchId', methods = ['GET'])
 def searchId(): 
+    '''
+    This function handles making a list of the file ids, 
+    such that it can be used later to search for a file. 
+    Attributes: 
+        files: contains all the files on the database at the time of creation
+    Arguments:
+        list: contains the string of each file id with spaces afterwards
+        file: one of the list files
+    '''
     files = Files.query.all()
     list = ""
     for file in files:
