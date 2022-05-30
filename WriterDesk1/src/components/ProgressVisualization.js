@@ -18,7 +18,7 @@ const ProgressVisualization = () => {
     {id: 4, date: '2022-12-04', Title: 'Title4', scoreLanguage: 8, scoreStructure: 5.5, scoreCohesion: 5.5, scoreSourceIntegration: 8},
     {id: 4, date: '2023-01-04', Title: 'Title5', scoreLanguage: 9, scoreStructure: 6, scoreCohesion: 5, scoreSourceIntegration: 8.5},
     {id: 4, date: '2023-03-04', Title: 'Title6', scoreLanguage: 9.5, scoreStructure: 7.4, scoreCohesion: 5.5, scoreSourceIntegration: 8}
-  ];
+  ]; //TODO: Retrieve document data
 
 
 
@@ -29,8 +29,8 @@ const ProgressVisualization = () => {
         x: documents.map(row => row.date),
         y: documents.map(row => row.scoreLanguage),
         mode: 'lines+markers',
-        line: {color: '#F5793A'},
-        marker: {color: '#f79c6e', symbol: 'circle', size: 10, line:{color:'#F5793A', width: 2}},
+        line: {color: '#648FFF'},
+        marker: {color: '#B3C8FF', symbol: 'circle', size: 10, line:{color:'#648FFF', width: 2}},
         name: 'Language and Style',
         hovertemplate: '<b>%{text}</b><br>Score: %{y}<br>%{x}',
         text: documents.map(row => row.Title),
@@ -44,8 +44,8 @@ const ProgressVisualization = () => {
         x: documents.map(row => row.date),
         y: documents.map(row => row.scoreCohesion),
         mode: 'lines+markers',
-        line: {color: '#A95AA1'},
-        marker: {color: '#c18abc', symbol: 'circle', size: 10, line:{color:'#A95AA1', width: 2}},
+        line: {color: '#FE6100'},
+        marker: {color: '#FFA166', symbol: 'circle', size: 10, line:{color:'#FE6100', width: 2}},
         name: 'Cohesion',
         hovertemplate: '<b>%{text}</b><br>Score: %{y}<br>%{x}',
         text: documents.map(row => row.Title),
@@ -59,8 +59,8 @@ const ProgressVisualization = () => {
         x: documents.map(row => row.date),
         y: documents.map(row => row.scoreSourceIntegration),
         mode: 'lines+markers',
-        line: {color: '#85C0F9'},
-        marker: {color: '#cee6fd', symbol: 'circle', size: 10, line: {color:'#85C0F9', width: 2}},
+        line: {color: '#DC267F'},
+        marker: {color: '#ED91BE', symbol: 'circle', size: 10, line: {color:'#DC267F', width: 2}},
         name: 'Source integration<br>and Content',
         hovertemplate: '<b>%{text}</b><br>Score: %{y}<br>%{x}',
         text: documents.map(row => row.Title),
@@ -74,8 +74,8 @@ const ProgressVisualization = () => {
         x: documents.map(row => row.date),
         y: documents.map(row => row.scoreStructure),
         mode: 'lines+markers',
-        line: {color: '#0F2080'},
-        marker: {color: '#324de7', symbol: 'circle', size: 10, line:{color:'#0F2080', width: 2}},
+        line: {color: '#FFB000'},
+        marker: {color: '#FFD780', symbol: 'circle', size: 10, line:{color:'#FFB000', width: 2}},
         name: 'Structure',
         hovertemplate: '<b>%{text}</b><br>Score: %{y}<br>%{x}',
         text: documents.map(row => row.Title),
@@ -111,7 +111,9 @@ const ProgressVisualization = () => {
       }
     } }
     config={{ modeBarButtonsToRemove: ['toImage', 'lasso2d', 'select2d', 'resetScale2d'], displaylogo: false }}
-    onClick={(data) => alert(data.points[0].x)}
+    onClick={
+      (data) => alert(data.points[0].x) //TODO: Add onclick event to go to document page
+    }
     /></>
   );
 }
