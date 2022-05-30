@@ -33,7 +33,7 @@ class User(db.Model):
     def __init__(self, username: str, password_plaintext: str):
         self.type = "user"
         self.username = username
-        self.passwordHash = self.set_password(password_plaintext)
+        self.set_password(password_plaintext)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
