@@ -21,8 +21,7 @@ const ProgressVisualization = () => {
   ]; //TODO: Retrieve document data
 
 
-
-  return (<>
+  return (
     <Plot
     data={[
       {
@@ -114,7 +113,13 @@ const ProgressVisualization = () => {
     onClick={
       (data) => alert(data.points[0].x) //TODO: Add onclick event to go to document page
     }
-    /></>
+    onHover={e => {
+      e.event.target.style.cursor = 'pointer'
+    }}
+    onUnhover={e => {
+      e.event.target.style.cursor = 'ew-resize'
+    }}
+    />
   );
 }
 
