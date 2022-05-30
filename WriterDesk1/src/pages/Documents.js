@@ -3,7 +3,8 @@ import { } from "@mui/material";
 
 // routing
 import { useOutletContext } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import {Button} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
 import {GridColDef} from "@mui/x-data-grid";
@@ -20,71 +21,81 @@ import {GridCellValue} from "@mui/x-data-grid";
  * @returns Documents Page
  */
 
-const columns: GridColDef[] = [
+const columns = [
   {
     field: 'filename',
     headerName: 'Filename',
     editable: false,
+    flex:1, 
+    minWidth: 250
   },
   {
-    field: 'type',
-    headerName: 'Type',
+    field: 'fileType',
+    headerName: 'FileType',
     editable: false,
+    flex:1 
   },
   {
-    field: 'course',
+    field: 'courseCode',
     headerName: 'Course',
     editable: false,
+    flex:1 
   },
   {
     field: 'h1',
     headerName: 'h1',
     type: "number",
     editable: false,
+    flex:1 
   },
   {
     field: 'h2',
     headerName: 'h2',
     type: "number",
     editable: false,
+    flex:1 
   },
   {
     field: 'h3',
     headerName: 'h3',
     type: "number",
     editable: false,
+    flex:1 
   },
   {
     field: 'h4',
     headerName: 'h4',
     type: "number",
     editable: false,
+    flex:1 
   },
   {
     field: 'date',
     headerName: 'Date ',
     editable: false,
+    flex:1 
   },
   {
     field: "actions",
     headerName: "Actions",
     sortable: false,
+    flex:1, 
     renderCell: (params) => {
-      const onClick = (e) => {
-        e.stopPropagation(); // don't select this row after clicking
+    //   const onClick = (e) => {
+    //     e.stopPropagation(); // don't select this row after clicking
 
-        const api: GridApi = params.api;
-        const thisRow: Record<string, GridCellValue> = {};
+    //     const api: GridApi = params.api;
+    //     const thisRow: Record<string, GridCellValue> = {};
 
-        api
-          .getAllColumns()
-          .filter((c) => c.field !== "__check__" && !!c)
-          .forEach(
-            (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-          );
+    //     api
+    //       .getAllColumns()
+    //       .filter((c) => c.field !== "__check__" && !!c)
+    //       .forEach(
+    //         (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+    //       );
 
-        return alert(JSON.stringify(thisRow, null, 4));
-      };
+    //     return alert(JSON.stringify(thisRow, null, 4));
+    //   };
 
       return <div><IconButton><GradingIcon /></IconButton><IconButton><DeleteOutlineIcon /></IconButton></div>;
     }
@@ -100,20 +111,34 @@ const rows = [
 ];
 
 function Documents() {
+    const [tableData, setTableData] = useState([])
+
   //set title in parent 'base' 
   const { setTitle } = useOutletContext();
   useEffect(() => {
     setTitle('Documents');
   });
+
+
+  useEffect(() => {
+    const url = 'https://127.0.0.1:5000/fileapi/fileretrieve';
+    const params = { 
+        userId: 123,
+        sortingAttribute: '',
+    }
+    axios.get(url, { params })
+        .then((response) => {setTableData(response.data)
+    })
+  }, []);
   
   return (
     <>
       <div style={{height: '80vh', maxHeight: '400px'}} >
         <DataGrid
-          rows={rows}
+          rows={tableData}
           columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
+          pageSize={12}
+          rowsPerPageOptions={[12]}
           checkboxSelection
           disableSelectionOnClick
         />
