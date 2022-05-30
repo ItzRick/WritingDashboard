@@ -37,7 +37,10 @@ def newFile():
 @pytest.fixture(scope='module')
 def newUser():
     '''
-        TODO ADD COMMENTS
+        This is an example user.
+        The user attributes:
+            username: m.l.langedijk@student.tue.nl
+            password (unhashed, will be hashed when ininitailized): wachtwoord
     '''
     user = User('m.l.langedijk@student.tue.nl', 'wachtwoord')
     return user

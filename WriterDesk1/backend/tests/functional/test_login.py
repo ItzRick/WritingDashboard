@@ -4,7 +4,10 @@ import json
 
 def test_valid_login(testClient, initDatabase):
     '''
-    TODO ADD COMMENTS
+    Test if login works with a valid username and password
+    Arguments:
+        testClient:  The test client we test this for.
+        initDatabase: the database instance we test this for.
     '''
 
     del initDatabase
@@ -18,7 +21,10 @@ def test_valid_login(testClient, initDatabase):
 
 def test_invalid_login(testClient,initDatabase):
     '''
-    TODO ADD COMMENTS
+    Test if login gives a 401 status code with an invalid username and password
+    Arguments:
+        testClient:  The test client we test this for.
+        initDatabase: the database instance we test this for.
     '''
     del initDatabase
     data = {
