@@ -22,11 +22,8 @@ function Document() {
   const { setTitle } = useOutletContext();
 
   const [file, setFile] = useState('');
-  // const [scrollPosY, setScrollPosY] = useState(0);
-  // const [mousePosY, setMousePosY] = useState(0);
 
   const [showTextbox, setShowTextbox] = useState([]);
-
 
 
   useEffect(() => {
@@ -37,14 +34,15 @@ function Document() {
   const type = 'pdf'
 
   const mistakes = [
-  {text: 'decade', explanation: 'expl1', type: 0, coords: [156.9016876220703, 157.89927673339844, 183.29876708984375, 169.56455993652344], page: 0, replacements: ['ab', 'b', 'ba']},
-  {text: 'Furthermore', explanation: 'expl2', type: 1, coords: [464.495361328125, 468.1363525390625, 514.29833984375, 480.14129638671875], page: 0, replacements: ['as']},
-  {text: 'past decade, a new ', explanation: 'expl3', type: 2, coords: [126.9016876220703, 157.89927673339844, 213.29876708984375, 169.56455993652344], page: 0, replacements: ['a', 'b', 'c']},
-  {text: 'semantics', explanation: 'expl4', type: 3, coords: [390.88116455078125, 66.0565185546875, 430.1736755371094, 78.06145477294922], page: 1, replacements: []}
+  {text: 'decade', explanation: 'expl1', type: 0, coords: [156.9016876220703, 157.89927673339844, 183.29876708984375, 169.56455993652344], page: 0, pageHeight: 0, replacements: ['ab', 'b', 'ba']},
+  {text: 'Furthermore', explanation: 'expl2', type: 1, coords: [464.495361328125, 468.1363525390625, 514.29833984375, 480.14129638671875], page: 0, pageHeight: 0, replacements: ['as']},
+  {text: 'past decade, a new ', explanation: 'expl3', type: 2, coords: [126.9016876220703, 157.89927673339844, 213.29876708984375, 169.56455993652344], page: 0, pageHeight: 0, replacements: ['a', 'b', 'c']},
+  {text: 'semantics', explanation: 'expl4', type: 3, coords: [390.88116455078125, 66.0565185546875, 430.1736755371094, 78.06145477294922], page: 1, pageHeight: 792, replacements: []}
   ];
 
 
-  const handleClick = (e, coords, pageNr) => {
+
+  const highlightClick = (e, coords, pageNr) => {
     let rect = e.target.getBoundingClientRect();
     let x = coords[0] + e.clientX - rect.left;
     let y = coords[1] + e.clientY - rect.top;
@@ -92,10 +90,9 @@ function Document() {
   };
 
   const ClickableTextDiv = (props) => {
-    let totalPageHeight = 792 * props.page; // TODO: Set correct page height
     return(
-     <div onClick={e=>handleClick(e, props.coords, props.page)} className='clickableTextDiv'
-          style={{left: props.coords[0], top: props.coords[1] + totalPageHeight,
+     <div onClick={e=>highlightClick(e, props.coords, props.page)} className='clickableTextDiv'
+          style={{left: props.coords[0], top: props.coords[1] + props.pageHeight,
             width: props.coords[2] - props.coords[0],
             height: props.coords[3] - props.coords[1]}}>
      </div>
@@ -133,8 +130,7 @@ function Document() {
       <div className="all-page-container" id="all-page-container">
         <AllPagesPDFViewer pdf={`http://127.0.0.1:5000/converttopdf/convert?filepath=${path}&filetype=${type}`} />
         {mistakes.map((mistake, i) =>
-          <ClickableTextDiv key={i} number={i} coords={mistake.coords} page={mistake.page}
-          />
+          <ClickableTextDiv key={i} number={i} coords={mistake.coords} page={mistake.page} pageHeight={mistake.pageHeight}/>
         )}
       </div>
       <div className='rightFloat'>
