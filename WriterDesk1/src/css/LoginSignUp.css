@@ -20,11 +20,6 @@ h5 {
     display: inline-table;
 }
 
-.center {
-    margin: auto;
-    width: fit-content;
-}
-
 .textbox {
     width: 70vw;
     display: inline-block;

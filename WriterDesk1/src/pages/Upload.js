@@ -1,7 +1,8 @@
 // materials
-import { 
+import {
     Typography,
-    Button
+    Button,
+    Box,
 } from "@mui/material";
 import UploadSingleFile from "./../components/UploadSingleFile";
 
@@ -27,21 +28,15 @@ const Upload = () => {
     const [id, setId] = useState(1);
 
     // list of UploadSingleFile objects
-    const [uploadSingleFiles, setUploadSingleFiles] = useState([
-        <UploadSingleFile 
-            thisIndex={0}
-            key={0}
-            ref={(el) => (refs.current[0] = el)}
-        />
-    ]);
+    const [uploadSingleFiles, setUploadSingleFiles] = useState([]);
 
-    // add UploadSingleFile object to rowList
-    const addRow = e => {
+    // add UploadSingleFile object to uploadSingleFiles
+    const addRow = () => {
         setUploadSingleFiles(uploadSingleFiles.concat([
-            <UploadSingleFile 
+            <UploadSingleFile
                 thisIndex={id}
-                key={id} 
-                setUploadSingleFiles={setUploadSingleFiles} 
+                key={id}
+                setUploadSingleFiles={setUploadSingleFiles}
                 ref={(el) => (refs.current[id] = el)}
             />
         ]));
@@ -49,30 +44,41 @@ const Upload = () => {
         setId((i) => i + 1);
     };
 
+    // Add first row, but only upon first render (i.e. when rendering the page)
+    //   Side effect: when you update the code, the page renders again, but does not remove the first row
+    useEffect(() => {
+        addRow();
+    }, []);
+
+    // upload all documents present in the UploadSingleFile objects in uploadSingleFiles
+    const uploadDocuments = () => {
+        uploadSingleFiles.forEach(item => {
+            refs.current[item.props.thisIndex].uploadFile();
+        })
+        //remove all files except index = 0
+        setUploadSingleFiles((list) => list.filter(item => item.props.thisIndex == 0));
+        setId(1);
+    }
+
     return (
         <>
-            <div className='title'>
+            <Box className='title'>
                 <Typography variant='h3'>Upload</Typography>
-            </div>
+            </Box>
             <br />
-            <div className='center'>
+            <Box className='center'>
                 {uploadSingleFiles}
-                <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} onClick={addRow}>Add</Button>
-            </div>
+            </Box>
+            <Box className='center' >
+                <Button variant='contained' sx={{ bgcolor: 'button.main', color: 'button.text'}} onClick={addRow}>Add</Button>
+            </Box>
             <br />
-            <div className='title'>
-                <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} className='uploadButton' onClick={() => {
-                    uploadSingleFiles.forEach(item => {
-                        refs.current[item.props.thisIndex].uploadFile();
-                    })
-                    //remove all files except index = 0
-                    setUploadSingleFiles((list) => list.filter(item => item.props.thisIndex == 0));
-                    setId(1);
-                }}
-                 style={{fontSize: '2vw', textTransform: 'none'}}>
+            <Box className='title'>
+                <Button variant='contained' sx={{ bgcolor: 'button.main', color: 'button.text' }} className='uploadButton' onClick={uploadDocuments}
+                    style={{ fontSize: '2vw', textTransform: 'none' }}>
                     Upload your document(s)
                 </Button>
-            </div>
+            </Box>
         </>
     );
 }

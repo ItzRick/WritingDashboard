@@ -186,7 +186,7 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
                     />
                 </LocalizationProvider>
                 <TextField label='course' variant='outlined' value={course} onChange={event => setCourse(event.target.value)} />
-                <Button variant='contained' sx={{ bgcolor: 'red', color: 'button.text' }} value={thisIndex} onClick={removeInstance}>Remove</Button>
+                <Button variant='contained' sx={{ bgcolor: 'buttonWarning.main', color: 'buttonWarning.text', ml: '5px',}} value={thisIndex} onClick={removeInstance}>Remove</Button>
             </div>
             {displayAlertType ? <Alert severity="error">Upload a file with a .txt, .pdf or .docx filetype!</Alert> : null}
             {displayAlertSize ? <Alert severity="error">The uploaded file was too big, upload a file that is not larger than 10 MB!</Alert> : null}
