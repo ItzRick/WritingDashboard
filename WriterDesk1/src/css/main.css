@@ -175,6 +175,7 @@ grid-row-gap: 0px;
     padding: 3px;
     margin-bottom: 5px;
     margin-top: 5px;
+    position: relative;
     /*display: none;*/
 }
 
@@ -190,9 +191,10 @@ grid-row-gap: 0px;
 
 .textBoxType {
     float: right;
-    /*position: absolute;*/
+    position: absolute;
     user-select: none;
-    width: 16vw;
+    right: 3px;
+    width: 11vw;
     text-align: right;
 }
 
