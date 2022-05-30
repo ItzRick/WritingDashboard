@@ -125,24 +125,25 @@ def fileDelete():
         basepath: basepath of the path of the file to be removed
     '''
     # Get the data as sent by the react frontend:
-    fileID = request.args.get('id')
-    fileToBeRemoved = Files.query.filter_by(id=fileID).first()
-    # Check if the file is nonexistent
-    # And if so, throw an error message 
-    if fileToBeRemoved == None: 
-        return 'file does not exist', 404
-    # Retrieve the paths of the file to be removed
-    path = fileToBeRemoved.path
-    basepath = os.path.dirname(path)
-    # If the path exists, remove the file from the database
-    # Else, throw an error message
-    if os.path.isfile(path):
-        os.remove(path)
-        removeFromDatabase(fileToBeRemoved)
-        if not os.listdir(basepath):
-            os.rmdir(basepath)
-    else: 
-        return 'file does not exist', 404
+    fileIDs = request.form.getlist('id')
+    for fileID in fileIDs:
+        fileToBeRemoved = Files.query.filter_by(id=fileID).first()
+        # Check if the file is nonexistent
+        # And if so, throw an error message 
+        if fileToBeRemoved == None: 
+            return 'file does not exist in database', 404
+        # Retrieve the paths of the file to be removed
+        path = fileToBeRemoved.path
+        basepath = os.path.dirname(path)
+        # If the path exists, remove the file from the database
+        # Else, throw an error message
+        if os.path.isfile(path):
+            os.remove(path)
+            removeFromDatabase(fileToBeRemoved)
+            if not os.listdir(basepath):
+                os.rmdir(basepath)
+        else: 
+            return 'file does not exist', 404
     # Return a success message when done
     return 'succes', 200
 
