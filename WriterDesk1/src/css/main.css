@@ -30,11 +30,6 @@ button {
     display: inline-block;
 }
 
-.center {
-    margin: auto;
-    width: fit-content;
-}
-
 .textbox {
     width: 70vw;
     display: inline-block;

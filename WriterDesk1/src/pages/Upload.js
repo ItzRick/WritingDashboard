@@ -1,10 +1,12 @@
 // materials
 import {
     Typography,
-    Button,
     Box,
 } from "@mui/material";
+
 import UploadSingleFile from "./../components/UploadSingleFile";
+import UploadPopUp from "./../components/UploadPopUp";
+import BlueButton from "./../components/BlueButton";
 
 // routing
 import { useOutletContext } from 'react-router-dom';
@@ -56,7 +58,12 @@ const Upload = () => {
             refs.current[item.props.thisIndex].uploadFile();
         })
         //remove all files except index = 0
-        setUploadSingleFiles((list) => list.filter(item => item.props.thisIndex == 0));
+        setUploadSingleFiles([<UploadSingleFile
+            thisIndex={0}
+            key={0}
+            setUploadSingleFiles={setUploadSingleFiles}
+            ref={(el) => (refs.current[0] = el)}
+        />]);
         setId(1);
     }
 
@@ -70,15 +77,13 @@ const Upload = () => {
                 {uploadSingleFiles}
             </Box>
             <Box className='center' >
-                <Button variant='contained' sx={{ bgcolor: 'button.main', color: 'button.text'}} onClick={addRow}>Add</Button>
+                <BlueButton onClick={addRow}>Add</BlueButton>
             </Box>
             <br />
             <Box className='title'>
-                <Button variant='contained' sx={{ bgcolor: 'button.main', color: 'button.text' }} className='uploadButton' onClick={uploadDocuments}
-                    style={{ fontSize: '2vw', textTransform: 'none' }}>
-                    Upload your document(s)
-                </Button>
+                <UploadPopUp func={uploadDocuments} fileCount={1} />
             </Box>
+            
         </>
     );
 }
