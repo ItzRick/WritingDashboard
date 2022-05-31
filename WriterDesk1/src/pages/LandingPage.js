@@ -2,14 +2,11 @@ import './../css/LoginSignUp.css';
 
 // materials
 import {
-  Button,
   Typography,
   Box,
 } from "@mui/material";
 import logo from '../images/logo.png'
-
-// routing
-import { Link } from 'react-router-dom';
+import BlueButton from "./../components/BlueButton";
 
 /**
  * 
@@ -32,9 +29,9 @@ const LandingPage = () => {
       <Typography variant='h5'>Improve your academic writing.</Typography>
       <br />
       <div className='center'>
-        <Button size='large' sx={{ bgcolor: 'button.main', color: 'button.text' }} variant='contained' component={Link} to={'/Login'}>Log in</Button>
+        <BlueButton pathName='/Login'>Log in</BlueButton>
         <div className='filler'></div>
-        <Button size='large' sx={{ bgcolor: 'button.main', color: 'button.text' }} variant='contained' component={Link} to={'/SignUp'}>Sign up</Button>
+        <BlueButton pathName='/SignUp'>Sign up</BlueButton>
       </div>
       <br /><br />
       <div className='center'>
