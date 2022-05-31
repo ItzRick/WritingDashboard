@@ -37,10 +37,7 @@ const UploadPopUp = ({func}) => {
 
     return (
         <>
-            <Button variant="contained" sx={{ bgcolor: 'button.main', color: 'button.text', fontSize: '2vw', textTransform: 'none' }} 
-            className='uploadButton' onClick={handleClickOpen}>
-                Upload your document(s)
-            </Button>
+            <BlueButton addStyle={{ fontSize: '2vw', textTransform: 'none' }} onClick={handleClickOpen}>Upload your document(s)</BlueButton>
             <Dialog
                 open={open}
                 onClose={switchOpen}
@@ -52,7 +49,7 @@ const UploadPopUp = ({func}) => {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                    Uploading successful. What would you like to do next?
+                        Uploading successful. What would you like to do next?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions sx={{justifyContent:'space-between'}}>

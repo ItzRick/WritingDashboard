@@ -4,10 +4,10 @@ import './../css/main.css';
 import {
     Typography,
     IconButton,
-    Button,
     TextField
 } from "@mui/material";
 import logo from '../images/logo.png';
+import BlueButton from "./../components/BlueButton";
 
 // routing
 import { Link, useOutletContext } from 'react-router-dom';
@@ -48,7 +48,7 @@ const SignUp = () => {
                     </div>
                     <br />
                     {/* TODO: do we want to go to main or to login */}
-                    <Button variant="contained" component={Link} to='/Login'>Sign up</Button>
+                    <BlueButton pathName='/Login'>Sign Up</BlueButton>
                 </div>
                 <div className='div3'>
                     <br />

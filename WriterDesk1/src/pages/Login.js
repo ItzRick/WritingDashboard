@@ -1,13 +1,13 @@
 import './../css/main.css';
 
 // materials 
-import { 
-    Button, 
+import {
     TextField, 
     Typography,
     IconButton 
 } from "@mui/material";
 import logo from '../images/logo.png';
+import BlueButton from "./../components/BlueButton";
 
 // routing
 import { Link, useOutletContext } from 'react-router-dom';
@@ -41,7 +41,7 @@ const Login = () => {
                         <TextField id='password' label='Password' variant='outlined' type='password' />
                     </div>
                     <br />
-                    <Button variant="contained" component={Link} to='/Main' sx={{bgcolor: 'button.main', color: 'button.text'}}>Log in</Button>
+                    <BlueButton pathName='/Main'>Log In</BlueButton>
                 </div>
                 <div className='div3'>
                     <br />

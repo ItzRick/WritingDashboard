@@ -9,6 +9,8 @@ import { DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import TimelineIcon from '@mui/icons-material/Timeline';
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import BlueButton from './../components/BlueButton';
+
 
 /**
  * 
@@ -88,7 +90,7 @@ function Participants() {
                     id="projectName"
                     label={"Project name"}
                 />
-                <Button variant='contained'>Add participants</Button>
+                <BlueButton>Add participants</BlueButton>
             </div>
             <div className='topBorder'>
                 <TextField
@@ -96,7 +98,7 @@ function Participants() {
                     id="projectName2"
                     label={"Project name"}
                 />
-                <Button variant='contained'>Download participants</Button>
+                <BlueButton>Download participants</BlueButton>
             </div>
             <div className='topBorder'>
                 <TextField
@@ -114,7 +116,7 @@ function Participants() {
                     id="projectName3"
                     label={"Project name"}
                 />
-                <Button variant='contained'>Download user data</Button>
+                <BlueButton>Download user data</BlueButton>
             </div>
             <div className='topBorder' style={{justifyContent: 'center', display: 'flex'}}>
                 <div style={{height: '80vh', maxHeight: '400px', width: '50vw'}} >

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import BlueButton from "./BlueButton"; 
 
 /**
  * 
@@ -161,7 +161,7 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
                     onDragEnter={(event) => event.preventDefault()}
                     onDragOver={(event) => event.preventDefault()}
                     onDrop={onFileDrop}>
-                    <Button variant='contained' sx={{ mr: '8px', bgcolor: 'button.main', color: 'button.text' }} onClick={() => fileInput.current.click()}>Choose a file</Button>
+                    <BlueButton onClick={() => fileInput.current.click()} addStyle={{ mr: '8px'}}>Choose a file</BlueButton>
                     <input
                         ref={fileInput}
                         type="file"
