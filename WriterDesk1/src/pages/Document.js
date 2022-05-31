@@ -32,11 +32,12 @@ function Document() {
   const path = 'C:\\Users\\20183163\\PycharmProjects\\SEP2021\\WriterDesk1\\src\\example2.pdf'
   const type = 'pdf'
 
+
   const mistakes = [
-    {text: 'decade', explanation: 'expl1', type: 0, coords: [156.9016876220703, 157.89927673339844, 183.29876708984375, 169.56455993652344], page: 0, pageHeight: 0, replacements: ['ab', 'b', 'ba']},
-    {text: 'Furthermore', explanation: 'expl2', type: 1, coords: [464.495361328125, 468.1363525390625, 514.29833984375, 480.14129638671875], page: 0, pageHeight: 0, replacements: ['as']},
-    {text: 'past decade, a new ', explanation: 'expl3', type: 2, coords: [126.9016876220703, 157.89927673339844, 213.29876708984375, 169.56455993652344], page: 0, pageHeight: 0, replacements: ['a', 'b', 'c']},
-    {text: 'semantics', explanation: 'expl4', type: 3, coords: [390.88116455078125, 66.0565185546875, 430.1736755371094, 78.06145477294922], page: 1, pageHeight: 792, replacements: []}
+    {text: 'decade', explanation: 'expl1', type: 0, coords: [156.9016876220703, 157.89927673339844, 183.29876708984375, 169.56455993652344], replacements: ['ab', 'b', 'ba']},
+    {text: 'Furthermore', explanation: 'expl2', type: 1, coords: [464.495361328125, 468.1363525390625, 514.29833984375, 480.14129638671875], replacements: ['as']},
+    {text: 'past decade, a new ', explanation: 'expl3', type: 2, coords: [126.9016876220703, 157.89927673339844, 213.29876708984375, 169.56455993652344], replacements: ['a', 'b', 'c']},
+    {text: 'semantics', explanation: 'expl4', type: 3, coords: [390.88116455078125, 858.056518555, 430.1736755371094, 870.061454773], replacements: []}
   ];
 
 
@@ -44,9 +45,8 @@ function Document() {
    * Function to show the explanation boxes that are being clicked
    * @param {Object} e - Click event
    * @param {Object} coords - Array of the coordinates of the mistake being clicked
-   * @param {number} clickPageNr - Number of the page where is clicked
    */
-  const handleHighlightClick = (e, coords, clickPageNr) => {
+  const handleHighlightClick = (e, coords) => {
     let rect = e.target.getBoundingClientRect();
     let x = coords[0] + e.clientX - rect.left; // x-coordinate of click in div
     let y = coords[1] + e.clientY - rect.top; // y-coordinate of click in div
@@ -58,10 +58,9 @@ function Document() {
       let right = mistakes[i].coords[2];
       let top = mistakes[i].coords[1];
       let bottom = mistakes[i].coords[3];
-      let mistakePage = mistakes[i].page;
 
       //Set showTextbox true for every mistake that is clicked
-      newArrShowTextbox[i] = (left <= x) && (x <= right) && (top <= y) && (y <= bottom) && (clickPageNr === mistakePage);
+      newArrShowTextbox[i] = (left <= x) && (x <= right) && (top <= y) && (y <= bottom);
     }
     setShowTextbox(newArrShowTextbox); // Overwrite showTextbox
   }
@@ -70,7 +69,7 @@ function Document() {
   /**
    * Div that shows the explanation of a mistake being clicked
    * @property {number} number - Number of mistake
-   * @property {number} type - Type of mistake in number
+   * @property {number} type - Number for type of mistake
    * @property {String} expl - Explanation of the mistake
    * @property {Object} replacements - Array of max 3 replacements for the mistake
    * @returns TextBoxExplanation component
@@ -106,16 +105,15 @@ function Document() {
   /**
    * Transparent div that handles onClick events on highlighted text
    * @property {Object} coords - Array of the coordinates on the page where the mistake is
-   * @property {number} page - Page number where the mistake is
-   * @property {number} pageHeight - Coordinates of top of page in file
+   * @property {number} type - Number for type of mistake
    * @returns ClickableTextDiv component
    */
   const ClickableTextDiv = (props) => {
     return(
-     <div onClick={e=>handleHighlightClick(e, props.coords, props.page)} className='clickableTextDiv'
-          style={{left: props.coords[0], top: props.coords[1] + props.pageHeight,
-            width: props.coords[2] - props.coords[0],
-            height: props.coords[3] - props.coords[1]}}>
+     <div onClick={e=>handleHighlightClick(e, props.coords)} className='clickableTextDiv'
+          style={{ backgroundColor: typeToColor(props.type), left: props.coords[0] - 2, top: props.coords[1] - 1,
+            width: props.coords[2] - props.coords[0] + 4,
+            height: props.coords[3] - props.coords[1] + 2, borderRadius:'4px'}}>
      </div>
     );
   };
@@ -163,7 +161,7 @@ function Document() {
         {/** potentially convert document to pdf and show document on page */}
         <AllPagesPDFViewer pdf={`http://127.0.0.1:5000/converttopdf/convert?filepath=${path}&filetype=${type}`} />
         {mistakes.map((mistake, i) =>
-          <ClickableTextDiv key={i} number={i} coords={mistake.coords} page={mistake.page} pageHeight={mistake.pageHeight}/>
+          <ClickableTextDiv key={i} number={i} coords={mistake.coords} type={mistake.type}/>
         )}
       </div>
       <div className='rightFloat'>
