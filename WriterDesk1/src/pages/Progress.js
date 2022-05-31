@@ -31,7 +31,9 @@ function Progress() {
                 <img src={graphPlaceholder} className='graph2' />
                 <br /><br />
                 <Typography variant='h5'>Progress over time</Typography>
-                <ProgressVisualization />
+                <div className="plotContainer">
+                    <ProgressVisualization />
+                </div>
             </div>
         </>
     );

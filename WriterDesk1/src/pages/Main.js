@@ -10,6 +10,7 @@ import chartImg from '../images/chartImage.png';
 // routing
 import { Link, useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
+import ProgressVisualization from "../components/ProgressVisualization";
 
 
 /**
@@ -49,8 +50,8 @@ const Main = () => {
             <br />
             <Typography style={{ fontSize: '2vw' }}><u>Progress</u></Typography>
         </div>
-        <div className='vertCenter'>
-          <img className='graph' src={chartImg} />
+        <div className='plotContainer'>
+          <ProgressVisualization />
         </div>
       </div>
     </div>

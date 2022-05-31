@@ -11,18 +11,24 @@ import Plot from 'react-plotly.js';
  * @returns ProgressVisualization Component
  */
 const ProgressVisualization = () => {
+
   const documents = [
-    {id: 1, date: '2020-10-04', Title: 'Title1', scoreLanguage: 6.5, scoreStructure: 5, scoreCohesion: 7, scoreSourceIntegration: 5.5},
-    {id: 2, date: '2021-11-04', Title: 'Title2', scoreLanguage: 7, scoreStructure: 5, scoreCohesion: 7.5, scoreSourceIntegration: 8},
-    {id: 3, date: '2022-12-04', Title: 'Title3', scoreLanguage: 7.5, scoreStructure: 6, scoreCohesion: 6, scoreSourceIntegration: 9},
-    {id: 4, date: '2022-12-04', Title: 'Title4', scoreLanguage: 8, scoreStructure: 5.5, scoreCohesion: 5.5, scoreSourceIntegration: 8},
-    {id: 4, date: '2023-01-04', Title: 'Title5', scoreLanguage: 9, scoreStructure: 6, scoreCohesion: 5, scoreSourceIntegration: 8.5},
-    {id: 4, date: '2023-03-04', Title: 'Title6', scoreLanguage: 9.5, scoreStructure: 7.4, scoreCohesion: 5.5, scoreSourceIntegration: 8}
+    {date: '2020-10-04', Title: 'Title1', scoreLanguage: 6.5, scoreStructure: 5, scoreCohesion: 7, scoreSourceIntegration: 5.5},
+    {date: '2021-11-04', Title: 'Title2', scoreLanguage: 7, scoreStructure: 5, scoreCohesion: 7.5, scoreSourceIntegration: 8},
+    {date: '2022-12-04', Title: 'Title3', scoreLanguage: 7.5, scoreStructure: 6, scoreCohesion: 6, scoreSourceIntegration: 9},
+    {date: '2022-12-04', Title: 'Title4', scoreLanguage: 8, scoreStructure: 5.5, scoreCohesion: 5.5, scoreSourceIntegration: 8},
+    {date: '2023-01-04', Title: 'Title5', scoreLanguage: 9, scoreStructure: 6, scoreCohesion: 5, scoreSourceIntegration: 8.5},
+    {date: '2023-03-04', Title: 'Title6', scoreLanguage: 9.5, scoreStructure: 7.4, scoreCohesion: 5.5, scoreSourceIntegration: 8}
   ]; //TODO: Retrieve document data
+
+  //TODO: Add onclick event to go to document page
+  const handlePointClick = (date) => {
+    alert(date)
+  }
 
 
   return (
-    <Plot
+    <Plot style={{ height: '100%', width: '85%' }}
     data={[
       {
         x: documents.map(row => row.date),
@@ -85,7 +91,7 @@ const ProgressVisualization = () => {
         }]
       }
     ]}
-    layout={ {width: 1120, height: 400, hovermode:'closest', margin: {l: 30, r: 0, b: 30, t: 20, pad: 4},
+    layout={ { hovermode:'closest', autosize: true, margin: {l: 180, r: 0, b: 30, t: 20, pad: 4},
       yaxis: {
         rangemode: 'tozero',
         autotick: false,
@@ -103,15 +109,15 @@ const ProgressVisualization = () => {
         type: 'date',
         showgrid: true,
         hoverformat: '%d-%m-%Y',
-        showspikes: true,
+        showspikes: false, //true
         spikecolor: 'black',
         spikemode: 'toaxis+across',
         spikethickness: 1
       }
     } }
-    config={{ modeBarButtonsToRemove: ['toImage', 'lasso2d', 'select2d', 'resetScale2d'], displaylogo: false }}
+    config={{ modeBarButtonsToRemove: ['toImage', 'lasso2d', 'select2d', 'resetScale2d'], displaylogo: false, responsive: true}}
     onClick={
-      (data) => alert(data.points[0].x) //TODO: Add onclick event to go to document page
+      (data) => handlePointClick(data.points[0].x)
     }
     onHover={e => {
       e.event.target.style.cursor = 'pointer'

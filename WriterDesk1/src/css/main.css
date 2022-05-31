@@ -133,6 +133,14 @@ grid-row-gap: 0px;
     height: 100%;
 }
 
+.plotContainer {
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 280px;
+}
+
 .subTitle {
     text-align: center;
     color: #44749D;
