@@ -29,9 +29,6 @@ function Document() {
   });
 
   // TODO take file path and file type from database
-  const path = 'C:\\Users\\20174066\\Documents\\School\\2IPE0_SEP\\SEP2021\\WriterDesk1\\src\\example3.docx'
-  const type = 'docx'
-
   const path = 'C:\\Users\\20183163\\PycharmProjects\\SEP2021\\WriterDesk1\\src\\example2.pdf'
   const type = 'pdf'
 
