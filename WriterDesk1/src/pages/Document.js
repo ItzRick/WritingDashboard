@@ -4,10 +4,10 @@ import {Typography} from "@mui/material";
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
+// show pdf
 import React from 'react';
-import AllPagesPDFViewer from "../components/all-pages";
+import AllPagesPDFViewer from "../components/ShowPDF";
 import "../css/styles.css";
 import "../css/main.css";
 import placeholder from '../images/chartImage.png';
@@ -21,14 +21,16 @@ function Document() {
   //set title in parent 'base'
   const { setTitle } = useOutletContext();
 
-  const [file, setFile] = useState('');
-
   const [showTextbox, setShowTextbox] = useState([]);
 
 
   useEffect(() => {
     setTitle('Document');
   });
+
+  // TODO take file path and file type from database
+  const path = 'C:\\Users\\20174066\\Documents\\School\\2IPE0_SEP\\SEP2021\\WriterDesk1\\src\\example3.docx'
+  const type = 'docx'
 
   const path = 'C:\\Users\\20183163\\PycharmProjects\\SEP2021\\WriterDesk1\\src\\example2.pdf'
   const type = 'pdf'
@@ -161,6 +163,7 @@ function Document() {
   return (
     <>
       <div className="all-page-container" id="all-page-container">
+        {/** potentially convert document to pdf and show document on page */}
         <AllPagesPDFViewer pdf={`http://127.0.0.1:5000/converttopdf/convert?filepath=${path}&filetype=${type}`} />
         {mistakes.map((mistake, i) =>
           <ClickableTextDiv key={i} number={i} coords={mistake.coords} page={mistake.page} pageHeight={mistake.pageHeight}/>
