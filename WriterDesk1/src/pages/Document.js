@@ -32,12 +32,13 @@ function Document() {
   const path = 'C:\\Users\\20183163\\PycharmProjects\\SEP2021\\WriterDesk1\\src\\example2.pdf'
   const type = 'pdf'
 
-
+//TODO: retrieve mistakes from database
   const mistakes = [
     {text: 'decade', explanation: 'expl1', type: 0, coords: [156.9016876220703, 157.89927673339844, 183.29876708984375, 169.56455993652344], replacements: ['ab', 'b', 'ba']},
     {text: 'Furthermore', explanation: 'expl2', type: 1, coords: [464.495361328125, 468.1363525390625, 514.29833984375, 480.14129638671875], replacements: ['as']},
     {text: 'past decade, a new ', explanation: 'expl3', type: 2, coords: [126.9016876220703, 157.89927673339844, 213.29876708984375, 169.56455993652344], replacements: ['a', 'b', 'c']},
-    {text: 'semantics', explanation: 'expl4', type: 3, coords: [390.88116455078125, 858.056518555, 430.1736755371094, 870.061454773], replacements: []}
+    {text: 'semantics', explanation: 'expl4', type: 3, coords: [390.88116455078125, 858.056518555, 430.1736755371094, 870.061454773], replacements: []},
+    {text: 'semantics', explanation: 'expl5', type: 0, coords: [390.88116455078125, 858.056518555, 430.1736755371094, 870.061454773], replacements: []}
   ];
 
 
@@ -48,16 +49,16 @@ function Document() {
    */
   const handleHighlightClick = (e, coords) => {
     let rect = e.target.getBoundingClientRect();
-    let x = coords[0] + e.clientX - rect.left; // x-coordinate of click in div
-    let y = coords[1] + e.clientY - rect.top; // y-coordinate of click in div
+    let x = coords[0] + e.clientX - rect.left; // x-coordinate of click in document
+    let y = coords[1] + e.clientY - rect.top; // y-coordinate of click in document
 
     let newArrShowTextbox = []; // Create new array to overwrite showTextbox
 
     for (let i = 0; i < mistakes.length; i++) {
-      let left = mistakes[i].coords[0];
-      let right = mistakes[i].coords[2];
-      let top = mistakes[i].coords[1];
-      let bottom = mistakes[i].coords[3];
+      let left = mistakes[i].coords[0] - 2;
+      let right = mistakes[i].coords[2] + 2;
+      let top = mistakes[i].coords[1] - 1;
+      let bottom = mistakes[i].coords[3] + 1;
 
       //Set showTextbox true for every mistake that is clicked
       newArrShowTextbox[i] = (left <= x) && (x <= right) && (top <= y) && (y <= bottom);
