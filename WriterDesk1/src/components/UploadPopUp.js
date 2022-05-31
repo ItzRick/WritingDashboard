@@ -2,10 +2,7 @@ import {
     useState,
 } from 'react';
 
-import { Link } from 'react-router-dom';
-
 import {
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -16,24 +13,26 @@ import {
 import BlueButton from "./BlueButton";
 
 /**
+ * Popup with button
  * 
- * @param {func} onAgree function that has to be activated when the accept has been clicked, default is empty function
- * @param {func} onDisagree function that has to be activated when the cancel has been clicked, default is empty function
+ * @param {func} func function activated when main button is clicked
  * 
- * @returns 
+ * @returns popup with button for upload page
  */
 const UploadPopUp = ({func}) => {
+    // whether popup is open
     const [open, setOpen] = useState(false);
 
+    // change state of popup
     const switchOpen = () => {
         setOpen(val => !val);
     }
 
+    // handle opening of popup
     const handleClickOpen = () => {
-        switchOpen();
         func();
+        switchOpen();
     };
-
 
     return (
         <>
