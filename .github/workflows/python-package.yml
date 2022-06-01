@@ -23,7 +23,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f WriterDesk1/requirements.txt ]; then pip install -r WriterDesk1/requirements.txt; fi
     - name: Test with pytest
       run: |
         pytest
