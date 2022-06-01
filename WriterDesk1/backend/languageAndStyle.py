@@ -42,8 +42,8 @@ def calculateScore(nrOfMistakes, nrOfWords):
     # No division by 0
     if nrOfWords > 0:
         # Function to calculate score between 0 and 10
-        score = max(0, -1276950 + (10 + 1276950) /
-                    (1 + ((nrOfMistakes / nrOfWords) / 0.1488448) ** 1.084818) ** 0.00000354305)
+        score = max(0, -221.785 + (10 + 221.785) /
+                    (1 + ((nrOfMistakes / nrOfWords) / 0.01911166) ** 1.415104) ** 0.007848222)
     else:
         score = 0
 
