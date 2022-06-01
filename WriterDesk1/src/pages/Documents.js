@@ -108,8 +108,6 @@ function Documents() {
   
   return (
     <>
-      <Button variant='contained'>Update selected documents with current feedback model</Button>
-      <br />
       <div style={{height: '80vh', maxHeight: '400px'}} >
         <DataGrid
           rows={rows}
