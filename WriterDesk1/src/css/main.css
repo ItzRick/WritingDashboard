@@ -211,6 +211,7 @@ grid-row-gap: 0px;
     display: inline-block;
     position: absolute;
     cursor: pointer;
+    mix-blend-mode: darken;
 }
 
 
