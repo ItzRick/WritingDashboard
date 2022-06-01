@@ -4,7 +4,8 @@ import './../css/main.css';
 import {
     TextField, 
     Typography,
-    IconButton 
+    IconButton,
+    Button
 } from "@mui/material";
 import logo from '../images/logo.png'
 import BlueButton from "./../components/BlueButton";
@@ -77,7 +78,8 @@ const Login = () => {
                         <TextField id='password' label='Password' variant='outlined' type='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
                     </div>
                     <br />
-                    <BlueButton pathName='/Main'>Log In</BlueButton>
+                    {formError && <Typography color="red">Invalid username and/or password</Typography>}
+                    <Button variant="contained" sx={{bgcolor: 'button.main', color: 'button.text'}} onClick={handleClick}>Log in</Button>
                 </div>
                 <div className='div3'>
                     <br />
