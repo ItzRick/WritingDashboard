@@ -1,14 +1,21 @@
 // materials
-import { } from "@mui/material";
+import {
+  TextField,
+  IconButton,
+
+} from "@mui/material";
+import {
+  DeleteOutline,
+  Timeline,
+} from "@mui/icons-material";
+import { DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
+import BlueButton from './../components/BlueButton';
 
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
-import {Button, TextField} from "@mui/material";
-import {DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
-import IconButton from "@mui/material/IconButton";
-import TimelineIcon from '@mui/icons-material/Timeline';
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+
+
 
 /**
  * 
@@ -52,7 +59,7 @@ const columns: GridColDef[] = [
         return alert(JSON.stringify(thisRow, null, 4));
       };
 
-      return <div><IconButton><TimelineIcon /></IconButton><IconButton><DeleteOutlineIcon /></IconButton></div>;
+      return <div><IconButton><Timeline /></IconButton><IconButton><DeleteOutline /></IconButton></div>;
     }
   }
 ];
@@ -88,7 +95,7 @@ function Participants() {
                     id="projectName"
                     label={"Project name"}
                 />
-                <Button variant='contained' style={{marginTop: '1vw'}}>Add participants</Button>
+                <BlueButton>Add participants</BlueButton>
             </div>
             <div className='topBorder'>
                 <TextField
@@ -96,7 +103,7 @@ function Participants() {
                     id="projectName2"
                     label={"Project name"}
                 />
-                <Button variant='contained' style={{marginTop: '1vw'}}>Download participants</Button>
+                <BlueButton>Download participants</BlueButton>
             </div>
             <div className='topBorder'>
                 <TextField
@@ -114,7 +121,7 @@ function Participants() {
                     id="projectName3"
                     label={"Project name"}
                 />
-                <Button variant='contained' style={{marginTop: '1vw'}}>Download user data</Button>
+                <BlueButton>Download user data</BlueButton>
             </div>
             <div className='topBorder'>
                 <Button variant='contained' style={{marginTop: '1vw', marginLeft: '1vw'}}>Download selected participants</Button>

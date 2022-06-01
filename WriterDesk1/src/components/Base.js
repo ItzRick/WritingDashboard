@@ -153,7 +153,7 @@ const Base = ({
   const theme = useTheme();
 
   return (
-    <Box sx={{ display: 'flex' }} color="textPrimary">
+    <Box sx={{ display: 'flex' }} color="textPrimary" className='baseRoot'>
       <CssBaseline />
       <CustomAppBar
         position='fixed'
@@ -241,9 +241,11 @@ const Base = ({
         </List>
       </CustomDrawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }} >
-        <CustomDrawerHeader />
-        <Outlet context={{ setTitle }} />
+      <Box component="main" sx={{ flexGrow: 1, p:3}} >
+        <CustomDrawerHeader/>
+        <Box className='content'sx={{ height:'93.5%'}}>
+          <Outlet context={{ setTitle }} />
+        </Box>
       </Box>
     </Box>
   );
