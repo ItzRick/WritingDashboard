@@ -118,7 +118,7 @@ const Base = () => {
     const [title, setTitle] = useState("");
 
     return (
-        <Box sx={{ display: 'flex', color: 'primary' }}>
+        <Box sx={{ display: 'flex', color: 'primary' }} className='baseRoot'>
             <CssBaseline />
             <CustomAppBar
                 position='fixed'
