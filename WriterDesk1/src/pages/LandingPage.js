@@ -41,7 +41,6 @@ const LandingPage = () => {
           After the document has been uploaded, feedback will be generated.
           The student can view the feedback, which includes the feedback scores.
           After uploading multiple documents, the students can view their progress over time.
-          Lorem ipsum, lorem ipsum.
         </span>
       </div>
     </Box>

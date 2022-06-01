@@ -1,20 +1,18 @@
 // materials
-import { } from "@mui/material";
+import {
+  IconButton, 
+  Stack,
+} from "@mui/material";
+import {
+  DeleteOutline,
+  Grading
+} from "@mui/icons-material";
+import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button } from "@mui/material";
-import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
-import { GridColDef } from "@mui/x-data-grid";
-import { GridValueGetterParams } from "@mui/x-data-grid";
-import Stack from '@mui/material/Stack';
-import IconButton from "@mui/material/IconButton";
-import GradingIcon from '@mui/icons-material/Grading';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { GridApi } from "@mui/x-data-grid";
-import { GridCellValue } from "@mui/x-data-grid";
 
 
 /**
@@ -95,7 +93,7 @@ const Documents = () => {
       sortable: false,
       flex: 1,
       renderCell: (params) => {
-        return <div><IconButton><GradingIcon /></IconButton><IconButton onClick={(e) => { deleteFile(e, params) }}  ><DeleteOutlineIcon /></IconButton></div>;
+        return <div><IconButton><Grading /></IconButton><IconButton onClick={(e) => { deleteFile(e, params) }}  ><DeleteOutline /></IconButton></div>;
       }
     }
   ];
@@ -174,7 +172,7 @@ const Documents = () => {
         ),
         Toolbar: () => (
           <GridToolbarContainer>
-            <IconButton onClick={deleteAllFiles} ><DeleteOutlineIcon /></IconButton>
+            <IconButton onClick={deleteAllFiles} ><DeleteOutline /></IconButton>
           </GridToolbarContainer>
         )
       }}

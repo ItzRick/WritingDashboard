@@ -1,15 +1,20 @@
 // materials
-import { } from "@mui/material";
+import {
+  TextField,
+  IconButton,
+
+} from "@mui/material";
+import {
+  DeleteOutline,
+  Timeline,
+} from "@mui/icons-material";
+import { DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
+import BlueButton from './../components/BlueButton';
 
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Button, TextField } from "@mui/material";
-import { DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
-import IconButton from "@mui/material/IconButton";
-import TimelineIcon from '@mui/icons-material/Timeline';
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import BlueButton from './../components/BlueButton';
+
 
 
 /**
@@ -54,7 +59,7 @@ const columns: GridColDef[] = [
         return alert(JSON.stringify(thisRow, null, 4));
       };
 
-      return <div><IconButton><TimelineIcon /></IconButton><IconButton><DeleteOutlineIcon /></IconButton></div>;
+      return <div><IconButton><Timeline /></IconButton><IconButton><DeleteOutline /></IconButton></div>;
     }
   }
 ];
