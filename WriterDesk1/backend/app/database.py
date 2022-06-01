@@ -1,10 +1,19 @@
 from app import db
 from app import models
 
+def initialSetup():
+    db.session.commit()
+    db.drop_all()
+    db.create_all()
+    # create initial user
+    u = models.User(id='123', username='john', email='john@example.com')
+    uploadToDatabase(u)
+
+    #don't forget to comment out ... existing files in models.py 
+
+
 def uploadToDatabase(toUpload):
-    # db.session.commit()
-    # db.drop_all()
-    # db.create_all()
+    
     db.session.add(toUpload)
     db.session.commit()
 
