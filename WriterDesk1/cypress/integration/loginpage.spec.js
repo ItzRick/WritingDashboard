@@ -35,10 +35,6 @@ describe('Test the loginpage', () => {
     })
 
     it('Checks if we get an error message.', () => {
-        cy.url().should('include', '/Login')
-        cy.contains('Sign up')
-        cy.contains('Note: the TU/e mail is the username of TU/e students.')
-
         cy.contains('Username:')
         cy.get('[id="username"]')
         .type('test@student.tue.nl')
@@ -54,6 +50,12 @@ describe('Test the loginpage', () => {
         .contains('Log in')
         .click()
         cy.contains('Invalid username and/or password')       
+    })
+
+    it('Checks if we can go to the signup page.', () => {
+        cy.contains('here').click()
+        cy.url().should('include', '/SignUp')
+        cy.contains('Signup')
     })
 
   })
