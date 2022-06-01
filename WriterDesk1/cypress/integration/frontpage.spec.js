@@ -10,19 +10,16 @@ describe('Test the frontpage', () => {
         cy.contains('Improve your academic writing.')
         cy.contains('TU/e students can improve their academic writing.')
     })
-    it('Goes to and checks the login page', () => {
-        cy.get('[name="loginButton"]')
-        .contains('Log in')
+    it('Checks if we can go to the login page', () => {
+        cy.get('[id="loginButton"]')
         .click()
-
         cy.url().should('include', '/Login')
-        cy.contains('Sign up')
-        cy.contains('Note: the TU/e mail is the username of TU/e students.')
-
-        cy.contains('Username:')
-        // cy.get('MuiOutlinedInput-root').should('have.attr', 'Legend', 'Username')
-        // cy.contains('Password:')
-        
+        cy.contains('Log in')
     })
-
+    it('Checks if we can go to the signup page', () => {
+        cy.get('[id="signupButton"]')
+        .click()
+        cy.url().should('include', '/SignUp')
+        cy.contains('Signup')
+    })
   })

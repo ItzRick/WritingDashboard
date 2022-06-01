@@ -22,9 +22,9 @@ const LandingPage = () => {
       <Typography variant='h5'>Improve your academic writing.</Typography>
       <br />
       <div className='center'>
-          <Button size='large' name='loginButton' sx={{bgcolor: 'button.main', color: 'button.text'}} variant='contained' component={Link}  to={'/Login'}>Log in</Button>
+          <Button size='large' id='loginButton' sx={{bgcolor: 'button.main', color: 'button.text'}} variant='contained' component={Link}  to={'/Login'}>Log in</Button>
           <div className='filler'></div>
-          <Button size='large' name='signupButton' sx={{bgcolor: 'button.main', color: 'button.text'}} variant='contained' component={Link}  to={'/SignUp'}>Sign up</Button>
+          <Button size='large' id='signupButton' sx={{bgcolor: 'button.main', color: 'button.text'}} variant='contained' component={Link}  to={'/SignUp'}>Sign up</Button>
       </div>
       <br /><br />
       <div className='center'>
