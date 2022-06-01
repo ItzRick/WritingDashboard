@@ -52,7 +52,7 @@ def testRetrieveFilesOfUserDateAsc(testClient, initDatabaseEmpty):
         db.session.rollback()
         
     # Retrieve the files from the specified user
-    response = testClient.get('/fileapi/fileretrieve', data=data)
+    response = testClient.get('/fileapi/fileretrieve', query_string=data)
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
@@ -138,7 +138,7 @@ def testRetrieveFilesOfUserDateDesc(testClient, initDatabaseEmpty):
         db.session.rollback()
         
     # Retrieve the files from the specified user
-    response = testClient.get('/fileapi/fileretrieve', data=data)
+    response = testClient.get('/fileapi/fileretrieve', query_string=data)
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
@@ -224,7 +224,7 @@ def testRetrieveFilesOfUserFilenameAsc(testClient, initDatabaseEmpty):
         db.session.rollback()
         
     # Retrieve the files from the specified user
-    response = testClient.get('/fileapi/fileretrieve', data=data)
+    response = testClient.get('/fileapi/fileretrieve', query_string=data)
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
@@ -310,7 +310,7 @@ def testRetrieveFilesOfUserFilenameDesc(testClient, initDatabaseEmpty):
         db.session.rollback()
         
     # Retrieve the files from the specified user
-    response = testClient.get('/fileapi/fileretrieve', data=data)
+    response = testClient.get('/fileapi/fileretrieve', query_string=data)
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
