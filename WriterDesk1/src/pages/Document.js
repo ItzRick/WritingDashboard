@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import AllPagesPDFViewer from "../components/ShowPDF";
 import "../css/styles.css";
-import "../css/main.css";
+import "../css/Document.css";
 import placeholder from '../images/chartImage.png';
 
 
@@ -79,24 +79,36 @@ function Document() {
     return(
       <div className={showTextbox[props.number] ? 'textBoxExpl' : 'hidden'} id={'textBoxExpl' + props.number}
            style={{backgroundColor: typeToColor(props.type), borderColor: typeToColor(props.type)}}>
-        <Typography className='textBoxType' style={{color: typeToColor(props.type)}}>
+        <Typography className='textBoxType' style={{color: typeToColor(props.type), fontSize: 'calc(8px + 0.5vw)'}}>
           <b>{typeToName(props.type)}</b>
         </Typography>
-        <Typography variant='body1' className='textBoxWord'><b>{props.text}</b></Typography>
-        <Typography variant='body2' sx={{marginTop: '5px', marginBottom:'10px'}}>
+        <Typography variant='body1' className='textBoxWord' style={{fontSize: 'calc(12px + 0.3vw)'}}>
+          <b>{props.text}</b>
+        </Typography>
+        <Typography variant='body2' sx={{marginTop: '5px', marginBottom:'10px', fontSize: 'calc(12px + 0.2vw)'}}>
           {props.expl}
         </Typography>
-        <Typography className={props.replacements.length > 0 ? 'replacementsText' : 'hidden'} variant='body2'>
+        <Typography className={props.replacements.length > 0 ? 'replacementsText' : 'hidden'}
+                    style={{fontSize: 'calc(11px + 0.2vw)'}} variant='body2'>
           Possible replacements:
         </Typography>
-        <Typography className='textBoxReplacements' variant='body1' sx={{ marginLeft: 0.6, marginRight: 0.6 }}
-                    style={{backgroundColor: typeToColor(props.type)}}> {props.replacements[0]}
+        <Typography className={props.replacements.length > 0 ? 'textBoxReplacements' : 'hidden'}
+                    variant='body1'
+                    style={{borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
+                      marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'}}>
+          {props.replacements[0]}
         </Typography>
-        <Typography className='textBoxReplacements' variant='body1' sx={{ marginLeft: 0.6, marginRight: 0.6 }}
-                    style={{backgroundColor: typeToColor(props.type)}}> {props.replacements[1]}
+        <Typography className={props.replacements.length > 1 ? 'textBoxReplacements' : 'hidden'}
+                    variant='body1'
+                    style={{borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
+                      marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'}}>
+          {props.replacements[1]}
         </Typography>
-        <Typography className='textBoxReplacements' variant='body1' sx={{ marginLeft: 0.6, marginRight: 0.6 }}
-                    style={{backgroundColor: typeToColor(props.type)}}> {props.replacements[2]}
+        <Typography className={props.replacements.length > 2 ? 'textBoxReplacements' : 'hidden'}
+                    variant='body1'
+                    style={{borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
+                      marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'}}>
+          {props.replacements[2]}
         </Typography>
       </div>
     );
