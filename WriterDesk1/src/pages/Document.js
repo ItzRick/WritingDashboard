@@ -57,8 +57,8 @@ function Document() {
     for (let i = 0; i < mistakes.length; i++) {
       let left = mistakes[i].coords[0] - 2;
       let right = mistakes[i].coords[2] + 2;
-      let top = mistakes[i].coords[1] - 1;
-      let bottom = mistakes[i].coords[3] + 1;
+      let top = mistakes[i].coords[1];
+      let bottom = mistakes[i].coords[3];
 
       //Set showTextbox true for every mistake that is clicked
       newArrShowTextbox[i] = (left <= x) && (x <= right) && (top <= y) && (y <= bottom);
@@ -112,9 +112,9 @@ function Document() {
   const ClickableTextDiv = (props) => {
     return(
      <div onClick={e=>handleHighlightClick(e, props.coords)} className='clickableTextDiv'
-          style={{ backgroundColor: typeToColor(props.type), left: props.coords[0] - 2, top: props.coords[1] - 1,
+          style={{ backgroundColor: typeToColor(props.type), left: props.coords[0] - 2, top: props.coords[1],
             width: props.coords[2] - props.coords[0] + 4,
-            height: props.coords[3] - props.coords[1] + 2, borderRadius:'4px'}}>
+            height: props.coords[3] - props.coords[1], borderRadius:'4px'}}>
      </div>
     );
   };
