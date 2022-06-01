@@ -2,7 +2,7 @@ from flask import Flask
 from flask import jsonify
 from flask import request, current_app
 from app.loginapi import bp
-
+from app import db
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import current_user
 from flask_jwt_extended import get_jwt_identity

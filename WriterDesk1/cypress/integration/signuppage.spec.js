@@ -1,7 +1,7 @@
-describe('Test the loginpage', () => {
+describe('Test the signup page', () => {
     beforeEach(() => {
         cy.visit('https://localhost:3000/')
-        cy.get('[id="loginButton"]')
+        cy.get('[id="signupButton"]')
         .click()
       })
     
@@ -10,6 +10,7 @@ describe('Test the loginpage', () => {
     })
 
     it('Checks if all elements are present.', () => {
+        cy.url().should('include', '/Login')
         cy.contains('Sign up')
         cy.contains('Note: the TU/e mail is the username of TU/e students.')
 
@@ -23,6 +24,11 @@ describe('Test the loginpage', () => {
     })
 
     it('Checks if we can add values to the textfields.', () => {
+        cy.url().should('include', '/Login')
+        cy.contains('Sign up')
+        cy.contains('Note: the TU/e mail is the username of TU/e students.')
+
+        cy.contains('Username:')
         cy.get('[id="username"]')
         .type('test@student.tue.nl')
         .should('have.value', 'test@student.tue.nl')
