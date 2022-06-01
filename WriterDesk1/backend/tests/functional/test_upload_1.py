@@ -177,7 +177,7 @@ def testUploadPDFFile(testClient, initDatabase):
             initDatabase: the database instance we test this for.
     '''
     del initDatabase
-    fileName = 'SEP intro.pdf'
+    fileName = 'SEP_intro.pdf'
     userId = 789
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
@@ -219,7 +219,7 @@ def testUploadPDFMultiple(testClient, initDatabase):
     '''
     del initDatabase
     # Upload the first file:
-    fileName1 = 'SEP intro.pdf'
+    fileName1 = 'SEP_intro.pdf'
     userId = 789
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
@@ -245,7 +245,7 @@ def testUploadPDFAgain(testClient, initDatabase):
             initDatabase: the database instance we test this for.
     '''
     # Upload the file the first time:
-    fileName = 'SEP intro.pdf'
+    fileName = 'SEP_intro.pdf'
     userId = 789
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
