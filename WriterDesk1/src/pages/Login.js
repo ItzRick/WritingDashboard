@@ -6,14 +6,20 @@ import {
     Typography,
     IconButton 
 } from "@mui/material";
-import logo from '../images/logo.png';
+import logo from '../images/logo.png'
 import BlueButton from "./../components/BlueButton";
 
 // routing
-import { Link, useOutletContext } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Link, useOutletContext  } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+
+// Login request setup
+import axios from 'axios';
+const BASE_URL = "https://localhost:5000/loginapi";
 
 /**
+ * Request login to server based on form on page
+ * 
  * 
  * @returns login page
  */
@@ -24,6 +30,36 @@ const Login = () => {
         setTitle('Login');
     });
 
+    // Set username from textfield
+    const [username, setUsername] = useState("");
+
+    // Set password from textfield
+    const [password, setPassword] = useState("");
+
+    // Change page using formError when we find an error
+    const [formError, setFormError] = useState(false);
+
+    // Do POST request containing username and password variable, recieve data when username and password are correct
+    const handleClick = () => {
+        axios.post(`${BASE_URL}/login`,{
+                "username": username,
+                "password": password,
+            }).then(response =>{
+                localStorage.setItem('access_token', response.data.access_token);
+
+                if (localStorage.getItem("access_token") !== null && localStorage.getItem("access_token")!=="undefined") {
+                console.log("Inloggen gelukt!")
+              }else{
+                  alert(response.data.error);
+                  setFormError(true);
+              }
+        })
+        .catch(error =>{
+            console.error("Something went wrong:",error);
+            setFormError(true);
+        });
+    }
+    
     return (
         <>
             <div className='parent'>
@@ -35,10 +71,10 @@ const Login = () => {
                 <div className='div2'>
                     <div className='text_boxes'>
                         <Typography>Username:</Typography>
-                        <TextField id='username' label='Username' variant='outlined' />
+                        <TextField id='username' label='Username' variant='outlined' value={username} onChange={(e) => setUsername(e.target.value)} />
                         <br />
                         <Typography>Password:</Typography>
-                        <TextField id='password' label='Password' variant='outlined' type='password' />
+                        <TextField id='password' label='Password' variant='outlined' type='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
                     </div>
                     <br />
                     <BlueButton pathName='/Main'>Log In</BlueButton>

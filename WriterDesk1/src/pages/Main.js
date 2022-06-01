@@ -28,7 +28,6 @@ const Main = () => {
   return (
     <div className='home_grid'>
       <div className='home1'>
-        <Typography variant='h3'>Homepage</Typography>
       </div>
       <div className='home2'>
         <div className='vertCenter'>

@@ -82,7 +82,7 @@ function Participants() {
         <>
             <div style={{textAlign: 'center', marginBottom: '1vh'}}>
                 <TextField
-                  style={{marginRight: '1vw'}}
+                  style={{marginRight: '1vw', marginTop: '1vw'}}
                   id="noOfParticipants"
                   label="Number of participants"
                   type="number"
@@ -91,7 +91,7 @@ function Participants() {
                   }}
                 />
                 <TextField
-                    style={{marginRight: '1vw'}}
+                    style={{marginRight: '1vw', marginTop: '1vw'}}
                     id="projectName"
                     label={"Project name"}
                 />
@@ -99,7 +99,7 @@ function Participants() {
             </div>
             <div className='topBorder'>
                 <TextField
-                    style={{marginRight: '1vw'}}
+                    style={{marginRight: '1vw', marginTop: '1vw'}}
                     id="projectName2"
                     label={"Project name"}
                 />
@@ -107,23 +107,28 @@ function Participants() {
             </div>
             <div className='topBorder'>
                 <TextField
-                    style={{marginRight: '1vw'}}
+                    style={{marginRight: '1vw', marginTop: '1vw'}}
                     id="startDate"
                     label={"Start date"}
                 />
                 <TextField
-                    style={{marginRight: '1vw'}}
+                    style={{marginRight: '1vw', marginTop: '1vw'}}
                     id="enData"
                     label={"End date"}
                 />
                 <TextField
-                    style={{marginRight: '1vw'}}
+                    style={{marginRight: '1vw', marginTop: '1vw'}}
                     id="projectName3"
                     label={"Project name"}
                 />
                 <BlueButton>Download user data</BlueButton>
             </div>
-            <div className='topBorder' style={{justifyContent: 'center', display: 'flex'}}>
+            <div className='topBorder'>
+                <Button variant='contained' style={{marginTop: '1vw', marginLeft: '1vw'}}>Download selected participants</Button>
+                <div style={{paddingLeft: '2vw', display: 'inline'}} />
+                <Button variant='contained' style={{marginTop: '1vw', marginLeft: '1vw'}}>Download user data of selected participants</Button>
+            </div>
+            <div style={{justifyContent: 'center', display: 'flex'}}>
                 <div style={{height: '80vh', maxHeight: '400px', width: '50vw'}} >
                     <DataGrid
                       rows={rows}

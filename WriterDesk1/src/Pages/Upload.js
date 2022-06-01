@@ -69,9 +69,6 @@ const Upload = () => {
 
     return (
         <>
-            <Box className='title'>
-                <Typography variant='h3'>Upload</Typography>
-            </Box>
             <br />
             <Box className='center'>
                 {uploadSingleFiles}

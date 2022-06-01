@@ -1,7 +1,7 @@
 from config import Config
 import pytest
 from app import create_app, db
-from app.models import Files
+from app.models import Files, User
 import os
 from datetime import datetime
 import shutil
@@ -33,6 +33,17 @@ def newFile():
     file = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/URD_Group3_vers03_Rc.pdf', filename='URD_Group3_vers03_Rc.pdf', 
     date=datetime(2018, 5, 20), userId = 256, courseCode = '2ILH0', fileType=".pdf")
     return file
+
+@pytest.fixture(scope='module')
+def newUser():
+    '''
+        This is an example user.
+        The user attributes:
+            username: m.l.langedijk@student.tue.nl
+            password (unhashed, will be hashed when ininitailized): wachtwoord
+    '''
+    user = User('m.l.langedijk@student.tue.nl', 'wachtwoord')
+    return user
 
 
 @pytest.fixture(scope='module')
@@ -83,6 +94,12 @@ def initDatabase(testClient):
     filename='SEP.pdf', date=datetime(2020, 10, 2), userId = 567, courseCode = '3NAB0', fileType = '.pdf')
     db.session.add(file1)
     db.session.add(file2)
+
+    user1 = User("Pietje", "Bell")
+    user2 = User("Donald", "Duck")
+    db.session.add(user1)
+    db.session.add(user2)
+
     db.session.commit()
 
     yield   # This is where the testing happens!

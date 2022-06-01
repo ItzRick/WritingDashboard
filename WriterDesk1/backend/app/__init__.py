@@ -3,6 +3,7 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
+from app.extensions import jwt
 
 # Database instance:
 db = SQLAlchemy()
@@ -18,8 +19,13 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    jwt.init_app(app)
+
     from app.fileapi import bp as fileapi_db
     app.register_blueprint(fileapi_db, url_prefix='/fileapi')
+
+    from app.loginapi import bp as loginapi_db
+    app.register_blueprint(loginapi_db, url_prefix='/loginapi')
 
     # Return the app:
     return app
