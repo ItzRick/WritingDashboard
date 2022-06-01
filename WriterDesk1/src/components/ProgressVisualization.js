@@ -28,7 +28,7 @@ const ProgressVisualization = () => {
 
 
   return (
-    <Plot style={{ height: '100%', width: '85%' }}
+    <Plot style={{ height: '100%', width: '80%' }}
     data={[
       {
         x: documents.map(row => row.date),
@@ -91,7 +91,7 @@ const ProgressVisualization = () => {
         }]
       }
     ]}
-    layout={ { hovermode:'closest', autosize: true, margin: {l: 180, r: 0, b: 30, t: 20, pad: 4},
+    layout={ { hovermode:'closest', margin: {l: 180, r: 0, b: 30, t: 20, pad: 4},
       yaxis: {
         rangemode: 'tozero',
         autotick: false,
