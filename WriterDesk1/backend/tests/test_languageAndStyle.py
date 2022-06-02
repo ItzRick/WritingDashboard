@@ -20,16 +20,13 @@ def testFeedbackLanguageMultipleSentences():
     assert 0 <= score <= 10
 
     assert mistakes[0][0] == "forteen"
-    assert mistakes[0][1] == "I'm forteen and I life in germany."
-    assert "fourteen" in mistakes[0][3]
+    assert "fourteen" in mistakes[0][4]
 
     assert mistakes[1][0] == "life"
-    assert mistakes[1][1] == "I'm forteen and I life in germany."
-    assert "live" in mistakes[1][3]
+    assert "live" in mistakes[1][4]
 
     assert mistakes[2][0] == "germany"
-    assert mistakes[2][1] == "I'm forteen and I life in germany."
-    assert "Germany" in mistakes[2][3]
+    assert "Germany" in mistakes[2][4]
 
     assert len(mistakes) == 3
 
@@ -40,7 +37,7 @@ def testFeedbackLanguageMissingLetter():
 
     assert mistakes[0][0] == "computr"
     assert mistakes[0][1] == "The computr was hot and overheated."
-    assert "computer" in mistakes[0][3]
+    assert "computer" in mistakes[0][4]
 
     assert len(mistakes) == 1
 
