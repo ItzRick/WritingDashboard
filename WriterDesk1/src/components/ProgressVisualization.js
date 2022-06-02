@@ -4,6 +4,7 @@ import {
 } from "@mui/material";
 import graphPlaceholder from '../images/chartImage.png';
 import Plot from 'react-plotly.js';
+import './../css/main.css';
 
 
 /**
@@ -25,6 +26,13 @@ const ProgressVisualization = () => {
   const handlePointClick = (date) => {
     alert(date)
   }
+
+  // const findMinMaxDate = () => {
+  //   const orderedDates = documents.map(row => row.date).sort(function (a, b) {
+  //     return Date.parse(a) - Date.parse(b);
+  //   });
+  //   alert(orderedDates[orderedDates.length-1]);
+  // }
 
 
   return (
@@ -91,7 +99,9 @@ const ProgressVisualization = () => {
         }]
       }
     ]}
-    layout={ { hovermode:'closest', margin: {l: 180, r: 0, b: 30, t: 20, pad: 4},
+    layout={ { hovermode:'closest', margin: {l: 30, r: 0, b: 30, t: 20, pad: 4}, legend:{font: {size: 12}, x: 0.0, y: 1, bgcolor: 'rgba(0, 0, 0, 0)',
+		xanchor: "center",
+		yanchor: "center"},
       yaxis: {
         rangemode: 'tozero',
         autotick: false,
