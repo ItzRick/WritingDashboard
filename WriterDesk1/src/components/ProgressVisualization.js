@@ -27,6 +27,23 @@ const ProgressVisualization = () => {
     alert(date)
   }
 
+  const concatTitlesSameDate = (dates, titles) => {
+    for (let i = 0; i < dates.length-1; i++) {
+      if (dates[i] === dates[i+1]) {
+        for (let n = i+1; n < dates.length-1; n++) {
+          if (dates[n] === dates[i]) {
+            titles[i] = titles[i] + ', ' + titles[n];
+          } else {
+            break;
+          }
+        }
+      }
+    }
+    return(titles);
+  }
+
+  const mergedTitles = (concatTitlesSameDate(documents.map(row => row.date), documents.map(row => row.Title)));
+
   return (
     <Plot style={{ height: '100%', width: '80%', marginLeft: '14vw', minWidth: '500px' }}
     data={[
@@ -38,7 +55,7 @@ const ProgressVisualization = () => {
         marker: {color: '#B3C8FF', symbol: 'circle', size: 10, line:{color:'#648FFF', width: 2}},
         name: 'Language and Style',
         hovertemplate: '<b>%{text}</b><br>Score: %{y}<br>%{x}',
-        text: documents.map(row => row.Title),
+        text: mergedTitles,
         transforms: [{
           type: 'aggregate',
           groups: documents.map(row => row.date),
@@ -53,7 +70,7 @@ const ProgressVisualization = () => {
         marker: {color: '#FFA166', symbol: 'circle', size: 10, line:{color:'#FE6100', width: 2}},
         name: 'Cohesion',
         hovertemplate: '<b>%{text}</b><br>Score: %{y}<br>%{x}',
-        text: documents.map(row => row.Title),
+        text: mergedTitles,
         transforms: [{
           type: 'aggregate',
           groups: documents.map(row => row.date),
@@ -68,7 +85,7 @@ const ProgressVisualization = () => {
         marker: {color: '#ED91BE', symbol: 'circle', size: 10, line: {color:'#DC267F', width: 2}},
         name: 'Source integration<br>and Content',
         hovertemplate: '<b>%{text}</b><br>Score: %{y}<br>%{x}',
-        text: documents.map(row => row.Title),
+        text: mergedTitles,
         transforms: [{
           type: 'aggregate',
           groups: documents.map(row => row.date),
@@ -83,7 +100,7 @@ const ProgressVisualization = () => {
         marker: {color: '#FFD780', symbol: 'circle', size: 10, line:{color:'#FFB000', width: 2}},
         name: 'Structure',
         hovertemplate: '<b>%{text}</b><br>Score: %{y}<br>%{x}',
-        text: documents.map(row => row.Title),
+        text: mergedTitles,
         transforms: [{
           type: 'aggregate',
           groups: documents.map(row => row.date),
