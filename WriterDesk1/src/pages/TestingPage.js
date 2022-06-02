@@ -11,9 +11,9 @@ import TestingComponent from "./../components/TestingComponent";
 const TestingPage = () => {
     
     return (
-        <>
+        {true ? <>
             Testing
-        </>
+        </> : <></>}
     );
 }
 

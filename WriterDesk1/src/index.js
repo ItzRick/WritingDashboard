@@ -6,6 +6,10 @@ import reportWebVitals from './reportWebVitals';
 // routing
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+// authentication
+import { Admin, CustomRoutes, useAuthenticated } from 'react-admin';
+import authProvider from '../services/authProvider';
+
 // theme and style
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -84,6 +88,9 @@ const theme = createTheme({
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+
+  <Admin authProvider={authProvider}>
+        
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       {/* Router encapsules the application */}
@@ -126,6 +133,7 @@ root.render(
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>
+  </Admin>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -152,6 +152,7 @@ const Base = ({
   // general theme, defined in index.js
   const theme = useTheme();
 
+
   return (
     <Box sx={{ display: 'flex' }} color="textPrimary">
       <CssBaseline />
