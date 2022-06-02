@@ -40,6 +40,28 @@ def create_token():
     userid = user.id
     return jsonify(access_token=access_token, user_id = userid) 
 
+@bp.route('/signup', methods=["POST"])
+def registerUser():
+    # Retrieve data from request
+    username = request.json.get("username", None)
+    hashedPassword = request.json.get("hashedpassword", None)
+    print(username)
+    print(hashedPassword)
+
+    # Try to register new user
+
+    # Send response based on outcome
+    i = 2
+    if i == 1:
+        # User successfully created
+        return jsonify({"msg": "Test"}), 200
+    elif i == 0:
+        # User exists already
+        return jsonify({"msg": "Test"}), 400
+    else:
+        # Unexpected
+        return jsonify({"msg": "Test"}), 500
+    
 
 @bp.route("/who_am_i", methods=["GET"])
 @jwt_required()

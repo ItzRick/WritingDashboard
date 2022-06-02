@@ -89,8 +89,17 @@ const SignUp = () => {
         const hashedPassword = password;
 
         // If no errors, do post request
-        
-        
+        const data = {
+            "username": username,
+            "hashedpassword": hashedPassword,
+        }
+        axios.post(`${BASE_URL}/signup`, data).then(response =>{
+            console.log(response.data.msg)
+        }).catch(error =>{
+            console.error("Something went wrong:",error);
+            setFormError("Unable to register user");
+        });
+
         // Depending on result, go to page
 
     }
