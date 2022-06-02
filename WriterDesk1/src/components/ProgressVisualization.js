@@ -27,16 +27,8 @@ const ProgressVisualization = () => {
     alert(date)
   }
 
-  // const findMinMaxDate = () => {
-  //   const orderedDates = documents.map(row => row.date).sort(function (a, b) {
-  //     return Date.parse(a) - Date.parse(b);
-  //   });
-  //   alert(orderedDates[orderedDates.length-1]);
-  // }
-
-
   return (
-    <Plot style={{ height: '100%', width: '80%' }}
+    <Plot style={{ height: '100%', width: '80%', marginLeft: '14vw', minWidth: '500px' }}
     data={[
       {
         x: documents.map(row => row.date),
@@ -99,8 +91,8 @@ const ProgressVisualization = () => {
         }]
       }
     ]}
-    layout={ { hovermode:'closest', margin: {l: 30, r: 0, b: 30, t: 20, pad: 4}, legend:{font: {size: 12}, x: 0.0, y: 1, bgcolor: 'rgba(0, 0, 0, 0)',
-		xanchor: "center",
+    layout={ { hovermode:'closest', margin: {l: 30, r: 0, b: 30, t: 20, pad: 4}, legend:{font: {size: 12}, bgcolor: 'rgba(0, 0, 0, 0)',
+		xanchor: "left",
 		yanchor: "center"},
       yaxis: {
         rangemode: 'tozero',

@@ -136,8 +136,6 @@ grid-row-gap: 0px;
 .plotContainer {
     display: -webkit-flex;
     display: flex;
-    align-items: center;
-    justify-content: center;
     height: 280px;
 }
 
@@ -172,6 +170,3 @@ grid-row-gap: 0px;
     text-align: center;
     margin-bottom: 1vh;
 }
-
-/*.js-plotly-plot .plotly .main-svg .legend {position: absolute;}*/
-/*.js-plotly-plot .plotly .main-svg {transform: translate(640px, 100px)}*/
