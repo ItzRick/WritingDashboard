@@ -48,7 +48,10 @@ const Main = () => {
       <div className='home4'>
         <div className='subTitle'>
             <br />
-            <Typography style={{ fontSize: '2vw' }}><u>Progress</u></Typography>
+            <Typography className='progressLink' style={{ fontSize: 'calc(1vw + 12px)', color: '#44749D'}}
+                        component={Link} to='/Progress'>
+              <u>Progress</u>
+            </Typography>
         </div>
         <div className='plotContainer'>
           <ProgressVisualization />
