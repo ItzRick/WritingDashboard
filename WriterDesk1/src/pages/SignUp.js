@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 // Signup request setup
 import axios from 'axios';
 const BASE_URL = "https://localhost:5000/loginapi";
+const NAVIGATE_TO_URL = "../../Login"
 
 const USERNAME_END = "tue.nl";
 const PASSWORD_LENGTH = 8;
@@ -87,19 +88,15 @@ const SignUp = () => {
             return;
         }
 
-        // If no errors, do post request
+        // If input is valid, do post request
         const data = {
             "username": username,
             "password": password,
         }
-        const headers = {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        }
         axios.post(`${BASE_URL}/signup`, data).then(response =>{
             // Post request is successful, user is registered
             // Loads login page
-            navigate('../../Login', {replace: true});
+            navigate(NAVIGATE_TO_URL, {replace: true});
         }).catch(error =>{
             // Post request failed, user is not created
             console.error("Something went wrong:", error.response.data);
