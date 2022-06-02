@@ -21,6 +21,9 @@ def create_app(config_class=Config):
     from app.fileapi import bp as fileapi_db
     app.register_blueprint(fileapi_db, url_prefix='/fileapi')
 
+    from app.scoreapi import bp as scoreapi_bp
+    app.register_blueprint(scoreapi_bp, url_prefix='/scoreapi')
+
     # Return the app:
     return app
 

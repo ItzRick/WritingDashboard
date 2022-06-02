@@ -1,9 +1,9 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify
-from app.models import Files
+from app.models import Files, Scores, Explanations
 from app.fileapi import bp
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup
 from magic import from_buffer 
 from datetime import date
 from mimetypes import guess_extension
@@ -34,6 +34,7 @@ def fileUpload():
             existing: current existing files with the same userId and fileName 
             associated in the database for the current file that is being handled.
     '''
+    # initialSetup() # Activate me when there is a problem! (mostly when you change the database)
     # Retrieve the files as send by the react frontend and give this to the fileUpload function, 
     # which does all the work:
     files = request.files.getlist('files')
@@ -92,15 +93,13 @@ def fileRetrieve():
     # ordered by the sorting attribute in the request
     if 'user_id' in session or True:
         userId = request.args.get('userId')
-        print(userId)
         sortingAttribute = request.args.get('sortingAttribute')
-        #TODO change session["user_id"] to actual reference to user
         files = getFilesByUser(userId, sortingAttribute)
 
         # Put dates in format
         for file in files:
             file['date'] = file.get('date').strftime('%d/%m/%y')
-            
+
         # Return http response with list as json in response body
         return jsonify(files)
     else:

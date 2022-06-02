@@ -13,7 +13,6 @@ def initialSetup():
 
 
 def uploadToDatabase(toUpload):
-    
     db.session.add(toUpload)
     db.session.commit()
 
@@ -40,4 +39,4 @@ def getFilesByUser(user, sortingAttribute):
     elif sortingAttribute == "date.desc":
         files = files.order_by(models.Files.date.desc())
 
-    return models.Files.serializeList(files.all())
+    return models.Files.serializeFiles(files.all())
