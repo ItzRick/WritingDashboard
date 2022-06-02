@@ -42,7 +42,7 @@ function Document() {
 
 
   /**
-   * Function to show the explanation boxes that are being clicked
+   * Function to show all the explanation boxes that are being clicked.
    * @param {Object} e - Click event
    * @param {Object} coords - Array of the coordinates of the mistake being clicked
    */
@@ -54,10 +54,11 @@ function Document() {
     let newArrShowTextbox = []; // Create new array to overwrite showTextbox
 
     for (let i = 0; i < mistakes.length; i++) {
-      let left = mistakes[i].coords[0] - 2;
-      let right = mistakes[i].coords[2] + 2;
-      let top = mistakes[i].coords[1];
-      let bottom = mistakes[i].coords[3];
+      // Loop over all mistakes to check if there is clicked on that mistake.
+      let left = mistakes[i].coords[0] - 2; // x1 of mistake[i] coordinates
+      let right = mistakes[i].coords[2] + 2; // x2 of mistake[i] coordinates
+      let top = mistakes[i].coords[1]; // y1 of mistake[i] coordinates
+      let bottom = mistakes[i].coords[3]; // y2 of mistake[i] coordinates
 
       //Set showTextbox true for every mistake that is clicked
       newArrShowTextbox[i] = (left <= x) && (x <= right) && (top <= y) && (y <= bottom);
@@ -66,15 +67,16 @@ function Document() {
   }
 
   /**
-   * Function to show or hide all the explanations of one type
+   * Function to show or hide all the explanations of one type. Call this function when clicking on the bar chart.
    * @param {number} type - Number for type of mistake
    */
   const showAllExplanationsOfType = (type) => {
-    let allOpenOfType = true;
+    let allOpenOfType = true; // Boolean that indicate if all explanations of given type are shown
 
     for (let i = 0; i < mistakes.length; i++) {
+      // Check if explanation of mistake is shown
       if (mistakes[i].type === type && !showTextbox[i]) {
-        allOpenOfType = false;
+        allOpenOfType = false; // Not all explanations of the given type are shown
       }
     }
 
@@ -82,6 +84,8 @@ function Document() {
 
     for (let i = 0; i < mistakes.length; i++) {
       if (mistakes[i].type === type) {
+        // Show all explanations of the given type
+        // If this is already the case, hide them all
         newArrShowTextbox[i] = !allOpenOfType;
       }
     }
