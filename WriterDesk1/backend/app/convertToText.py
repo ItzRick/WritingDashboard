@@ -14,8 +14,19 @@ from copy import deepcopy
 # Usage: call extract_string_from_file(path) or convert_file_to_txt(pathIn, pathOut) in a try/catch to catch type/value errors
 # All paths should be absolute paths
 
-# Retrieves text from a text file at path, returns a string with the text
 def getTXTText(path):
+    '''
+        Retrieves text from a text file at path, returns a string with the text
+        Attributes:
+            fullText: full text we are currently reading.
+            linesDocument: Array that will contiain the document.
+            document: The document we are currently reading.
+            line: line in the document we are reading.
+        Arguments: 
+            path: absolute path of the .txt file that should be read. 
+        Returns:
+            fullText: full text from the file we are currently reading.
+    '''
     fullText = ""
     try: 
         # Define array that will contain the document
@@ -73,8 +84,12 @@ def getPDFText(path, returnReferences=False, includeTables=False, includeCaption
         blockText: String of text of a single block
         referenceSplit: Split of the extracted string into normal text and reference text
         referenceText: String of text containing references
-    :param path: Path of pdf file which will be extracted
-    :return: Text of pdf file as a string
+    Arguments: 
+        path: Path of pdf file which will be extracted
+        returnReferences: True if the references should also be returned.
+    Returns: 
+        text: Text of pdf file as a string.
+        referenceText: Text with only the references form the pdf file. 
     """
 
     text = referenceText = ""
@@ -144,8 +159,10 @@ def getDOCXText(path):
         para: Paragraph of text
         documentXML: document.xml of docx file
         tag: tags inside documentXML
-    :param path: Path of docx file which will be extracted.
-    :return: Text of docx file as a string.
+    Arguments: 
+        path: Path of docx file which will be extracted.
+    Returns:
+        fullText Text of docx file as a string.
     """
 
     fullText = ""
@@ -199,8 +216,10 @@ def extractStringFromFile(path):
         name: Name of file at path without file extension
         fileExtension: File extension of file at path
         text: String of text extracted from file at path
-    :param path: Path of file which will be extracted
-    :return: Text of file as a string
+    Arguments:
+        path: Path of file which will be extracted
+    Returns:
+        text: Text of file as a string
     """
 
     name, fileExtension = os.path.splitext(path)
@@ -222,8 +241,9 @@ def extractStringFromFile(path):
 def convertStringToTXT(string, path):
     """
     Writes string to txt file at path
-    :param string: String to write
-    :param path: Path of file to which the string is written
+    Arguments:
+        string: String to write
+        path: Path of file to which the string is written
     """
 
     try:
@@ -241,8 +261,9 @@ def convertFileToTXT(pathIn, pathOut):
     Retrieves text from a pdf, docx or txt file at path as string and writes to txt file
     Attributes:
         string: String of text extracted from file at pathIn
-    :param pathIn: Path of file which will be extracted
-    :param pathOut: Path of file to which result will be written
+    Arguments: 
+        pathIn: Path of file which will be extracted
+        pathOut: Path of file to which result will be written
     """
 
     try:
@@ -263,8 +284,10 @@ def splitBlocks(blocks):
         newBlock: Block with lines between empty lines
         lastBreak: Index of last empty line
         lineText: Text of a single line
-    :param blocks: List of original blocks
-    :return: List of new blocks
+    Arguments:
+        blocks: List of original blocks
+    Returns: 
+        blocksNew: List of new blocks
     """
 
     blocksNew = []
@@ -291,8 +314,10 @@ def getFrequencyX(doc):
     Gets x-coordinates of blocks in doc with their frequency
     Attributes:
         xlist: List of x-coordinates
-    :param doc: PDF document to get blocks from
-    :return: Counter object with x-coordinates and their frequency
+    Arguments:
+        doc: PDF document to get blocks from
+    Returns:
+        Counter(xlist): Counter object with x-coordinates and their frequency
     """
     
     xlist = []
@@ -312,8 +337,10 @@ def postProcessText(text):
         text: String that is filtered
         oneSource: Regex for finding in-text citations with one source
         multipleSources: Regex for finding in-text citations with multiple sources
-    :param text: String that needs to be filtered
-    :return: String that is filtered
+    Arguments:
+        text: String that needs to be filtered
+    Returns:
+        text: String that is filtered
     """   
 
     #Combine broken words together
@@ -339,8 +366,10 @@ def getLineText(line):
         lineText: Text from a single line
         spans: List of spans from line
         spanText: Text from a single span
-    :param line: Line of which text is extracted
-    :return: Text of line as a string
+    Arguments:
+        line: Line of which text is extracted
+    Returns:
+        lineText: Text of line as a string
     """
 
     lineText = ""
@@ -357,9 +386,11 @@ def filterLineList(lineText, includeLists=True):
     Removes list symbols from a line, or entire line if includeLists is False
     Attributes:
         listRegex: Regex to find list symbols
-    :param lineText: Text to filter
-    :param includeLists: Whether text after list symbols should be included in the text
-    :return: Text of line as a string
+    Arguments:
+        lineText: Text to filter
+        includeLists: Whether text after list symbols should be included in the text
+    Returns:
+        lineText: Text of line as a string
     """
 
     listRegex = r"^\s*(\p{N}+\.|\p{L}\.|[^\p{L}\p{N}&%#])(\p{N}+)*((\.|:))?\s(?=\p{L})"
@@ -376,8 +407,10 @@ def filterLineNoLetters(lineText):
     Removes a line if it contains no letters or punctuation
     Attributes:
         noLetterRegex: Regex to find absence of letters and punctuation
-    :param lineText: Text to filter
-    :return: Text of line as a string
+    Arguments:
+        lineText: Text to filter
+    Returns: 
+        lineText: Text of line as a string
     """
 
     noLetterRegex = r"^[^,:\(\)\p{L}]*$"
@@ -396,8 +429,10 @@ def getBlockText(block, includeLists):
         unfilteredLineText: Raw text from a single line
         lineText: Text from a single line, filtered
         previousLineSpans: List of spans from previous line
-    :param line: Line of which text is extracted
-    :return: Text of line as a string
+    Arguments:
+        line: Line of which text is extracted
+    Returns:
+        blockText: Text of line as a string
     """
 
     blockText = ""
@@ -430,10 +465,12 @@ def isBlockTable(block, xNormal, yTolerance=3):
     Attributes:
         lines: List of lines from block
         y: Y-coordinate of first line from block
-    :param block: Block to check
-    :param xNormal: X-coordinate of normal text
-    :param yTolerance: Maximum difference lines can have to be considered a table row
-    :return: Whether a block is potentially part of a table
+    Arguments:
+        block: Block to check
+        xNormal: X-coordinate of normal text
+        yTolerance: Maximum difference lines can have to be considered a table row
+    Returns:
+        Whether a block is potentially part of a table
     """
 
     lines = block["lines"]
@@ -458,8 +495,10 @@ def isTextCaption(block):
     Checks whether a block contains a caption
     Attributes:
         reg: Regex to find captions
-    :param block: Block to filter for captions
-    :return: Whether block contains a caption
+    Arguments:
+        block: Block to filter for captions
+    Returns:
+        Whether block contains a caption
     """
     reg = r"^(T(?i)able|F(?i)igure|F(?i)ig\.)\s*\d*(\.\d*)*(\.|:)?\s*(?=\p{Lu})"
     return regex.search(reg, block.lstrip())
