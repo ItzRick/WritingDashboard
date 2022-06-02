@@ -10,6 +10,7 @@ from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import jwt_required
 
+from app.database import postUser
 from app.models import User
 
 @bp.route('/login', methods=['POST'])
@@ -44,23 +45,20 @@ def create_token():
 def registerUser():
     # Retrieve data from request
     username = request.json.get("username", None)
-    hashedPassword = request.json.get("hashedpassword", None)
+    password = request.json.get("password", None)
     print(username)
-    print(hashedPassword)
+    print(password)
 
     # Try to register new user
+    isCreated = postUser(username, password)
 
     # Send response based on outcome
-    i = 2
-    if i == 1:
+    if isCreated:
         # User successfully created
-        return jsonify({"msg": "Test"}), 200
-    elif i == 0:
-        # User exists already
-        return jsonify({"msg": "Test"}), 400
+        return jsonify({"msg": "User was successfully created!"}), 200
     else:
-        # Unexpected
-        return jsonify({"msg": "Test"}), 500
+        # User exists already
+        return "Username is already taken!", 400
     
 
 @bp.route("/who_am_i", methods=["GET"])

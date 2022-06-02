@@ -10,7 +10,7 @@ import logo from '../images/logo.png';
 import BlueButton from "./../components/BlueButton";
 
 // routing
-import { Link, useOutletContext } from 'react-router-dom';
+import { Link, useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 // Signup request setup
@@ -30,6 +30,8 @@ const SignUp = () => {
     useEffect(() => {
         setTitle('Sign Up');
     });
+
+    const navigate = useNavigate();
 
     // Check if username input is valid
     const checkUsername = () => {
@@ -85,23 +87,24 @@ const SignUp = () => {
             return;
         }
 
-        // Get password hash
-        const hashedPassword = password;
-
         // If no errors, do post request
         const data = {
             "username": username,
-            "hashedpassword": hashedPassword,
+            "password": password,
+        }
+        const headers = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
         }
         axios.post(`${BASE_URL}/signup`, data).then(response =>{
-            console.log(response.data.msg)
+            // Post request is successful, user is registered
+            // Loads login page
+            navigate('../../Login', {replace: true});
         }).catch(error =>{
-            console.error("Something went wrong:",error);
-            setFormError("Unable to register user");
+            // Post request failed, user is not created
+            console.error("Something went wrong:", error.response.data);
+            setFormError(error.response.data);
         });
-
-        // Depending on result, go to page
-
     }
 
     // Set username from textfield
@@ -154,7 +157,6 @@ const SignUp = () => {
                         />
                     </div>
                     <br />
-                    {/* TODO: do we want to go to main or to login */}
                     {formError !== "" && <Typography color="red">{formError}</Typography>}
                     <br />
                     <BlueButton onClick={handleClick}>Sign Up</BlueButton>

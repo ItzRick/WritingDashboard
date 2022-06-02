@@ -31,3 +31,13 @@ def getFilesByUser(user, sortingAttribute):
         files = files.order_by(models.Files.date.desc())
 
     return models.Files.serializeList(files.all())
+
+# Registers new user with username and password
+def postUser(username, password):
+    if db.session.query(models.User).filter_by(username=username).count() > 0:
+        return False
+
+    print("add user")
+    user = models.Student(username=username, password_plaintext=password)
+    uploadToDatabase(user)
+    return True
