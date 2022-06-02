@@ -20,19 +20,31 @@ const ProgressVisualization = () => {
     {date: '2022-12-04', Title: 'Title4', scoreLanguage: 8, scoreStructure: 5.5, scoreCohesion: 5.5, scoreSourceIntegration: 8},
     {date: '2023-01-04', Title: 'Title5', scoreLanguage: 9, scoreStructure: 6, scoreCohesion: 5, scoreSourceIntegration: 8.5},
     {date: '2023-03-04', Title: 'Title6', scoreLanguage: 9.5, scoreStructure: 7.4, scoreCohesion: 5.5, scoreSourceIntegration: 8}
-  ]; //TODO: Retrieve document data
+  ]; //TODO: Retrieve document data. Has to be in order of date.
 
   //TODO: Add onclick event to go to document page
   const handlePointClick = (date) => {
     alert(date)
   }
 
+
+  /**
+   * Function to concat titles that are on the same date.
+   * This is used to show multiple titles when hovering over a
+   * point in the graph that corresponds with multiple documents.
+   * @param {Array} dates - Array of sorted dates.
+   * @param {Array} titles - Array of titles that corresponds to the dates. Must be of same length as array of dates
+   * @returns {Array} Modified array of titles where title of the first document in a row of documents with the same date
+   * contains all titles of those documents. Example: ['Title1', 'Title2, Title3', 'Title3']
+   */
   const concatTitlesSameDate = (dates, titles) => {
-    for (let i = 0; i < dates.length-1; i++) {
+    for (let i = 0; i < dates.length-1; i++) { // Loop over all documents
       if (dates[i] === dates[i+1]) {
+
+        // If there are 2 documents with the same date, check if there are more with that date
         for (let n = i+1; n < dates.length-1; n++) {
           if (dates[n] === dates[i]) {
-            titles[i] = titles[i] + ', ' + titles[n];
+            titles[i] = titles[i] + ', ' + titles[n]; // For all the documents with the same date, concat titles
           } else {
             break;
           }
@@ -42,6 +54,7 @@ const ProgressVisualization = () => {
     return(titles);
   }
 
+  // Titles of documents for the hover text
   const mergedTitles = (concatTitlesSameDate(documents.map(row => row.date), documents.map(row => row.Title)));
 
   return (
@@ -136,13 +149,13 @@ const ProgressVisualization = () => {
     } }
     config={{ modeBarButtonsToRemove: ['toImage', 'lasso2d', 'select2d', 'resetScale2d'], displaylogo: false, responsive: true}}
     onClick={
-      (data) => handlePointClick(data.points[0].x)
+      (data) => handlePointClick(data.points[0].x) // Call function to handle point click
     }
     onHover={e => {
-      e.event.target.style.cursor = 'pointer'
+      e.event.target.style.cursor = 'pointer' // Changes cursor on hover to pointer
     }}
     onUnhover={e => {
-      e.event.target.style.cursor = 'ew-resize'
+      e.event.target.style.cursor = 'ew-resize' // Change cursor back on unhover
     }}
     />
   );
