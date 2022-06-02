@@ -38,7 +38,6 @@ function Document() {
     {text: 'Furthermore', explanation: 'expl2', type: 1, coords: [464.495361328125, 468.1363525390625, 514.29833984375, 480.14129638671875], replacements: ['as']},
     {text: 'past decade, a new ', explanation: 'expl3', type: 2, coords: [126.9016876220703, 157.89927673339844, 213.29876708984375, 169.56455993652344], replacements: ['a', 'b', 'c']},
     {text: 'semantics', explanation: 'expl4', type: 3, coords: [390.88116455078125, 858.056518555, 430.1736755371094, 870.061454773], replacements: []},
-    {text: 'semantics', explanation: 'expl5', type: 0, coords: [390.88116455078125, 858.056518555, 430.1736755371094, 870.061454773], replacements: []}
   ];
 
 
@@ -65,6 +64,30 @@ function Document() {
     }
     setShowTextbox(newArrShowTextbox); // Overwrite showTextbox
   }
+
+  /**
+   * Function to show or hide all the explanations of one type
+   * @param {number} type - Number for type of mistake
+   */
+  const showAllExplanationsOfType = (type) => {
+    let allOpenOfType = true;
+
+    for (let i = 0; i < mistakes.length; i++) {
+      if (mistakes[i].type === type && !showTextbox[i]) {
+        allOpenOfType = false;
+      }
+    }
+
+    let newArrShowTextbox = []; // Create new array to overwrite showTextbox
+
+    for (let i = 0; i < mistakes.length; i++) {
+      if (mistakes[i].type === type) {
+        newArrShowTextbox[i] = !allOpenOfType;
+      }
+    }
+    setShowTextbox(newArrShowTextbox); // Overwrite showTextbox
+  }
+
 
 
   /**
