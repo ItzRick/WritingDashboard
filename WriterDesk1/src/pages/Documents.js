@@ -15,6 +15,11 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 
+import React from 'react';
+import "../css/styles.css";
+import "../css/main.css";
+
+
 /**
  * 
  * @returns Documents Page
