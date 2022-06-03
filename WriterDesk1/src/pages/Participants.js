@@ -1,14 +1,21 @@
 // materials
-import { } from "@mui/material";
+import {
+  TextField,
+  IconButton,
+
+} from "@mui/material";
+import {
+  DeleteOutline,
+  Timeline,
+} from "@mui/icons-material";
+import { DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
+import BlueButton from './../components/BlueButton';
 
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
-import {Button, TextField} from "@mui/material";
-import {DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
-import IconButton from "@mui/material/IconButton";
-import TimelineIcon from '@mui/icons-material/Timeline';
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+
+
 
 /**
  * 
@@ -52,7 +59,7 @@ const columns: GridColDef[] = [
         return alert(JSON.stringify(thisRow, null, 4));
       };
 
-      return <div><IconButton><TimelineIcon /></IconButton><IconButton><DeleteOutlineIcon /></IconButton></div>;
+      return <div><IconButton><Timeline /></IconButton><IconButton><DeleteOutline /></IconButton></div>;
     }
   }
 ];
@@ -75,7 +82,7 @@ function Participants() {
         <>
             <div style={{textAlign: 'center', marginBottom: '1vh'}}>
                 <TextField
-                  style={{marginRight: '1vw'}}
+                  style={{marginRight: '1vw', marginTop: '1vw'}}
                   id="noOfParticipants"
                   label="Number of participants"
                   type="number"
@@ -84,39 +91,44 @@ function Participants() {
                   }}
                 />
                 <TextField
-                    style={{marginRight: '1vw'}}
+                    style={{marginRight: '1vw', marginTop: '1vw'}}
                     id="projectName"
                     label={"Project name"}
                 />
-                <Button variant='contained'>Add participants</Button>
+                <BlueButton>Add participants</BlueButton>
             </div>
             <div className='topBorder'>
                 <TextField
-                    style={{marginRight: '1vw'}}
+                    style={{marginRight: '1vw', marginTop: '1vw'}}
                     id="projectName2"
                     label={"Project name"}
                 />
-                <Button variant='contained'>Download participants</Button>
+                <BlueButton>Download participants</BlueButton>
             </div>
             <div className='topBorder'>
                 <TextField
-                    style={{marginRight: '1vw'}}
+                    style={{marginRight: '1vw', marginTop: '1vw'}}
                     id="startDate"
                     label={"Start date"}
                 />
                 <TextField
-                    style={{marginRight: '1vw'}}
+                    style={{marginRight: '1vw', marginTop: '1vw'}}
                     id="enData"
                     label={"End date"}
                 />
                 <TextField
-                    style={{marginRight: '1vw'}}
+                    style={{marginRight: '1vw', marginTop: '1vw'}}
                     id="projectName3"
                     label={"Project name"}
                 />
-                <Button variant='contained'>Download user data</Button>
+                <BlueButton>Download user data</BlueButton>
             </div>
-            <div className='topBorder' style={{justifyContent: 'center', display: 'flex'}}>
+            <div className='topBorder'>
+                <Button variant='contained' style={{marginTop: '1vw', marginLeft: '1vw'}}>Download selected participants</Button>
+                <div style={{paddingLeft: '2vw', display: 'inline'}} />
+                <Button variant='contained' style={{marginTop: '1vw', marginLeft: '1vw'}}>Download user data of selected participants</Button>
+            </div>
+            <div style={{justifyContent: 'center', display: 'flex'}}>
                 <div style={{height: '80vh', maxHeight: '400px', width: '50vw'}} >
                     <DataGrid
                       rows={rows}

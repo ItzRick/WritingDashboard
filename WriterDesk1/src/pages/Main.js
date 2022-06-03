@@ -6,6 +6,7 @@ import {
   Typography 
 } from "@mui/material";
 import chartImg from '../images/chartImage.png';
+import BlueButton from "./../components/BlueButton";
 
 // routing
 import { Link, useOutletContext } from 'react-router-dom';
@@ -28,13 +29,10 @@ const Main = () => {
   return (
     <div className='home_grid'>
       <div className='home1'>
-        <Typography variant='h3'>Homepage</Typography>
       </div>
       <div className='home2'>
         <div className='vertCenter'>
-          <Button variant='contained' className='uploadButton' sx={{
-            fontSize: '2vw', textTransform: 'none', bgcolor: 'button.main', color: 'button.text'
-          }} component={Link} to='/Upload'>Upload a document</Button>
+          <BlueButton className='uploadButton' pathName='/Upload' addStyle={{width: '20vw', height: '7vw', fontSize: '2vw', textTransform: 'none'}}>Upload a document</BlueButton>
         </div>
       </div>
       <div className='home3'>
