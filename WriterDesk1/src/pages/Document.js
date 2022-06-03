@@ -73,7 +73,6 @@ function Document() {
                 useResizeHandler={true}
                 style={{width: '100%', height: '50%'}}
                 />
-              {/* <img className='smallGraph' src={placeholder} /> */}
               <br />
               <Typography className='textBoxExpl'>Sample text</Typography>
           </div>
