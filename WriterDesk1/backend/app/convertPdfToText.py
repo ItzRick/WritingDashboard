@@ -7,7 +7,7 @@ import bs4 as bs
 import regex
 from collections import Counter
 from copy import deepcopy
-from backend.app.convertDocxTxtToText import getTXTText, getDOCXText
+from app.convertDocxTxtToText import getTXTText, getDOCXText
 
 
 # Methods used for extracting text from pdf files and converting them to strings or text files.

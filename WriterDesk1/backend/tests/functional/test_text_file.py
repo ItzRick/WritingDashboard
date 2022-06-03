@@ -1,9 +1,9 @@
-from backend.app.convertDocxTxtToText import getTXTText
+from app.convertDocxTxtToText import getTXTText
 import os
 
 ### Note: Test cases regarding finding references, images, or text boxes are not necessary in a txt file
 
-def testGetTxtFile():
+def testGetTxtFile(testClient):
     """
         Test if the getTXTText function retrieves the text from the txt file as a string.
         Attributes:
@@ -11,6 +11,7 @@ def testGetTxtFile():
             actualOutput: String that contains the output of the getTXTText function.
             expectedOutput: String that is to be compared to the actual output
     """
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -18,13 +19,14 @@ def testGetTxtFile():
     expectedOutput = "This is the first sentence. The second sentence are as follows. I don't understand this document.\nThis is another paragraph. Why is this the case?\nHelp. Help. Help."
     assert actualOutput == expectedOutput
 
-def testGetDocxEmptyFile():
+def testGetDocxEmptyFile(testClient):
     """
         Test if the getTXTText function retrieves the text from the empty txt file as an empty string.
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getTXTText function.
     """
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -32,13 +34,14 @@ def testGetDocxEmptyFile():
     assert text == ''
 
 
-def testGetDocxCorruptedFile():
+def testGetDocxCorruptedFile(testClient):
     """
         Test if the getTXTText function retrieves the text from the corrupted txt file as an empty string.
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getTXTText function.
     """
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -46,13 +49,14 @@ def testGetDocxCorruptedFile():
     assert text == ''
 
 
-def testGetDocxInvalidFile():
+def testGetDocxInvalidFile(testClient):
     """
         Test if the getTXTText function retrieves the text from the nonexistent file as an empty string.
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getTXTText function.
     """
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -60,13 +64,14 @@ def testGetDocxInvalidFile():
     assert text == ''
 
 
-def testGetDocxInvalidExtension():
+def testGetDocxInvalidExtension(testClient):
     """
         Test if the getTXTText function retrieves the text from the doc file as an empty string.
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getTXTText function.
     """
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
