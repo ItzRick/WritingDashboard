@@ -105,7 +105,8 @@ def getPDFText(path, returnReferences=False, includeTables=False, includeCaption
 # If file at path has a different extension, a type error is thrown
 def extractStringFromFile(path):
     """
-    Retrieves text from a pdf, docx or txt file at path and returns a string with the text
+    Retrieves text from a pdf, docx or txt file at path and returns a string with the text.
+    If file at path has a different extension, a type error is thrown
     Attributes:
         name: Name of file at path without file extension
         fileExtension: File extension of file at path
@@ -129,12 +130,10 @@ def extractStringFromFile(path):
         raise TypeError("File type is not pdf, docx or txt")
     return text
 
-
-# Writes a string to a txt file at path
-# If this is not possible an exception is thrown
 def convertStringToTXT(string, path):
     """
-    Writes string to txt file at path
+    Writes string to txt file at path.
+    If this is not possible an exception is thrown.
     Arguments:
         string: String to write
         path: Path of file to which the string is written
@@ -146,13 +145,11 @@ def convertStringToTXT(string, path):
     except Exception as e:
         raise ValueError("Couldn't write to txt")
 
-
-# Extracts text from file at path_in and writes to file at path_out
-# If input file has a wrong type, a type error is thrown
-# If writing to output file fails, a value error is thrown
 def convertFileToTXT(pathIn, pathOut):
     """
-    Retrieves text from a pdf, docx or txt file at path as string and writes to txt file
+    Retrieves text from a pdf, docx or txt file at path as string and writes to txt file at pathOut.
+    If input file has a wrong type, a type error is thrown. 
+    If writing to output file fails, a value error is thrown.
     Attributes:
         string: String of text extracted from file at pathIn
     Arguments: 
@@ -168,11 +165,9 @@ def convertFileToTXT(pathIn, pathOut):
     except ValueError as e:
         raise ValueError(e.args[0])
 
-#Split blocks at empty lines, as they are separate paragraphs
-#Returns list of new blocks 
 def splitBlocks(blocks):
     """
-    Splits blocks with empty lines into separate blocks
+    Splits blocks with empty lines into separate blocks, as they are separate paragraphs.
     Attributes:
         blocksNew: Holder of new blocks
         newBlock: Block with lines between empty lines
@@ -202,10 +197,9 @@ def splitBlocks(blocks):
                     blocksNew.append(deepcopy(newBlock))
     return blocksNew
 
-# Gets frequencies of x-coordinates of blocks in a Python Counter object
 def getFrequencyX(doc):
     """
-    Gets x-coordinates of blocks in doc with their frequency
+    Gets x-coordinates of blocks in doc with their frequency in a Python Counter object.
     Attributes:
         xlist: List of x-coordinates
     Arguments:
@@ -222,11 +216,10 @@ def getFrequencyX(doc):
                 xlist.append(block["lines"][0]["bbox"][0])
     return Counter(xlist)
 
-# Combines broken words, filters out number references, in-text citations and empty lines
-# using regular expressions
 def postProcessText(text):  
     """
     Filters string on hyphenated words, number references, empty lines, excess spaces and in-text citations
+    using regular expressions.
     Attributes:
         text: String that is filtered
         oneSource: Regex for finding in-text citations with one source
@@ -252,7 +245,6 @@ def postProcessText(text):
     text = regex.sub(r"(?<=[^\.])\s\((" + oneSource + "|" + multipleSources + r")\)", "", text)
     return text
 
-# Retrieves text from a pdf line as string
 def getLineText(line):
     """
     Retrieves text from a line in a pdf and returns a string with the text
@@ -274,7 +266,6 @@ def getLineText(line):
         lineText = "".join([lineText, spanText])
     return lineText
 
-# Remove list symbols from a line, or entire line if includeLists is False
 def filterLineList(lineText, includeLists=True):
     """
     Removes list symbols from a line, or entire line if includeLists is False
@@ -295,7 +286,6 @@ def filterLineList(lineText, includeLists=True):
             lineText = ""
     return lineText
 
-#Remove lines without letters and punctuation
 def filterLineNoLetters(lineText):
     """
     Removes a line if it contains no letters or punctuation
@@ -312,11 +302,10 @@ def filterLineNoLetters(lineText):
         lineText = regex.sub(noLetterRegex, "", lineText)
     return lineText
 
-# Retrieves text from a pdf block as string,
-# with list symbols, lines without letters and punctuation out
 def getBlockText(block, includeLists):
     """
-    Retrieves text from a block in a pdf and returns a string with the text
+    Retrieves text from a block in a pdf and returns a string with the text 
+    with list symbols, without lines without letters and punctuation.
     Attributes:
         blockText: Text from a single block
         lines: List of lines from block
@@ -350,12 +339,11 @@ def getBlockText(block, includeLists):
         blockText = "".join([blockText, lineText, " "]).replace("  ", " ")
     return blockText
 
-#Checks if block could be part of a table
-#Assumes row in table has 2+ columns at same y coordinate
-#and does not start at normal x coordinate 
 def isBlockTable(block, xNormal, yTolerance=3):
     """
-    Checks whether a block is potentially part of a table
+    Checks whether a block is potentially part of a table.
+    Assumes row in table has 2+ columns at same y coordinate 
+    and does not start at normal x coordinate .
     Attributes:
         lines: List of lines from block
         y: Y-coordinate of first line from block
@@ -382,11 +370,10 @@ def isBlockTable(block, xNormal, yTolerance=3):
             return True
     return False
 
-#Checks if block is caption
-#Assumes captions start with Figure, Fig. or Table
 def isTextCaption(block):
     """
-    Checks whether a block contains a caption
+    Checks whether a block contains a caption.
+    Assumes captions start with Figure, Fig. or Table.
     Attributes:
         reg: Regex to find captions
     Arguments:
