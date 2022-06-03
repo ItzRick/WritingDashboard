@@ -48,7 +48,7 @@ function Document() {
                 data={[
                     {
                         // Order of the bars is as follows: first source integration, then cohesion, then structure, then language & style:
-                    x: ['Source integration & <br> content', 'Cohesion', 'Structure', "Language & style"],
+                    x: ['Language & style', 'Structure', 'Cohesion', 'Source integration & <br> content'],
                     y: currentData,
                     marker: {color: ['#F5793A', '#A95AA1', '#85C0F9', '#0F2080']},
                     type: 'bar',
