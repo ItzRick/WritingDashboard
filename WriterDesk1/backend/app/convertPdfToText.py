@@ -1,4 +1,3 @@
-from app import app
 import fitz
 import os
 import docx
@@ -8,7 +7,7 @@ import bs4 as bs
 import regex
 from collections import Counter
 from copy import deepcopy
-from convertDocxTxtToText import getTXTText, getDOCXText
+from backend.app.convertDocxTxtToText import getTXTText, getDOCXText
 
 
 # Methods used for extracting text from pdf files and converting them to strings or text files.

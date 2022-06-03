@@ -1,4 +1,4 @@
-from app.convertDocxTxtToText import getDOCXText
+from backend.app.convertDocxTxtToText import getDOCXText
 import os
 
 

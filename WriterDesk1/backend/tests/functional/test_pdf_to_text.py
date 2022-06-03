@@ -1,4 +1,4 @@
-from app.convertToText import getPDFText
+from backend.app.convertPdfToText import getPDFText
 import os
 
 def testGetPDFReferences():

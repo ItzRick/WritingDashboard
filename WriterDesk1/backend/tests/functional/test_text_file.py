@@ -1,4 +1,4 @@
-from app.convertDocxTxtToText import getTXTText
+from backend.app.convertDocxTxtToText import getTXTText
 import os
 
 ### Note: Test cases regarding finding references, images, or text boxes are not necessary in a txt file

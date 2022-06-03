@@ -1,4 +1,3 @@
-from app import app
 import fitz
 import os
 import docx
