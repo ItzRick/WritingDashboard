@@ -1,9 +1,16 @@
-from app.convertToText import getTXTText
+from app.convertDocxTxtToText import getTXTText
 import os
 
 ### Note: Test cases regarding finding references, images, or text boxes are not necessary in a txt file
 
-def testGetTxtHeading():
+def testGetTxtFile():
+    """
+        Test if the getTXTText function retrieves the text from the txt file as a string.
+        Attributes:
+            dir_path: Path of the location where the file is stored.
+            actualOutput: String that contains the output of the getTXTText function.
+            expectedOutput: String that is to be compared to the actual output
+    """
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -12,6 +19,12 @@ def testGetTxtHeading():
     assert actualOutput == expectedOutput
 
 def testGetDocxEmptyFile():
+    """
+        Test if the getTXTText function retrieves the text from the empty txt file as an empty string.
+        Attributes:
+            dir_path: Path of the location where the file is stored.
+            text: String that contains the output of the getTXTText function.
+    """
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -20,6 +33,12 @@ def testGetDocxEmptyFile():
 
 
 def testGetDocxCorruptedFile():
+    """
+        Test if the getTXTText function retrieves the text from the corrupted txt file as an empty string.
+        Attributes:
+            dir_path: Path of the location where the file is stored.
+            text: String that contains the output of the getTXTText function.
+    """
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -28,6 +47,12 @@ def testGetDocxCorruptedFile():
 
 
 def testGetDocxInvalidFile():
+    """
+        Test if the getTXTText function retrieves the text from the nonexistent file as an empty string.
+        Attributes:
+            dir_path: Path of the location where the file is stored.
+            text: String that contains the output of the getTXTText function.
+    """
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -36,6 +61,12 @@ def testGetDocxInvalidFile():
 
 
 def testGetDocxInvalidExtension():
+    """
+        Test if the getTXTText function retrieves the text from the doc file as an empty string.
+        Attributes:
+            dir_path: Path of the location where the file is stored.
+            text: String that contains the output of the getTXTText function.
+    """
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
