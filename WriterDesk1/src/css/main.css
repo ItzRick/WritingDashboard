@@ -133,6 +133,12 @@ button {
     height: 100%;
 }
 
+.plotContainer {
+    display: -webkit-flex;
+    display: flex;
+    height: 280px;
+}
+
 .subTitle {
     text-align: center;
     color: #44749D;
