@@ -29,7 +29,7 @@ jobs:
         if [ -f WriterDesk1/requirements.txt ]; then pip install -r WriterDesk1/requirements.txt; fi
     - name: Test with pytest
       run: |
-        pytest 
+        pytest --junitxml=pytest.xml --cov=app --cov-report=term-missing --cov-report=xml > pytest-coverage.txt
 
     - name: Pytest coverage comment
       uses: MishaKav/pytest-coverage-comment@main
