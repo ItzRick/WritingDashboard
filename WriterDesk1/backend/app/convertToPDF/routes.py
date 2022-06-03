@@ -7,6 +7,16 @@ from fpdf import FPDF
 
 @bp.route('/convert', methods= ['GET'])
 def convertToPDF():
+    '''
+        Function to convert a document of type docx or txt to a document of
+        type pdf. 
+        Attributes:
+            filepath: the path to the document to be converted.
+            filetype: the type of the document to be converted.
+            pdf: used in making a pdf from a txt file.
+        Return:
+            Take the converted document from the disk and send it. 
+    '''
     filepath = request.args.get('filepath')
     filetype = request.args.get('filetype')
     print(filepath)
