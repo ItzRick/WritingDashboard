@@ -1,11 +1,14 @@
 import axios from 'axios'
+import { authHeader } from '../helpers/auth-header';
 const BASE_URL = "https://localhost:5000/loginapi";
 
 
 export const AuthenticationService = {
     login,
     logout,
-    getCurrentUser
+    getCurrentUser,
+    checkAuth,
+    getRole
 }
 
 function login(username, password) {
@@ -13,20 +16,19 @@ function login(username, password) {
         "username": username,
         "password": password,
     }).then(response => {
-        localStorage.setItem('access_token', response.data.access_token);
-        localStorage.setItem('refresh_token', response.data.refresh_token)
+        localStorage.setItem('currentUser', JSON.stringify(response.data));
 
-        if (localStorage.getItem("access_token") !== null && localStorage.getItem("access_token") !== "undefined") {
+        if (JSON.parse(localStorage.getItem('currentUser')).access_token !== null && JSON.parse(localStorage.getItem('currentUser')).access_token !== "undefined") {
             console.log("Inloggen gelukt!")
             // TODO go to new page
         } else {
             alert(response.data.error);
-            setFormError(true);
+            // setFormError(true);
         }
     })
         .catch(error => {
             console.error("Something went wrong:", error);
-            setFormError(true);
+            logout();
         });
 }
 
@@ -38,4 +40,17 @@ function getCurrentUser() {
     return JSON.parse(localStorage.getItem('currentUser'));
 }
 
-export default new AuthenticationService();
+function checkAuth () {
+    return axios.get(`${BASE_URL}/protected`, {headers: authHeader()});
+}
+
+function getRole (){
+    return axios.get(`${BASE_URL}/protected`, {headers: authHeader()
+        }).then(response => {
+            return response.data.role;
+            localStorage.setItem('currentUser', JSON.stringify(response.data));
+        }).catch(error => {
+            AuthenticationService.logout();
+            console.error("Couldn't recieve role:", error);
+        });
+}
