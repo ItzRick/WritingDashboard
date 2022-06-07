@@ -1,7 +1,7 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify
-from app.models import Files, Scores, Explanations
+from app.models import Files
 from app.fileapi import bp
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup
 from magic import from_buffer 
