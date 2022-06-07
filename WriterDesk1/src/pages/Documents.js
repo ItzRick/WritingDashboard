@@ -10,7 +10,7 @@ import {
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
 // routing
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -25,6 +25,9 @@ import "../css/main.css";
  * @returns Documents Page
  */
 const Documents = () => {
+  const navigate = useNavigate();
+
+
   // State to keep track of the data inside the table:
   const [tableData, setTableData] = useState([])
 
@@ -98,10 +101,28 @@ const Documents = () => {
       sortable: false,
       flex: 1,
       renderCell: (params) => {
-        return <div><IconButton><Grading /></IconButton><IconButton onClick={(e) => { deleteFile(e, params) }}  ><DeleteOutline /></IconButton></div>;
+        return <div><IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton><IconButton onClick={(e) => { deleteFile(e, params) }}  ><DeleteOutline /></IconButton></div>;
       }
     }
   ];
+
+  const navigateToDoc = (_event, params) => {
+    // // Url of the server:
+    // const url = 'https://127.0.0.1:5000/fileapi/getfile';
+    // // Formdata for the backend call, to which the id has been added:
+    // const formData = new FormData();
+    // formData.append('id', params.id);
+    //
+    // const document = {docId: params.id}
+    // // Make the call to the backend:
+    // axios.get(url, { data: formData })
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     navigate('/Document', {state: {userId: response.data.userId, docId: response.data.id}});
+    //
+    //   })
+    navigate('/Document', {state: {fileId: params.id}});
+  }
 
 
   /**

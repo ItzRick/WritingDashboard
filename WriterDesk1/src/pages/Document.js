@@ -2,8 +2,9 @@
 import {Typography} from "@mui/material";
 
 // routing
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 // show pdf
 import React from 'react';
@@ -18,19 +19,74 @@ import placeholder from '../images/chartImage.png';
  * @returns Documents Page
  */
 function Document() {
+  const location = useLocation();
+
+
   //set title in parent 'base'
   const { setTitle } = useOutletContext();
 
   const [showTextbox, setShowTextbox] = useState([]);
+
+  const [path, setPath] = useState([]);
+  const [type, setType] = useState([]);
+
+  const [scoreLanguage, setScoreLanguage] = useState([]);
+  const [scoreStructure, setScoreStructure] = useState([]);
+  const [scoreCohesion, setScoreCohesion] = useState([]);
+  const [scoreSourceIntegration, setScoreSourceIntegration] = useState([]);
+
 
 
   useEffect(() => {
     setTitle('Document');
   });
 
-  // TODO take file path and file type from database
-  const path = 'C:\\Users\\20183163\\PycharmProjects\\SEP2021\\WriterDesk1\\src\\example2.pdf'
-  const type = 'pdf'
+  useEffect(() => {
+    const fileId = location.state.fileId;
+    fetchFilePath(fileId);
+    fetchScores(fileId);
+    fetchMistakes(fileId);
+  }, [location.state.fileId]);
+
+
+
+  const fetchFilePath = (fileId) => {
+    // Url of the server:
+    const url = 'https://127.0.0.1:5000/fileapi/getFileById';
+
+    // Make the call to the backend:
+    axios.get(url, {params: {fileId: fileId}})
+      .then((response) => {
+        setPath(response.data.path);
+        setType(response.data.filetype.substring(1));
+      })
+  }
+
+  const fetchScores = (fileId) => {
+    // Url of the server:
+    //const url = 'https://127.0.0.1:5000/scoreapi/getScores';
+
+    // Make the call to the backend:
+    // axios.get(url, {params: {fileId: fileId}})
+    //   .then((response) => {
+    //     setScoreLanguage(response.data.scoreLanguage);
+    //     setScoreStructure(response.data.scoreStructure);
+    //     setScoreCohesion(response.data.scoreCohesion);
+    //     setScoreSourceIntegration(response.data.scoreSourceIntegration);
+    //   })
+  }
+
+
+  const fetchMistakes = (fileId) => {
+    // Url of the server:
+    //const url = 'https://127.0.0.1:5000/mistakeapi/getMistakes';
+
+    // Make the call to the backend:
+    // axios.get(url, {params: {fileId: fileId}})
+    //   .then((response) => {
+    //
+    //   })
+  }
 
 //TODO: retrieve mistakes from database
   const mistakes = [
@@ -199,7 +255,7 @@ function Document() {
     <>
       <div className="all-page-container" id="all-page-container">
         {/** potentially convert document to pdf and show document on page */}
-        <AllPagesPDFViewer pdf={`http://127.0.0.1:5000/converttopdf/convert?filepath=${path}&filetype=${type}`} />
+        <AllPagesPDFViewer pdf={`https://127.0.0.1:5000/converttopdf/convert?filepath=${path}&filetype=${type}`} />
         {mistakes.map((mistake, i) =>
           <ClickableTextDiv key={i} number={i} coords={mistake.coords} type={mistake.type}/>
         )}
@@ -207,7 +263,6 @@ function Document() {
       <div className='rightFloat'>
         <img className='smallGraph' src={placeholder} />
         <br />
-
         {mistakes.map((mistake, i) =>
           <TextBoxExplanation
           key={i} number={i} text={mistake.text} type={mistake.type} expl={mistake.explanation}
