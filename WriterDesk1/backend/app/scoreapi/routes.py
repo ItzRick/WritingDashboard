@@ -13,7 +13,7 @@ from mimetypes import guess_extension
 def setScore():
     '''
         This functions handles setting the score
-        If score is -1, the score is not updated
+        If score is not in [0..1], the score is not updated
         Attributes:
             fileId: Id of the file for which the score and explanation has to be set
             scoreStyle: Score for Language and Style
@@ -27,9 +27,6 @@ def setScore():
     scoreCohesion = request.form.get('scoreCohesion')
     scoreStructure = request.form.get('scoreStructure')
     scoreIntegration = request.form.get('scoreIntegration')
-    
-    ''''''
-    # Get current scores for fileId, note that since fileId is primaryKey, this should be at most 1
     
     return setScoreDB(fid, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
 
@@ -45,8 +42,12 @@ def getScores():
     # Get scores
     scores = Scores.query.filter_by(fileId=fileId).first()
     # return scores
-    return {'scoreStyle':scores.scoreStyle, 'scoreCohesion':scores.scoreCohesion, 'scoreStructure':scores.scoreStructure, 'scoreIntegration':scores.scoreIntegration}, 200
-    #
+    return {
+        'scoreStyle'       :scores.scoreStyle, 
+        'scoreCohesion'    :scores.scoreCohesion, 
+        'scoreStructure'   :scores.scoreStructure, 
+        'scoreIntegration' :scores.scoreIntegration
+    }, 200
 
 def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
     '''
