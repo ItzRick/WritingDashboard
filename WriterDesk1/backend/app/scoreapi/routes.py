@@ -236,7 +236,7 @@ def setExplanation():
         explanationIndb = Explanations(
             fileId = fileId,
             explId = explId,
-            type = typeEx,
+            type = type,
             explanation = explanation,
             mistakeText = mistakeText,
             X1          = X1,
