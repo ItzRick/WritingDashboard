@@ -1,7 +1,16 @@
-from app.convertToText import getPDFText
+from app.convertToText import getPDFText, splitBlocks, getFrequencyX, postProcessText, getLineText, filterLineList, filterLineNoLetters, getBlockText, isBlockTable, isTextCaption
 import os
+import fitz
 
 def testGetPDFReferences():
+    '''
+        Test if references are split and returned when getPDFText() is called with returnReferences=True
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            text: string of text returned by getPDFText
+            references: string containing references returned by getPDFText()
+    '''
+
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -10,6 +19,13 @@ def testGetPDFReferences():
     assert references == '''A Framework for Personal Science - Quantified Self. (n.d.). Retrieved June 17, 2021, from https://quantifiedself.com/blog/personal-science/ \nBaumer, E. P. S. (2015). Reflective Informatics. 585–594. https://doi.org/10.1145/2702123.2702234 \nBaumer, E. P. S., Khovanskaya, V., Matthews, M., Reynolds, L., Sosik, V. S., & Gay, G. (2014). Reviewing reflection: On the use of reflection in interactive system design. Proceedings of the Conference on Designing Interactive Systems: Processes, Practices, Methods, and Techniques, DIS, 93–102. https://doi.org/10.1145/2598510.2598598 '''
 
 def testGetPDFImages():
+    '''
+        Test if images are ignored when getPDFText() is called
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            text: string of text returned by getPDFText
+    '''
+
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -17,6 +33,13 @@ def testGetPDFImages():
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. '''
 
 def testGetPDFList():
+    '''
+        Test if list symbols are removed when getPDFText() is called
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            text: string of text returned by getPDFText
+    '''
+
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -24,6 +47,13 @@ def testGetPDFList():
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \nLorum \nIpsum \nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. '''
 
 def testGetPDFTable():
+    '''
+        Test if text from tables is removed when getPDFText() is called
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            text: string of text returned by getPDFText
+    '''
+
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -31,6 +61,13 @@ def testGetPDFTable():
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. '''
 
 def testGetPDFEmptyFile():
+    '''
+        Test if empty string is returned when getPDFText() is called on an empty file
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            text: string of text returned by getPDFText
+    '''
+
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -39,6 +76,13 @@ def testGetPDFEmptyFile():
 
 
 def testGetPDFCorruptedFile():
+    '''
+        Test if empty string is returned when getPDFText() is called on a corrupted file
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            text: string of text returned by getPDFText
+    '''
+
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -47,6 +91,13 @@ def testGetPDFCorruptedFile():
 
 
 def testGetPDFInvalidFile():
+    '''
+        Test if empty string is returned when getPDFText() is called on a file with an invalid file name
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            text: string of text returned by getPDFText
+    '''
+
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -55,8 +106,153 @@ def testGetPDFInvalidFile():
 
 
 def testGetPDFInvalidExtension():
+    '''
+        Test if empty string is returned when getPDFText() is called on a file that is not a pdf
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            text: string of text returned by getPDFText
+    '''
+
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
     text = getPDFText('invalidFileExtension.docx')
     assert text == ''
+
+def testSplitBlocks():
+    '''
+        Test if splitBlocks() splits blocks correctly when they contain empty lines
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            doc: document opened with Pymupdf
+            blocks: blocks on the first page of the opened document
+    '''
+    
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    os.chdir(dir_path)
+
+    doc = fitz.open('multitasking.pdf')
+    blocks = doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"]
+    assert len(blocks) == 1
+    blocks = splitBlocks(blocks)
+    assert len(blocks) == 7
+
+def testGetFrequencyX():
+    '''
+        Test if getFrequencyX() counts frequencies of x-coordinates correctly
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            doc: document opened with Pymupdf
+            counter: Counter object returned by getFrequencyX()
+    '''
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    os.chdir(dir_path)
+
+    doc = fitz.open('multitasking.pdf')
+    counter = getFrequencyX(doc)
+    assert len(counter) == 1
+
+def testPostProcessText():
+    '''
+        Test if postProcessText() removes references, hyphenations and empty lines correctly
+        Attributes: 
+            inputText: text that will be processed
+            output: text returned by postProcessText()
+    '''
+
+    inputText = "First [1] sen- \ntences are hard (Source, 2022) \n  \nSo now you know "
+    output = postProcessText(inputText)
+    assert output == "First sentences are hard \nSo now you know "
+
+def testGetLineText():
+    '''
+        Test if getLineText() retrieves text from lines correctly
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            doc: document opened with Pymupdf
+            line: first line from first block of opened document
+    '''
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    os.chdir(dir_path)
+
+    doc = fitz.open('multitasking.pdf')
+    line = doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"][0]["lines"][0]
+    assert getLineText(line) == "Summary debate 1 Multitasking "
+
+def testFilterLineList():
+    '''
+        Test if filterLineList() removes list symbols correctly
+        Attributes: 
+            inputText: text that will be processed
+            output: text returned by filterLineList()
+    '''
+
+    inputText = "b. This is a list "
+    output = filterLineList(inputText)
+    assert output == "This is a list "
+
+def testFilterLineNoLetters():
+    '''
+        Test if filterLineNoLetters() removes empty lines without letters correctly
+        Attributes: 
+            inputText: text that will be processed
+            output: text returned by filterLineNoLetters()
+    '''
+
+    inputText = "4 "
+    output = filterLineNoLetters(inputText)
+    assert output == ""
+
+def testGetBlockText():
+    '''
+        Test if getBlockText() retrieves text from blocks correctly
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            doc: document opened with Pymupdf
+            block: first block of opened document
+    '''
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    os.chdir(dir_path)
+
+    doc = fitz.open('multitasking.pdf')
+    block = splitBlocks(doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"])[0]
+    assert getBlockText(block, True) == "Summary debate 1 Multitasking "
+
+def testIsBlockTable():
+    '''
+        Test if isBlockTable() identifies potential table blocks correctly
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf
+            doc: document opened with Pymupdf
+            xNormal: x-coordinate of normal text in the document
+            blocks: blocks of opened document
+    '''
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    os.chdir(dir_path)
+
+    doc = fitz.open('tableFile.pdf')
+    xNormal = getFrequencyX(doc).most_common(1)[0][0]
+    blocks = splitBlocks(doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"])
+    assert isBlockTable(blocks[0], xNormal) == False
+    assert isBlockTable(blocks[1], xNormal) == True
+    assert isBlockTable(blocks[2], xNormal) == True
+    assert isBlockTable(blocks[3], xNormal) == True
+    assert isBlockTable(blocks[4], xNormal) == True
+    assert isBlockTable(blocks[5], xNormal) == False
+
+def testIsTextCaption():
+    '''
+        Test if isTextCaption() identifies captions correctly
+        Attributes: 
+            inputText: text without caption that will be checked
+            inputCaption: text with caption that will be checked
+    '''
+
+    inputText = "Figure 1 is not a caption"
+    inputCaption = "Figure 2. A caption"
+    assert not isTextCaption(inputText)
+    assert isTextCaption(inputCaption)

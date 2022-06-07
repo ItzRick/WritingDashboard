@@ -325,7 +325,8 @@ def getFrequencyX(doc):
         blocks = page.get_text("dict")["blocks"]
         for block in blocks:
             if block["type"] == 0:
-                xlist.append(block["lines"][0]["bbox"][0])
+                for line in block["lines"]:
+                    xlist.append(line["bbox"][0])
     return Counter(xlist)
 
 # Combines broken words, filters out number references, in-text citations and empty lines
@@ -500,5 +501,5 @@ def isTextCaption(block):
     Returns:
         Whether block contains a caption
     """
-    reg = r"^(T(?i)able|F(?i)igure|F(?i)ig\.)\s*\d*(\.\d*)*(\.|:)?\s*(?=\p{Lu})"
+    reg = r"^(T(?i:able)|F(?i:igure)|F(?i:ig)\.)\s*\d+(\.\d*)*(\.|:)?\s*(?=\p{Lu})"
     return regex.search(reg, block.lstrip())
