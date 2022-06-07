@@ -25,6 +25,7 @@ class Serializer(object):
     @staticmethod
     def serializeFiles(l):
         return [m.serializeFile() for m in l]
+        
 
 class User(db.Model):
     id       = db.Column(db.Integer, primary_key=True)
@@ -72,6 +73,7 @@ class Scores(db.Model):
     '''
         Class to enter scores and explanations related to a file. 
         Each instance here is one-to-one related to an instance in Files
+        Scores should be between 0 and 10.
         Attributes:
             fileId: Id of this database instance, Id of the file corresponding to a file in the Files
             scoreStyle: Score for Language and Style
@@ -96,15 +98,37 @@ class Explanations(db.Model):
         Attributes:
             fileId: Id of this database instance, of this file that has been added in the database.
             explId: Id of the file corresponding to a file in the Files
-            type: Explanation type, 0=style, 1=cohesion, 2=structure, 3=integration
+            type: Explanation type, what type of mistake is explained,
+                    0=style, 1=cohesion, 2=structure, 3=integration
             explanation: String containing a comment on a part of the text in the file
-            location: ???
+            mistakeText: What text in the document is wrong
+            X1: X of the top right corner of the boxing rectangle
+            X2: X of the bottom left corner of the boxing rectangle
+            Y1: Y of the top right corner of the boxing rectangle
+            Y2: Y of the bottom left corner of the boxing rectangle
+            replacement1..3: Three possible replacements for the mistakeText
     '''
     fileId      = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
     explId      = db.Column(db.Integer, primary_key=True)
-    type        = db.Column(db.Integer)
-    explanation = db.Column(db.String)
-    # TODO location of explanation??
+    type        = db.Column(db.Integer, default=-1)
+    explanation = db.Column(db.String, default='')
+    mistakeText = db.Column(db.String, default='')
+    X1          = db.Column(db.Float, default=-1)
+    X2          = db.Column(db.Float, default=-1)
+    Y1          = db.Column(db.Float, default=-1)
+    Y2          = db.Column(db.Float, default=-1)
+    replacement1= db.Column(db.String, default='')
+    replacement2= db.Column(db.String, default='')
+    replacement3= db.Column(db.String, default='')
 
     def __repr__(self):
         return '<Explanations {}>'.format(self.fileId, self.explId)
+
+    @property
+    def serialize(self):
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            #skip related file
+            if not c == 'explainedFile':
+                dict[c] = getattr(self, c)
+        return dict
