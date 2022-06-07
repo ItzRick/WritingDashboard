@@ -1,8 +1,8 @@
-from app.convertToText import getPDFText, splitBlocks, getFrequencyX, postProcessText, getLineText, filterLineList, filterLineNoLetters, getBlockText, isBlockTable, isTextCaption
+from app.convertPdfToText import getPDFText, splitBlocks, getFrequencyX, postProcessText, getLineText, filterLineList, filterLineNoLetters, getBlockText, isBlockTable, isTextCaption
 import os
 import fitz
 
-def testGetPDFReferences():
+def testGetPDFReferences(testClient):
     '''
         Test if references are split and returned when getPDFText() is called with returnReferences=True
         Attributes: 
@@ -11,6 +11,7 @@ def testGetPDFReferences():
             references: string containing references returned by getPDFText()
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -18,7 +19,7 @@ def testGetPDFReferences():
     assert text == '''Donec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. Phasellus rutrum molestie dictum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc faucibus lobortis tortor non hendrerit. '''
     assert references == '''A Framework for Personal Science - Quantified Self. (n.d.). Retrieved June 17, 2021, from https://quantifiedself.com/blog/personal-science/ \nBaumer, E. P. S. (2015). Reflective Informatics. 585–594. https://doi.org/10.1145/2702123.2702234 \nBaumer, E. P. S., Khovanskaya, V., Matthews, M., Reynolds, L., Sosik, V. S., & Gay, G. (2014). Reviewing reflection: On the use of reflection in interactive system design. Proceedings of the Conference on Designing Interactive Systems: Processes, Practices, Methods, and Techniques, DIS, 93–102. https://doi.org/10.1145/2598510.2598598 '''
 
-def testGetPDFImages():
+def testGetPDFImages(testClient):
     '''
         Test if images are ignored when getPDFText() is called
         Attributes: 
@@ -26,13 +27,14 @@ def testGetPDFImages():
             text: string of text returned by getPDFText
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
     text = getPDFText('imageFile.pdf')
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. '''
 
-def testGetPDFList():
+def testGetPDFList(testClient):
     '''
         Test if list symbols are removed when getPDFText() is called
         Attributes: 
@@ -40,13 +42,14 @@ def testGetPDFList():
             text: string of text returned by getPDFText
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
     text = getPDFText('listFile.pdf')
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \nLorum \nIpsum \nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. '''
 
-def testGetPDFTable():
+def testGetPDFTable(testClient):
     '''
         Test if text from tables is removed when getPDFText() is called
         Attributes: 
@@ -54,13 +57,14 @@ def testGetPDFTable():
             text: string of text returned by getPDFText
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
     text = getPDFText('tableFile.pdf')
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. '''
 
-def testGetPDFEmptyFile():
+def testGetPDFEmptyFile(testClient):
     '''
         Test if empty string is returned when getPDFText() is called on an empty file
         Attributes: 
@@ -68,6 +72,7 @@ def testGetPDFEmptyFile():
             text: string of text returned by getPDFText
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -75,7 +80,7 @@ def testGetPDFEmptyFile():
     assert text == ''
 
 
-def testGetPDFCorruptedFile():
+def testGetPDFCorruptedFile(testClient):
     '''
         Test if empty string is returned when getPDFText() is called on a corrupted file
         Attributes: 
@@ -83,6 +88,7 @@ def testGetPDFCorruptedFile():
             text: string of text returned by getPDFText
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -90,7 +96,7 @@ def testGetPDFCorruptedFile():
     assert text == ''
 
 
-def testGetPDFInvalidFile():
+def testGetPDFInvalidFile(testClient):
     '''
         Test if empty string is returned when getPDFText() is called on a file with an invalid file name
         Attributes: 
@@ -98,6 +104,7 @@ def testGetPDFInvalidFile():
             text: string of text returned by getPDFText
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -105,7 +112,7 @@ def testGetPDFInvalidFile():
     assert text == ''
 
 
-def testGetPDFInvalidExtension():
+def testGetPDFInvalidExtension(testClient):
     '''
         Test if empty string is returned when getPDFText() is called on a file that is not a pdf
         Attributes: 
@@ -113,6 +120,7 @@ def testGetPDFInvalidExtension():
             text: string of text returned by getPDFText
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
