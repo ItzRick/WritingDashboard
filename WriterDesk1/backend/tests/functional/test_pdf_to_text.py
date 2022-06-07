@@ -9,6 +9,8 @@ def testGetPDFReferences(testClient):
             dir_path: path of the directory that holds this file and the test pdf
             text: string of text returned by getPDFText
             references: string containing references returned by getPDFText()
+        Arguments:
+            testClient: the test client we test this for
     '''
 
     del testClient
@@ -25,6 +27,8 @@ def testGetPDFImages(testClient):
         Attributes: 
             dir_path: path of the directory that holds this file and the test pdf
             text: string of text returned by getPDFText
+        Arguments:
+            testClient: the test client we test this for
     '''
 
     del testClient
@@ -40,6 +44,8 @@ def testGetPDFList(testClient):
         Attributes: 
             dir_path: path of the directory that holds this file and the test pdf
             text: string of text returned by getPDFText
+        Arguments:
+            testClient: the test client we test this for
     '''
 
     del testClient
@@ -55,6 +61,8 @@ def testGetPDFTable(testClient):
         Attributes: 
             dir_path: path of the directory that holds this file and the test pdf
             text: string of text returned by getPDFText
+        Arguments:
+            testClient: the test client we test this for
     '''
 
     del testClient
@@ -70,6 +78,8 @@ def testGetPDFEmptyFile(testClient):
         Attributes: 
             dir_path: path of the directory that holds this file and the test pdf
             text: string of text returned by getPDFText
+        Arguments:
+            testClient: the test client we test this for
     '''
 
     del testClient
@@ -86,6 +96,8 @@ def testGetPDFCorruptedFile(testClient):
         Attributes: 
             dir_path: path of the directory that holds this file and the test pdf
             text: string of text returned by getPDFText
+        Arguments:
+            testClient: the test client we test this for
     '''
 
     del testClient
@@ -102,6 +114,8 @@ def testGetPDFInvalidFile(testClient):
         Attributes: 
             dir_path: path of the directory that holds this file and the test pdf
             text: string of text returned by getPDFText
+        Arguments:
+            testClient: the test client we test this for
     '''
 
     del testClient
@@ -118,6 +132,8 @@ def testGetPDFInvalidExtension(testClient):
         Attributes: 
             dir_path: path of the directory that holds this file and the test pdf
             text: string of text returned by getPDFText
+        Arguments:
+            testClient: the test client we test this for
     '''
 
     del testClient
@@ -127,15 +143,18 @@ def testGetPDFInvalidExtension(testClient):
     text = getPDFText('invalidFileExtension.docx')
     assert text == ''
 
-def testSplitBlocks():
+def testSplitBlocks(testClient):
     '''
         Test if splitBlocks() splits blocks correctly when they contain empty lines
         Attributes: 
             dir_path: path of the directory that holds this file and the test pdf
             doc: document opened with Pymupdf
             blocks: blocks on the first page of the opened document
+        Arguments:
+            testClient: the test client we test this for
     '''
     
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -145,15 +164,18 @@ def testSplitBlocks():
     blocks = splitBlocks(blocks)
     assert len(blocks) == 7
 
-def testGetFrequencyX():
+def testGetFrequencyX(testClient):
     '''
         Test if getFrequencyX() counts frequencies of x-coordinates correctly
         Attributes: 
             dir_path: path of the directory that holds this file and the test pdf
             doc: document opened with Pymupdf
             counter: Counter object returned by getFrequencyX()
+        Arguments:
+            testClient: the test client we test this for
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -161,27 +183,33 @@ def testGetFrequencyX():
     counter = getFrequencyX(doc)
     assert len(counter) == 1
 
-def testPostProcessText():
+def testPostProcessText(testClient):
     '''
         Test if postProcessText() removes references, hyphenations and empty lines correctly
         Attributes: 
             inputText: text that will be processed
             output: text returned by postProcessText()
+        Arguments:
+            testClient: the test client we test this for
     '''
 
+    del testClient
     inputText = "First [1] sen- \ntences are hard (Source, 2022) \n  \nSo now you know "
     output = postProcessText(inputText)
     assert output == "First sentences are hard \nSo now you know "
 
-def testGetLineText():
+def testGetLineText(testClient):
     '''
         Test if getLineText() retrieves text from lines correctly
         Attributes: 
             dir_path: path of the directory that holds this file and the test pdf
             doc: document opened with Pymupdf
             line: first line from first block of opened document
+        Arguments:
+            testClient: the test client we test this for
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -189,39 +217,48 @@ def testGetLineText():
     line = doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"][0]["lines"][0]
     assert getLineText(line) == "Summary debate 1 Multitasking "
 
-def testFilterLineList():
+def testFilterLineList(testClient):
     '''
         Test if filterLineList() removes list symbols correctly
         Attributes: 
             inputText: text that will be processed
             output: text returned by filterLineList()
+        Arguments:
+            testClient: the test client we test this for
     '''
 
+    del testClient
     inputText = "b. This is a list "
     output = filterLineList(inputText)
     assert output == "This is a list "
 
-def testFilterLineNoLetters():
+def testFilterLineNoLetters(testClient):
     '''
         Test if filterLineNoLetters() removes empty lines without letters correctly
         Attributes: 
             inputText: text that will be processed
             output: text returned by filterLineNoLetters()
+        Arguments:
+            testClient: the test client we test this for
     '''
 
+    del testClient
     inputText = "4 "
     output = filterLineNoLetters(inputText)
     assert output == ""
 
-def testGetBlockText():
+def testGetBlockText(testClient):
     '''
         Test if getBlockText() retrieves text from blocks correctly
         Attributes: 
             dir_path: path of the directory that holds this file and the test pdf
             doc: document opened with Pymupdf
             block: first block of opened document
+        Arguments:
+            testClient: the test client we test this for
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -229,7 +266,7 @@ def testGetBlockText():
     block = splitBlocks(doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"])[0]
     assert getBlockText(block, True) == "Summary debate 1 Multitasking "
 
-def testIsBlockTable():
+def testIsBlockTable(testClient):
     '''
         Test if isBlockTable() identifies potential table blocks correctly
         Attributes: 
@@ -237,8 +274,11 @@ def testIsBlockTable():
             doc: document opened with Pymupdf
             xNormal: x-coordinate of normal text in the document
             blocks: blocks of opened document
+        Arguments:
+            testClient: the test client we test this for
     '''
 
+    del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
 
@@ -252,14 +292,17 @@ def testIsBlockTable():
     assert isBlockTable(blocks[4], xNormal) == True
     assert isBlockTable(blocks[5], xNormal) == False
 
-def testIsTextCaption():
+def testIsTextCaption(testClient):
     '''
         Test if isTextCaption() identifies captions correctly
         Attributes: 
             inputText: text without caption that will be checked
             inputCaption: text with caption that will be checked
+        Arguments:
+            testClient: the test client we test this for
     '''
 
+    del testClient
     inputText = "Figure 1 is not a caption"
     inputCaption = "Figure 2. A caption"
     assert not isTextCaption(inputText)
