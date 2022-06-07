@@ -7,8 +7,7 @@ from app.database import uploadToDatabase, removeFromDatabase
 @bp.route('/setScore', methods = ['POST'])
 def setScore():
     '''
-        This functions handles setting the score
-        If score is not in [0..1], the score is not updated
+        This functions handles setting the score as requested by the frontend
         Attributes:
             fileId: Id of the file for which the score and explanation has to be set
             scoreStyle: Score for Language and Style
@@ -25,42 +24,12 @@ def setScore():
     
     return setScoreDB(fid, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
 
-@bp.route('/getScores', methods = ['GET'])
-def getScores(): 
-    '''
-        This function handles making a list of the file ids, 
-        such that it can be used later to search for a file. 
-        Attributes: 
-            fileId: file id as given by the frontend
-        Arguments:
-            scoreStyle: 
-            scoreCohesion: 
-            scoreStructure: 
-            scoreIntegration: 
-    '''
-
-    # get fileId from request
-    fileId = request.args.get('fileId')
-    
-    # Check if the fileId exists in Scores
-    if (Scores.query.filter_by(fileId=fileId).first() is None):
-        return 'No score found with fileId', 400
-    
-    # Get scores
-    scores = Scores.query.filter_by(fileId=fileId).first()
-    # return scores
-    return {
-        'scoreStyle'       :scores.scoreStyle, 
-        'scoreCohesion'    :scores.scoreCohesion, 
-        'scoreStructure'   :scores.scoreStructure, 
-        'scoreIntegration' :scores.scoreIntegration
-    }, 200
 
 def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
     '''
         This functions handles setting the score and explanations for a file.
-        If score is not in [0..1], the score is not updated
-        Attributes:
+        If score is not in [0..10], the score is not updated
+        Arguments:
             fileId: Id of the file for which the score and explanation has to be set
             scoreStyle: Score for Language and Style
             scoreCohesion: Score for Cohesion
@@ -98,12 +67,60 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
     scoreIndb = Scores(fileId=fileId, scoreStyle=scoreStyle, scoreStructure=scoreStructure, scoreCohesion=scoreCohesion, scoreIntegration=scoreIntegration)
     # upload
     uploadToDatabase(scoreIndb)
-
     return 'successfully uploaded Scores'
+
+
+@bp.route('/getScores', methods = ['GET'])
+def getScores(): 
+    '''
+        This function handles returning the score of some file
+        Attributes: 
+            fileId: file id as given by the frontend
+        Arguments:
+            scoreStyle: Score for Language and Style
+            scoreCohesion: Score for Cohesion
+            scoreStructure: Score for Structure
+            scoreIntegration: Score for Source Integration and Content
+    '''
+
+    # get fileId from request
+    fileId = request.args.get('fileId')
+    
+    # Check if the fileId exists in Scores
+    if (Scores.query.filter_by(fileId=fileId).first() is None):
+        return 'No score found with matching fileId', 400
+    
+    # Get scores
+    scores = Scores.query.filter_by(fileId=fileId).first()
+    # return scores
+    return {
+        'scoreStyle'       :scores.scoreStyle, 
+        'scoreCohesion'    :scores.scoreCohesion, 
+        'scoreStructure'   :scores.scoreStructure, 
+        'scoreIntegration' :scores.scoreIntegration
+    }, 200
 
 
 @bp.route('/getExplanation', methods = ['GET'])
 def getExplanation(): 
+    '''
+        This function handles returning a specific explanation of some file
+        Attributes: 
+            fileId: file id as given by the frontend
+            explId: explanation id as given by the frontend
+        Arguments:
+            fileId: file id
+            explId: explanation id
+            type: Explanation type, what type of mistake is explained,
+                    0=style, 1=cohesion, 2=structure, 3=integration
+            explanation: String containing a comment on a part of the text in the file
+            mistakeText: String, What text in the document is wrong
+            X1: X of the top right corner of the boxing rectangle
+            X2: X of the bottom left corner of the boxing rectangle
+            Y1: Y of the top right corner of the boxing rectangle
+            Y2: Y of the bottom left corner of the boxing rectangle
+            replacement1..3: Three possible replacements for the mistakeText
+    '''
     # get fileId from request
     fileId = request.args.get('fileId')
     explId = request.args.get('explId')
@@ -113,19 +130,37 @@ def getExplanation():
 
     # Check if the fileId and explId exists in Explanation
     if explanation is None:
-        return 'No explanation found with fileId and explId', 400
+        return 'No explanation found with matching fileId and explId', 400
     
     # return explanation
     return explanation.serialize, 200
 
 @bp.route('/getExplanationForFile', methods = ['GET'])
 def getExplanationForFile(): 
+    '''
+        This function handles returning all explanations of some file
+        Attributes: 
+            fileId: file id as given by the frontend
+        Arguments:
+            Array containing:
+                fileId: file id
+                explId: explanation id
+                type: Explanation type, what type of mistake is explained,
+                        0=style, 1=cohesion, 2=structure, 3=integration
+                explanation: String containing a comment on a part of the text in the file
+                mistakeText: String, What text in the document is wrong
+                X1: X of the top right corner of the boxing rectangle
+                X2: X of the bottom left corner of the boxing rectangle
+                Y1: Y of the top right corner of the boxing rectangle
+                Y2: Y of the bottom left corner of the boxing rectangle
+                replacement1..3: Three possible replacements for the mistakeText
+    '''
     # get fileId from request
     fileId = request.args.get('fileId')
     
     # Check if the fileId exists in Explanation
     if (Explanations.query.filter_by(fileId=fileId).first() is None):
-        return 'No explanation found with fileId', 400
+        return 'No explanations found with matching fileId', 400
     
     # Get explanations
     explanations = Explanations.query.filter_by(fileId=fileId).all()
@@ -141,6 +176,15 @@ def setExplanation():
         Attributes:
             fileId: Id for the file
             explId: Id for the explanation, if -1, create new explanation
+            type: Explanation type, what type of mistake is explained,
+                    0=style, 1=cohesion, 2=structure, 3=integration
+            explanation: String containing a comment on a part of the text in the file
+            mistakeText: String, What text in the document is wrong
+            X1: X of the top right corner of the boxing rectangle
+            X2: X of the bottom left corner of the boxing rectangle
+            Y1: Y of the top right corner of the boxing rectangle
+            Y2: Y of the bottom left corner of the boxing rectangle
+            replacement1..3: Three possible replacements for the mistakeText
     '''
     # Get the data as sent by the react frontend:
     fileId = request.form.get('fileId')
