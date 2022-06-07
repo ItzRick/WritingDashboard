@@ -132,28 +132,24 @@ const SignUp = () => {
                         <Typography>Email:</Typography>
                         <TextField id='email' label='example@mail.com' variant='outlined' 
                             value={username} onChange={(e) => {setUsername(e.target.value); setFormError("")}}
-                            error={checkUsername() !== ""} helperText={checkUsername() !== "" ? checkUsername() : ""}
+                            error={checkUsername() !== ""} helperText={checkUsername() !== "" ? checkUsername() : " "}
                         />
-                        <br /><br />
                         <Typography>Repeat email:</Typography>
                         <TextField id='email2' label='example@mail.com' variant='outlined' 
                             value={usernameConfirm} onChange={(e) => {setUsernameConfirm(e.target.value); setFormError("")}} 
-                            error={confirmUsername() !== ""} helperText={confirmUsername() !== "" ? confirmUsername() : ""}
+                            error={confirmUsername() !== ""} helperText={confirmUsername() !== "" ? confirmUsername() : " "}
                         />
-                        <br /><br />
                         <Typography>Password:</Typography>
                         <TextField id='password' label='Password' variant='outlined' type='password' 
                             value={password} onChange={(e) => {setPassword(e.target.value); setFormError("")}} 
-                            error={checkPassword() !== ""} helperText={checkPassword() !== "" ? checkPassword() : ""}
+                            error={checkPassword() !== ""} helperText={checkPassword() !== "" ? checkPassword() : " "}
                         />
-                        <br /><br />
                         <Typography>Repeat password:</Typography>
                         <TextField id='password2' label='Password' variant='outlined' type='password' 
                             value={passwordConfirm} onChange={(e) => {setPasswordConfirm(e.target.value); setFormError("")}} 
-                            error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : ""}
+                            error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : " "}
                         />
                     </div>
-                    <br />
                     {formError !== "" && <Typography color="red">{formError}</Typography>}
                     <br />
                     <BlueButton onClick={handleClick}>Sign Up</BlueButton>
