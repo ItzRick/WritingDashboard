@@ -1,13 +1,8 @@
 from app.scoreapi import bp
 
-import os
-from werkzeug.utils import secure_filename
-from flask import current_app, request, session, jsonify
+from flask import request, jsonify
 from app.models import Files, Scores, Explanations
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup
-from magic import from_buffer 
-from datetime import date
-from mimetypes import guess_extension
+from app.database import uploadToDatabase, removeFromDatabase
 
 @bp.route('/setScore', methods = ['POST'])
 def setScore():
@@ -32,6 +27,18 @@ def setScore():
 
 @bp.route('/getScores', methods = ['GET'])
 def getScores(): 
+    '''
+        This function handles making a list of the file ids, 
+        such that it can be used later to search for a file. 
+        Attributes: 
+            fileId: file id as given by the frontend
+        Arguments:
+            scoreStyle: 
+            scoreCohesion: 
+            scoreStructure: 
+            scoreIntegration: 
+    '''
+
     # get fileId from request
     fileId = request.args.get('fileId')
     
@@ -69,11 +76,11 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
         # retreive current Scores
         currentScores = Scores.query.filter_by(fileId=fileId).first()
 
-        # local function returns new score if new score is valid
+        # local function: returns new score if new score is valid
         def compareScores(current, new):
             current = float(current)
             new = float(new)
-            if (new < 0.0) or (new > 1.0):
+            if (new < 0.0) or (new > 10.0):
                 # invalid new score, return current
                 return current
             else:
@@ -94,3 +101,110 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
 
     return 'successfully uploaded Scores'
 
+
+@bp.route('/getExplanation', methods = ['GET'])
+def getExplanation(): 
+    # get fileId from request
+    fileId = request.args.get('fileId')
+    explId = request.args.get('explId')
+    
+    # get explanation
+    explanation = Explanations.query.filter_by(fileId=fileId, explId=explId).first()
+
+    # Check if the fileId and explId exists in Explanation
+    if explanation is None:
+        return 'No explanation found with fileId and explId', 400
+    
+    # return explanation
+    return explanation.serialize, 200
+
+@bp.route('/getExplanationForFile', methods = ['GET'])
+def getExplanationForFile(): 
+    # get fileId from request
+    fileId = request.args.get('fileId')
+    
+    # Check if the fileId exists in Explanation
+    if (Explanations.query.filter_by(fileId=fileId).first() is None):
+        return 'No explanation found with fileId', 400
+    
+    # Get explanations
+    explanations = Explanations.query.filter_by(fileId=fileId).all()
+    # return scores
+    return jsonify([i.serialize for i in explanations]), 200
+
+
+@bp.route('/setExplanation', methods = ['POST'])
+def setExplanation():
+    '''
+        This functions handles setting the explanation
+
+        Attributes:
+            fileId: Id for the file
+            explId: Id for the explanation, if -1, create new explanation
+    '''
+    # Get the data as sent by the react frontend:
+    fileId = request.form.get('fileId')
+    explId = request.form.get('explId')
+    type = request.form.get('type')
+    explanation = request.form.get('explanation')
+    mistakeText = request.form.get('mistakeText')
+    X1          = request.form.get('X1')
+    X2          = request.form.get('X2')
+    Y1          = request.form.get('Y1')
+    Y2          = request.form.get('Y2')
+    replacement1= request.form.get('replacement1')
+    replacement2= request.form.get('replacement2')
+    replacement3= request.form.get('replacement3')
+
+    # check if file exists
+    if (Files.query.filter_by(id=fileId).first() is None):
+        return 'No file found with fileId', 400
+
+    # TODO check for anomalies ?
+
+    # if explId = -1, create new record, else override one
+    if explId == -1:
+        # create new record
+        # create Explanations object
+        explanationIndb = Explanations(
+            fileId = fileId,
+            type        = type,
+            explanation = explanation,
+            mistakeText = mistakeText,
+            X1          = X1,
+            X2          = X2,
+            Y1          = Y1,
+            Y2          = Y2,
+            replacement1= replacement1,
+            replacement2= replacement2,
+            replacement3= replacement3,
+        )
+    else:
+        # already in Explanations
+        # retreive current Explanation
+        current = Explanations.query.filter_by(
+            fileId=fileId, explId=explId).first()
+        if current is not None:
+            # remove from database, current scores
+            removeFromDatabase(current)
+
+        # create Explanations object
+        explanationIndb = Explanations(
+            fileId = fileId,
+            explId = explId,
+            type = typeEx,
+            explanation = explanation,
+            mistakeText = mistakeText,
+            X1          = X1,
+            X2          = X2,
+            Y1          = Y1,
+            Y2          = Y2,
+            replacement1= replacement1,
+            replacement2= replacement2,
+            replacement3= replacement3,
+        )
+    
+    # upload
+    uploadToDatabase(explanationIndb)
+
+    return 'successfully uploaded Explanations'
