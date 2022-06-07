@@ -106,21 +106,13 @@ const Documents = () => {
     }
   ];
 
+
+  /**
+   * Navigate to the Document page and add the file id as state parameter.
+   * @param {event} _event: event data pushed with the call, not required
+   * @param {params} params: params of the row where the current file is that needs to be navigated to.
+   */
   const navigateToDoc = (_event, params) => {
-    // // Url of the server:
-    // const url = 'https://127.0.0.1:5000/fileapi/getfile';
-    // // Formdata for the backend call, to which the id has been added:
-    // const formData = new FormData();
-    // formData.append('id', params.id);
-    //
-    // const document = {docId: params.id}
-    // // Make the call to the backend:
-    // axios.get(url, { data: formData })
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     navigate('/Document', {state: {userId: response.data.userId, docId: response.data.id}});
-    //
-    //   })
     navigate('/Document', {state: {fileId: params.id}});
   }
 

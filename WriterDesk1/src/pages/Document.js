@@ -42,14 +42,18 @@ function Document() {
   });
 
   useEffect(() => {
-    const fileId = location.state.fileId;
-    fetchFilePath(fileId);
-    fetchScores(fileId);
-    fetchMistakes(fileId);
+    const fileId = location.state.fileId; // Get file id from previous page.
+    fetchFilePath(fileId); // Set file path and type
+    fetchScores(fileId); // Set scores of current file
+    fetchMistakes(fileId); //Set mistakes of current file
   }, [location.state.fileId]);
 
 
-
+  /**
+   * Make the backend call to retrieve the correct file and
+   * set the correct path and file type for the given file id.
+   * @param {number} fileId: id of the file that needs to be shown.
+   */
   const fetchFilePath = (fileId) => {
     // Url of the server:
     const url = 'https://127.0.0.1:5000/fileapi/getFileById';
@@ -57,16 +61,17 @@ function Document() {
     // Make the call to the backend:
     axios.get(url, {params: {fileId: fileId}})
       .then((response) => {
-        setPath(response.data.path);
-        setType(response.data.filetype.substring(1));
+        setPath(response.data.path); // Set path of file given by file id
+        setType(response.data.filetype.substring(1)); // Set file type without '.'
       })
   }
 
+//TODO: Retrieve scores from database.
   const fetchScores = (fileId) => {
-    // Url of the server:
+    // // Url of the server:
     //const url = 'https://127.0.0.1:5000/scoreapi/getScores';
 
-    // Make the call to the backend:
+    // // Make the call to the backend:
     // axios.get(url, {params: {fileId: fileId}})
     //   .then((response) => {
     //     setScoreLanguage(response.data.scoreLanguage);
@@ -76,7 +81,7 @@ function Document() {
     //   })
   }
 
-
+//TODO: Retrieve mistakes from database.
   const fetchMistakes = (fileId) => {
     // Url of the server:
     //const url = 'https://127.0.0.1:5000/mistakeapi/getMistakes';
@@ -88,7 +93,6 @@ function Document() {
     //   })
   }
 
-//TODO: retrieve mistakes from database
   const mistakes = [
     {text: 'decade', explanation: 'expl1', type: 0, coords: [156.9016876220703, 157.89927673339844, 183.29876708984375, 169.56455993652344], replacements: ['ab', 'b', 'ba']},
     {text: 'Furthermore', explanation: 'expl2', type: 1, coords: [464.495361328125, 468.1363525390625, 514.29833984375, 480.14129638671875], replacements: ['as']},
