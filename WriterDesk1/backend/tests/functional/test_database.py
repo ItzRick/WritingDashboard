@@ -1,6 +1,6 @@
 from distutils.command.upload import upload
-from app.models import Files
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
+from app.models import Files, User, Student
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, postUser
 from app import db
 from datetime import datetime, date
 # import os
@@ -128,3 +128,23 @@ def testFiles(testClient, initDatabase):
     files = Files.query.all()
     assert str(files[0]) == '<File URD_Group3_vers03_Rc.pdf>'
     assert str(files[1]) == '<File SEP.pdf>'
+
+def testPostUser(testClient, initDatabase):
+    '''
+        Test if postUser() correctly adds a user to the database
+        Attributes: 
+            users: all users with username 'test@tue.nl'
+        Arguments:
+            testClient: the test client we test this for
+            initDatabase: the database instance we test this for
+    '''
+
+    del testClient, initDatabase
+    try:
+        postUser("test@tue.nl", "TestPassword1")
+        db.session.commit()
+    except:
+        db.session.rollback()
+    users = User.query.filter_by(username="test@tue.nl").all()
+    assert len(users) == 1
+    assert users[0].check_password("TestPassword1")

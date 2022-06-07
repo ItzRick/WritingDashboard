@@ -68,7 +68,7 @@ def registerUser():
         return "User was successfully created!", 200
     else:
         # User exists already
-        return "Username is already taken!", 400
+        return "Account with this email already exists!", 400
     
 
 @bp.route("/who_am_i", methods=["GET"])

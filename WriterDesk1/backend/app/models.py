@@ -15,7 +15,7 @@ class Serializer(object):
     def serializeList(l):
         return [m.serialize() for m in l]
 
-class User(db.Model):
+class User(db.Model, Serializer):
     '''
         Declare user model containing usernames and passwords (hashed), we use single table inheritance for different types of users.
         Attributes:

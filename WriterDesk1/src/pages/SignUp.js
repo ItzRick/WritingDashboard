@@ -39,7 +39,7 @@ const SignUp = () => {
         if(username === "") {
             return "";
         } else if(!username.endsWith(USERNAME_END)) {
-            return "Username is not a TUe email-address";
+            return "Must be a TU/e email-address";
         }
         return "";
     }
@@ -47,7 +47,7 @@ const SignUp = () => {
     // Check if repeated username input is valid
     const confirmUsername = () => {
         if(username !== "" && username !== usernameConfirm) {
-            return "Does not match Email";
+            return "Must match Email";
         }
         return "";
     }
@@ -57,13 +57,13 @@ const SignUp = () => {
         if(password === "") {
             return "";
         } else if(password.length < PASSWORD_LENGTH) {
-            return "Password needs to contain at least 8 characters";
+            return "Must contain at least 8 characters";
         } else if((password.match(/[a-z]/g) || []).length < 1) {
-            return "Password needs to contain at least 1 lowercase letter";
+            return "Must contain min. 1 lowercase letter";
         } else if((password.match(/[A-Z]/g) || []).length < 1) {
-            return "Password needs to contain at least 1 uppercase letter";
+            return "Must contain at least 1 uppercase letter";
         } else if((password.match(/[0-9]/g) || []).length < 1) {
-            return "Password needs to contain at least 1 number";
+            return "Must contain at least 1 number";
         }
         return "";
     }
@@ -71,7 +71,7 @@ const SignUp = () => {
     // Check if repeated password input is valid
     const confirmPassword = () => {
         if(password !== "" && password !== passwordConfirm) {
-            return "Does not match password";
+            return "Must match Password";
         }
         return "";
     }
@@ -93,7 +93,10 @@ const SignUp = () => {
             "username": username,
             "password": password,
         }
-        axios.post(`${BASE_URL}/signup`, data).then(response =>{
+        const headers = {
+            "Content-Type": "application/json"
+        }
+        axios.post(`${BASE_URL}/signup`, data, headers).then(response =>{
             // Post request is successful, user is registered
             // Loads login page
             navigate(NAVIGATE_TO_URL, {replace: true});
@@ -133,25 +136,31 @@ const SignUp = () => {
                         <TextField id='email' label='example@mail.com' variant='outlined' 
                             value={username} onChange={(e) => {setUsername(e.target.value); setFormError("")}}
                             error={checkUsername() !== ""} helperText={checkUsername() !== "" ? checkUsername() : " "}
+                            fullWidth
                         />
                         <Typography>Repeat email:</Typography>
                         <TextField id='email2' label='example@mail.com' variant='outlined' 
                             value={usernameConfirm} onChange={(e) => {setUsernameConfirm(e.target.value); setFormError("")}} 
                             error={confirmUsername() !== ""} helperText={confirmUsername() !== "" ? confirmUsername() : " "}
+                            fullWidth
                         />
                         <Typography>Password:</Typography>
                         <TextField id='password' label='Password' variant='outlined' type='password' 
                             value={password} onChange={(e) => {setPassword(e.target.value); setFormError("")}} 
                             error={checkPassword() !== ""} helperText={checkPassword() !== "" ? checkPassword() : " "}
+                            fullWidth
                         />
                         <Typography>Repeat password:</Typography>
                         <TextField id='password2' label='Password' variant='outlined' type='password' 
                             value={passwordConfirm} onChange={(e) => {setPasswordConfirm(e.target.value); setFormError("")}} 
                             error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : " "}
+                            fullWidth
                         />
                     </div>
-                    {formError !== "" && <Typography color="red">{formError}</Typography>}
                     <br />
+                    {formError !== "" && <Typography color="red">{formError}</Typography>}
+                    {formError !== "" && <br />}
+
                     <BlueButton onClick={handleClick}>Sign Up</BlueButton>
                 </div>
                 <div className='div3'>
