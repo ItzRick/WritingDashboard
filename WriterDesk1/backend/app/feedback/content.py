@@ -5,7 +5,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from bs4 import BeautifulSoup
-from requests_html import HTMLSession
+# from requests_html import HTMLSession
 import requests
 from bs4 import BeautifulSoup
 from flask import current_app
@@ -15,6 +15,19 @@ import os
 
 
 def sourceIntegration(text, input_words, englishStopwords):
+    # Get the number of sources and number of paragraphs from the text
+    # If enough: else, applicable score and explanation
+    # Get the words from the text 
+    # Get the words from the sources
+    # TODO: apply get text from pdf
+    # Calculate scores
+    # Give explanations
+
+    # Score: 
+    # At least one source per 2 alineas? 
+    # No: score 2, 1 per 4 alineas is 1, even less is 0.
+    # Yes: sliding scale, 10% of the words of the text are also in the source: 10, 0%: 2.
+    
     counts = {}
     for word in input_words:
         counts[word] = (len(re.findall(word, text)))
@@ -29,16 +42,24 @@ def wordsSource(text, wordsWoStopwords, englishStopwords):
             wordsWoStopwords.add(t)
     return wordsWoStopwords
 
-def countTotalWordsText(text, englishStopwords):
+def wordsText(text, englishStopwords):
     count = 0
+    wordsWoStopwords = dict()
     text = re.sub('[,\.!?]', '', text)
     
     tokens = word_tokenize(text.lower())
     for t in tokens:
         if t not in englishStopwords:
             count += 1
+            if t not in wordsWoStopwords.keys():
+                wordsWoStopwords[t] = 1
+            else:
+                wordsWoStopwords[t] += 1
 
-    return count
+    return wordsWoStopwords, count
+
+def countParagraphs(text):
+    return text.count('\n') + 1
 
 def downloadPapers(doi):
     userId = 123
@@ -48,6 +69,11 @@ def downloadPapers(doi):
         os.makedirs(basePath)
     scihub_download(doi, paper_type='doi', out=filePath)
     # TODO: Requires pdf file retrieval. 
+    # Delete the file and delete the folder if it is empty:
+    if os.path.exists(filePath):
+        os.remove(filePath)
+        if not os.listdir(basePath):
+            os.rmdir(basePath)
 
 def getUrlsSources(sourceString):
     '''
@@ -64,8 +90,6 @@ def getUrlsSources(sourceString):
             links: array with the links which do not contain the text "doi.org".
             links_doi: array with the links which do contain the text "doi.org" and therefore should be papers.
             numSources: the number of sources.
-
-
     '''
     # Get all the individual sources:
     sources = sourceString.split('\n')
@@ -182,10 +206,12 @@ Reitberger, W., Spreicer, W., & Fitzpatrick, G. (2014). Nutriflect: Reflecting c
 Rooksby, J., Rost, M., Morrison, A., & Chalmers, M. (2014). Personal Tracking as Lived Informatics. 1163–1172.
 Wise, A. F., & Jung, Y. (2019). Teaching with analytics: Towards a situated model of instructional decision-making. Journal of Learning Analytics, 6(2), 53–69. https://doi.org/10.18608/jla.2019.62.4"""
 
+print(countParagraphs(string))
 english_stopwords = stopwords.words('english')
+print(wordsText('These texts can be longer, however then we must find more information etc. etc', english_stopwords))
 print(wordsSource('These texts can be longer, however then we must find more information etc. etc', set(), english_stopwords))
 # print(countWordsText('These texts can be longer, however then we must find more information etc, etc', english_stopwords))
-# print(getUrlsSources(example))
+print(getUrlsSources(example))
 # print(sourceIntegration("This is some nice text, is this the correct format?",findWords("This is some nice text, is this the correct format?, some more formatting is required as is the followng format.")))
-# print(findWords(scrape_page("https://dictionary.cambridge.org/dictionary/english/multitasking"), set()))
+print(wordsSource(scrape_page("https://dictionary.cambridge.org/dictionary/english/multitasking"), set(), english_stopwords))
 # print(scrape_page("https://www.pewresearch.org/internet/2013/01/28/tracking-for-health/"))
