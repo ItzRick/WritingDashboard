@@ -5,9 +5,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from bs4 import BeautifulSoup
-# from requests_html import HTMLSession
 import requests
-from bs4 import BeautifulSoup
 from flask import current_app
 import os
 from app.feedback.convertPdfToText import getPDFText
@@ -28,15 +26,18 @@ def sourceIntegration(text, references, englishStopwords):
     # No: score 2, 1 per 4 alineas is 1, even less is 0.
     # Yes: sliding scale, 10% of the words of the text are also in the source: 10, 0%: 2.
     
-    
     links, links_doi, numSources, numSourcesUsed = getUrlsSources(references)
     wordsReferences = getWordsSources(links, links_doi, englishStopwords)
+    wordsFromText, numWordsText = wordsText(text, englishStopwords)
 
 
 def getWordsSources(links, links_doi, englishStopwords):
     wordsReferences = set()
     for link in links:
         text = scrapePage(link)
+        wordsReferences = wordsSource(text, wordsReferences, englishStopwords)
+    for link_doi in links_doi:
+        text = textDoi(link_doi)
         wordsReferences = wordsSource(text, wordsReferences, englishStopwords)
     
     return wordsReferences
@@ -73,16 +74,19 @@ def textDoi(doi):
     # basePath = os.path.join(current_app.config['UPLOAD_FOLDER'], userId)
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     basePath = os.path.join(BASEDIR, str(userId))
-    filePath = os.path.join(basePath, 'temp.pdf')
-    if not os.path.isdir(basePath):
-        os.makedirs(basePath)
+    tempPath = os.path.join(basePath, 'temp')
+    filePath = os.path.join(tempPath, 'temp.pdf')
+    if not os.path.isdir(tempPath):
+        os.makedirs(tempPath)
     if downloadDoi(doi, filePath):
         text = getPDFText(filePath)
-    # Delete the file and delete the folder if it is empty:
+    # Delete the file if it exists and delete the folder if it is empty:
     if os.path.exists(filePath):
         os.remove(filePath)
-        if not os.listdir(basePath):
-            os.rmdir(basePath)
+        if not os.listdir(tempPath):
+            os.rmdir(tempPath)
+            if not os.listdir(basePath):
+                os.rmdir(basePath)
     return text
 
 def getUrlsSources(sourceString):
@@ -124,10 +128,11 @@ def getUrlsSources(sourceString):
     return links, links_doi, numSources, numSourcesUsed
 
 def downloadDoi(url, filePath):
+    sci_hub_url = 'https://sci-hub.se/'
     headers = {
         'User-Agent': 'Mozilla/5.0',
     }
-    url = 'https://sci-hub.se/' + url
+    url = sci_hub_url + url
     r = requests.get(url, headers=headers)
     soup = BeautifulSoup(r.content, 'html.parser')
     embed = soup.find(id='pdf')
