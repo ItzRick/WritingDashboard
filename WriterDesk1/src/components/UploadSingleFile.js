@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import BlueButton from "./BlueButton"; 
 
 /**
  * 
@@ -85,15 +85,14 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
         const fileType = file.type
         //file type checkers
         const isPDF = fileType === 'application/pdf';
-        const isWord1 = fileType === ('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-        const isWord2 = fileType === 'application/msword';
+        const isWord = fileType === ('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         const isTXT = fileType === 'text/plain';
         //boolean for correct type and size
         let isCorrectType = true;
         let isCorrectSize = true;
 
         //check file type: pdf, doc, docx, txt
-        if (!(isPDF || isWord1 || isWord2 || isTXT)) {
+        if (!(isPDF || isWord || isTXT)) {
             // incorrect file type
             setDisplayAlertType(true);
             isCorrectType = false;
@@ -162,12 +161,12 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
                     onDragEnter={(event) => event.preventDefault()}
                     onDragOver={(event) => event.preventDefault()}
                     onDrop={onFileDrop}>
-                    <Button variant='contained' sx={{ mr: '8px', bgcolor: 'button.main', color: 'button.text' }} onClick={() => fileInput.current.click()}>Choose a file</Button>
+                    <BlueButton onClick={() => fileInput.current.click()} addStyle={{ mr: '8px'}}>Choose a file</BlueButton>
                     <input
                         ref={fileInput}
                         type="file"
                         style={{ display: 'none' }}
-                        accept="application/pdf, application/msword, 
+                        accept="application/pdf,
                         application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain"
                         onChange={onFileChange}
                     />
@@ -186,10 +185,10 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
                         renderInput={(params) => <TextField {...params} />}
                     />
                 </LocalizationProvider>
-                <TextField label='course' variant='outlined' value={course} onChange={event => setCourse(event.target.value)} />
-                <Button variant='contained' sx={{ bgcolor: 'red', color: 'button.text' }} value={thisIndex} onClick={removeInstance}>Remove</Button>
+                <TextField label='Course ID' variant='outlined' value={course} onChange={event => setCourse(event.target.value)} />
+                <Button variant='contained' sx={{ bgcolor: 'buttonWarning.main', color: 'buttonWarning.text', ml: '5px',}} value={thisIndex} onClick={removeInstance}>Remove</Button>
             </div>
-            {displayAlertType ? <Alert severity="error">Upload a file with a .txt, .pdf, .docx or .doc filetype!</Alert> : null}
+            {displayAlertType ? <Alert severity="error">Upload a file with a .txt, .pdf or .docx filetype!</Alert> : null}
             {displayAlertSize ? <Alert severity="error">The uploaded file was too big, upload a file that is not larger than 10 MB!</Alert> : null}
         </div>
     )

@@ -177,7 +177,7 @@ def testUploadPDFFile(testClient, initDatabase):
             initDatabase: the database instance we test this for.
     '''
     del initDatabase
-    fileName = 'SEP intro.pdf'
+    fileName = 'SEP Intro.pdf'
     userId = 789
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
@@ -219,7 +219,7 @@ def testUploadPDFMultiple(testClient, initDatabase):
     '''
     del initDatabase
     # Upload the first file:
-    fileName1 = 'SEP intro.pdf'
+    fileName1 = 'SEP Intro.pdf'
     userId = 789
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
@@ -245,7 +245,7 @@ def testUploadPDFAgain(testClient, initDatabase):
             initDatabase: the database instance we test this for.
     '''
     # Upload the file the first time:
-    fileName = 'SEP intro.pdf'
+    fileName = 'SEP Intro.pdf'
     userId = 789
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
@@ -326,77 +326,6 @@ def testUploadDOCXFileAgain(testClient, initDatabase):
     date2 = date(2018, 11, 8)
     generalTestStuff(testClient, fileName, userId, courseCode, date2, filetype)
 
-def testUploadDOCFile(testClient, initDatabase):
-    '''
-        Test the file upload with a doc file. 
-        Attributes:
-            fileName: filename of the file for which the upload is tested (in the same location as the conftest.py file).
-            userId: userId of the user for which to test to upload the current file.
-            courseCode: courseCode of the course for which we test to upload the current file.
-            date1: date of the file which we are currently testing to upload.
-        Arguments:
-            testClient:  The test client we test this for.
-            initDatabase: the database instance we test this for.
-    '''
-    del initDatabase
-    fileName = 'test.doc'
-    userId = 12345
-    courseCode = '3ASE0'
-    date1 = date(2009, 12, 27)
-    filetype = '.doc'
-    generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype)
-
-def testUploadDOCFileMultiple(testClient, initDatabase):
-    '''
-        Test the file upload with multiple (2) doc files for one user.
-        Attributes:
-            fileName1: filename of the first file for which the upload is tested (in the same location as the conftest.py file).
-            fileName2: filename of the second file for which the upload is tested (in the same location as the conftest.py file).
-            userId: userId of the user for which to test to upload the current file.
-            courseCode: courseCode of the course for which we test to upload the current file.
-            date1: date of the first file which we are currently testing to upload.
-            date2: date of the second file which we are currently testing to upload.
-        Arguments:
-            testClient:  The test client we test this for.
-            initDatabase: the database instance we test this for.
-    '''
-    del initDatabase
-    # Upload the first file:
-    fileName1 = 'test.doc'
-    userId = 12345
-    courseCode = '3ASE0'
-    date1 = date(2009, 12, 27)
-    filetype = '.doc'
-    generalTestStuff(testClient, fileName1, userId, courseCode, date1, filetype)
-    # Upload the second file:
-    fileName2 = 'test_1.doc'
-    date2 = date(2018, 3, 27)
-    generalTestStuff(testClient, fileName2, userId, courseCode, date1, filetype)
-
-def testUploadDOCFileAgain(testClient, initDatabase):
-    '''
-        Test if we can upload a doc file multiple times and if we then update the date.
-        Attributes:
-            fileName: filename of the file for which the upload and replacing is tested (in the same location as the conftest.py file).
-            userId: userId of the user for which to test to upload the current file.
-            courseCode: courseCode of the course for which we test to upload the current file.
-            date1: date of the file initially, which we are currently testing to upload.
-            date2: date of the file if we upload it again, for which we are currently testing to upload.
-        Arguments:
-            testClient:  The test client we test this for.
-            initDatabase: the database instance we test this for.
-    '''
-    del initDatabase
-    # Upload the document for the first time:
-    fileName = 'test.doc'
-    userId = 12345
-    courseCode = '3ASE0'
-    date1 = date(2009, 12, 27)
-    filetype = '.doc'
-    generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype)
-    # Upload the document for the second time, with an updated date:
-    date2 = date(2018, 3, 27)
-    generalTestStuff(testClient, fileName, userId, courseCode, date2, filetype)
 
 
 

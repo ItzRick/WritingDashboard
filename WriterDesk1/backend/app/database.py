@@ -12,10 +12,12 @@ def initialSetup():
     #don't forget to comment out ... existing files in models.py 
 
 
+# Upload the given file to the database of this session
 def uploadToDatabase(toUpload):
     db.session.add(toUpload)
     db.session.commit()
 
+# Remove the given file from the database of this session
 def removeFromDatabase(document):
     db.session.delete(document)
     db.session.commit()
@@ -39,4 +41,4 @@ def getFilesByUser(user, sortingAttribute):
     elif sortingAttribute == "date.desc":
         files = files.order_by(models.Files.date.desc())
 
-    return models.Files.serializeFiles(files.all())
+    return models.Files.serializeList(files.all())

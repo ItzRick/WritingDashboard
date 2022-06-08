@@ -8,10 +8,6 @@ from magic import from_buffer
 from datetime import date
 from mimetypes import guess_extension
 
-# @bp.before_first_request
-# def create_tables():
-#     bp.create_all()
-
 @bp.route('/upload', methods = ['POST'])
 def fileUpload():
     '''
@@ -52,12 +48,11 @@ def fileUpload():
         fileType = from_buffer(file.read(), mime = True)
         isPdf = (fileType == 'application/pdf')
         isDocx = (fileType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-        isDoc = (fileType == 'application/msword')
         isTxt = (fileType == 'text/plain')
         extension = guess_extension(fileType)
-
+       
         # If the filetype is not accepted, indicate this by returning this in a message and a 400 code:
-        if (not (isPdf or isDoc or isDocx or isTxt)):
+        if (not (isPdf or isDocx or isTxt)):
             return 'Incorrect filetype ' + str(idx + 1), 400
         # Run secure_filename on the file to protect against sql_injections etc and to make sure the filename does not
         # contain any spaces:
@@ -89,6 +84,19 @@ def fileUpload():
 
 @bp.route('/fileretrieve', methods = ['GET'])
 def fileRetrieve():
+    '''
+    This function handles the retrieval of files in a specified order from a 
+    specific user in the form of a json file. 
+    This is done by identifying the user and retrieving the preferred sorting. 
+    Attributes: 
+        userId: user id as given by the frontend
+        sortingAttribute: chosen sorting of files as given by the frontend
+    Arguments:
+        files: the files of the user corresponding to the user id, 
+               which are sorted based on the sortingAttribute
+        file: one of the files of the list files
+    '''
+
     # Retrieve list of files that were uploaded by the current user,
     # ordered by the sorting attribute in the request
     if 'user_id' in session or True:
@@ -99,7 +107,7 @@ def fileRetrieve():
         # Put dates in format
         for file in files:
             file['date'] = file.get('date').strftime('%d/%m/%y')
-
+            
         # Return http response with list as json in response body
         return jsonify(files)
     else:
@@ -107,42 +115,51 @@ def fileRetrieve():
 
 @bp.route('/filedelete', methods = ['DELETE'])
 def fileDelete(): 
-    # print("HEEYY1.1")
-    # Check if there are even files to delete
-    # files = request.files.getlist('files')
-    # if (len(files) == 0):
-    #     return 'No file uploaded', 400
+    '''
+    This function handles the deletion of files using the corresponding file id. 
+    Attributes: 
+        fileID: file id as given by the frontend
+    Arguments: 
+        fileToBeRemoved: file that is to be removed, using the given file id
+        path: path of the file that is to be removed
+        basepath: basepath of the path of the file to be removed
+    '''
     # Get the data as sent by the react frontend:
-    # courseCode = request.form.getlist('courseCode')
-    fileID = request.args.get('id')
-    # date = request.form.getlist('date')
-    fileToBeRemoved = Files.query.filter_by(id=fileID).first()
-    path = fileToBeRemoved.path
-    basepath = os.path.dirname(path)
-    if os.path.isfile(path):
-        os.remove(path)
-        removeFromDatabase(fileToBeRemoved)
-        if not os.listdir(basepath):
-            os.rmdir(basepath)
-    else: 
-        return 'file does not exist', 400
-    # print(os.path.dirname(path))
+    fileIDs = request.form.getlist('id')
+    for fileID in fileIDs:
+        fileToBeRemoved = Files.query.filter_by(id=fileID).first()
+        # Check if the file is nonexistent
+        # And if so, throw an error message 
+        if fileToBeRemoved == None: 
+            return 'file does not exist in database', 404
+        # Retrieve the paths of the file to be removed
+        path = fileToBeRemoved.path
+        basepath = os.path.dirname(path)
+        # If the path exists, remove the file from the database
+        # Else, throw an error message
+        if os.path.isfile(path):
+            os.remove(path)
+            removeFromDatabase(fileToBeRemoved)
+            if not os.listdir(basepath):
+                os.rmdir(basepath)
+        else: 
+            return 'file does not exist', 404
+    # Return a success message when done
     return 'succes', 200
-    # return str(fileID), 200
-
-    # Delete the file specified, which can be either with id or file name
-    # if fileToBeRemoved in session: 
-        # fileToDelete = request.args.get('fileID')
-        # print(hello)
-    # removeFromDatabase(fileToBeRemoved)
-        # return 'success'
-    # else: 
-    #     return 'No file available', 400
 
 @bp.route('/searchId', methods = ['GET'])
 def searchId(): 
+    '''
+    This function handles making a list of the file ids, 
+    such that it can be used later to search for a file. 
+    Attributes: 
+        files: contains all the files on the database at the time of creation
+    Arguments:
+        list: contains the string of each file id with spaces afterwards
+        file: one of the list files
+    '''
     files = Files.query.all()
     list = ""
     for file in files:
-        list += (str(file.id) + '    ')
+        list += (str(file.id) + ' ')
     return list, 200

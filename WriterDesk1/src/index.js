@@ -24,6 +24,7 @@ import Main from './pages/Main.js';
 import Upload from './pages/Upload';
 import Progress from './pages/Progress';
 import Documents from './pages/Documents';
+import Document from './pages/Document';
 // pages for researchers (and admin)
 import Participants from './pages/Participants';
 import FeedbackModels from './pages/FeedbackModels';
@@ -70,7 +71,11 @@ const theme = createTheme({
     button: {
       main: ThemeColors.darkBlue,
       text: ThemeColors.white
-	},
+	  },
+    buttonWarning: {
+      main: ThemeColors.red,
+      text: ThemeColors.white
+    },
     primary: {
       main: ThemeColors.darkBlue,
     },
@@ -106,6 +111,7 @@ root.render(
             <Route name='Upload' path='Upload' element={<Upload />} />
             <Route name='Progress' path='Progress' element={<Progress />} />
             <Route name='Documents' path='Documents' element={<Documents />} />
+            <Route name='Document' path='Document' element={<Document />} />
 
             {/* For researchers and admin users */}
             <Route name='Participants' path='Participants' element={<Participants />} />
