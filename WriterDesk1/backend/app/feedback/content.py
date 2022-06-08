@@ -1,111 +1,184 @@
 import re
-import nltk
+# TODO: move to __init__.py: 
+# import nltk
 # nltk.download('stopwords')
 # nltk.download('punkt')
 # english_stopwords = stopwords.words('english')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-from bs4 import BeautifulSoup
-import requests
 from flask import current_app
 import os
 from app.feedback.convertPdfToText import getPDFText
-
+from app.feedback.pageDownload import scrapePage, downloadDoi
 
 
 def sourceIntegration(text, references, englishStopwords, userId):
-    
+    '''
+        Calculate the score for the source-integration and content, by retrieving the sources, looking 
+        if there are enough sources and looking if words in the text are also used in the sources. 
+        Attributes: 
+            links: Links from the sources which are not papers, so no sources containing doi.org. 
+            links_doi: Links from the sources which are papers, so have links containing doi.org.
+            numSources: Total number of sources in references.
+            numWordsText: Total number of words in the text without stopWords.
+            numSourcesUsed: Number of sources that are used by the application, so of which the words could be retrieved.
+            numParagraphs: The number of paragraphs in the text.
+        Arguments: 
+            text: The text we calculate the source-integration and content for.
+            references: References ofr this text, for which we calculate the source integration and content.
+            englishStopwords: Corpus of all the english stopwords, as taken from the nltk library.
+            userId: userId of the current user, we calculate this score for.
+        Returns:
+            score: Score of the source-integration and content for this text.
+            explanation: explanation of the source-integration and content corresponding to this score.
+    '''
+    # Retrieve the links, links_doi and number of sources from the references string:
     links, links_doi, numSources = getUrlsSources(references)
+    # Retrieve the words in a set that occur in at least one reference and are not in englishStopwords, 
+    # and the number of source which could be looked at:
     wordsReferences, numSourcesUsed = getWordsSources(links, links_doi, englishStopwords, userId)
+    # Get the dictionary of the words, which are not in englishStopwords and the number of words in the text:
     wordsFromText, numWordsText = wordsText(text, englishStopwords)
+    # Count the number of paragraphs in the text:
     numParagraphs = countParagraphs(text)
+    # If the words of at least one source could be retrieved:
     if numSourcesUsed > 0: 
+        # Calculate the score and get the explanation using the calcScoreAndExplanationSourcesDownloaded method:
         score, explanation = calcScoreAndExplanationSourcesDownloaded(wordsReferences, wordsFromText, numWordsText, numSources, numParagraphs)
     else: 
+        # Else, calculate the score and get the explanation using the calcScoreAndExplanationSourcesNotDownloaded method:
         score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
     return score, explanation
 
     
-def calcScoreAndExplanationSourcesDownloaded(wordsReferences, wordsFromText, numWordsText, numSources, numParagraphs):
+def calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsReferences, numWordsText, numSources, numParagraphs):
+    '''
+        Calculate the score and create the explanation if the text from the sources could be downloaded.
+        For the score, if you use 1 source per 3 paragraphs you only get a score of 1, if this is 1 source per 4 paragraphs this is 0.5
+        and if you use 1 source per 5 paragraphs this is a 0. If you use at least 1 source per 3 paragraphs, you need a percentage 
+        of 25% of words in the text also occurring in the sources for a 10, which goes down to the 1 if no words in the text are also 
+        contained in the sources. 
+        Arguments:
+            wordsFromText: Dictionary of words without stopWords occurring in the text.
+            wordsReferences: Set of words without stopwords occurring in the references.
+            numWordsText: Number of words in the text.
+            numSources: Number of sources for this text.
+            numParagraphs: Number of paragraphs in this text.
+        Returns: 
+            score: Score for this number of sources, the number of paragraphs and the percentage of words also occurring in the sources.
+            explanation: General explanation for this score as string.
+    '''
+    # If there are not at least 1 source per 3 paragraphs, set the score according to the number of paragraphs per source:
     if numParagraphs // numSources  > 3:
-        score = 1
+        if numParagraphs // numSources > 5:
+            score = 0
+        elif numParagraphs // numSources  > 4:
+            score = 0.5
+        elif numParagraphs // numSources  > 3:
+            score = 1
+        # Add the explanation and return:
         explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
         f'in {numParagraphs} of text. Try adding more sources.' )
-        return score, explanation
-    elif numParagraphs // numSources  > 5:
-        score = 0
-        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-        f'in {numParagraphs} of text. Try adding more sources.' )
-        return score, explanation
     else:
-        percentageWordsInText = calcPercentageUsed(wordsFromText, wordsReferences, numWordsText)
-        score = max(1 + round(percentageWordsInText*9, 2), 10)
+        # If there is at least one source per 3 paragraphs, calculate the percentage of words from the text also in the references:
+        percentageWordsInText = calcPercentageWordsUsed(wordsFromText, wordsReferences, numWordsText)
+        # Calculate the score, where the score can be at most 10 and a 25% occurrence in the sources is a 10:
+        score = max(1 + round(percentageWordsInText*36, 2), 10)
+        # If you have a 10 indicate that you have a perfect score, otherwise say that you can improve the score:
         if score == 10:
-            explanation = (f'Your score for source integration and content is {score}. You used {numSources} sources ' + 
-            f'in {numParagraphs} of text. You used {percentageWordsInText *100}% of the words used in the sources in your text. ' +  
-            f'This gives a perfect score, you could try adding more words used in the sources in your text.')
+            stringPart = 'This gives a perfect score'
         else:
-            explanation = (f'Your score for source integration and content is {score}. You used {numSources} sources ' + 
-            f'in {numParagraphs} of text. You used {percentageWordsInText *100}% of the words used in the sources in your text. ' +  
-            f'For a higher score, you could try adding more words used in the sources in your text.')
-        return score, explanation
+            stringPart = 'For a higher score'
+        # Add the explanation:
+        explanation = (f'Your score for source integration and content is {score}. You used {numSources} sources ' + 
+        f'in {numParagraphs} of text. You used {percentageWordsInText *100}% of the words used in the sources in your text. ' +  
+        f'{stringPart}, you could try adding more words used in the sources in your text.')
+    return score, explanation
 
 def calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs):
+    '''
+        Calculate the score and create the explanation if no sources could be downloaded. 
+        This score is based on the number of sources per paragraph, where less than 1 source per 5 paragraphs is a 0
+        and 1 score per paragraph is a 10, and everything inbetween. So the score increments by 2 for paragraph 
+        per source that is added. 
+        Arguments: 
+            numSources: Total number of sources in this text.
+            numParagraphs: Total number of paragraphs in this text.
+        Returns: 
+            score: Score for this number of sources and number of paragraphs.
+            explanation: General explanation for this score as string.
+    '''
+    # Calculate the score:
     if numParagraphs // numSources  > 5:
         score = 0
-        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-        f'in {numParagraphs} of text. Try adding more sources.' )
-        return score, explanation
     elif numParagraphs // numSources  > 4:
         score = 2
-        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-        f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
-        f'are actually used in the text.' )
-        return score, explanation
     elif numParagraphs // numSources  > 3:
         score = 4
-        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-        f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
-        f'are actually used in the text.' )
-        return score, explanation
     elif numParagraphs // numSources  > 2:
         score = 6
-        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-        f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
-        f'are actually used in the text.' )
-        return score, explanation
     elif numParagraphs // numSources  > 1:
         score = 8
-        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-        f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
-        f'are actually used in the text.' )
-        return score, explanation
     else:
         score = 10
-        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-        f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
-        f'are actually used in the text.' )
-        return score, explanation 
+    # Create the explanation and return:
+    explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
+    f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+    f'are actually used in the text.' )
+    return score, explanation
 
 
-def calcPercentageUsed(wordsFromText, wordsReferences, numWordsText):
+def calcPercentageWordsUsed(wordsFromText, wordsReferences, numWordsText):
+    '''
+        Calculate the percentage of words from the text also in the references. That is, 
+        calculate which percentage of words in wordsFromText is also in wordsReferences.
+        Attributes:
+            word: Single word from wordsFromText. 
+        Arguments:
+            wordsFromText: All words in the dictionary from the text.
+            wordsReferences: Set with all words from the references. 
+            numWordsText: The amount of words in the original text.
+        Returns:
+            percentage: Percentage of words in wordsFromText also in numWordsText.
+    '''
     percentage = 0
+    # For each word in wordsFromText:
     for word in wordsFromText:
+        # If this word is also in wordsReferences:
         if word in wordsReferences:
+            # Add the amount of time this word occurs divided by the total number of words to the percentage:
             percentage += wordsFromText[word] / numWordsText
     return percentage
 
-
-
 def getWordsSources(links, links_doi, englishStopwords, userId):
+    '''
+        Get the words from the sources as given in links and links_doi by applying the 
+        wordsSource, scrapePage and textDoi methods.
+        Attributes:
+            link: single link from the links list.
+            link_doi: single link from the links_doi list.
+            text: text as retrieved from either a single link or single link_doi.
+        Arguments: 
+            englishStopwords: Corpus of all the english stopwords, as taken from the nltk library.
+        Returns:
+            wordReferences: set of the words without stopwords of all sources in links and links_doi.
+            count: Number of sources actually retrieved the words from.
+    '''
+    # Initialize wordReferences and count:
     wordsReferences = set()
     count = 0
+    # For each link in links:
     for link in links:
+        # Scrape the text of the page from this link:
         text = scrapePage(link)
+        # Add the words from this text if they are not in englishStopwords and not in the set already and increment the count:
         wordsReferences = wordsSource(text, wordsReferences, englishStopwords)
         count += 1
+    # For each link_doi in links_doi:
     for link_doi in links_doi:
+        # Get the text of the pdf from this link via the textDoi method:
         text = textDoi(link_doi, userId)
+        # If there is an actual test returned increment the count and add the words not in the set already and not in englishStopwords:
         if text != '':
             count += 1
             wordsReferences = wordsSource(text, wordsReferences, englishStopwords)
@@ -113,10 +186,28 @@ def getWordsSources(links, links_doi, englishStopwords, userId):
     return wordsReferences, count
 
 def wordsSource(text, wordsWoStopwords, englishStopwords):
+    '''
+        Gets the words without stopwords as in the nltk stopwords english library 
+        from a single source, as given in text and add this to the wordsWoStopwords set.
+        Attributes: 
+            t: Single token inside the for-loop.
+            tokens: Tokens of the words inside the text, that is each word individually. 
+        Arguments:
+            text: Text we want to find the words with occurrences from.
+            englishStopwords: Corpus of all the english stopwords, as taken from the nltk library.
+            wordsWoStopwords: Set with the words without stopwords in the texts that have already been processed.
+        Returns:
+            wordsWoStopwords: Set with the words without stopwords added to the wordsWoStopwords set, if not there yet.
+    '''
+    # Remove punctuation from the text:
     text = re.sub('[,\.!?]', '', text)
+
+    # Retrieve each word separately:
     tokens = word_tokenize(text.lower())
+    # For each word, if it is not in englishStopwords:
     for t in tokens:
         if t not in englishStopwords:
+            # Add this word to the text:
             wordsWoStopwords.add(t)
     return wordsWoStopwords
 
@@ -126,27 +217,35 @@ def wordsText(text, englishStopwords):
         inside a dictionary with the number of occurrences of each words. Counts the total number of words 
         without stopwords in the text. 
         Attributes:
+            t: Single token inside the for-loop.
             tokens: Tokens of the words inside the text, that is each word individually. 
         Arguments:
-            text: Text we want to find the words with occurences from.
+            text: Text we want to find the words with occurrences from.
             englishStopwords: Corpus of all the english stopwords, as taken from the nltk library.
         Returns:
-            wordsWoStopwords: Dictionary with the words without stopwords in the text as key and their occurences as value.
+            wordsWoStopwords: Dictionary with the words without stopwords in the text as key and their occurrences as value.
             count: The number of words without stopwords inside the text.
     '''
+    # Variable for the wordcount:
     count = 0
+    # Dictionary for the words in the text:
     wordsWoStopwords = dict()
+    # Remove punctuation from the text:
     text = re.sub('[,\.!?]', '', text)
     
+    # Retrieve each word separately:
     tokens = word_tokenize(text.lower())
+    # For each word, if it is not in englishStopwords:
     for t in tokens:
         if t not in englishStopwords:
+            # Count this word:
             count += 1
+            # If the word is not in the dictionary yet, set the count to 1, else increment the count by 1:
             if t not in wordsWoStopwords.keys():
                 wordsWoStopwords[t] = 1
             else:
                 wordsWoStopwords[t] += 1
-
+    # Return the words and count:
     return wordsWoStopwords, count
 
 def countParagraphs(text):
@@ -233,57 +332,3 @@ def getUrlsSources(sourceString):
     # Find the number of sources and return everything:
     numSources = len(sources)
     return links, links_doi, numSources
-
-def downloadDoi(url, filePath):
-    sci_hub_url = 'https://sci-hub.se/'
-    headers = {
-        'User-Agent': 'Mozilla/5.0',
-    }
-    url = sci_hub_url + url
-    r = requests.get(url, headers=headers)
-    soup = BeautifulSoup(r.content, 'html.parser')
-    embed = soup.find(id='pdf')
-    if embed:
-        link = embed.get('src')
-        if link:
-            link = 'https:' + link
-            r = requests.get(link, headers=headers)
-            if r.status_code == 200:
-                with open(filePath, 'wb') as fd:
-                    for chunk in r.iter_content(chunk_size=128):
-                        fd.write(chunk)
-                return True
-    return False
-
-def scrapePage(url):
-    headers = {
-        'User-Agent': 'Mozilla/5.0',
-    }
-    r = requests.get(url, headers=headers)
-    soup = BeautifulSoup(r.content, 'html.parser')
-    text = soup.find_all(text=True)
-    output = ''
-    blacklist = [
-        '[document]',
-        'noscript',
-        'style'
-        'header',
-        'html',
-        'meta',
-        'head', 
-        'input',
-        'script',
-        'link',
-        'button',
-        'form',
-        'label',
-        'amp-state', 
-        'footer',
-        # there may be more elements you don't want, such as "style", etc.
-    ]
-
-    for t in text:
-        if t.parent.name not in blacklist:
-            output += '{} '.format(t)
-
-    return output
