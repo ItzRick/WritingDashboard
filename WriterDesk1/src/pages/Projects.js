@@ -31,14 +31,21 @@ const Projects = () => {
     });
 
     // TODO remove toyData here and from tableData
-    const toyData = {
-        id: '1',
+    const toyData = [{
+        id: '0',
         projectName: 'toyProject',
         partCount: '12'
+    },
+    {
+        id: '1',
+        projectName: 'toyProject2',
+        partCount: '120'
     }
 
+    ]
+
     //data displayed in the table
-    const [tableData, setTableData] = useState([toyData])
+    const [tableData, setTableData] = useState(toyData)
     //list of selected items
     const [selectedInstances, setSelectedInstances] = useState([])
 
