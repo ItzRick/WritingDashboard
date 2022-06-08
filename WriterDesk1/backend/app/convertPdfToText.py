@@ -93,7 +93,7 @@ def getPDFText(path, returnReferences=False, includeTables=False, includeCaption
     #Split references
     referenceSplit = regex.split(r"\n\P{L}*((?i)references|(?i)bibliography)[\n\s]", text)
     if len(referenceSplit) > 1:
-        text = referenceSplit[0]
+        text = referenceSplit[0].strip()
         referenceText = referenceSplit[len(referenceSplit)-1]
     if returnReferences:
         return text, referenceText
@@ -217,7 +217,7 @@ def getFrequencyX(doc):
 def postProcessText(text):  
     """
     Filters string on hyphenated words, number references, empty lines, excess spaces and in-text citations
-    using regular expressions.
+    using regular expressions. Replaces new lines with double new lines for consistency with docx and txt files
     Attributes:
         text: String that is filtered
         oneSource: Regex for finding in-text citations with one source
@@ -241,6 +241,8 @@ def postProcessText(text):
     oneSource = r"([^\)]*(\n[^\)]*)?,[\s\n]*)?(\d{4}|n\.d\.)"
     multipleSources = r"(("+ oneSource +r"|\setc\.)(;[\s\n]*)?)+"
     text = regex.sub(r"(?<=[^\.])\s\((" + oneSource + "|" + multipleSources + r")\)", "", text)
+    #Replace new lines with double new lines
+    text = regex.sub(r"\n+", r"\n\n", text).strip()
     return text
 
 def getLineText(line):
