@@ -2,6 +2,7 @@ import re
 import nltk
 # nltk.download('stopwords')
 # nltk.download('punkt')
+# english_stopwords = stopwords.words('english')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from bs4 import BeautifulSoup
@@ -12,72 +13,80 @@ from app.feedback.convertPdfToText import getPDFText
 
 
 
-def sourceIntegration(text, references, englishStopwords):
+def sourceIntegration(text, references, englishStopwords, userId):
     
     links, links_doi, numSources = getUrlsSources(references)
-    wordsReferences, numSourcesUsed = getWordsSources(links, links_doi, englishStopwords)
+    wordsReferences, numSourcesUsed = getWordsSources(links, links_doi, englishStopwords, userId)
     wordsFromText, numWordsText = wordsText(text, englishStopwords)
     numParagraphs = countParagraphs(text)
+    if numSourcesUsed > 0: 
+        score, explanation = calcScoreAndExplanationSourcesDownloaded(wordsReferences, wordsFromText, numWordsText, numSources, numParagraphs)
+    else: 
+        score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    return score, explanation
 
-    if numSourcesUsed > 0:
-        if numParagraphs // numSources  > 3:
-            score = 1
-            explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-            f'in {numParagraphs} of text. Try adding more sources.' )
-            return score, explanation
-        elif numParagraphs // numSources  > 5:
-            score = 0
-            explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-            f'in {numParagraphs} of text. Try adding more sources.' )
-            return score, explanation
-        else:
-            percentageWordsInText = calcPercentageUsed(wordsFromText, wordsReferences, numWordsText)
-            score = max(1 + round(percentageWordsInText*9, 2), 10)
-            if score == 10:
-                explanation = (f'Your score for source integration and content is {score}. You used {numSources} sources ' + 
-                f'in {numParagraphs} of text. You used {percentageWordsInText *100}% of the words used in the sources in your text. ' +  
-                f'This gives a perfect score, you could try adding more words used in the sources in your text.')
-            else:
-                explanation = (f'Your score for source integration and content is {score}. You used {numSources} sources ' + 
-                f'in {numParagraphs} of text. You used {percentageWordsInText *100}% of the words used in the sources in your text. ' +  
-                f'For a higher score, you could try adding more words used in the sources in your text.')
-            return score, explanation
+    
+def calcScoreAndExplanationSourcesDownloaded(wordsReferences, wordsFromText, numWordsText, numSources, numParagraphs):
+    if numParagraphs // numSources  > 3:
+        score = 1
+        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
+        f'in {numParagraphs} of text. Try adding more sources.' )
+        return score, explanation
+    elif numParagraphs // numSources  > 5:
+        score = 0
+        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
+        f'in {numParagraphs} of text. Try adding more sources.' )
+        return score, explanation
     else:
-        if numParagraphs // numSources  > 5:
-            score = 0
-            explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-            f'in {numParagraphs} of text. Try adding more sources.' )
-            return score, explanation
-        elif numParagraphs // numSources  > 4:
-            score = 2
-            explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-            f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
-            f'are actually used in the text.' )
-            return score, explanation
-        elif numParagraphs // numSources  > 3:
-            score = 4
-            explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-            f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
-            f'are actually used in the text.' )
-            return score, explanation
-        elif numParagraphs // numSources  > 2:
-            score = 6
-            explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-            f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
-            f'are actually used in the text.' )
-            return score, explanation
-        elif numParagraphs // numSources  > 1:
-            score = 8
-            explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-            f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
-            f'are actually used in the text.' )
-            return score, explanation
+        percentageWordsInText = calcPercentageUsed(wordsFromText, wordsReferences, numWordsText)
+        score = max(1 + round(percentageWordsInText*9, 2), 10)
+        if score == 10:
+            explanation = (f'Your score for source integration and content is {score}. You used {numSources} sources ' + 
+            f'in {numParagraphs} of text. You used {percentageWordsInText *100}% of the words used in the sources in your text. ' +  
+            f'This gives a perfect score, you could try adding more words used in the sources in your text.')
         else:
-            score = 10
-            explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-            f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
-            f'are actually used in the text.' )
-            return score, explanation 
+            explanation = (f'Your score for source integration and content is {score}. You used {numSources} sources ' + 
+            f'in {numParagraphs} of text. You used {percentageWordsInText *100}% of the words used in the sources in your text. ' +  
+            f'For a higher score, you could try adding more words used in the sources in your text.')
+        return score, explanation
+
+def calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs):
+    if numParagraphs // numSources  > 5:
+        score = 0
+        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
+        f'in {numParagraphs} of text. Try adding more sources.' )
+        return score, explanation
+    elif numParagraphs // numSources  > 4:
+        score = 2
+        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
+        f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+        f'are actually used in the text.' )
+        return score, explanation
+    elif numParagraphs // numSources  > 3:
+        score = 4
+        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
+        f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+        f'are actually used in the text.' )
+        return score, explanation
+    elif numParagraphs // numSources  > 2:
+        score = 6
+        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
+        f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+        f'are actually used in the text.' )
+        return score, explanation
+    elif numParagraphs // numSources  > 1:
+        score = 8
+        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
+        f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+        f'are actually used in the text.' )
+        return score, explanation
+    else:
+        score = 10
+        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
+        f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+        f'are actually used in the text.' )
+        return score, explanation 
+
 
 def calcPercentageUsed(wordsFromText, wordsReferences, numWordsText):
     percentage = 0
@@ -88,7 +97,7 @@ def calcPercentageUsed(wordsFromText, wordsReferences, numWordsText):
 
 
 
-def getWordsSources(links, links_doi, englishStopwords):
+def getWordsSources(links, links_doi, englishStopwords, userId):
     wordsReferences = set()
     count = 0
     for link in links:
@@ -96,10 +105,10 @@ def getWordsSources(links, links_doi, englishStopwords):
         wordsReferences = wordsSource(text, wordsReferences, englishStopwords)
         count += 1
     for link_doi in links_doi:
-        text, hasDownloaded = textDoi(link_doi)
-        if hasDownloaded:
+        text = textDoi(link_doi, userId)
+        if text != '':
             count += 1
-        wordsReferences = wordsSource(text, wordsReferences, englishStopwords)
+            wordsReferences = wordsSource(text, wordsReferences, englishStopwords)
     
     return wordsReferences, count
 
@@ -112,6 +121,19 @@ def wordsSource(text, wordsWoStopwords, englishStopwords):
     return wordsWoStopwords
 
 def wordsText(text, englishStopwords):
+    '''
+        Get the words inside the text (without English stopwords as in the nltk library stopwords corpus)
+        inside a dictionary with the number of occurrences of each words. Counts the total number of words 
+        without stopwords in the text. 
+        Attributes:
+            tokens: Tokens of the words inside the text, that is each word individually. 
+        Arguments:
+            text: Text we want to find the words with occurences from.
+            englishStopwords: Corpus of all the english stopwords, as taken from the nltk library.
+        Returns:
+            wordsWoStopwords: Dictionary with the words without stopwords in the text as key and their occurences as value.
+            count: The number of words without stopwords inside the text.
+    '''
     count = 0
     wordsWoStopwords = dict()
     text = re.sub('[,\.!?]', '', text)
@@ -128,29 +150,52 @@ def wordsText(text, englishStopwords):
     return wordsWoStopwords, count
 
 def countParagraphs(text):
+    '''
+        Function to count the number of paragraphs in the text.
+        Arguments:
+            text: Text to count the number of paragraphs from.
+        Returns:
+            The number of paragraphs in the text, where each paragraph is divided by 
+                2 newline characters.
+    '''
     return text.count('\n\n') + 1
 
-def textDoi(doi):
-    hasDownloadedFile = False
-    userId = 123
+def textDoi(doi, userId):
+    '''
+        Method to extract the text from urls containing doi.org, which are generally papers. 
+        Used the downloadDoi and getPDFText functions.
+        Attributes:
+            basePath: Path consisting of joining the UPLOAD_FOLDER in the flask config and the current userId.
+            tempPath: Path consisting of joining the basePath and 'temp', to create a temp folder.
+            filePath: Path consisting of joining this tempPath and 'temp.pdf' to create a temporary filepath.
+        Arguments:
+            doi: doi link of the document we want to get the text from.
+        Returns:
+            text: Text from the document the link in the doi variable points to, empty string if no document could be found.
+    '''
+    text = ''
+    # Get (and join) the paths:
     basePath = os.path.join(current_app.config['UPLOAD_FOLDER'], userId)
+    # TODO: Remove:
     # BASEDIR = os.path.abspath(os.path.dirname(__file__))
     # basePath = os.path.join(BASEDIR, str(userId))
     tempPath = os.path.join(basePath, 'temp')
     filePath = os.path.join(tempPath, 'temp.pdf')
+    # If this folder does not yet exist, create it:
     if not os.path.isdir(tempPath):
         os.makedirs(tempPath)
+    # Try to download the file via the downloadDoi method, if this is possible extract the text using the getPDFText method. 
     if downloadDoi(doi, filePath):
         text = getPDFText(filePath)
-        hasDownloadedFile = True
-    # Delete the file if it exists and delete the folder if it is empty:
+    # Delete the file if it exists and delete the folder(s), so temp folder and user folder if it is empty:
     if os.path.exists(filePath):
         os.remove(filePath)
         if not os.listdir(tempPath):
             os.rmdir(tempPath)
             if not os.listdir(basePath):
                 os.rmdir(basePath)
-    return text, hasDownloadedFile
+    # Return the text:
+    return text
 
 def getUrlsSources(sourceString):
     '''
