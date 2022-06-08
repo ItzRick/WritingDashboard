@@ -194,6 +194,6 @@ def getFileById():
         "filename": file.filename,
         "filetype": file.fileType,
         "courseCode": file.courseCode,
-        "date": file.date
+        "date": file.date.strftime('%d/%m/%y')
     }
-    return filedict
+    return filedict, 200
