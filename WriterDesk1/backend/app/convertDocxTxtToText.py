@@ -1,7 +1,7 @@
-import fitz
+# import fitz
 import os
 import docx
-import pdfplumber
+# import pdfplumber
 import re
 import bs4 as bs
 import regex
@@ -59,7 +59,7 @@ def getTXTText(path):
         # Invalid file or filename
         print("caught", repr(e), "when calling getTXTText")
     # Remove redundant newlines
-    # fullText = re.sub(r'\n+', '\n\n', fullText).strip()
+    fullText = re.sub(r'\n+', '\n\n', fullText).strip()
     return fullText
 
 def getDOCXText(path):

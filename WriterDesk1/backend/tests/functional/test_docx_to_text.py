@@ -12,10 +12,10 @@ def testGetDocxHeading(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
-    os.chdir(dir_path)  # Set directory path
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'headingTest.docx')
 
-    text = getDOCXText('headingTest.docx')
+    text = getDOCXText(fileDir)
     assert text == 'This is some text.\n\nMore text.'
 
 
@@ -29,10 +29,10 @@ def testGetDocxReferences(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
-    os.chdir(dir_path)  # Set directory path
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'referencesTest.docx')
 
-    text = getDOCXText('referencesTest.docx')
+    text = getDOCXText(fileDir)
     assert text == 'Text.\n\nMore text.\n\nNew text.'
 
 
@@ -46,10 +46,10 @@ def testGetDocxImages(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
-    os.chdir(dir_path)  # Set directory path
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'imagesTest.docx')
 
-    text = getDOCXText('imagesTest.docx')
+    text = getDOCXText(fileDir)
     assert text == 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa.'
 
 
@@ -63,10 +63,10 @@ def testGetDocxTextboxes(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
-    os.chdir(dir_path)  # Set directory path
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'textboxTest.docx')
 
-    text = getDOCXText('textboxTest.docx')
+    text = getDOCXText(fileDir)
     assert text == 'This is text outside a textbox.'
 
 
@@ -80,10 +80,10 @@ def testGetDocxEmptyFile(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
-    os.chdir(dir_path)  # Set directory path
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'emptyFile.docx')
 
-    text = getDOCXText('emptyFile.docx')
+    text = getDOCXText(fileDir)
     assert text == ''
 
 
@@ -97,10 +97,10 @@ def testGetDocxCorruptedFile(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
-    os.chdir(dir_path)  # Set directory path
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'corruptedFile.docx')
 
-    text = getDOCXText('corruptedFile.docx')
+    text = getDOCXText(fileDir)
     assert text == ''
 
 
@@ -114,10 +114,10 @@ def testGetDocxInvalidFile(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
-    os.chdir(dir_path)  # Set directory path
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'invalidFileName.docx')
 
-    text = getDOCXText('invalidFileName.docx')
+    text = getDOCXText(fileDir)
     assert text == ''
 
 
@@ -131,8 +131,8 @@ def testGetDocxInvalidExtension(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
-    os.chdir(dir_path)  # Set directory path
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'invalidFileExtension.pdf')
 
-    text = getDOCXText('invalidFileExtension.pdf')
+    text = getDOCXText(fileDir)
     assert text == ''

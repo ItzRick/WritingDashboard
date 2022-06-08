@@ -14,11 +14,11 @@ def testGetTxtFile(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'normalFile.txt')
 
-    actualOutput = getTXTText('normalFile.txt')
-    expectedOutput = "This is the first sentence. The second sentence are as follows. I don't understand this document.\nThis is another paragraph. Why is this the case?\nHelp. Help. Help."
+    actualOutput = getTXTText(fileDir)
+    expectedOutput = "This is the first sentence. The second sentence are as follows. I don't understand this document.\n\nThis is another paragraph. Why is this the case?\n\nHelp. Help. Help."
     assert actualOutput == expectedOutput
 
 def testGetDocxEmptyFile(testClient):
@@ -31,10 +31,10 @@ def testGetDocxEmptyFile(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'emptyFile.txt')
 
-    text = getTXTText('emptyFile.txt')
+    text = getTXTText(fileDir)
     assert text == ''
 
 
@@ -48,10 +48,10 @@ def testGetDocxCorruptedFile(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'corruptedFile.txt')
 
-    text = getTXTText('corruptedFile.txt')
+    text = getTXTText(fileDir)
     assert text == ''
 
 
@@ -65,10 +65,10 @@ def testGetDocxInvalidFile(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'invalidFileName.txt')
 
-    text = getTXTText('invalidFileName.txt')
+    text = getTXTText(fileDir)
     assert text == ''
 
 
@@ -82,8 +82,8 @@ def testGetDocxInvalidExtension(testClient):
             testClient:  The test client we test this for.
     """
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'invalidFileExtension.doc')
 
-    text = getTXTText('invalidFileExtension.doc')
+    text = getTXTText(fileDir)
     assert text == ''
