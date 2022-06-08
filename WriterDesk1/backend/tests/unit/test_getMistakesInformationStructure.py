@@ -3,6 +3,10 @@ import fitz
 import os
 
 def testOnePageZeroMistakes():
+    '''
+        Tests if a document that contains no mistakes returns no information
+        regarding the mistakes.
+    '''
     mistakes = {
 
     }
@@ -12,6 +16,11 @@ def testOnePageZeroMistakes():
     assert output == []
 
 def testOnePageOneMistakeOneLine():
+    '''
+        Tests if a document containing one mistake covering one line in the
+        document returns a list containing one element that provides information
+        about that mistake.
+    '''
     mistakes = {
         'Short 1' : 'This paragraph is too short, try to make paragraphs with more words.'
     }
@@ -27,6 +36,11 @@ def testOnePageOneMistakeOneLine():
     assert output[0][6] == 'Short 1'
 
 def testOnePageOneMistakeTwoLines():
+    '''
+        Tests if a document containing one mistake covering two lines in the
+        document returns a list containing two elements. These two elements 
+        provide, among other information, the coordinates of each of the lines.
+    '''
     mistakes = {
         'Short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines.' : 'This paragraph is too short, try to make paragraphs with more words.'
     }
@@ -46,6 +60,11 @@ def testOnePageOneMistakeTwoLines():
     assert output[1][6] == 'Short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines.'
 
 def testOnePageTwoMistakesOneLine():
+    '''
+        Tests if a document containing two mistakes that cover the same line
+        returns a list containing two elements. Those elements contain, among
+        other information, the coordinates of the text on that single line.
+    '''
     mistakes = {
         'Short 1' : 'This paragraph is too short, try to make paragraphs with more words.',
         'Short 2' : 'This paragraph is too short, try to make paragraphs with more words.'
@@ -66,6 +85,11 @@ def testOnePageTwoMistakesOneLine():
     assert output[1][6] == 'Short 2'
 
 def testOnePageTwoMistakesTwoLines():
+    '''
+        Tests if a document containing two mistakes that cover two lines
+        returns a list containing two elements. Those elements contain, among
+        other information, the coordinates of the text on each of those lines.
+    '''
     mistakes = {
         'Short 1' : 'This paragraph is too short, try to make paragraphs with more words.',
         'Short 2' : 'This paragraph is too short, try to make paragraphs with more words.'
@@ -86,6 +110,12 @@ def testOnePageTwoMistakesTwoLines():
     assert output[1][6] == 'Short 2'
 
 def testTwoPagesOneMistakeOneLine():
+    '''
+        Tests if a document with one mistake that covers one line on the second
+        page of the document returns a list with one element. That element is a
+        list that contains, among other information, the coordinates of the text
+        calculated from the height from the first page in the document.
+    '''
     mistakes = {
         'Short 1' : 'This paragraph is too short, try to make paragraphs with more words.'
     }
@@ -101,6 +131,13 @@ def testTwoPagesOneMistakeOneLine():
     assert output[0][6] == 'Short 1'
 
 def testTwoPagesOneMistakeTwoLines():
+    '''
+        Tests if a document with one mistake that covers two lines on the second
+        page of the document returns a list with two elements. Those elements
+        are lists that contain, among other information, the coordinates of the 
+        mistake text calculated from the height from the first page in the 
+        document.
+    '''
     mistakes = {
         'Short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines.' : 'This paragraph is too short, try to make paragraphs with more words.'
     }
@@ -120,6 +157,13 @@ def testTwoPagesOneMistakeTwoLines():
     assert output[1][6] == 'Short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines, short on 2 lines.'
 
 def testTwoPagesTwoMistakesOneLine():
+    '''
+        Tests if a document containing two mistakes that cover the same line on 
+        the second page of the document returns a list containing two elements. 
+        Those elements contain, among other information, the coordinates of the 
+        text on that single line calculated from the height from the first page 
+        in the document.
+    '''
     mistakes = {
         'Short 1' : 'This paragraph is too short, try to make paragraphs with more words.',
         'Short 2' : 'This paragraph is too short, try to make paragraphs with more words.'
@@ -140,6 +184,13 @@ def testTwoPagesTwoMistakesOneLine():
     assert output[1][6] == 'Short 2'
 
 def testTwoPagesTwoMistakesTwoLines():
+    '''
+        Tests if a document containing two mistakes that cover two lines on the
+        second page of the document returns a list containing two elements. 
+        Those elements contain, among other information, the coordinates of the
+        text on each of those lines calculated from the height from the first 
+        page in the document.
+    '''
     mistakes = {
         'Short 1' : 'This paragraph is too short, try to make paragraphs with more words.',
         'Short 2' : 'This paragraph is too short, try to make paragraphs with more words.'
