@@ -10,6 +10,8 @@ def testGetTxtFile(testClient):
             dir_path: Path of the location where the file is stored.
             actualOutput: String that contains the output of the getTXTText function.
             expectedOutput: String that is to be compared to the actual output
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -25,6 +27,8 @@ def testGetDocxEmptyFile(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getTXTText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -40,6 +44,8 @@ def testGetDocxCorruptedFile(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getTXTText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -55,6 +61,8 @@ def testGetDocxInvalidFile(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getTXTText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -70,6 +78,8 @@ def testGetDocxInvalidExtension(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getTXTText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))

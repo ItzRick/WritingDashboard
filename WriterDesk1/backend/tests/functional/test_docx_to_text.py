@@ -8,6 +8,8 @@ def testGetDocxHeading(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
@@ -23,6 +25,8 @@ def testGetDocxReferences(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
@@ -38,6 +42,8 @@ def testGetDocxImages(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
@@ -53,6 +59,8 @@ def testGetDocxTextboxes(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
@@ -68,6 +76,8 @@ def testGetDocxEmptyFile(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
@@ -83,6 +93,8 @@ def testGetDocxCorruptedFile(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
@@ -98,6 +110,8 @@ def testGetDocxInvalidFile(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
@@ -113,6 +127,8 @@ def testGetDocxInvalidExtension(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
+        Arguments:
+            testClient:  The test client we test this for.
     """
     del testClient
     dir_path = os.path.dirname(os.path.realpath(__file__))  # Get directory path
