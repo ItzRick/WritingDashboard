@@ -14,11 +14,11 @@ from app.convertDocxTxtToText import getTXTText, getDOCXText
 # Usage: call extract_string_from_file(path) or convert_file_to_txt(pathIn, pathOut) in a try/catch to catch type/value errors
 # All paths should be absolute paths
 
-# Retrieves text from a pdf file at path, returns a string with the text
-# If returnReferences is True, also returns a string with the references
+
 def getPDFText(path, returnReferences=False, includeTables=False, includeCaptions=False, includeLists=True):
     """
-    Retrieves text from a pdf file at path and returns a string with the text
+    Retrieves text from a pdf file at path and returns a string with the text.
+    If returnReferences is True, also returns a string with the references.
     Attributes:
         returnReferences: Whether a string with the references should be returned
         includeTables: Whether text from tables should be included in the returned string
@@ -100,8 +100,6 @@ def getPDFText(path, returnReferences=False, includeTables=False, includeCaption
     return text
 
 
-# Extracts text from pdf, docx and txt files. Returns text as string
-# If file at path has a different extension, a type error is thrown
 def extractStringFromFile(path):
     """
     Retrieves text from a pdf, docx or txt file at path and returns a string with the text.
