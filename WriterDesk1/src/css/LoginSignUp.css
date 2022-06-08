@@ -1,0 +1,27 @@
+h2 {
+    text-align: center;
+    color: #44749D;
+}
+
+h5 {
+    text-align: center;
+}
+
+.filler {
+    width: 10vw;
+    display: inline-block;
+}
+
+.logo {
+    margin: 0px 10px 0px 10px;
+}
+
+.titleChild {
+    display: inline-table;
+}
+
+.textbox {
+    width: 70vw;
+    display: inline-block;
+    font-size: 14px;
+}

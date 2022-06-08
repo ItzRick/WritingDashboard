@@ -9,3 +9,6 @@ class Config(object):
     if not os.path.isdir(os.path.join(basedir, "saved_documents")):
         os.mkdir(os.path.join(basedir, "saved_documents"))
     UPLOAD_FOLDER = os.path.join(basedir, "saved_documents")
+
+    #authentication
+    JWT_SECRET_KEY = "super-secret"  # TODO CHANGE SECRET KEY

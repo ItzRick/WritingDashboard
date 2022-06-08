@@ -1,7 +1,7 @@
 from config import Config
 import pytest
 from app import create_app, db
-from app.models import Files
+from app.models import Files, User
 import os
 from datetime import datetime
 import shutil
@@ -31,8 +31,19 @@ def newFile():
             courseCode: 2ILH0
     '''
     file = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/URD_Group3_vers03_Rc.pdf', filename='URD_Group3_vers03_Rc.pdf', 
-    date=datetime(2018, 5, 20), userId = 256, courseCode = '2ILH0')
+    date=datetime(2018, 5, 20), userId = 256, courseCode = '2ILH0', fileType=".pdf")
     return file
+
+@pytest.fixture(scope='module')
+def newUser():
+    '''
+        This is an example user.
+        The user attributes:
+            username: m.l.langedijk@student.tue.nl
+            password (unhashed, will be hashed when ininitailized): wachtwoord
+    '''
+    user = User('m.l.langedijk@student.tue.nl', 'wachtwoord')
+    return user
 
 
 @pytest.fixture(scope='module')
@@ -53,8 +64,6 @@ def testClient():
         # Establish an application context
         with app.app_context():
             yield testing_client  # this is where the testing happens!
-
-
 
 @pytest.fixture(scope='function')
 def initDatabase(testClient):
@@ -80,11 +89,17 @@ def initDatabase(testClient):
 
     # Add the 2 files:
     file1 = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/URD_Group3_vers03_Rc.pdf', 
-    filename='URD_Group3_vers03_Rc.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0')
+    filename='URD_Group3_vers03_Rc.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0', fileType = '.pdf')
     file2 = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/SEP.pdf', 
-    filename='SEP.pdf', date=datetime(2020, 10, 2), userId = 567, courseCode = '3NAB0')
+    filename='SEP.pdf', date=datetime(2020, 10, 2), userId = 567, courseCode = '3NAB0', fileType = '.pdf')
     db.session.add(file1)
     db.session.add(file2)
+
+    user1 = User("Pietje", "Bell")
+    user2 = User("Donald", "Duck")
+    db.session.add(user1)
+    db.session.add(user2)
+
     db.session.commit()
 
     yield   # This is where the testing happens!
@@ -93,4 +108,18 @@ def initDatabase(testClient):
     db.session.commit()
     db.drop_all()
 
+@pytest.fixture(scope='function')
+def initDatabaseEmpty(testClient):
+    '''
+        Creates a database, with tables such as defined in the models of the application. Doesn't add any files to the database.
+        Afterward the test case, the database is empties again, so no entries can influence a next test run. This is run each time
+        a test case is run, so that one test case does not influence the database of another test case. 
+    '''
+    # Create the database:
+    db.create_all()
 
+    yield   # This is where the testing happens!
+    
+    # Empties the database after the application has finished testing:
+    db.session.commit()
+    db.drop_all()

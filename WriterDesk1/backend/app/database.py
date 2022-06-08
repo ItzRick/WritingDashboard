@@ -1,15 +1,14 @@
 from app import db
 from app import models
 
+# Upload the given file to the database of this session
 def uploadToDatabase(toUpload):
-    # db.session.commit()
-    # db.drop_all()
-    # db.create_all()
     db.session.add(toUpload)
     db.session.commit()
 
-def removeFromDatabase(toRemove):
-    db.session.delete(toRemove)
+# Remove the given file from the database of this session
+def removeFromDatabase(document):
+    db.session.delete(document)
     db.session.commit()
 
 # Retrieves all files of user,

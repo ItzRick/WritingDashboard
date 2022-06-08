@@ -1,5 +1,15 @@
-from app.models import Files
+from app.models import Files, User
 from datetime import datetime
+
+def testNewUser(newUser):
+    '''
+        Test if new user is correct and if password is hashed
+        Arguments:
+            newUser: the user of which the parameters should be checked 
+    '''
+    assert newUser.type == "user"
+    assert newUser.username == "m.l.langedijk@student.tue.nl"
+    assert newUser.passwordHash != "wachtwoord"
 
 def testNewFile(newFile):
     '''
@@ -12,6 +22,7 @@ def testNewFile(newFile):
     assert newFile.date == datetime(2018, 5, 20)
     assert newFile.userId == 256
     assert newFile.courseCode == "2ILH0"
+    assert newFile.fileType == '.pdf'
 
 def testFileId(newFile):
     '''

@@ -2,7 +2,8 @@ from distutils.command.upload import upload
 from app.models import Files
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from app import db
-from datetime import datetime
+from datetime import datetime, date
+# import os
 
 def testValidFile(testClient, initDatabase):
     '''
@@ -26,6 +27,7 @@ def testValidFile(testClient, initDatabase):
     assert file.date == datetime(2019, 2, 12)
     assert file.userId == 123
     assert file.courseCode == "2IPE0"
+    assert file.fileType == '.pdf'
     # Test if all attributes for the file are still currently there: 
     file = files[1]
     assert file.filename=='SEP.pdf'
@@ -33,6 +35,7 @@ def testValidFile(testClient, initDatabase):
     assert file.date == datetime(2020, 10, 2)
     assert file.userId == 567
     assert file.courseCode == "3NAB0"
+    assert file.fileType == '.pdf'
 
 def testUploadToDatabase(testClient, initDatabase):
     '''
@@ -48,7 +51,7 @@ def testUploadToDatabase(testClient, initDatabase):
     del testClient, initDatabase
     # Create a file instance of Files:
     file = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/ScrumAndXpFromTheTrenchesonline07-31.pdf', 
-    filename='ScrumAndXpFromTheTrenchesonline07-31.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0')
+    filename='ScrumAndXpFromTheTrenchesonline07-31.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0', fileType = '.pdf')
     # Call the uploadToDatabase function:
     uploadToDatabase(file)
     # Retrieve this file with query.filter_by and check if all attributes are retrieved correctly:
@@ -58,6 +61,7 @@ def testUploadToDatabase(testClient, initDatabase):
     assert file1.date == datetime(2019, 2, 12)
     assert file1.userId == 123
     assert file1.courseCode == "2IPE0"
+    assert file1.fileType == '.pdf'
     # Check if we can also retrieve this with query.all() and can then retrieve it with the second element, 
     # check if all attributes are retrieved correctly:
     file2 = Files.query.all()[2]
@@ -66,18 +70,38 @@ def testUploadToDatabase(testClient, initDatabase):
     assert file2.date == datetime(2019, 2, 12)
     assert file2.userId == 123
     assert file2.courseCode == "2IPE0"
+    assert file2.fileType == '.pdf'
     
 def testGetFilesByUser(testClient, initDatabase):
-    db.session.commit()
-    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
-    db.session.add(file)
-    file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 2, 12), userId = 201, courseCode = '2IPE0')
-    db.session.add(file2)
-    file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
-    db.session.add(file3)
-    db.session.commit()
-    
+    '''
+        Test if we get the correct display if we run getFilesByUser(200, 'date.asc'), so the representation of '<File <filename>>'. 
+        Attributes: 
+            file, file2, file3: File to be added to the database.
+        Arguments:
+            testClient:  The test client we test this for.
+    '''
+    # This test case also includes testing getting files sorted by date ascending
+    del testClient, initDatabase
+    # We add three files to the database session
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
+    try: 
+        file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', date=datetime(2019, 2, 12), userId = 200, courseCode = '2IPE0')
+        db.session.add(file)
+        file2 = Files(path='C:/normal/path/File-2.pdf', filename='File-2.pdf', date=datetime(2019, 2, 12), userId = 201, courseCode = '2IPE0')
+        db.session.add(file2)
+        file3 = Files(path='C:/normal/path/File-3.pdf', filename='File-3.pdf', date=datetime(1999, 2, 12), userId = 200, courseCode = '2IPE0')
+        db.session.add(file3)
+        db.session.commit()
+    except: 
+        db.session.rollback()
+    # We retrieve the files of the user with date ascending
     files = getFilesByUser(200, 'date.asc')
+    # Check if the number of files is 2,
+    # that the first file is the oldest file 
+    # and that the userId for that file is correct.
     assert len(files) == 2
     assert files[0].get('filename') == 'File-3.pdf'
     assert files[0].get('userId') == 200
@@ -104,32 +128,3 @@ def testFiles(testClient, initDatabase):
     files = Files.query.all()
     assert str(files[0]) == '<File URD_Group3_vers03_Rc.pdf>'
     assert str(files[1]) == '<File SEP.pdf>'
-
-def testRemoveFromDatabase(testClient, initDatabase):
-    '''
-        Test if we can remove a file from the database using the removeFromDatabase method. We first add a file to the database and then delete it. 
-        After we have removed this file, we check that we can indeed not query on this file. 
-        Attributes:
-            file: File we create to add and remove in the database.
-        Arguments:
-            testClient:  The test client we test this for.
-            initDatabase: the database instance we test this for. 
-    '''
-    del testClient, initDatabase
-    # Create the file instance to be added:
-    file = Files(path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/ScrumAndXpFromTheTrenchesonline07-31.pdf', 
-    filename='ScrumAndXpFromTheTrenchesonline07-31.pdf', date=datetime(2019, 2, 12), userId = 123, courseCode = '2IPE0')
-    # Add the file to the database:
-    db.session.add(file)
-    db.session.commit()
-    # See if we can retrieve this file instance with the correct attributes:
-    file = Files.query.filter_by(filename='ScrumAndXpFromTheTrenchesonline07-31.pdf').first()
-    assert file.filename =='ScrumAndXpFromTheTrenchesonline07-31.pdf'
-    assert file.path =='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/ScrumAndXpFromTheTrenchesonline07-31.pdf'
-    assert file.date == datetime(2019, 2, 12)
-    assert file.userId == 123
-    assert file.courseCode == "2IPE0"
-    # Remove this file instance from the database:
-    removeFromDatabase(file)
-    # Check if we can indeed not retrieve this file anymore:
-    assert Files.query.filter_by(filename='ScrumAndXpFromTheTrenchesonline07-31.pdf').first() == None

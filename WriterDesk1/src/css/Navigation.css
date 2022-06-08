@@ -1,0 +1,30 @@
+.sidebar {
+  width: 250px;
+  min-width: 250px;
+  padding: 20px 20px;
+  margin: 20px auto 0 auto;
+  box-shadow: 0 0 6px hsl(210 14% 90%);
+}
+
+.navlink {
+  display: flex;
+  align-items: cover;
+  cursor: pointer;
+  border-radius: 30px;
+}
+
+.navlink:hover {
+  background-color: #e8f5fe;
+  color: #50b7f5;
+  transition: color 100ms ease-out;
+}
+
+.navlink>h2 {
+  font-weight: 700;
+  font-size: 20px;
+  margin-right: 20px;
+}
+
+.navlink>.MuiSvgIcon-root {
+  padding: 20px;
+}
