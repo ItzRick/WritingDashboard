@@ -9,8 +9,8 @@ from bs4 import BeautifulSoup
 import requests
 from bs4 import BeautifulSoup
 from flask import current_app
-from scidownl import scihub_download
 import os
+from app.feedback.convertPdfToText import getPDFText
 
 
 
@@ -68,19 +68,22 @@ def wordsText(text, englishStopwords):
 def countParagraphs(text):
     return text.count('\n\n') + 1
 
-def downloadPapers(doi):
+def textDoi(doi):
     userId = 123
-    basePath = os.path.join(current_app.config['UPLOAD_FOLDER'], userId)
+    # basePath = os.path.join(current_app.config['UPLOAD_FOLDER'], userId)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    basePath = os.path.join(BASEDIR, str(userId))
     filePath = os.path.join(basePath, 'temp.pdf')
-    if not os.isdir(basePath):
+    if not os.path.isdir(basePath):
         os.makedirs(basePath)
-    scihub_download(doi, paper_type='doi', out=filePath)
-    # TODO: Requires pdf file retrieval. 
+    if downloadDoi(doi, filePath):
+        text = getPDFText(filePath)
     # Delete the file and delete the folder if it is empty:
     if os.path.exists(filePath):
         os.remove(filePath)
         if not os.listdir(basePath):
             os.rmdir(basePath)
+    return text
 
 def getUrlsSources(sourceString):
     '''
@@ -120,6 +123,25 @@ def getUrlsSources(sourceString):
     numSourcesUsed = len(links) + len(links_doi)
     return links, links_doi, numSources, numSourcesUsed
 
+def downloadDoi(url, filePath):
+    headers = {
+        'User-Agent': 'Mozilla/5.0',
+    }
+    url = 'https://sci-hub.se/' + url
+    r = requests.get(url, headers=headers)
+    soup = BeautifulSoup(r.content, 'html.parser')
+    embed = soup.find(id='pdf')
+    if embed:
+        link = embed.get('src')
+        if link:
+            link = 'https:' + link
+            r = requests.get(link, headers=headers)
+            if r.status_code == 200:
+                with open(filePath, 'wb') as fd:
+                    for chunk in r.iter_content(chunk_size=128):
+                        fd.write(chunk)
+                return True
+    return False
 
 def scrapePage(url):
     headers = {
@@ -188,14 +210,16 @@ Reitberger, W., Spreicer, W., & Fitzpatrick, G. (2014). Nutriflect: Reflecting c
 Rooksby, J., Rost, M., Morrison, A., & Chalmers, M. (2014). Personal Tracking as Lived Informatics. 1163–1172. \n
 Wise, A. F., & Jung, Y. (2019). Teaching with analytics: Towards a situated model of instructional decision-making. Journal of Learning Analytics, 6(2), 53–69. https://doi.org/10.18608/jla.2019.62.4"""
 
-print(countParagraphs(string))
-english_stopwords = stopwords.words('english')
-print(wordsText('These texts can be longer, however then we must find more information etc. etc', english_stopwords))
-print(wordsSource('These texts can be longer, however then we must find more information etc. etc', set(), english_stopwords))
+# print(countParagraphs(string))
+# english_stopwords = stopwords.words('english')
+# print(wordsText('These texts can be longer, however then we must find more information etc. etc', english_stopwords))
+# print(wordsSource('These texts can be longer, however then we must find more information etc. etc', set(), english_stopwords))
 # print(countWordsText('These texts can be longer, however then we must find more information etc, etc', english_stopwords))
-print(getUrlsSources(example))
+# print(getUrlsSources(example))
 # print(sourceIntegration("This is some nice text, is this the correct format?",findWords("This is some nice text, is this the correct format?, some more formatting is required as is the followng format.")))
 # print(wordsSource(scrape_page("https://dictionary.cambridge.org/dictionary/english/multitasking"), set(), english_stopwords))
 # print(scrape_page("https://www.pewresearch.org/internet/2013/01/28/tracking-for-health/"))
 
-sourceIntegration(string, example, english_stopwords)
+# sourceIntegration(string, example, english_stopwords)
+# print(textDoi('https://doi.org/10.1145/3214273'))
+# print(downloadDoi('https://doi.org/10.1145/3214273', 'C:\\Users\\20192435\\Downloads\\SEP2021\\WriterDesk1\\backend\\app\\feedback\\123\\temp.pdf'))
