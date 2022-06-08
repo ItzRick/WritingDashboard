@@ -126,5 +126,5 @@ def testFiles(testClient, initDatabase):
     '''
     del testClient, initDatabase
     files = Files.query.all()
-    assert str(files[0]) == '<File URD_Group3_vers03_Rc.pdf>'
-    assert str(files[1]) == '<File SEP.pdf>'
+    assert str(files[0]) == '<Files URD_Group3_vers03_Rc.pdf>'
+    assert str(files[1]) == '<Files SEP.pdf>'

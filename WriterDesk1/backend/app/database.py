@@ -6,7 +6,7 @@ def initialSetup():
     db.drop_all()
     db.create_all()
     # create initial user
-    u = models.User(id='123', username='john', email='john@example.com')
+    u = models.User(id=123, username='john', password_plaintext='password',)
     uploadToDatabase(u)
 
     #don't forget to comment out ... existing files in models.py 

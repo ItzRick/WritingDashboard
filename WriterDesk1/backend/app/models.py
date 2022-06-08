@@ -7,27 +7,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy.inspection import inspect
 
-# Class to turn database models into dictionaries,
-# which are able to be turned into json
-class Serializer(object):
-    def serialize(self):
-        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
-
-    def serializeFile(self):
-        dict = {}
-        for c in inspect(self).attrs.keys():
-            if not c == 'scores' and not c == 'explanations' and not c == 'owner':
-                dict[c] =  getattr(self, c)
-        return dict
-
-    @staticmethod
-    def serializeList(l):
-        return [m.serialize() for m in l]
-
-    @staticmethod
-    def serializeFiles(l):
-        return [m.serializeFile() for m in l]
-        
 class User(db.Model):
     '''
         Declare user model containing usernames and passwords (hashed), we use single table inheritance for different types of users.
@@ -49,9 +28,16 @@ class User(db.Model):
         self.username = username
         self.set_password(password_plaintext)
 
+    def serializeUser(self):
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            if not c == 'file':
+                dict[c] =  getattr(self, c)
+        return dict
+
     @staticmethod
     def serializeList(l):
-        return [m.serialize() for m in l]
+        return [m.serializeUser() for m in l]
     
     # relationships
     file = db.relationship('Files', backref='owner', lazy='dynamic', cascade='all,delete')
@@ -69,7 +55,6 @@ class User(db.Model):
         'polymorphic_on': type,
         'polymorphic_identity':"user",
     }
-
 
 class Student(User):
     '''
@@ -92,7 +77,7 @@ class Participant(User):
         'polymorphic_identity': "participant",
     }
 
-class Files(db.Model, Serializer):
+class Files(db.Model):
     '''
         Class to enter files in the database. 
         Attributes:
@@ -111,7 +96,16 @@ class Files(db.Model, Serializer):
     courseCode = db.Column(db.String(16), unique=False, default=NULL)
     date       = db.Column(db.DateTime, unique=False, default=datetime.today())
 
-    serialize_only = ('id', 'userId', 'path', 'fileName', 'fileType', 'çourseCode', 'date')
+    def serializeFile(self):
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            if not c == 'scores' and not c == 'explanations' and not c == 'owner':
+                dict[c] =  getattr(self, c)
+        return dict
+
+    @staticmethod
+    def serializeList(l):
+        return [m.serializeFile() for m in l]
 
     # relationships
     scores       = db.relationship('Scores', backref='scoredFile', lazy='dynamic', cascade='all,delete')

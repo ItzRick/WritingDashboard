@@ -1,7 +1,8 @@
-from WriterDesk1.backend.languageAndStyle import feedbackLanguageStyle
+from app.languageAndStyle import feedbackLanguageStyle
 
 
-def testFeedbackLanguageAn():
+def testFeedbackLanguageAn(testClient):
+    del testClient
     mistakes, score = feedbackLanguageStyle("This is an sentence with a mistake.")
     assert 0 <= score <= 10
     assert mistakes[0][0] == "an"
@@ -9,13 +10,15 @@ def testFeedbackLanguageAn():
     assert len(mistakes) == 1
 
 
-def testFeedbackLanguageEmpty():
+def testFeedbackLanguageEmpty(testClient):
+    del testClient
     mistakes, score = feedbackLanguageStyle('')
     assert score == 0
     assert len(mistakes) == 0
 
 
-def testFeedbackLanguageMultipleSentences():
+def testFeedbackLanguageMultipleSentences(testClient):
+    del testClient
     mistakes, score = feedbackLanguageStyle("Hello, My name is Susan. I'm forteen and I life in germany.")
     assert 0 <= score <= 10
 
@@ -34,7 +37,8 @@ def testFeedbackLanguageMultipleSentences():
     assert len(mistakes) == 3
 
 
-def testFeedbackLanguageMissingLetter():
+def testFeedbackLanguageMissingLetter(testClient):
+    del testClient
     mistakes, score = feedbackLanguageStyle("The computr was hot and overheated.")
     assert 0 <= score <= 10
 
@@ -45,7 +49,8 @@ def testFeedbackLanguageMissingLetter():
     assert len(mistakes) == 1
 
 
-def testFeedbackLanguagePerfectSentence():
+def testFeedbackLanguagePerfectSentence(testClient):
+    del testClient
     mistakes, score = feedbackLanguageStyle("Are you opening the door?")
     assert score == 10
 
