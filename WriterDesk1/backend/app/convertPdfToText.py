@@ -1,7 +1,7 @@
 import fitz
 import os
-import docx
-import pdfplumber
+# import docx
+# import pdfplumber
 import re
 import bs4 as bs
 import regex

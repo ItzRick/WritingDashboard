@@ -14,10 +14,10 @@ def testGetPDFReferences(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'referenceFile.pdf')
 
-    text, references = getPDFText('referenceFile.pdf', returnReferences=True)
+    text, references = getPDFText(fileDir, returnReferences=True)
     assert text == '''Donec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. Phasellus rutrum molestie dictum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc faucibus lobortis tortor non hendrerit. '''
     assert references == '''A Framework for Personal Science - Quantified Self. (n.d.). Retrieved June 17, 2021, from https://quantifiedself.com/blog/personal-science/ \nBaumer, E. P. S. (2015). Reflective Informatics. 585–594. https://doi.org/10.1145/2702123.2702234 \nBaumer, E. P. S., Khovanskaya, V., Matthews, M., Reynolds, L., Sosik, V. S., & Gay, G. (2014). Reviewing reflection: On the use of reflection in interactive system design. Proceedings of the Conference on Designing Interactive Systems: Processes, Practices, Methods, and Techniques, DIS, 93–102. https://doi.org/10.1145/2598510.2598598 '''
 
@@ -32,10 +32,10 @@ def testGetPDFImages(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'imageFile.pdf')
 
-    text = getPDFText('imageFile.pdf')
+    text = getPDFText(fileDir)
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. '''
 
 def testGetPDFList(testClient):
@@ -49,10 +49,10 @@ def testGetPDFList(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'listFile.pdf')
 
-    text = getPDFText('listFile.pdf')
+    text = getPDFText(fileDir)
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \nLorum \nIpsum \nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. '''
 
 def testGetPDFTable(testClient):
@@ -66,10 +66,10 @@ def testGetPDFTable(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'tableFile.pdf')
 
-    text = getPDFText('tableFile.pdf')
+    text = getPDFText(fileDir)
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. '''
 
 def testGetPDFEmptyFile(testClient):
@@ -83,10 +83,10 @@ def testGetPDFEmptyFile(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'emptyFile.pdf')
 
-    text = getPDFText('emptyFile.pdf')
+    text = getPDFText(fileDir)
     assert text == ''
 
 
@@ -101,10 +101,10 @@ def testGetPDFCorruptedFile(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'corruptedFile.pdf')
 
-    text = getPDFText('corruptedFile.pdf')
+    text = getPDFText(fileDir)
     assert text == ''
 
 
@@ -119,10 +119,10 @@ def testGetPDFInvalidFile(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'invalidFileName.pdf')
 
-    text = getPDFText('invalidFileName.pdf')
+    text = getPDFText(fileDir)
     assert text == ''
 
 
@@ -137,10 +137,10 @@ def testGetPDFInvalidExtension(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'invalidFileExtension.docx')
 
-    text = getPDFText('invalidFileExtension.docx')
+    text = getPDFText(fileDir)
     assert text == ''
 
 def testSplitBlocks(testClient):
@@ -155,10 +155,10 @@ def testSplitBlocks(testClient):
     '''
     
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'multitasking.pdf')
 
-    doc = fitz.open('multitasking.pdf')
+    doc = fitz.open(fileDir)
     blocks = doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"]
     assert len(blocks) == 1
     blocks = splitBlocks(blocks)
@@ -176,10 +176,10 @@ def testGetFrequencyX(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'multitasking.pdf')
 
-    doc = fitz.open('multitasking.pdf')
+    doc = fitz.open(fileDir)
     counter = getFrequencyX(doc)
     assert len(counter) == 1
 
@@ -210,10 +210,10 @@ def testGetLineText(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'multitasking.pdf')
 
-    doc = fitz.open('multitasking.pdf')
+    doc = fitz.open(fileDir)
     line = doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"][0]["lines"][0]
     assert getLineText(line) == "Summary debate 1 Multitasking "
 
@@ -259,10 +259,10 @@ def testGetBlockText(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'multitasking.pdf')
 
-    doc = fitz.open('multitasking.pdf')
+    doc = fitz.open(fileDir)
     block = splitBlocks(doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"])[0]
     assert getBlockText(block, True) == "Summary debate 1 Multitasking "
 
@@ -279,10 +279,10 @@ def testIsBlockTable(testClient):
     '''
 
     del testClient
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(dir_path)
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'tableFile.pdf')
 
-    doc = fitz.open('tableFile.pdf')
+    doc = fitz.open(fileDir)
     xNormal = getFrequencyX(doc).most_common(1)[0][0]
     blocks = splitBlocks(doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"])
     assert isBlockTable(blocks[0], xNormal) == False
