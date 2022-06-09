@@ -324,6 +324,7 @@ def getUrlsSources(sourceString):
         # If there is an url, look if this contains doi.org, if yes add to links_doi, else add to links:
         if url != None:
             url1 = url.group(0)
+            url1 = re.sub(r'^\s+|\s+$', '', url1)
             url_doi = re.search('.*doi.org.*', url1)
             if url_doi != None:
                 links_doi.append(url_doi.group(0))

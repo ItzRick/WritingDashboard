@@ -1,4 +1,4 @@
-from app.feedback.content import countParagraphs, wordsSource, wordsText
+from app.feedback.content import countParagraphs, wordsSource, wordsText, getUrlsSources
 
 def testCountParagraphsOne(testClient):
     '''
@@ -140,4 +140,26 @@ def testWordsTextSecond(testClient, englishStopwords):
     wordsDict, count = wordsText(text, englishStopwords)
     assert count == 60
     assert wordsDict == expectedDictWords
+
+def testGetUrlSources(testClient):
+    '''
+        Test the getUrlsSources method, using a sample sources string, where each string is divided by 2 whitespace characters.
+        Attributes: 
+            sources: String with the example sources, each source separated by 2 whitespace characters. 
+            links: The links as retrieved from the getUrlsSources method.
+            links_doi: The links containing doi.org as retrieved from the getUrlsSources method.
+            numSources: The number of sources inside the sources string, as retrieved from the getUrlsSources method.
+        Arguments:
+            testClient:  The test client we test this for.
+    '''
+    del testClient
+    sources = ('Cambridge Dictionary. (2021c, june 2). multitasking definition: 1. a person’s ability to do more than one thing' +
+    ' at a time: 2. the ability of a computer to operate. . .. Learn more. Cambridge University.' +
+    ' https://dictionary.cambridge.org/dictionary/english/multitasking \n\n  Uncapher, M. R., & Wagner, A. D. (2018).' +
+    ' Minds and brains of media multitaskers: Current findings - and future directions. Proceedings of the National Academy' +
+    ' of Sciences, 115(40), 9889–9896. https://doi.org/10.1073/pnas.1611612115')
+    links, links_doi, numSources = getUrlsSources(sources)
+    assert links == ['https://dictionary.cambridge.org/dictionary/english/multitasking']
+    assert links_doi == ['https://doi.org/10.1073/pnas.1611612115']
+    assert numSources == 2
 
