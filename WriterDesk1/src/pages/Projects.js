@@ -19,7 +19,6 @@ import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 /**
- * TODO
  * 
  * @returns Projects Page
  */
@@ -49,6 +48,7 @@ const Projects = () => {
     //list of selected items
     const [selectedInstances, setSelectedInstances] = useState([])
 
+    // columns in data-grid
     const columns = [
         {
             field: 'projectName',
@@ -86,6 +86,7 @@ const Projects = () => {
     return (
         <>
             <div style={{ height: '30%' }}>
+                {/* adding projects */}
                 <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
                     <TextField
                         sx={{ mr: '1vw', verticalAlign: 'middle' }}
@@ -102,6 +103,7 @@ const Projects = () => {
                 </div>
                 <div />
                 <div className="topBorder">
+                    {/* downloading user data */}
                     <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ margin: '1vh', verticalAlign: 'middle' }}>
                         <DatePicker
                             sx={{ margin: '1vh', verticalAlign: 'middle' }}
@@ -136,10 +138,12 @@ const Projects = () => {
                     <BlueButton style={{ margin: '1vh', verticalAlign: 'middle' }}>Download user data</BlueButton>
                 </div>
                 <div className="topBorder">
+                    {/* downloading participants and user data */}
                     <BlueButton addStyle={{ margin: '1vh', verticalAlign: 'middle', }}>Download participants of selected projects</BlueButton>
                     <BlueButton addStyle={{ margin: '1vh', verticalAlign: 'middle', }}>Download user data of participants of selected project</BlueButton>
                 </div>
             </div>
+            {/* displaying projects */}
             <DataGrid
                 style={{ height: '70%' }}
                 rows={tableData}
