@@ -1,12 +1,13 @@
 from app import db
 from app import models
 
+# helper function, TODO remove before deploy
 def initialSetup():
     db.session.commit()
     db.drop_all()
     db.create_all()
     # create initial user
-    u = models.User(username='john', password_plaintext='password',)
+    u = models.User(username='john', password_plaintext='password')
     uploadToDatabase(u)
 
     # comment out:

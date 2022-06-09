@@ -1,6 +1,4 @@
-from asyncio.windows_events import NULL
 from datetime import datetime
-from tkinter import CASCADE
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -10,6 +8,7 @@ from sqlalchemy.inspection import inspect
 class User(db.Model):
     '''
         Declare user model containing usernames and passwords (hashed), we use single table inheritance for different types of users.
+        Cascade makes sure that if a User is removed, related files instances in the db are also removed
         Attributes:
             type: used as discrimator, indicates type of object in row
             id: Unique primary key User ID 
@@ -27,7 +26,7 @@ class User(db.Model):
         self.type = "user"
         self.username = username
         self.set_password(password_plaintext)
-        # self.id = 123 # Activate me together with initialSetup() in fileapi > uploadfile()
+        # self.id = 123 # Activate me together with initialSetup() in fileapi > uploadfile() # TODO remove before deploy
 
     def serializeUser(self):
         dict = {}
@@ -81,6 +80,7 @@ class Participant(User):
 class Files(db.Model):
     '''
         Class to enter files in the database. 
+        Cascade makes sure that if a File is removed, related Scores and Explanations instances in the db are also removed
         Attributes:
             id: Id of this database instance, of this file that has been added in the database.
             userId: Id of the user corresponding to the current file.
@@ -94,7 +94,7 @@ class Files(db.Model):
     path       = db.Column(db.String, unique=False)
     filename   = db.Column(db.String(256), index=True, unique=False)
     fileType   = db.Column(db.String(5), unique=False)
-    courseCode = db.Column(db.String(16), unique=False, default=NULL)
+    courseCode = db.Column(db.String(16), unique=False, default=None)
     date       = db.Column(db.DateTime, unique=False, default=datetime.today())
 
     def serializeFile(self):
@@ -121,7 +121,7 @@ class Scores(db.Model):
     '''
         Class to enter scores and explanations related to a file. 
         Each instance here is one-to-one related to an instance in Files
-        Scores should be between 0 and 10.
+        Scores should be between 0 and 10. Additionally, values are rounded to 2 decimals
         Attributes:
             fileId: Id of this database instance, Id of the file corresponding to a file in the Files
             scoreStyle: Score for Language and Style
@@ -132,10 +132,10 @@ class Scores(db.Model):
     fileId = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
     # Scores are numeric values with 2 decimals before and 2 decimals after the point. 
     # Thus, allowing us at least values between 10.00 and 0.00
-    scoreStyle       = db.Column(db.Numeric(4,2), unique=False, default=NULL)
-    scoreCohesion    = db.Column(db.Numeric(4,2), unique=False, default=NULL)
-    scoreStructure   = db.Column(db.Numeric(4,2), unique=False, default=NULL)
-    scoreIntegration = db.Column(db.Numeric(4,2), unique=False, default=NULL)
+    scoreStyle       = db.Column(db.Numeric(4,2), unique=False, default=None)
+    scoreCohesion    = db.Column(db.Numeric(4,2), unique=False, default=None)
+    scoreStructure   = db.Column(db.Numeric(4,2), unique=False, default=None)
+    scoreIntegration = db.Column(db.Numeric(4,2), unique=False, default=None)
 
     def __repr__(self):
         return '<ScoresExplanations {}>'.format(self.fileId)

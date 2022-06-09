@@ -1,4 +1,3 @@
-from pkg_resources import NullProvider
 from app.scoreapi import bp
 
 from flask import request, jsonify
@@ -28,11 +27,42 @@ def setScore():
     
     return setScoreDB(fid, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
 
+def isValid(score):
+    '''
+        This function returns whether or not a score is valid: bool
+        The score should be in [0..10]. Scores are acurate to 2 decimal points
+        Arguments:
+            score: score to best test for validness
+    '''
+    return (score >= 0.0) and (score <= 10.0)
+    
+def compareScores(current, new, NULL_VALUE):
+    '''
+        If the new is in [0..10], it returns new
+        If the new is -1, it returns current
+        If the new is something else, we set -2
+        arguments:
+            current: score that is currently in the database
+            new: score that is destined for the database
+        returns:
+            If the new is in [0..10], it returns new
+            If the new is -1, it returns current
+            If the new is something else, we set -2
+    '''
+    #first check if is none, or if 'something else'
+    if new is None or (not isValid(float(new)) and float(new) != -1):
+        return NULL_VALUE
+    elif float(new) == -1:
+        return float(current)
+    else:
+        return float(new)
 
 def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
     '''
         This functions handles setting the score and explanations for a file.
-        If score is not in [0..10], and there is already a score, the score is not updated
+        If score is -1, the previous score is used
+        If score is not in [0..10], and not -1. The score is set to -2
+        Scores are acurate to 2 decimal points
         Arguments:
             fileId: Id of the file for which the score and explanation has to be set
             scoreStyle: Score for Language and Style
@@ -40,32 +70,8 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
             scoreStructure: Score for Structure
             scoreIntegration: Score for Source Integration and Content
     '''
+    # value for when a variable is not defined
     NULL_VALUE = -2
-    def isValid(score):
-        '''
-            This function returns whether or not a score is valid: bool
-            The score should be in [0..10]
-            Arguments:
-                score: score to best test for validness
-        '''
-        return (score >= 0.0) and (score <= 10.0)
-    
-    def compareScores(current, new):
-        '''
-            If the new is in [0..10], it returns new
-            If the new is -1, it returns current
-            If the new is something else, we set -2
-            arguments:
-                current: score that is currently in the database
-                new: score that is destined for the database
-        '''
-        #first check if is none, or if 'something else'
-        if new is None or (not isValid(float(new)) and float(new) != -1):
-            return NULL_VALUE
-        elif float(new) == -1:
-            return float(current)
-        else:
-            return float(new)
 
     # Check if the fileId exists in Files
     if (Files.query.filter_by(id=fileId).first() is None):
@@ -79,17 +85,16 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
         # remove from database, current scores
         removeFromDatabase(currentScores)
         # choose the new score if it is valid
-        scoreStyle = compareScores(currentScores.scoreStyle, scoreStyle)
-        scoreCohesion = compareScores(currentScores.scoreCohesion, scoreCohesion)
-        scoreStructure = compareScores(currentScores.scoreStructure, scoreStructure)
-        scoreIntegration = compareScores(currentScores.scoreIntegration, scoreIntegration)
+        scoreStyle = compareScores(currentScores.scoreStyle, scoreStyle, NULL_VALUE)
+        scoreCohesion = compareScores(currentScores.scoreCohesion, scoreCohesion, NULL_VALUE)
+        scoreStructure = compareScores(currentScores.scoreStructure, scoreStructure, NULL_VALUE)
+        scoreIntegration = compareScores(currentScores.scoreIntegration, scoreIntegration, NULL_VALUE)
     else:
         # check if score is valid or -1, when nothing was set before
-        scoreStyle = compareScores(NULL_VALUE, scoreStyle)
-        scoreCohesion = compareScores(NULL_VALUE, scoreCohesion)
-        scoreStructure = compareScores(NULL_VALUE, scoreStructure)
-        scoreIntegration = compareScores(NULL_VALUE, scoreIntegration)
-   
+        scoreStyle = compareScores(NULL_VALUE, scoreStyle, NULL_VALUE)
+        scoreCohesion = compareScores(NULL_VALUE, scoreCohesion, NULL_VALUE)
+        scoreStructure = compareScores(NULL_VALUE, scoreStructure, NULL_VALUE)
+        scoreIntegration = compareScores(NULL_VALUE, scoreIntegration, NULL_VALUE)
     
     # create Scores object
     scoreIndb = Scores(fileId=fileId, scoreStyle=scoreStyle, scoreStructure=scoreStructure, scoreCohesion=scoreCohesion, scoreIntegration=scoreIntegration)
@@ -148,6 +153,8 @@ def getExplanation():
             Y1: Y of the top right corner of the boxing rectangle
             Y2: Y of the bottom left corner of the boxing rectangle
             replacement1..3: Three possible replacements for the mistakeText
+        returns:
+            explanation and code
     '''
     # get fileId from request
     fileId = request.args.get('fileId')
@@ -182,6 +189,8 @@ def getExplanationForFile():
                 Y1: Y of the top right corner of the boxing rectangle
                 Y2: Y of the bottom left corner of the boxing rectangle
                 replacement1..3: Three possible replacements for the mistakeText
+        returns:
+            list of explanations and code
     '''
     # get fileId from request
     fileId = request.args.get('fileId')
@@ -199,7 +208,7 @@ def getExplanationForFile():
 @bp.route('/setExplanation', methods = ['POST'])
 def setExplanation():
     '''
-        This functions handles setting the explanation
+        This functions handles setting the explanation to the database
 
         Attributes:
             fileId: Id for the file
@@ -213,6 +222,8 @@ def setExplanation():
             Y1: Y of the top right corner of the boxing rectangle
             Y2: Y of the bottom left corner of the boxing rectangle
             replacement1..3: Three possible replacements for the mistakeText
+        returns:
+            return code
     '''
     # Get the data as sent by the react frontend:
     fileId = request.form.get('fileId')

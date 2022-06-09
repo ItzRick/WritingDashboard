@@ -6,12 +6,19 @@ import json
 
 def uploadFile(testClient):
     '''
+        General function to upload file
+        Attributes:
             courseCode: courseCode when initializing a file
             fileName: filename when initializing a file
             BASEDIR: Location of the conftest.py file.
             fileDir: Location of the file we are testing the upload of.
             response: the result fo retrieving the scores in the specified order
             file: file instance 
+        Arguments: 
+            testClient: The test client we test this for.
+        Returns:
+            response: response from backend
+            file: file instance in database that has been uploaded
     '''
     courseCode = '2WBB0'
     fileName = 'test.txt'
@@ -70,6 +77,8 @@ def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegrat
     assert score.scoreIntegration == sIntegration
 
 def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
+
+    # data for get request
     data = {
         'fileId':fileId,
     }
@@ -111,13 +120,16 @@ def testSpecificScores(testClient, initDatabase):
     scoreCohesion=0
     scoreStructure=0
     scoreIntegration=0
+    # test if we can set a file
     generalSetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
+    # test if we can then also retrieve that file
     generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
 
 def testInvalidScore(testClient, initDatabase):
     '''
         This test checks whether we can send and retreive score from and to the database
-        However, it will send an invalid score
+        Meanwhile checking different configurations of invalid and valid scores.
+        Thus it will send two scores, such that the second overrides the first.
         It first makes a file since scores need a fileId to be related to
         Attributes:
             file: file instance 
