@@ -200,7 +200,7 @@ def wordsSource(text, wordsWoStopwords, englishStopwords):
             wordsWoStopwords: Set with the words without stopwords added to the wordsWoStopwords set, if not there yet.
     '''
     # Remove punctuation from the text:
-    text = re.sub('[,\.!?]', '', text)
+    text = re.sub(r'[^\w\s]', '', text)
 
     # Retrieve each word separately:
     tokens = word_tokenize(text.lower())
@@ -231,7 +231,7 @@ def wordsText(text, englishStopwords):
     # Dictionary for the words in the text:
     wordsWoStopwords = dict()
     # Remove punctuation from the text:
-    text = re.sub('[,\.!?]', '', text)
+    text = re.sub(r'[^\w\s]', '', text)
     
     # Retrieve each word separately:
     tokens = word_tokenize(text.lower())
