@@ -4,6 +4,33 @@ from app.models import Scores, Files
 from werkzeug.utils import secure_filename
 import json
 
+def uploadFile(testClient):
+    '''
+            courseCode: courseCode when initializing a file
+            fileName: filename when initializing a file
+            BASEDIR: Location of the conftest.py file.
+            fileDir: Location of the file we are testing the upload of.
+            response: the result fo retrieving the scores in the specified order
+            file: file instance 
+    '''
+    courseCode = '2WBB0'
+    fileName = 'test.txt'
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, fileName)
+    data = {
+        'files': (open(fileDir, 'rb'), fileName),
+        'fileName': fileName,
+        'courseCode': courseCode,
+        'userId': 256,
+        'date': date(1998, 10, 30)
+    }
+    # Create the response by means of the post request:
+    response = testClient.post('/fileapi/upload', data=data)
+    assert response.data == b'success'
+    file = Files.query.filter_by(filename=secure_filename(fileName)).first()
+    assert file.courseCode == courseCode
+    return response, file
+
 def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegration):
     '''
         A general method to test uploading a score
@@ -58,18 +85,11 @@ def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructur
     assert float(data['scoreStructure']) == scoreStructure
     assert float(data['scoreIntegration']) == scoreIntegration
     
-    
-
 def testSpecificScores(testClient, initDatabase):
     '''
         This test checks whether we can send and retreive score from and to the database
         It first makes a file since scores need a fileId to be related to
         Attributes: 
-            courseCode: courseCode when initializing a file
-            fileName: filename when initializing a file
-            BASEDIR: Location of the conftest.py file.
-            fileDir: Location of the file we are testing the upload of.
-            response: the result fo retrieving the scores in the specified order
             file: file instance 
             fileId: file id related to the 
             scoreStyle: language and style score
@@ -83,22 +103,7 @@ def testSpecificScores(testClient, initDatabase):
     del initDatabase
 
     # first upload a related file
-    courseCode = '2WBB0'
-    fileName = 'test.txt'
-    BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, fileName)
-    data = {
-        'files': (open(fileDir, 'rb'), fileName),
-        'fileName': fileName,
-        'courseCode': courseCode,
-        'userId': 256,
-        'date': date(1998, 10, 30)
-    }
-    # Create the response by means of the post request:
-    response = testClient.post('/fileapi/upload', data=data)
-    assert response.data == b'success'
-    file = Files.query.filter_by(filename=secure_filename(fileName)).first()
-    assert file.courseCode == courseCode
+    _, file = uploadFile(testClient)
 
     # set fileId
     fileId = file.id
@@ -108,3 +113,70 @@ def testSpecificScores(testClient, initDatabase):
     scoreIntegration=0
     generalSetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
     generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
+
+def testInvalidScore(testClient, initDatabase):
+    '''
+        This test checks whether we can send and retreive score from and to the database
+        However, it will send an invalid score
+        It first makes a file since scores need a fileId to be related to
+        Attributes:
+            file: file instance 
+            fileId: file id related to the 
+            scoreStyle: language and style score
+            scoreCohesion: cohesion score
+            scoreStructure: structure score
+            scoreIntegration: source integration and content score
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+    del initDatabase
+
+    # first upload a related file
+    _, file = uploadFile(testClient)
+    # then upload score
+    fileId = file.id
+    scoreStyle = None
+    scoreCohesion = 11
+    scoreStructure = 1
+    scoreIntegration = 1
+    data = {
+        'fileId': fileId,
+        'scoreStyle': scoreStyle,
+        'scoreCohesion': scoreCohesion,
+        'scoreStructure': scoreStructure,
+        'scoreIntegration' : scoreIntegration,
+    }
+    response = testClient.post('/scoreapi/setScore', data=data)
+    # See if we indeed get code 200 and the correct message from this request:
+    assert response.data == b'successfully uploaded Scores'
+    assert response.status_code == 200
+    # See if the correct data has been added to the database which we retrieve by the filename:
+    score = Scores.query.filter_by(fileId=fileId).first()
+    assert score.scoreStyle == -2
+    assert score.scoreCohesion == -2
+    assert score.scoreStructure == scoreStructure
+    assert score.scoreIntegration == scoreIntegration
+
+    # next we test whether invalid values are overwritten, and valid are not
+    scoreStyle1 = 1
+    scoreCohesion1 = -1
+    scoreStructure1 = -1
+    scoreIntegration1 = -2
+    data = {
+        'fileId': file.id,
+        'scoreStyle': scoreStyle1,
+        'scoreCohesion': scoreCohesion1,
+        'scoreStructure': scoreStructure1,
+        'scoreIntegration' : scoreIntegration1,
+    }
+    response = testClient.post('/scoreapi/setScore', data=data)
+    # See if we indeed get code 200 and the correct message from this request:
+    assert response.data == b'successfully uploaded Scores'
+    assert response.status_code == 200
+    # See if the correct data has been added to the database which we retrieve by the filename:
+    score = Scores.query.filter_by(fileId=fileId).first()
+    assert score.scoreStyle == scoreStyle1 # always take the new value, if it is valid
+    assert score.scoreCohesion == -2 # if -1, take prev value
+    assert score.scoreStructure == scoreStructure # if -1, take prev value
+    assert score.scoreIntegration == -2 # if invalid, take -2

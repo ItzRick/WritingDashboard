@@ -27,6 +27,7 @@ class User(db.Model):
         self.type = "user"
         self.username = username
         self.set_password(password_plaintext)
+        # self.id = 123 # Activate me together with initialSetup() in fileapi > uploadfile()
 
     def serializeUser(self):
         dict = {}
@@ -131,10 +132,10 @@ class Scores(db.Model):
     fileId = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
     # Scores are numeric values with 2 decimals before and 2 decimals after the point. 
     # Thus, allowing us at least values between 10.00 and 0.00
-    scoreStyle       = db.Column(db.Numeric(4,2), unique=False, default=0.0)
-    scoreCohesion    = db.Column(db.Numeric(4,2), unique=False, default=0.0)
-    scoreStructure   = db.Column(db.Numeric(4,2), unique=False, default=0.0)
-    scoreIntegration = db.Column(db.Numeric(4,2), unique=False, default=0.0)
+    scoreStyle       = db.Column(db.Numeric(4,2), unique=False, default=NULL)
+    scoreCohesion    = db.Column(db.Numeric(4,2), unique=False, default=NULL)
+    scoreStructure   = db.Column(db.Numeric(4,2), unique=False, default=NULL)
+    scoreIntegration = db.Column(db.Numeric(4,2), unique=False, default=NULL)
 
     def __repr__(self):
         return '<ScoresExplanations {}>'.format(self.fileId)

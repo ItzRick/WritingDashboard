@@ -1,3 +1,4 @@
+from pkg_resources import NullProvider
 from app.scoreapi import bp
 
 from flask import request, jsonify
@@ -7,7 +8,10 @@ from app.database import uploadToDatabase, removeFromDatabase
 @bp.route('/setScore', methods = ['POST'])
 def setScore():
     '''
-        This functions handles setting the score as requested by the frontend
+        This functions handles setting the score as requested by the frontend.
+        If the score is in [0..10], it sets the score
+        If the score is -1, it does not override the old score
+        If the score is something else, we set NULL
         Attributes:
             fileId: Id of the file for which the score and explanation has to be set
             scoreStyle: Score for Language and Style
@@ -28,7 +32,7 @@ def setScore():
 def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
     '''
         This functions handles setting the score and explanations for a file.
-        If score is not in [0..10], the score is not updated
+        If score is not in [0..10], and there is already a score, the score is not updated
         Arguments:
             fileId: Id of the file for which the score and explanation has to be set
             scoreStyle: Score for Language and Style
@@ -36,33 +40,57 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
             scoreStructure: Score for Structure
             scoreIntegration: Score for Source Integration and Content
     '''
+    NULL_VALUE = -2
+    def isValid(score):
+        '''
+            This function returns whether or not a score is valid: bool
+            The score should be in [0..10]
+            Arguments:
+                score: score to best test for validness
+        '''
+        return (score >= 0.0) and (score <= 10.0)
+    
+    def compareScores(current, new):
+        '''
+            If the new is in [0..10], it returns new
+            If the new is -1, it returns current
+            If the new is something else, we set -2
+            arguments:
+                current: score that is currently in the database
+                new: score that is destined for the database
+        '''
+        #first check if is none, or if 'something else'
+        if new is None or (not isValid(float(new)) and float(new) != -1):
+            return NULL_VALUE
+        elif float(new) == -1:
+            return float(current)
+        else:
+            return float(new)
+
     # Check if the fileId exists in Files
     if (Files.query.filter_by(id=fileId).first() is None):
         return 'No file found with fileId', 400
+    
     # Check fileId exists in scores
-    elif Scores.query.filter_by(fileId=fileId).first() is not None:
+    if Scores.query.filter_by(fileId=fileId).first() is not None:
         # already in score
         # retreive current Scores
         currentScores = Scores.query.filter_by(fileId=fileId).first()
-
-        # local function: returns new score if new score is valid
-        def compareScores(current, new):
-            current = float(current)
-            new = float(new)
-            if (new < 0.0) or (new > 10.0):
-                # invalid new score, return current
-                return current
-            else:
-                return new
+        # remove from database, current scores
+        removeFromDatabase(currentScores)
         # choose the new score if it is valid
         scoreStyle = compareScores(currentScores.scoreStyle, scoreStyle)
         scoreCohesion = compareScores(currentScores.scoreCohesion, scoreCohesion)
         scoreStructure = compareScores(currentScores.scoreStructure, scoreStructure)
         scoreIntegration = compareScores(currentScores.scoreIntegration, scoreIntegration)
-
-        # remove from database, current scores
-        removeFromDatabase(currentScores)
-        
+    else:
+        # check if score is valid or -1, when nothing was set before
+        scoreStyle = compareScores(NULL_VALUE, scoreStyle)
+        scoreCohesion = compareScores(NULL_VALUE, scoreCohesion)
+        scoreStructure = compareScores(NULL_VALUE, scoreStructure)
+        scoreIntegration = compareScores(NULL_VALUE, scoreIntegration)
+   
+    
     # create Scores object
     scoreIndb = Scores(fileId=fileId, scoreStyle=scoreStyle, scoreStructure=scoreStructure, scoreCohesion=scoreCohesion, scoreIntegration=scoreIntegration)
     # upload
@@ -203,8 +231,6 @@ def setExplanation():
     # check if file exists
     if (Files.query.filter_by(id=fileId).first() is None):
         return 'No file found with fileId', 400
-
-    # TODO check for anomalies ?
 
     # if explId = -1, create new record, else override one
     if explId == -1:
