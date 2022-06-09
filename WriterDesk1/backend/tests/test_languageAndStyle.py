@@ -1,4 +1,4 @@
-from WriterDesk1.backend.app.languageAndStyle import feedbackLanguageStyle
+from app.languageAndStyle import feedbackLanguageStyle
 
 
 def testFeedbackLanguageAn(testClient):
