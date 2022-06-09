@@ -3,12 +3,10 @@ import {
     Typography 
 } from "@mui/material";
 import graphPlaceholder from '../images/chartImage.png';
-import Plot from 'react-plotly.js';
 
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
-import ProgressVisualization from "../components/ProgressVisualization";
 
 
 
@@ -22,8 +20,6 @@ function Progress() {
     useEffect(() => {
         setTitle('Progress');
     });
-
-
     return (
         <>
             <div className='subTitle'>
@@ -31,9 +27,7 @@ function Progress() {
                 <img src={graphPlaceholder} className='graph2' />
                 <br /><br />
                 <Typography variant='h5'>Progress over time</Typography>
-                <div className="plotContainer">
-                    <ProgressVisualization />
-                </div>
+                <img src={graphPlaceholder} className='graph2' />
             </div>
         </>
     );

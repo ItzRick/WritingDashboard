@@ -1,0 +1,19 @@
+.navlink{
+    display: flex;
+    align-items: cover;
+    cursor: pointer;
+    border-radius: 30px;
+  }
+  .navlink:hover{
+    background-color: #e8f5fe;
+    color: #50b7f5;
+    transition: color 100ms ease-out;
+  }
+  .navlink > h2{
+    font-weight: 700;
+    font-size: 20px;
+    margin-right: 20px;
+  }
+  .navlink > .MuiSvgIcon-root {
+    padding: 20px;
+  }
