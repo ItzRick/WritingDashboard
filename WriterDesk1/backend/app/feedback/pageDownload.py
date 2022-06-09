@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import re
 
 
 def downloadDoi(url, filePath):
@@ -36,8 +37,7 @@ def downloadDoi(url, filePath):
         # If it exists, get the link:
         link = embed.get('src')
         if link:
-            # If it exists, add https: in front:
-            link = 'https:' + link
+            link = sci_hub_url + link
             # Retrieve this pdf file:
             r = requests.get(link, headers=headers)
             if r.status_code == 200:
@@ -74,7 +74,7 @@ def scrapePage(url):
     # Create the BeautifulSoup object:
     soup = BeautifulSoup(r.content, 'html.parser')
     # Retrieve all text from this object:
-    text = soup.find_all(text=True)
+    text = soup.find_all(string=True)
     # Create a output element:
     output = ''
     # Blacklist of HTML elements we do not want the text from:

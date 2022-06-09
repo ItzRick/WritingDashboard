@@ -1,4 +1,5 @@
-from app.feedback.content import countParagraphs, wordsSource, wordsText, getUrlsSources
+from app.feedback.content import countParagraphs, wordsSource, wordsText, getUrlsSources, calcScoreAndExplanationSourcesNotDownloaded
+from math import ceil
 
 def testCountParagraphsOne(testClient):
     '''
@@ -162,4 +163,155 @@ def testGetUrlSources(testClient):
     assert links == ['https://dictionary.cambridge.org/dictionary/english/multitasking']
     assert links_doi == ['https://doi.org/10.1073/pnas.1611612115']
     assert numSources == 2
+
+def testCalcScoreAndExplanationSourcesNotDownloadedZero(testClient):
+    '''
+        Test of the calcScoreAndExplanationSourcesNotDownloaded method, while giving numSources and numParagraphs.
+        This is for a number of sources and number of paragraphs that gives a score 0. We also test the explanation.
+        Attributes: 
+            numSources: The number of sources we test this method for. 
+            numParagraphs: The number of paragraphs we test this method for.
+            score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanationText: The text manually set, we should retrieve from the method, to check against.
+        Arguments:
+            testClient:  The test client we test this for.
+    '''
+    del testClient
+    numSources = 2
+    numParagraphs = 11
+    # Assert that we should indeed get a score of 0:
+    assert ceil(numParagraphs / numSources) > 5
+    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    assert score == 0
+    explanationText = ('Your score for source integration and content is 0. You only used 2 sources ' + 
+    'in 11 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+    'are actually used in the text.' )
+    assert explanation == explanationText
+
+def testCalcScoreAndExplanationSourcesNotDownloadedTwo(testClient):
+    '''
+        Test of the calcScoreAndExplanationSourcesNotDownloaded method, while giving numSources and numParagraphs.
+        This is for a number of sources and number of paragraphs that gives a score 2. We also test the explanation.
+        Attributes: 
+            numSources: The number of sources we test this method for. 
+            numParagraphs: The number of paragraphs we test this method for.
+            score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanationText: The text manually set, we should retrieve from the method, to check against.
+        Arguments:
+            testClient:  The test client we test this for.
+    '''
+    del testClient
+    numSources = 3
+    numParagraphs = 13
+    # Assert that we should indeed get a score of 2:
+    assert ceil(numParagraphs / numSources) > 4
+    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    assert score == 2
+    explanationText = ('Your score for source integration and content is 2. You only used 3 sources ' + 
+    'in 13 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+    'are actually used in the text.' )
+    assert explanation == explanationText
+
+def testCalcScoreAndExplanationSourcesNotDownloadedFour(testClient):
+    '''
+        Test of the calcScoreAndExplanationSourcesNotDownloaded method, while giving numSources and numParagraphs.
+        This is for a number of sources and number of paragraphs that gives a score 4. We also test the explanation.
+        Attributes: 
+            numSources: The number of sources we test this method for. 
+            numParagraphs: The number of paragraphs we test this method for.
+            score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanationText: The text manually set, we should retrieve from the method, to check against.
+        Arguments:
+            testClient:  The test client we test this for.
+    '''
+    del testClient
+    numSources = 4
+    numParagraphs = 13
+    # Assert that we should indeed get a score of 4:
+    assert ceil(numParagraphs / numSources) > 3
+    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    assert score == 4
+    explanationText = ('Your score for source integration and content is 4. You only used 4 sources ' + 
+    'in 13 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+    'are actually used in the text.' )
+    assert explanation == explanationText
+
+def testCalcScoreAndExplanationSourcesNotDownloadedSix(testClient):
+    '''
+        Test of the calcScoreAndExplanationSourcesNotDownloaded method, while giving numSources and numParagraphs.
+        This is for a number of sources and number of paragraphs that gives a score 6. We also test the explanation.
+        Attributes: 
+            numSources: The number of sources we test this method for. 
+            numParagraphs: The number of paragraphs we test this method for.
+            score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanationText: The text manually set, we should retrieve from the method, to check against.
+        Arguments:
+            testClient:  The test client we test this for.
+    '''
+    del testClient
+    numSources = 6
+    numParagraphs = 13
+    # Assert that we should indeed get a score of 6:
+    assert ceil(numParagraphs / numSources) > 2
+    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    assert score == 6
+    explanationText = ('Your score for source integration and content is 6. You only used 6 sources ' + 
+    'in 13 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+    'are actually used in the text.' )
+    assert explanation == explanationText
+
+def testCalcScoreAndExplanationSourcesNotDownloadedEight(testClient):
+    '''
+        Test of the calcScoreAndExplanationSourcesNotDownloaded method, while giving numSources and numParagraphs.
+        This is for a number of sources and number of paragraphs that gives a score 8. We also test the explanation.
+        Attributes: 
+            numSources: The number of sources we test this method for. 
+            numParagraphs: The number of paragraphs we test this method for.
+            score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanationText: The text manually set, we should retrieve from the method, to check against.
+        Arguments:
+            testClient:  The test client we test this for.
+    '''
+    del testClient
+    numSources = 10
+    numParagraphs = 11
+    # Assert that we should indeed get a score of 8:
+    assert ceil(numParagraphs / numSources) > 1
+    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    assert score == 8
+    explanationText = ('Your score for source integration and content is 8. You only used 10 sources ' + 
+    'in 11 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+    'are actually used in the text.' )
+    assert explanation == explanationText
+
+def testCalcScoreAndExplanationSourcesNotDownloadedTen(testClient):
+    '''
+        Test of the calcScoreAndExplanationSourcesNotDownloaded method, while giving numSources and numParagraphs.
+        This is for a number of sources and number of paragraphs that gives a score 10. We also test the explanation.
+        Attributes: 
+            numSources: The number of sources we test this method for. 
+            numParagraphs: The number of paragraphs we test this method for.
+            score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
+            explanationText: The text manually set, we should retrieve from the method, to check against.
+        Arguments:
+            testClient:  The test client we test this for.
+    '''
+    del testClient
+    numSources = 12
+    numParagraphs = 11
+    # Assert that we should indeed get a score of 10:
+    assert ceil(numParagraphs / numSources) > 0
+    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    assert score == 10
+    explanationText = ('Your score for source integration and content is 10. You only used 12 sources ' + 
+    'in 11 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+    'are actually used in the text.' )
+    assert explanation == explanationText
+
 

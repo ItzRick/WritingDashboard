@@ -10,7 +10,7 @@ from flask import current_app
 import os
 from app.feedback.convertPdfToText import getPDFText
 from app.feedback.pageDownload import scrapePage, downloadDoi
-
+from math import ceil
 
 def sourceIntegration(text, references, englishStopwords, userId):
     '''
@@ -44,7 +44,7 @@ def sourceIntegration(text, references, englishStopwords, userId):
     # If the words of at least one source could be retrieved:
     if numSourcesUsed > 0: 
         # Calculate the score and get the explanation using the calcScoreAndExplanationSourcesDownloaded method:
-        score, explanation = calcScoreAndExplanationSourcesDownloaded(wordsReferences, wordsFromText, numWordsText, numSources, numParagraphs)
+        score, explanation = calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsReferences, numWordsText, numSources, numParagraphs)
     else: 
         # Else, calculate the score and get the explanation using the calcScoreAndExplanationSourcesNotDownloaded method:
         score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
@@ -69,21 +69,21 @@ def calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsReferences, num
             explanation: General explanation for this score as string.
     '''
     # If there are not at least 1 source per 3 paragraphs, set the score according to the number of paragraphs per source:
-    if numParagraphs // numSources  > 3:
-        if numParagraphs // numSources > 5:
+    if ceil(numParagraphs / numSources)  > 3:
+        if ceil(numParagraphs / numSources) > 5:
             score = 0
-        elif numParagraphs // numSources  > 4:
+        elif ceil(numParagraphs / numSources)  > 4:
             score = 0.5
-        elif numParagraphs // numSources  > 3:
+        elif ceil(numParagraphs / numSources)  > 3:
             score = 1
         # Add the explanation and return:
-        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-        f'in {numParagraphs} of text. Try adding more sources.' )
+        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} sources ' + 
+        f'in {numParagraphs} paragraphs of text. Try adding more sources.' )
     else:
         # If there is at least one source per 3 paragraphs, calculate the percentage of words from the text also in the references:
         percentageWordsInText = calcPercentageWordsUsed(wordsFromText, wordsReferences, numWordsText)
         # Calculate the score, where the score can be at most 10 and a 25% occurrence in the sources is a 10:
-        score = max(1 + round(percentageWordsInText*36, 2), 10)
+        score = min(1 + round(percentageWordsInText*36, 2), 10)
         # If you have a 10 indicate that you have a perfect score, otherwise say that you can improve the score:
         if score == 10:
             stringPart = 'This gives a perfect score'
@@ -91,7 +91,7 @@ def calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsReferences, num
             stringPart = 'For a higher score'
         # Add the explanation:
         explanation = (f'Your score for source integration and content is {score}. You used {numSources} sources ' + 
-        f'in {numParagraphs} of text. You used {percentageWordsInText *100}% of the words used in the sources in your text. ' +  
+        f'in {numParagraphs} paragraphs of text. You used {round(percentageWordsInText *100, 2)}% of the words used in the sources in your text. ' +  
         f'{stringPart}, you could try adding more words used in the sources in your text.')
     return score, explanation
 
@@ -109,21 +109,21 @@ def calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs):
             explanation: General explanation for this score as string.
     '''
     # Calculate the score:
-    if numParagraphs // numSources  > 5:
+    if ceil(numParagraphs / numSources)  > 5:
         score = 0
-    elif numParagraphs // numSources  > 4:
+    elif ceil(numParagraphs / numSources)  > 4:
         score = 2
-    elif numParagraphs // numSources  > 3:
+    elif ceil(numParagraphs / numSources)  > 3:
         score = 4
-    elif numParagraphs // numSources  > 2:
+    elif ceil(numParagraphs / numSources)  > 2:
         score = 6
-    elif numParagraphs // numSources  > 1:
+    elif ceil(numParagraphs / numSources)  > 1:
         score = 8
     else:
         score = 10
     # Create the explanation and return:
-    explanation = (f'Your score for source integration and content is {score}. You only used {numSources} ' + 
-    f'in {numParagraphs} of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
+    explanation = (f'Your score for source integration and content is {score}. You only used {numSources} sources ' + 
+    f'in {numParagraphs} paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
     f'are actually used in the text.' )
     return score, explanation
 
@@ -274,7 +274,7 @@ def textDoi(doi, userId):
     '''
     text = ''
     # Get (and join) the paths:
-    basePath = os.path.join(current_app.config['UPLOAD_FOLDER'], userId)
+    basePath = os.path.join(current_app.config['UPLOAD_FOLDER'], str(userId))
     # TODO: Remove:
     # BASEDIR = os.path.abspath(os.path.dirname(__file__))
     # basePath = os.path.join(BASEDIR, str(userId))
