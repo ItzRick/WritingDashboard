@@ -2,7 +2,11 @@
 import {
   TextField,
   IconButton,
-  Button
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import {
   DeleteOutline,
@@ -13,7 +17,7 @@ import BlueButton from './../components/BlueButton';
 
 // routing
 import { useOutletContext } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 
 
@@ -72,17 +76,39 @@ const rows = [
   { id: 5, username: 'Claire', password: 'welcome1', project: 'testProject5' },
 ];
 
+// replace with list of real projects, needed for project dropdowns
+const projects = [
+  { id: 1, projectName: 'test project 1'},
+  { id: 2, projectName: 'test project 2'},
+  { id: 3, projectName: 'test project 3'},
+]
+
 function Participants() {
   //set title in parent 'base' 
   const { setTitle } = useOutletContext();
   useEffect(() => {
     setTitle('Participants');
   });
+
+  // project in project add
+  const [projectAdd, setProjectAdd] = useState('');
+  // project in project download
+  const [projectDown, setProjectDown] = useState('');
+
+  // dropdown handler for project add
+  const handleProjAddPart = (event) => {
+    setProjectAdd(event.target.value);
+  };
+  // dropdown handler for project download
+  const handleProjectDownPart = (event) => {
+    setProjectDown(event.target.value);
+  };
+
   return (
     <>
       <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
         <TextField
-          style={{ marginRight: '1vw', marginTop: '1vw' }}
+          sx={{ mr: '1vw', verticalAlign: 'middle' }}
           id="noOfParticipants"
           label="Number of participants"
           type="number"
@@ -90,43 +116,39 @@ function Participants() {
             shrink: true,
           }}
         />
-        <TextField
-          style={{ marginRight: '1vw', marginTop: '1vw' }}
-          id="projectName"
-          label={"Project name"}
-        />
+        <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
+          <InputLabel id="project-add-participants">Project</InputLabel>
+          <Select
+            labelId="project-add-participants"
+            id="project-add-participants"
+            value={projectAdd}
+            label="Project"
+            onChange={handleProjAddPart}
+          >
+            {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)}
+          </Select>
+        </FormControl>
         <BlueButton>Add participants</BlueButton>
       </div>
       <div className='topBorder'>
-        <TextField
-          style={{ marginRight: '1vw', marginTop: '1vw' }}
-          id="projectName2"
-          label={"Project name"}
-        />
+        <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
+          <InputLabel id="project-down-participants">Project</InputLabel>
+          <Select
+            labelId="project-down-participants"
+            id="project-down-participants"
+            value={projectDown}
+            label="Project"
+            onChange={handleProjectDownPart}
+          >
+            {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)}
+          </Select>
+        </FormControl>
         <BlueButton>Download participants</BlueButton>
       </div>
       <div className='topBorder'>
-        <TextField
-          style={{ marginRight: '1vw', marginTop: '1vw' }}
-          id="startDate"
-          label={"Start date"}
-        />
-        <TextField
-          style={{ marginRight: '1vw', marginTop: '1vw' }}
-          id="enData"
-          label={"End date"}
-        />
-        <TextField
-          style={{ marginRight: '1vw', marginTop: '1vw' }}
-          id="projectName3"
-          label={"Project name"}
-        />
-        <BlueButton>Download user data</BlueButton>
-      </div>
-      <div className='topBorder'>
-        <Button variant='contained' style={{ marginTop: '1vw', marginLeft: '1vw' }}>Download selected participants</Button>
+        <Button variant='contained' sx={{ mr: '1vw', verticalAlign: 'middle' }}>Download selected participants</Button>
         <div style={{ paddingLeft: '2vw', display: 'inline' }} />
-        <Button variant='contained' style={{ marginTop: '1vw', marginLeft: '1vw' }}>Download user data of selected participants</Button>
+        <Button variant='contained' sx={{ mr: '1vw', verticalAlign: 'middle' }}>Download user data of selected participants</Button>
       </div>
       <div style={{ justifyContent: 'center', display: 'flex' }}>
         <div style={{ height: '80vh', maxHeight: '400px', width: '50vw' }} >
