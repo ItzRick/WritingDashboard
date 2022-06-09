@@ -1,14 +1,18 @@
-from WriterDesk1.backend.languageAndStyle import feedbackLanguageStyle
+from WriterDesk1.backend.app.languageAndStyle import feedbackLanguageStyle
 
 
-def testFeedbackLanguageAn():
+def testFeedbackLanguageAn(testClient):
     """
     Function to test language and style feedback with single sentence with 'an' mistake.
+    Arguments:
+        testClient: The test client we test this for.
     Attributes:
         mistakes: List of mistakes in text including matched text, context,
                   occurrence of text in context, explanation, and possible replacements.
         score: Score given to the text based on the feedback.
     """
+    del testClient
+
     mistakes, score = feedbackLanguageStyle("This is an sentence with a mistake.")
     assert 0 <= score <= 10  # Score is between 0 and 10
     assert mistakes[0][0] == "an"  # Word of mistake
@@ -16,27 +20,35 @@ def testFeedbackLanguageAn():
     assert len(mistakes) == 1  # There is only one language and style mistake in the sentence
 
 
-def testFeedbackLanguageEmpty():
+def testFeedbackLanguageEmpty(testClient):
     """
     Function to test language and style feedback with empty sentence.
+    Arguments:
+        testClient: The test client we test this for.
     Attributes:
         mistakes: List of mistakes in text including matched text, context,
                   occurrence of text in context, explanation, and possible replacements.
         score: Score given to the text based on the feedback.
     """
+    del testClient
+
     mistakes, score = feedbackLanguageStyle('')
     assert score == 0  # Score is 0 when there is no text
     assert len(mistakes) == 0  # No language and style mistakes
 
 
-def testFeedbackLanguageMultipleSentences():
+def testFeedbackLanguageMultipleSentences(testClient):
     """
     Function to test language and style feedback with multiple sentence and multiple mistakes.
+    Arguments:
+        testClient: The test client we test this for.
     Attributes:
         mistakes: List of mistakes in text including matched text, context,
                   occurrence of text in context, explanation, and possible replacements.
         score: Score given to the text based on the feedback.
     """
+    del testClient
+
     mistakes, score = feedbackLanguageStyle("Hello, My name is Susan. I'm forteen and I life in germany.")
     assert 0 <= score <= 10  # Score is between 0 and 10
 
@@ -52,14 +64,18 @@ def testFeedbackLanguageMultipleSentences():
     assert len(mistakes) == 3  # 3 language and style mistakes in the text
 
 
-def testFeedbackLanguageMissingLetter():
+def testFeedbackLanguageMissingLetter(testClient):
     """
     Function to test language and style feedback with word with missing letter.
+    Arguments:
+        testClient: The test client we test this for.
     Attributes:
         mistakes: List of mistakes in text including matched text, context,
                   occurrence of text in context, explanation, and possible replacements.
         score: Score given to the text based on the feedback.
     """
+    del testClient
+
     mistakes, score = feedbackLanguageStyle("The computr was hot and overheated.")
     assert 0 <= score <= 10
 
@@ -70,14 +86,18 @@ def testFeedbackLanguageMissingLetter():
     assert len(mistakes) == 1  # There is only one language and style mistake in the sentence
 
 
-def testFeedbackLanguagePerfectSentence():
+def testFeedbackLanguagePerfectSentence(testClient):
     """
     Function to test language and style feedback with correct sentence.
+    Arguments:
+        testClient: The test client we test this for.
     Attributes:
         mistakes: List of mistakes in text including matched text, context,
                   occurrence of text in context, explanation, and possible replacements.
         score: Score given to the text based on the feedback.
     """
+    del testClient
+
     mistakes, score = feedbackLanguageStyle("Are you opening the door?")
     assert score == 10  # Perfect score for correct sentence
 
