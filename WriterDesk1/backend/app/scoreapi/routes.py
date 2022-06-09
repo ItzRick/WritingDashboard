@@ -69,6 +69,8 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
             scoreCohesion: Score for Cohesion
             scoreStructure: Score for Structure
             scoreIntegration: Score for Source Integration and Content
+        returns:
+            return code
     '''
     # value for when a variable is not defined
     NULL_VALUE = -2
@@ -114,6 +116,8 @@ def getScores():
             scoreCohesion: Score for Cohesion
             scoreStructure: Score for Structure
             scoreIntegration: Score for Source Integration and Content
+        returns:
+            scores and code
     '''
 
     # get fileId from request
