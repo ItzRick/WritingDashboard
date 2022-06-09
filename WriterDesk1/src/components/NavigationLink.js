@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // css
-import "./../css/Navigation.css";
+import "./../css/NavigationLink.css";
 
 // components
 import { 
