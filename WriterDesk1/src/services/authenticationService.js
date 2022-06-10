@@ -12,6 +12,13 @@ export const AuthenticationService = {
     getRole
 }
 
+/**
+ * Request login to server using axios
+ * 
+ * @param username username for request
+ * @param password password for request
+ * @returns login page
+ */
 function login(username, password) {
     return axios.post(`${BASE_URL}/login`, {
         "username": username,
@@ -30,14 +37,25 @@ function login(username, password) {
         });
 }
 
+/**
+ * Logout user
+ */
 function logout() {
     localStorage.removeItem('currentUser');
 }
 
+/**
+ * 
+ * @returns currentUser containing user id, access token, role
+ */
 function getCurrentUser() {
     return JSON.parse(localStorage.getItem('currentUser'));
 }
 
+/**
+ * 
+ * @returns user ID
+ */
 function getCurrentUserId() {
     if(JSON.parse(localStorage.getItem('currentUser')) !== null) {
         return JSON.parse(localStorage.getItem('currentUser')).id;
@@ -46,10 +64,19 @@ function getCurrentUserId() {
     }
 }
 
+/**
+ * Server checks if users access token is valid
+ * 
+ * @returns axios response, status 200 when user is authenticated
+ */
 function checkAuth () {
     return axios.get(`${BASE_URL}/protected`, {headers: authHeader()});
 }
 
+/**
+ * 
+ * @returns user role
+ */
 function getRole (){
     return JSON.parse(localStorage.getItem('currentUser')).role;
 }
