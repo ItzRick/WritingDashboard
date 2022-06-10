@@ -10,7 +10,7 @@ describe('Test the loginpage', () => {
     })
 
     it('Checks if all elements are present.', () => {
-        cy.contains('Sign up')
+        cy.contains('Log in')
         cy.contains('Note: the TU/e mail is the username of TU/e students.')
 
         cy.contains('Username:')

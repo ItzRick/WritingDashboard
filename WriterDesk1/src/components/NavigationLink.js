@@ -26,6 +26,7 @@ import { Link } from 'react-router-dom';
 const NavigationLink = ({ text, Icon, open, allowed = false, pageLink }) => {
     return (
         <ListItem
+            id={text}
             key={text}
             disablePadding
             sx={{

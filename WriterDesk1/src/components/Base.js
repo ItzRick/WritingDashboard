@@ -177,6 +177,7 @@ const Base = ({
           <Settings style={{ opacity: '0', margin: '8' }} />
           <Typography variant="h6" component="div" sx={{color: "appBar.text",}}> {title} </Typography>
           <IconButton
+            id='settings'
             sx={{
               justifySelf: "flex-end",
               color: "appBar.icon",

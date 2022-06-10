@@ -106,7 +106,7 @@ function Participants() {
                 />
                 <TextField
                     style={{marginRight: '1vw', marginTop: '1vw'}}
-                    id="enData"
+                    id="endDate"
                     label={"End date"}
                 />
                 <TextField
