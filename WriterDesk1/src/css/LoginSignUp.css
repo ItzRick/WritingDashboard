@@ -7,21 +7,17 @@ h5 {
     text-align: center;
 }
 
-button {
-    background: #44749D;
-    border-radius: 20px;
-    border-style: none;
-    color: white;
-}
-
 .filler {
     width: 10vw;
     display: inline-block;
 }
 
-.center {
-    margin: auto;
-    width: fit-content;
+.logo {
+    margin: 0px 10px 0px 10px;
+}
+
+.titleChild {
+    display: inline-table;
 }
 
 .textbox {
