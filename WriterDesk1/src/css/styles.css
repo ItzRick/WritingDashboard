@@ -38,4 +38,14 @@
     overflow: auto;
     float: left;
   }
+
+  .sideBar { 
+      /* display: flex; */
+      /* justify-content: center; */
+      width:40vw;
+      float: right;
+      overflow: auto;
+      width: 50%;
+      height: 85vh;
+   }
   
