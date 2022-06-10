@@ -54,11 +54,15 @@ const Upload = () => {
             <br />
             <div className='center'>
                 {uploadSingleFiles}
-                <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} onClick={addRow}>Add</Button>
+                <Button variant='contained'
+                        id='add'
+                        sx={{bgcolor:'button.main', color: 'button.text'}} onClick={addRow}>Add</Button>
             </div>
             <br />
             <div className='title'>
-                <Button variant='contained' sx={{bgcolor:'button.main', color: 'button.text'}} className='uploadButton' onClick={() => {
+                <Button variant='contained'
+                        id='upload'
+                        sx={{bgcolor:'button.main', color: 'button.text'}} className='uploadButton' onClick={() => {
                     uploadSingleFiles.forEach(item => {
                         refs.current[item.props.thisIndex].uploadFile();
                     })

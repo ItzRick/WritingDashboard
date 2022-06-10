@@ -30,7 +30,7 @@ const Main = () => {
       </div>
       <div className='home2'>
         <div className='vertCenter'>
-          <Button variant='contained' className='uploadButton' sx={{
+          <Button id='upload' variant='contained' className='uploadButton' sx={{
             fontSize: '2vw', textTransform: 'none', bgcolor: 'button.main', color: 'button.text'
           }} component={Link} to='/Upload'>Upload a document</Button>
         </div>
