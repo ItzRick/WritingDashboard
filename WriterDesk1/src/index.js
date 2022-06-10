@@ -71,7 +71,11 @@ const theme = createTheme({
     button: {
       main: ThemeColors.darkBlue,
       text: ThemeColors.white
-	},
+	  },
+    buttonWarning: {
+      main: ThemeColors.red,
+      text: ThemeColors.white
+    },
     primary: {
       main: ThemeColors.darkBlue,
     },

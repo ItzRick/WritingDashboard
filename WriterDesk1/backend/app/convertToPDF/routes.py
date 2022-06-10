@@ -19,11 +19,13 @@ def convertToPDF():
     '''
     filepath = request.args.get('filepath')
     filetype = request.args.get('filetype')
-    print(filepath)
+    # if the document is a docx file, use the convert method from the docx2pdf module and return the converted document.
     if filetype == 'docx':
         if not os.path.isfile(filepath.replace("docx", "pdf")):
             convert(filepath)
         return send_file(filepath.replace("docx", "pdf"))
+    # if the document is a txt file, convert it to a pdf by making a new pdf using the contents of the txt file, 
+    # then return the converted document.
     if filetype == 'txt':
         if not os.path.isfile(filepath.replace("txt", "pdf")):
             pdf = FPDF()
