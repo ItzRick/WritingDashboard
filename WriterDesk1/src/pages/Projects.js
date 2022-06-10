@@ -2,7 +2,10 @@ import {
     TextField,
     IconButton,
     Stack,
-    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
 } from "@mui/material";
 import {
     DeleteOutline,
@@ -30,8 +33,8 @@ const Projects = () => {
         setTitle('Projects');
     });
 
-    // TODO remove toyData here and from tableData
-    const toyData = [{
+    // TODO replace with real projects
+    const projects = [{
         id: '0',
         projectName: 'toyProject',
         partCount: '12'
@@ -45,9 +48,16 @@ const Projects = () => {
     ]
 
     //data displayed in the table
-    const [tableData, setTableData] = useState(toyData)
+    const [tableData, setTableData] = useState(projects)
     //list of selected items
     const [selectedInstances, setSelectedInstances] = useState([])
+    // project selected in download user data
+    const [projectDown, setProjectDown] = useState('');
+
+    // dropdown handler for project add
+    const handleProjDown = (event) => {
+        setProjectDown(event.target.value);
+    };
 
     // columns in data-grid
     const columns = [
@@ -130,11 +140,18 @@ const Projects = () => {
                         renderInput={(params) => <TextField sx={{ margin: '1vh', verticalAlign: 'middle' }} {...params} />}
                     />
                 </LocalizationProvider>
-                <TextField
-                    sx={{ margin: '1vh', verticalAlign: 'middle' }}
-                    id="projectName3"
-                    label={"Project name"}
-                />
+                <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
+                    <InputLabel id="project-down-participants">Project</InputLabel>
+                    <Select
+                        labelId="project-down-participants"
+                        id="project-down-participants"
+                        value={projectDown}
+                        label="Project"
+                        onChange={handleProjDown}
+                    >
+                        {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)}
+                </Select>
+                </FormControl>
                 <BlueButton style={{ margin: '1vh', verticalAlign: 'middle' }}>Download user data</BlueButton>
             </div>
             <div className="topBorder">
