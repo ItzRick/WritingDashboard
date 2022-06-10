@@ -20,6 +20,6 @@ describe('Test the frontpage', () => {
         cy.get('[id="signupButton"]')
         .click()
         cy.url().should('include', '/SignUp')
-        cy.contains('Signup')
+        cy.contains('Sign Up')
     })
   })

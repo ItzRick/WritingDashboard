@@ -36,7 +36,7 @@ const UploadPopUp = ({func}) => {
 
     return (
         <>
-            <BlueButton addStyle={{ fontSize: '2vw', textTransform: 'none' }} onClick={handleClickOpen}>Upload your document(s)</BlueButton>
+            <BlueButton idStr='upload' addStyle={{ fontSize: '2vw', textTransform: 'none' }} onClick={handleClickOpen}>Upload your document(s)</BlueButton>
             <Dialog
                 open={open}
                 onClose={switchOpen}

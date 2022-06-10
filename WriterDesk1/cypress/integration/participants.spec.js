@@ -10,20 +10,11 @@ describe('Test the participants page', () => {
         cy.contains('Download selected participants')
         cy.contains('Download user data of selected participants')
 
-        cy.get('[id="projectName"]')
-        cy.contains('label', 'Project name')
+        cy.get('[id="project-add-participants"]')
+        cy.contains('label', 'Project')
 
-        cy.get('[id="projectName2"]')
-        cy.contains('label', 'Project name')
-
-        cy.get('[id="projectName3"]')
-        cy.contains('label', 'Project name')
-
-        cy.get('[id="startDate"]')
-        cy.contains('label', 'Start date')
-
-        cy.get('[id="endDate"]')
-        cy.contains('label', 'End date')
+        cy.get('[id="project-down-participants"]')
+        cy.contains('label', 'Project')
     })
 
   })

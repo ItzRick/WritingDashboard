@@ -10,7 +10,7 @@ describe('Test the signup page', () => {
     })
 
     it('Checks if all elements are present.', () => {
-        cy.contains('Sign up')
+        cy.contains('Sign Up')
 
         cy.get('[id="email"]')
         cy.contains('label', 'example@mail.com')
@@ -19,7 +19,7 @@ describe('Test the signup page', () => {
         cy.contains('label', 'example@mail.com')
 
         cy.get('[id="password"]')
-        cy.contains('label', 'Password')  
+        cy.contains('label', 'Password')
 
         cy.get('[id="password2"]')
         cy.contains('label', 'Password')  

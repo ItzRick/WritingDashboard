@@ -13,9 +13,10 @@ import { Link } from 'react-router-dom';
  * 
  * @returns default blue action button
  */
-const BlueButton = ({children, pathName='', onClick= ()=>{}, addStyle}) => {
+const BlueButton = ({idStr='', children, pathName='', onClick= ()=>{}, addStyle}) => {
     return (
-        <Button 
+        <Button
+            id={idStr}
             size='large' variant='contained' sx={[{ bgcolor: 'button.main', color: 'button.text' }, addStyle]} 
             component={Link} to={{pathname: pathName}}
             onClick={onClick}

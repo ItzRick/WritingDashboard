@@ -55,7 +55,7 @@ describe('Test the loginpage', () => {
     it('Checks if we can go to the signup page.', () => {
         cy.contains('here').click()
         cy.url().should('include', '/SignUp')
-        cy.contains('Signup')
+        cy.contains('Sign Up')
     })
 
   })
