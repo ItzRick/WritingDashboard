@@ -1,7 +1,6 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from asyncio.windows_events import NULL
 from datetime import datetime
 from sqlalchemy.inspection import inspect
 
@@ -70,7 +69,7 @@ class Files(db.Model, Serializer):
     path = db.Column(db.String, unique=False)
     filename = db.Column(db.String(256), index=True, unique=False)
     fileType = db.Column(db.String(5), unique=False)
-    courseCode = db.Column(db.String(16), unique=False, default=NULL)
+    courseCode = db.Column(db.String(16), unique=False, default=None)
     date = db.Column(db.DateTime, unique=False, default=datetime.today())
 
     def __repr__(self):

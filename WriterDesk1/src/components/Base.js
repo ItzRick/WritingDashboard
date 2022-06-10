@@ -25,6 +25,7 @@ import {
   Build,
   Person,
   Settings,
+  ListAlt,
 } from '@mui/icons-material';
 import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 
@@ -173,8 +174,7 @@ const Base = ({
   },[]);
 
   return (
-    
-    <Box sx={{ display: 'flex' }} color="textPrimary">
+    <Box sx={{ display: 'flex' }} color="textPrimary" className='baseRoot'>
       <CssBaseline />
       <CustomAppBar
         position='fixed'
@@ -253,6 +253,7 @@ const Base = ({
             display: admin || researcher ? 'block' : 'none'
           }} />
           <NavigationLink open={open} text="Participants" Icon={Group} allowed={researcher | admin} pageLink='Participants' />
+          <NavigationLink open={open} text="Projects" Icon={ListAlt} allowed={researcher | admin} pageLink='Projects' />
           <NavigationLink open={open} text="Feedback Models" Icon={Build} allowed={researcher | admin} pageLink='FeedbackModels' />
           <Divider sx={{
             bgcolor:'drawer.divider',
@@ -262,9 +263,11 @@ const Base = ({
         </List>
       </CustomDrawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }} >
-        <CustomDrawerHeader />
-        <Outlet context={{ setTitle }} />
+      <Box component="main" sx={{ flexGrow: 1, p:3}} >
+        <CustomDrawerHeader/>
+        <Box className='content'sx={{ height:'93.5%'}}>
+          <Outlet context={{ setTitle }} />
+        </Box>
       </Box>
     </Box>
   );
