@@ -146,9 +146,9 @@ function Participants() {
         <BlueButton>Download participants</BlueButton>
       </div>
       <div className='topBorder'>
-        <Button variant='contained' sx={{ mr: '1vw', verticalAlign: 'middle' }}>Download selected participants</Button>
+        <BlueButton>Download selected participants</BlueButton>
         <div style={{ paddingLeft: '2vw', display: 'inline' }} />
-        <Button variant='contained' sx={{ mr: '1vw', verticalAlign: 'middle' }}>Download user data of selected participants</Button>
+        <BlueButton>Download user data of selected participants</BlueButton>
       </div>
       <div style={{ justifyContent: 'center', display: 'flex' }}>
         <div style={{ height: '80vh', maxHeight: '400px', width: '50vw' }} >
