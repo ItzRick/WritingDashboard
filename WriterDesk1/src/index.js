@@ -5,10 +5,10 @@ import reportWebVitals from './reportWebVitals';
 
 // routing
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { history } from './helpers/history';
 
 // authentication
-import { Admin, CustomRoutes, useAuthenticated } from 'react-admin';
-import authProvider from '../services/authProvider';
+import { ProtectedR, ProtectedA } from './services/ProtectedRoutes';
 
 // theme and style
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -87,14 +87,11 @@ const theme = createTheme({
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-
-  <Admin authProvider={authProvider}>
-        
+root.render(     
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       {/* Router encapsules the application */}
-      <BrowserRouter>
+      <BrowserRouter history={history}>
         <Routes>
           {/* public part of the router, accessible for public */}
           <Route path='/' element={<BaseOut />}>
@@ -114,13 +111,14 @@ root.render(
             <Route name='Progress' path='Progress' element={<Progress />} />
             <Route name='Documents' path='Documents' element={<Documents />} />
 
-            {/* For researchers and admin users */}
-            <Route name='Participants' path='Participants' element={<Participants />} />
-            <Route name='FeedbackModels' path='FeedbackModels' element={<FeedbackModels />} />
-
+            <Route element={<ProtectedR/>}>
+              <Route name='Participants' path='Participants' element={<Participants />} />
+              <Route name='FeedbackModels' path='FeedbackModels' element={<FeedbackModels />} />
+            </Route>
             {/* For admin users */}
-            <Route name='Users' path='Users' element={<Users />} />
-
+            <Route element={<ProtectedA/>}>
+              <Route name='Users' path='Users' element={<Users />} />
+            </Route>
             <Route path='/' element={<Main />} />
 
 
@@ -133,7 +131,6 @@ root.render(
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>
-  </Admin>
 );
 
 // If you want to start measuring performance in your app, pass a function

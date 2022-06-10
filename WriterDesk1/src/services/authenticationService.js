@@ -7,28 +7,26 @@ export const AuthenticationService = {
     login,
     logout,
     getCurrentUser,
+    getCurrentUserId,
     checkAuth,
     getRole
 }
 
 function login(username, password) {
-    axios.post(`${BASE_URL}/login`, {
+    return axios.post(`${BASE_URL}/login`, {
         "username": username,
         "password": password,
     }).then(response => {
         localStorage.setItem('currentUser', JSON.stringify(response.data));
 
         if (JSON.parse(localStorage.getItem('currentUser')).access_token !== null && JSON.parse(localStorage.getItem('currentUser')).access_token !== "undefined") {
-            console.log("Inloggen gelukt!")
-            // TODO go to new page
+            console.log("Inloggen gelukt!");
         } else {
-            alert(response.data.error);
-            // setFormError(true);
+            return Promise.reject();
         }
     })
-        .catch(error => {
-            console.error("Something went wrong:", error);
-            logout();
+        .catch(error => {        
+            return Promise.reject();   
         });
 }
 
@@ -40,17 +38,18 @@ function getCurrentUser() {
     return JSON.parse(localStorage.getItem('currentUser'));
 }
 
+function getCurrentUserId() {
+    if(JSON.parse(localStorage.getItem('currentUser')) !== null) {
+        return JSON.parse(localStorage.getItem('currentUser')).id;
+    } else {
+        return Error("No user found");
+    }
+}
+
 function checkAuth () {
     return axios.get(`${BASE_URL}/protected`, {headers: authHeader()});
 }
 
 function getRole (){
-    return axios.get(`${BASE_URL}/protected`, {headers: authHeader()
-        }).then(response => {
-            return response.data.role;
-            localStorage.setItem('currentUser', JSON.stringify(response.data));
-        }).catch(error => {
-            AuthenticationService.logout();
-            console.error("Couldn't recieve role:", error);
-        });
+    return JSON.parse(localStorage.getItem('currentUser')).role;
 }

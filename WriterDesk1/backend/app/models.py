@@ -36,6 +36,12 @@ class User(db.Model):
         self.username = username
         self.set_password(password_plaintext)
 
+    def __init__(self, username: str, password_plaintext: str, role: str):
+        ''' Create new user, use set_password to create hashed password for plaintext password'''
+        self.type = role
+        self.username = username
+        self.set_password(password_plaintext)
+
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
@@ -45,32 +51,7 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.passwordHash, password)
 
-    __mapper_args__ = {
-        'polymorphic_on': type,
-        'polymorphic_identity':"user",
-    }
 
-
-class Student(User):
-    '''
-        Subclass of User table, for students
-    '''
-
-    __tablename__ = None
-    
-    __mapper_args__ = {
-        'polymorphic_identity': "student",
-    }
-
-class Participant(User):
-    '''
-        Subclass of User table, for participantszz
-    '''
-    __tablename__ = None
-    
-    __mapper_args__ = {
-        'polymorphic_identity': "participant",
-    }
 
 class Files(db.Model, Serializer):
     '''

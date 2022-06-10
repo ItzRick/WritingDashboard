@@ -73,6 +73,7 @@ def user_lookup_callback(_jwt_header, jwt_data):
 @bp.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
+    print('test')
     return jsonify(
         id=current_user.id,
         username=current_user.username,

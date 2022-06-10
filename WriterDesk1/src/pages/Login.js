@@ -12,9 +12,11 @@ import testImage from '../images/placeholder_image.png'
 // routing
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
+import { history } from '../helpers/history';
 
 // Login request setup
 import axios from 'axios';
+import { AuthenticationService } from '../services/authenticationService';
 const BASE_URL = "https://localhost:5000/loginapi";
 
 /**
@@ -36,21 +38,10 @@ const Login = () => {
 
     // Do POST request containing username and password variable, recieve data when username and password are correct
     const handleClick = () => {
-        axios.post(`${BASE_URL}/login`,{
-                "username": username,
-                "password": password,
-            }).then(response =>{
-                localStorage.setItem('access_token', response.data.access_token);
-
-                if (localStorage.getItem("access_token") !== null && localStorage.getItem("access_token")!=="undefined") {
-                console.log("Inloggen gelukt!")
-              }else{
-                  alert(response.data.error);
-                  setFormError(true);
-              }
-        })
-        .catch(error =>{
-            console.error("Something went wrong:",error);
+        AuthenticationService.login(username, password).then(() => {
+            history.push("/Main");
+            window.location.reload();
+        }).catch( error => {
             setFormError(true);
         });
     }
