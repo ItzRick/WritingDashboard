@@ -1,10 +1,7 @@
-from datetime import datetime
-from datetime import timedelta
-from datetime import timezone
+from app import db
 
-from flask import Flask
 from flask import jsonify
-from flask import request, current_app
+from flask import request
 from app.loginapi import bp
 
 from flask_jwt_extended import create_access_token
@@ -79,3 +76,40 @@ def protected():
         username=current_user.username,
         role = current_user.type
     )
+
+@bp.route("/changeRole", methods=["POST"])
+def changeRole():
+    '''
+        This function handles updating the role of a user with given userId. This function is only available to admins 
+        Attributes:
+            userId: id of the user of whom we want to change the role
+            newRole: intended role of the user
+        Return:
+            Returns success if it succeeded, or an error message if there exists no user with userId
+    '''
+    # retrieve data from call
+    userId = request.args.get('userId')
+    newRole = request.args.get('newRole')
+
+    # get targetUser
+    targetUser = User.query.filter_by(userId=userId).first()
+    # check if userId exists
+    if targetUser is None:
+        return 'user with userId not found', 404
+    # check if CallingUser is Admin ??
+    if False: #TODO @mark
+        return "Method only accessible by admin", 403 # return Unauthorized response status code
+    # check if role is a valid role type ??
+    if False: #TODO 
+        return 'Invalid role', 404
+    # update role
+    targetUser.role = newRole
+    # update the database
+    db.session.commit()
+    return 'success'
+
+#REQUIRES AUTH !!
+@bp.route("/changePassword", methods=["POST"])
+def changePassword():
+    print('Changing Password ...')
+    return 'success'
