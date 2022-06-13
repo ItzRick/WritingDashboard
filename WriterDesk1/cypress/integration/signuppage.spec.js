@@ -78,27 +78,27 @@ describe('Test the signup page', () => {
         cy.contains(repeatPassWordError).should('not.exist')
 
         //Password too short, repeat not the same
-        cy.get('[id="password"]').type('short')
+        cy.get('[id="password"]').clear().type('short')
         cy.contains(passWordErrorLength)
         cy.contains(repeatPassWordError)
 
         //Password missing lowercase
-        cy.get('[id="password"]').type('UPPERCASE')
+        cy.get('[id="password"]').clear().type('UPPERCASE')
         cy.contains(passWordErrorLower)
         cy.contains(repeatPassWordError)
 
         //Password missing uppercase
-        cy.get('[id="password"]').type('lowercase')
+        cy.get('[id="password"]').clear().type('lowercase')
         cy.contains(passWordErrorUpper)
         cy.contains(repeatPassWordError)
 
         //Password missing number
-        cy.get('[id="password"]').type('NoNumber')
+        cy.get('[id="password"]').clear().type('NoNumber')
         cy.contains(passWordErrorNumber)
         cy.contains(repeatPassWordError)
 
         //Valid password, repeat not the same
-        cy.get('[id="password"]').type('ValidPass1')
+        cy.get('[id="password"]').clear().type('ValidPass1')
         cy.contains(passWordErrorLength).should('not.exist')
         cy.contains(passWordErrorLower).should('not.exist')
         cy.contains(passWordErrorUpper).should('not.exist')
@@ -106,13 +106,15 @@ describe('Test the signup page', () => {
         cy.contains(repeatPassWordError)
 
         //Valid password, repeat the same
+        cy.get('[id="password2"]').clear().type('ValidPass1')
         cy.contains(repeatPassWordError).should('not.exist')
     })
 
     it('Checks if correct errors are displayed on clicking button', () => {
         //Empty fields
+        cy.get('[id="password"]').clear()
         cy.contains('One or more fields are empty!').should('not.exist')
-        cy.contains('Sign Up').click()
+        cy.get('[id="signButton"]').click()
         cy.contains('One or more fields are empty!')
 
         //Non-empty invalid fields
@@ -121,7 +123,7 @@ describe('Test the signup page', () => {
         cy.get('[id="password"]').type('invalidpassword')
         cy.get('[id="password2"]').type('invalidpassword')
         cy.contains('One or more fields are not complete!').should('not.exist')
-        cy.contains('Sign Up').click()
+        cy.get('[id="signButton"]').click()
         cy.contains('One or more fields are not complete!')
     })
 
