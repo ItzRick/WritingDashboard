@@ -1,4 +1,4 @@
-from app.feedback.convertDocxTxtToText import getDOCXText
+from app.feedback.retrieveText.convertDocxTxtToText import getDOCXText
 import os
 
 

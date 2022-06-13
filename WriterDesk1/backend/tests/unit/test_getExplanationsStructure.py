@@ -1,4 +1,4 @@
-from app.structureCheck import getExplanationsStructure
+from app.feedback.structureCheck import getExplanationsStructure
 
 
 def test_zero_words():

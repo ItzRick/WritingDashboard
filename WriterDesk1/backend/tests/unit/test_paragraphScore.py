@@ -1,5 +1,5 @@
 from decimal import ROUND_HALF_UP, Decimal
-from app.structureCheck import getParagraphScore
+from app.feedback.structureCheck import getParagraphScore
 
 
 def test_zero_words():
