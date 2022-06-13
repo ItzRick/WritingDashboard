@@ -59,7 +59,7 @@ const SignUp = () => {
         } else if(password.length < PASSWORD_LENGTH) {
             return "Must contain at least 8 characters";
         } else if((password.match(/[a-z]/g) || []).length < 1) {
-            return "Must contain min. 1 lowercase letter";
+            return "Must contain at least 1 lowercase letter";
         } else if((password.match(/[A-Z]/g) || []).length < 1) {
             return "Must contain at least 1 uppercase letter";
         } else if((password.match(/[0-9]/g) || []).length < 1) {
@@ -161,7 +161,7 @@ const SignUp = () => {
                     {formError !== "" && <Typography color="red">{formError}</Typography>}
                     {formError !== "" && <br />}
 
-                    <BlueButton onClick={handleClick}>Sign Up</BlueButton>
+                    <BlueButton idStr='signButton' onClick={handleClick}>Sign Up</BlueButton>
                 </div>
                 <div className='div3'>
                     <br />
