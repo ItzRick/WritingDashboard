@@ -81,13 +81,15 @@ def protected():
 @bp.route("/changeRole", methods=["POST"])
 def changeRole():
     '''
-        This function handles updating the role of a user with given userId. This function is only available to admins 
+        This function handles updating the role of a user with given userId. This function is only available to admins
+        Function requires a user to be logged in, use helpers > auth-header.js
         Attributes:
             userId: id of the user of whom we want to change the role
             newRole: intended role of the user
+            targetUser: user with id == userId
         Return:
             Returns success if it succeeded, or an 
-            error message 
+            error message:
                 404, if there exists no user with userId
                 403, if the current user is not an admin
                 404, if the role name is not one of ['admin', 'participant', 'researcher', 'student']
@@ -120,10 +122,14 @@ def changeRole():
 def setPassword():
     '''
         This function handles setting the password for the user
+        Function requires a user to be logged in, use helpers > auth-header.js
         Attributes:
             newPassword: intended password for the user
+            current_user: the user currently logged in
         Return:
-            Returns success if it succeeded, or an error message if the current user does not exist
+            Returns success if it succeeded, or an 
+            error message:
+                404, if the current user's id does not exist in User table
     '''
     # retrieve data from call
     newPassword = request.args.get('newPassword')
