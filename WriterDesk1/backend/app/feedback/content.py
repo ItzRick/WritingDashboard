@@ -1,10 +1,4 @@
 import re
-# TODO: move to __init__.py: 
-# import nltk
-# nltk.download('stopwords')
-# nltk.download('punkt')
-# english_stopwords = stopwords.words('english')
-from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from flask import current_app
 import os

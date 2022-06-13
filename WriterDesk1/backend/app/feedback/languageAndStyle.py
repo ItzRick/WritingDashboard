@@ -1,5 +1,5 @@
-import language_tool_python
 import re
+from app import languageToolEn
 
 
 def feedbackLanguageStyle(text):
@@ -17,18 +17,14 @@ def feedbackLanguageStyle(text):
         context: context of mistake text.
     Arguments:
         text: Input string that will be given feedback on.
+        tool: Language tool used to give the feedback on the language and style.
     Returns:
         mistakes: List of mistakes in text including matched text, context,
                   occurrence of text in context, explanation, and possible replacements.
         score: Score between 0 and 10 given to the text based on the feedback.
     """
-
-    # Instantiate language tool
-    # TODO: Remove out of function to improve performance
-    tool = language_tool_python.LanguageTool('en-US')
-
     # Check for mistakes
-    matches = tool.check(text)
+    matches = languageToolEn.check(text)
 
     mistakes = []
     for match in matches:

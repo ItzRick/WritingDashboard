@@ -1,12 +1,12 @@
 # import fitz
-import os
-import docx
+# import os
+from docx import Document
 # import pdfplumber
 import re
 import bs4 as bs
-import regex
-from collections import Counter
-from copy import deepcopy
+# import regex
+# from collections import Counter
+# from copy import deepcopy
 
 
 # Methods used for extracting text from txt and docx files and converting them to strings or text files.
@@ -85,7 +85,7 @@ def getDOCXText(path):
 
     try:
         # Read docx file
-        doc = docx.Document(path)
+        doc = Document(path)
 
         # iterate over paragraphs
         for para in doc.paragraphs:
