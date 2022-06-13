@@ -69,7 +69,6 @@ function Document() {
       })
   }
 
-  //TODO: retrieve mistakes from database
 //TODO: Retrieve scores from database.
   const fetchScores = (fileId) => {
     // // Url of the server:
@@ -168,45 +167,47 @@ function Document() {
    */
   const TextBoxExplanation = (props) => {
     return (
-      <div className={showTextbox[props.number] ? 'textBoxExpl' : 'hidden'} id={'textBoxExpl' + props.number}
-        style={{ backgroundColor: typeToColor(props.type), borderColor: typeToColor(props.type) }}>
-        <Typography className='textBoxType' style={{ color: typeToColor(props.type), fontSize: 'calc(8px + 0.5vw)' }}>
-          <b>{typeToName(props.type)}</b>
-        </Typography>
-        <Typography variant='body1' className='textBoxWord' style={{ fontSize: 'calc(12px + 0.3vw)' }}>
-          <b>{props.text}</b>
-        </Typography>
-        <Typography variant='body2' sx={{ marginTop: '5px', marginBottom: '10px', fontSize: 'calc(12px + 0.2vw)' }}>
-          {props.expl}
-        </Typography>
-        <Typography className={props.replacements.length > 0 ? 'replacementsText' : 'hidden'}
-          style={{ fontSize: 'calc(11px + 0.2vw)' }} variant='body2'>
-          Possible replacements:
-        </Typography>
-        <Typography className={props.replacements.length > 0 ? 'textBoxReplacements' : 'hidden'}
-          variant='body1'
-          style={{
-            borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
-            marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'
-          }}>
-          {props.replacements[0]}
-        </Typography>
-        <Typography className={props.replacements.length > 1 ? 'textBoxReplacements' : 'hidden'}
-          variant='body1'
-          style={{
-            borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
-            marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'
-          }}>
-          {props.replacements[1]}
-        </Typography>
-        <Typography className={props.replacements.length > 2 ? 'textBoxReplacements' : 'hidden'}
-          variant='body1'
-          style={{
-            borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
-            marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'
-          }}>
-          {props.replacements[2]}
-        </Typography>
+      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <div className={showTextbox[props.number] ? 'textBoxExpl' : 'hidden'} id={'textBoxExpl' + props.number}
+          style={{ backgroundColor: typeToColor(props.type), borderColor: typeToColor(props.type) }}>
+          <Typography className='textBoxType' style={{ color: typeToColor(props.type), fontSize: 'calc(8px + 0.5vw)' }}>
+            <b>{typeToName(props.type)}</b>
+          </Typography>
+          <Typography variant='body1' className='textBoxWord' style={{ fontSize: 'calc(12px + 0.3vw)' }}>
+            <b>{props.text}</b>
+          </Typography>
+          <Typography variant='body2' sx={{ marginTop: '5px', marginBottom: '10px', fontSize: 'calc(12px + 0.2vw)' }}>
+            {props.expl}
+          </Typography>
+          <Typography className={props.replacements.length > 0 ? 'replacementsText' : 'hidden'}
+            style={{ fontSize: 'calc(11px + 0.2vw)' }} variant='body2'>
+            Possible replacements:
+          </Typography>
+          <Typography className={props.replacements.length > 0 ? 'textBoxReplacements' : 'hidden'}
+            variant='body1'
+            style={{
+              borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
+              marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'
+            }}>
+            {props.replacements[0]}
+          </Typography>
+          <Typography className={props.replacements.length > 1 ? 'textBoxReplacements' : 'hidden'}
+            variant='body1'
+            style={{
+              borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
+              marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'
+            }}>
+            {props.replacements[1]}
+          </Typography>
+          <Typography className={props.replacements.length > 2 ? 'textBoxReplacements' : 'hidden'}
+            variant='body1'
+            style={{
+              borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
+              marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'
+            }}>
+            {props.replacements[2]}
+          </Typography>
+        </div>
       </div>
     );
   };
@@ -301,9 +302,9 @@ function Document() {
           config={{
             displayModeBar: false, // this is the line that hides the bar.
           }}
-          // So that you can do stuff if you click on a bar (TODO: remove):
+          // Show all explanations of the clicked type
           onClick={(data) => {
-            console.log("data", data.points[0].pointNumber)
+            showAllExplanationsOfType(data.points[0].pointNumber);
           }}
           // So the chart can resize:
           useResizeHandler={true}
