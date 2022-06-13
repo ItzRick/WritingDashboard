@@ -25,6 +25,9 @@ def create_app(config_class=Config):
     from app.fileapi import bp as fileapi_bp
     app.register_blueprint(fileapi_bp, url_prefix='/fileapi')
 
+    from app.feedback import bp as feedback_bp
+    app.register_blueprint(feedback_bp, url_prefix='/feedback')
+
     from app.loginapi import bp as loginapi_db
     app.register_blueprint(loginapi_db, url_prefix='/loginapi')
 
