@@ -126,22 +126,6 @@ describe('Test the signup page', () => {
         cy.contains('One or more fields are invalid!').should('not.exist')
         cy.contains('Sign Up').click()
         cy.contains('One or more fields are invalid!')
-
-        //Valid fields, existing user
-
-    })
-
-    it('Checks if we are brought to the login page after registration', () => {
-        cy.get('[id="email"]').type('validemail@student.tue.nl')
-        cy.get('[id="email2"]').type('validemail@student.tue.nl')
-        cy.get('[id="password"]').type('Validpass1')
-        cy.get('[id="password2"]').type('Validpass1')
-        cy.contains('Sign Up').click()
-        .then(() =>{
-            //After request
-            cy.url().should('include', '/Login')
-            cy.contains('Log in')
-        })
     })
 
     it('Checks if we can go to the login page..', () => {
