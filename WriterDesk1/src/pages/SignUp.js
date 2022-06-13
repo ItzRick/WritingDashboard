@@ -34,7 +34,10 @@ const SignUp = () => {
 
     const navigate = useNavigate();
 
-    // Check if username input is valid
+    /* 
+     * Check if username input is valid.
+     * @returns helper text for username textfield
+     */
     const checkUsername = () => {
         if(username === "") {
             return "";
@@ -44,7 +47,10 @@ const SignUp = () => {
         return "";
     }
 
-    // Check if repeated username input is valid
+    /*
+     * Check if repeated username input is valid.
+     * @returns helper text for second username textfield
+     */
     const confirmUsername = () => {
         if(username !== "" && username !== usernameConfirm) {
             return "Must match Email";
@@ -52,7 +58,12 @@ const SignUp = () => {
         return "";
     }
 
-    // Check if password input is valid
+    /* 
+     * Check if password input is valid.
+     * According to URC 1.2-1.5, a valid password has at least 8 characters,
+     * with at least 1 lowercase character, uppercase character and number.
+     * @returns helper text for password textfield
+     */
     const checkPassword = () => {
         if(password === "") {
             return "";
@@ -68,7 +79,10 @@ const SignUp = () => {
         return "";
     }
 
-    // Check if repeated password input is valid
+    /* 
+     * Check if repeated password input is valid.
+     * @returns helper text for second password textfield
+     */
     const confirmPassword = () => {
         if(password !== "" && password !== passwordConfirm) {
             return "Must match Password";
@@ -76,7 +90,9 @@ const SignUp = () => {
         return "";
     }
 
-    // Do POST request containing username and password variable, recieve status of response
+    /*
+     * Do POST request containing username and password variable, recieve status of response.
+     */
     const handleClick = () => {
         // Check if input is valid
         if (username === "" || password === "") {
@@ -110,13 +126,13 @@ const SignUp = () => {
     // Set username from textfield
     const [username, setUsername] = useState("");
 
-    // Set username from textfield
+    // Set repeated username from textfield
     const [usernameConfirm, setUsernameConfirm] = useState("");
 
     // Set password from textfield
     const [password, setPassword] = useState("");
 
-    // Set password from textfield
+    // Set repeated password from textfield
     const [passwordConfirm, setPasswordConfirm] = useState("");
 
     // Change page using formError when we find an error
@@ -133,13 +149,13 @@ const SignUp = () => {
                 <div className='div2'>
                     <div className='text_boxes'>
                         <Typography>Email:</Typography>
-                        <TextField id='email' label='example@mail.com' variant='outlined' 
+                        <TextField id='email' label='example@tue.nl' variant='outlined' 
                             value={username} onChange={(e) => {setUsername(e.target.value); setFormError("")}}
                             error={checkUsername() !== ""} helperText={checkUsername() !== "" ? checkUsername() : " "}
                             fullWidth
                         />
                         <Typography>Repeat email:</Typography>
-                        <TextField id='email2' label='example@mail.com' variant='outlined' 
+                        <TextField id='email2' label='example@tue.nl' variant='outlined' 
                             value={usernameConfirm} onChange={(e) => {setUsernameConfirm(e.target.value); setFormError("")}} 
                             error={confirmUsername() !== ""} helperText={confirmUsername() !== "" ? confirmUsername() : " "}
                             fullWidth

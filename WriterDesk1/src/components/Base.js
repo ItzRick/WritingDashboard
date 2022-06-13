@@ -159,6 +159,7 @@ const Base = ({
   // general theme, defined in index.js
   const theme = useTheme();
 
+  // give rights depending on the role of the user that is logged in
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     if (user === null) {
