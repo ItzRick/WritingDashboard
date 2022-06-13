@@ -48,8 +48,8 @@ describe('Test the signup page', () => {
     })
 
     it('Checks if correct error messages are displayed', () => {
-        const emailError = 'Must be a TUe email!'
-        const repeatEmailError = 'Does not match Email!'
+        const emailError = 'Must be a TU/e email-address'
+        const repeatEmailError = 'Must match Email'
         cy.contains(emailError).should('not.exist')
         cy.contains(repeatEmailError).should('not.exist')
 
@@ -67,10 +67,11 @@ describe('Test the signup page', () => {
         cy.get('[id="email"]').type('validemail@student.tue.nl')
         cy.contains(emailError).should('not.exist')
 
-        const passWordErrorLength = 'Must be at least 8 characters!'
-        const passWordErrorUpper = 'Must contain at least 1 uppercase letter!'
-        const passWordErrorNumber = 'Must contain at least 1 number!'
-        const repeatPassWordError = 'Does not match Password!'
+        const passWordErrorLength = 'Must contain at least 8 characters'
+        const passWordErrorLower = 'Must contain at least 1 lowercase letter'
+        const passWordErrorUpper = 'Must contain at least 1 uppercase letter'
+        const passWordErrorNumber = 'Must contain at least 1 number'
+        const repeatPassWordError = 'Must match Password'
         cy.contains(passWordErrorLength).should('not.exist')
         cy.contains(passWordErrorUpper).should('not.exist')
         cy.contains(passWordErrorNumber).should('not.exist')
@@ -79,36 +80,32 @@ describe('Test the signup page', () => {
         //Password too short, repeat not the same
         cy.get('[id="password"]').type('short')
         cy.contains(passWordErrorLength)
-        cy.contains(passWordErrorUpper).should('not.exist')
-        cy.contains(passWordErrorNumber).should('not.exist')
+        cy.contains(repeatPassWordError)
+
+        //Password missing lowercase
+        cy.get('[id="password"]').type('UPPERCASE')
+        cy.contains(passWordErrorLower)
         cy.contains(repeatPassWordError)
 
         //Password missing uppercase
         cy.get('[id="password"]').type('lowercase')
-        cy.contains(passWordErrorLength).should('not.exist')
         cy.contains(passWordErrorUpper)
-        cy.contains(passWordErrorNumber).should('not.exist')
         cy.contains(repeatPassWordError)
 
         //Password missing number
         cy.get('[id="password"]').type('NoNumber')
-        cy.contains(passWordErrorLength).should('not.exist')
-        cy.contains(passWordErrorUpper).should('not.exist')
         cy.contains(passWordErrorNumber)
         cy.contains(repeatPassWordError)
 
         //Valid password, repeat not the same
         cy.get('[id="password"]').type('ValidPass1')
         cy.contains(passWordErrorLength).should('not.exist')
+        cy.contains(passWordErrorLower).should('not.exist')
         cy.contains(passWordErrorUpper).should('not.exist')
         cy.contains(passWordErrorNumber).should('not.exist')
         cy.contains(repeatPassWordError)
 
         //Valid password, repeat the same
-        cy.get('[id="password2"]').type('ValidPass1')
-        cy.contains(passWordErrorLength).should('not.exist')
-        cy.contains(passWordErrorUpper).should('not.exist')
-        cy.contains(passWordErrorNumber).should('not.exist')
         cy.contains(repeatPassWordError).should('not.exist')
     })
 
@@ -123,9 +120,9 @@ describe('Test the signup page', () => {
         cy.get('[id="email2"]').type('validemail@student.tue.nl')
         cy.get('[id="password"]').type('invalidpassword')
         cy.get('[id="password2"]').type('invalidpassword')
-        cy.contains('One or more fields are invalid!').should('not.exist')
+        cy.contains('One or more fields are not complete!').should('not.exist')
         cy.contains('Sign Up').click()
-        cy.contains('One or more fields are invalid!')
+        cy.contains('One or more fields are not complete!')
     })
 
     it('Checks if we can go to the login page..', () => {
