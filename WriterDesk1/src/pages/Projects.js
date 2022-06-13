@@ -17,13 +17,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import axios from "axios";
 
 /**
- * 
+ *
  * @returns Projects Page
  */
 const Projects = () => {
-    // set title in parent 'base' 
+    // set title in parent 'base'
     const { setTitle } = useOutletContext();
     useEffect(() => {
         setTitle('Projects');
@@ -72,7 +73,7 @@ const Projects = () => {
                 return (<div>
                     <IconButton onClick={(e) => { }}  ><PersonSearch /></IconButton>
                     <IconButton onClick={(e) => { }}  ><Storage /></IconButton>
-                    <IconButton onClick={(e) => { }}  ><DeleteOutline /></IconButton>
+                    <IconButton onClick={(e) => { deleteProject(e, params) }}  ><DeleteOutline /></IconButton>
                 </div>);
             }
         }
@@ -83,6 +84,49 @@ const Projects = () => {
     // end date of project
     const [endData, setEndData] = useState(new Date());
 
+    const [projectName, setProjectName] = useState();
+    const [numberOfParticipants, setNumberOfParticipants] = useState();
+
+    const createProject = (e) => {
+        if (!(numberOfParticipants !== '' && numberOfParticipants >= 0 && numberOfParticipants <= 10000)) {
+            alert('Make sure the number of participants is a valid number between 0 and 10000');
+            return null;
+        }
+        axios.post(`https://localhost:5000/projectapi/setProject`,{
+                "projectName": projectName,
+                "numberOfParticipants": numberOfParticipants,
+            }).then(response =>{
+            alert(123)
+        })
+
+    }
+
+    const deleteProject = (e, params) => {
+       // alert(params.id);
+       //  //   Url of the server:
+       //  const url = 'https://127.0.0.1:5000/projectapi/projectdelete'
+       //  // Formdata for the backend call, to which the id has been added:
+       //  const formData = new FormData();
+       //  formData.append('id', params.id);
+       //  // Make the call to the backend:
+       //  axios.delete(url, { data: formData })
+       //    .then(() => {  });
+
+    }
+
+    const deleteSelectedProjects = (e) => {
+        // // Url of the server:
+        // const url = 'https://127.0.0.1:5000/projectapi/projectdelete'
+        // // Create a new formdata:
+        // const formData = new FormData();
+        // // For each of the selected instances, add this id to the formdata:
+        // selectedInstances.forEach(id => alert(id));
+        // // Make the backend call:
+        // axios.delete(url, { data: formData })
+        //   .then(() => {  });
+    }
+
+
     return (
         <>
             <div style={{ height: '30%' }}>
@@ -92,14 +136,18 @@ const Projects = () => {
                         sx={{ mr: '1vw', verticalAlign: 'middle' }}
                         id="projectName"
                         label={"Project name"}
+                        inputProps={{ maxLength: 264 }}
+                        onChange={(e) => setProjectName(e.target.value)}
                     />
                     <TextField
                         sx={{ mr: '1vw', verticalAlign: 'middle' }}
                         id="partCount"
                         type='number'
                         label={"Number of Participants"}
+                        InputProps={{ inputProps: { min: 0 } }}
+                        onChange={(e) => setNumberOfParticipants(e.target.value)}
                     />
-                    <BlueButton style={{ verticalAlign: 'middle' }}>Add project</BlueButton>
+                    <BlueButton style={{ verticalAlign: 'middle' }} onClick={(e) => {createProject(e)}}>Add project</BlueButton>
                 </div>
                 <div />
                 <div className="topBorder">
@@ -161,7 +209,7 @@ const Projects = () => {
                     ),
                     Toolbar: () => (
                         <GridToolbarContainer>
-                            <IconButton><DeleteOutline /></IconButton>
+                            <IconButton onClick={(e) => {deleteSelectedProjects(e)}}><DeleteOutline /></IconButton>
                         </GridToolbarContainer>
                     )
                 }}

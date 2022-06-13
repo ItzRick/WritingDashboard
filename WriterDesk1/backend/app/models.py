@@ -93,3 +93,19 @@ class Files(db.Model, Serializer):
 
     def __repr__(self):
         return '<File {}>'.format(self.filename)
+
+
+class Projects(db.Model):
+    '''
+        Class to enter research projects in the database.
+        Attributes:
+            id: Id of this database instance, of this project that has been added in the database.
+            userId: Id of the researcher corresponding to the research project.
+            projectName: Name of the research project.
+    '''
+    id = db.Column(db.Integer, primary_key=True)
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'))
+    projectName = db.Column(db.String(256), index=True, unique=False, default='')
+
+    def __repr__(self):
+        return '<Project {}>'.format(self.projectName)
