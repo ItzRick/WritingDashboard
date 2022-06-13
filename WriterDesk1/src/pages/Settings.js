@@ -34,7 +34,11 @@ const Settings = () => {
                     <br /><br />
                     <FormControlLabel value="no" control={<Radio />} label="I refuse the data conditions." />
                 </RadioGroup>
-                <br /><br /><br />
+                <br />
+                <Typography sx={{maxWidth: '60%', margin:'auto'}}>
+                The data conditions allow the application to record user data. The user data is the clicks of the user within the application and their time and location. This data is only used to improve the automatic feedback generated within the application. The application is still fully available when refusing the data conditions.
+                </Typography>
+                <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Change password
                 </Typography>
@@ -55,7 +59,6 @@ const Settings = () => {
                 </Typography>
                 <br />
                 <Button variant='contained'>I want to delete my account.</Button>
-
             </div>
         </>
     );
