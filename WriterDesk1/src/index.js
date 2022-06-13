@@ -13,6 +13,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 // base pages
 import Base from './components/Base.js'
 import BaseOut from './components/BaseOut.js';
+import Projects from './pages/Projects';
 
 // pages outside login
 import Settings from './pages/Settings';
@@ -115,6 +116,7 @@ root.render(
 
             {/* For researchers and admin users */}
             <Route name='Participants' path='Participants' element={<Participants />} />
+            <Route name='Projects' path='Projects' element={<Projects />} />
             <Route name='FeedbackModels' path='FeedbackModels' element={<FeedbackModels />} />
 
             {/* For admin users */}

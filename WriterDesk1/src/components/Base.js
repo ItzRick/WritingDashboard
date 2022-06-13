@@ -25,6 +25,7 @@ import {
   Build,
   Person,
   Settings,
+  ListAlt,
 } from '@mui/icons-material';
 import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 
@@ -232,6 +233,7 @@ const Base = ({
             display: admin || researcher ? 'block' : 'none'
           }} />
           <NavigationLink open={open} text="Participants" Icon={Group} allowed={researcher | admin} pageLink='Participants' />
+          <NavigationLink open={open} text="Projects" Icon={ListAlt} allowed={researcher | admin} pageLink='Projects' />
           <NavigationLink open={open} text="Feedback Models" Icon={Build} allowed={researcher | admin} pageLink='FeedbackModels' />
           <Divider sx={{
             bgcolor:'drawer.divider',
