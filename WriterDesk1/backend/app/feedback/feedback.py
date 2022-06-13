@@ -21,9 +21,11 @@ def genFeedback(file):
     elif fileType == '.txt':
         text = getTXTText(path)
     englishStopwords = getEnglishStopwords()
-    mistakesStyle, scoreStyle = feedbackLanguageStyle(text)
-    scoreContent, explanationsContent = sourceIntegration(text, references, englishStopwords, userId)
-    
+    try:
+        mistakesStyle, scoreStyle = feedbackLanguageStyle(text)
+        scoreContent, explanationsContent = sourceIntegration(text, references, englishStopwords, userId)
+    except Exception as e:
+        return False, e
     return True
 
 @cache.memoize(30*24*60*60)
