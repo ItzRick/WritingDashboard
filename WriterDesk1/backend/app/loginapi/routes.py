@@ -77,6 +77,7 @@ def protected():
         role = current_user.type
     )
 
+@jwt_required(refresh=True)
 @bp.route("/changeRole", methods=["POST"])
 def changeRole():
     '''
@@ -85,7 +86,11 @@ def changeRole():
             userId: id of the user of whom we want to change the role
             newRole: intended role of the user
         Return:
-            Returns success if it succeeded, or an error message if there exists no user with userId
+            Returns success if it succeeded, or an 
+            error message 
+                404, if there exists no user with userId
+                403, if the current user is not an admin
+                404, if the role name is not one of ['admin', 'participant', 'researcher', 'student']
     '''
     # retrieve data from call
     userId = request.args.get('userId')
@@ -93,23 +98,42 @@ def changeRole():
 
     # get targetUser
     targetUser = User.query.filter_by(userId=userId).first()
+
     # check if userId exists
     if targetUser is None:
         return 'user with userId not found', 404
-    # check if CallingUser is Admin ??
-    if False: #TODO @mark
-        return "Method only accessible by admin", 403 # return Unauthorized response status code
-    # check if role is a valid role type ??
-    if False: #TODO 
+    # check if current_user is Admin
+    if current_user.role != 'admin':
+        return "Method only accessible for admin users", 403 # return Unauthorized response status code
+    # check if role is valid
+    if newRole not in ['admin', 'participant', 'researcher', 'student']:
         return 'Invalid role', 404
+    
     # update role
     targetUser.role = newRole
     # update the database
     db.session.commit()
     return 'success'
 
-#REQUIRES AUTH !!
-@bp.route("/changePassword", methods=["POST"])
-def changePassword():
-    print('Changing Password ...')
+@jwt_required(refresh=True)
+@bp.route("/setPassword", methods=["POST"])
+def setPassword():
+    '''
+        This function handles setting the password for the user
+        Attributes:
+            newPassword: intended password for the user
+        Return:
+            Returns success if it succeeded, or an error message if the current user does not exist
+    '''
+    # retrieve data from call
+    newPassword = request.args.get('newPassword')
+
+    # check if current_user is actually in Users
+    if User.query.filter_by(userId=current_user.id).first() is None:
+        return 'user not found', 404
+    
+    # set password using user function
+    current_user.set_password(newPassword)
+    # update the database
+    db.session.commit()
     return 'success'

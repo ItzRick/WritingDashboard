@@ -18,7 +18,7 @@ class User(db.Model):
     '''
         Declare user model containing usernames and passwords (hashed), we use single table inheritance for different types of users.
         Attributes:
-            type: used as discrimator, indicates type of object in row
+            type: used as discrimator, indicates type of object in row; type is one of: ['admin', 'participant', 'researcher', 'student']
             id: Unique primary key User ID 
             username: email address or username from user
             passwordHash: hashed password from user, hashed using werkzeug.security
