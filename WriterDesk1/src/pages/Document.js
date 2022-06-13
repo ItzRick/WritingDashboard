@@ -1,5 +1,5 @@
 // materials
-import {Typography} from "@mui/material";
+import { Typography } from "@mui/material";
 
 // routing
 import { useOutletContext, useLocation } from 'react-router-dom';
@@ -11,7 +11,7 @@ import React from 'react';
 import AllPagesPDFViewer from "../components/ShowPDF";
 import "../css/styles.css";
 import "../css/Document.css";
-import placeholder from '../images/chartImage.png';
+import Plot from 'react-plotly.js';
 
 
 /**
@@ -26,6 +26,9 @@ function Document() {
   const { setTitle } = useOutletContext();
 
   const [showTextbox, setShowTextbox] = useState([]);
+
+  // State to save the data to display in the barchart in:
+  const [currentData, setCurrentData] = useState([2, 6, 3, 4])
 
   const [path, setPath] = useState([]);
   const [type, setType] = useState([]);
@@ -66,6 +69,7 @@ function Document() {
       })
   }
 
+  //TODO: retrieve mistakes from database
 //TODO: Retrieve scores from database.
   const fetchScores = (fileId) => {
     // // Url of the server:
@@ -94,10 +98,10 @@ function Document() {
   }
 
   const mistakes = [
-    {text: 'decade', explanation: 'expl1', type: 0, coords: [156.9016876220703, 157.89927673339844, 183.29876708984375, 169.56455993652344], replacements: ['ab', 'b', 'ba']},
-    {text: 'Furthermore', explanation: 'expl2', type: 1, coords: [464.495361328125, 468.1363525390625, 514.29833984375, 480.14129638671875], replacements: ['as']},
-    {text: 'past decade, a new ', explanation: 'expl3', type: 2, coords: [126.9016876220703, 157.89927673339844, 213.29876708984375, 169.56455993652344], replacements: ['a', 'b', 'c']},
-    {text: 'semantics', explanation: 'expl4', type: 3, coords: [390.88116455078125, 858.056518555, 430.1736755371094, 870.061454773], replacements: []},
+    { text: 'decade', explanation: 'expl1', type: 0, coords: [156.9016876220703, 157.89927673339844, 183.29876708984375, 169.56455993652344], replacements: ['ab', 'b', 'ba'] },
+    { text: 'Furthermore', explanation: 'expl2', type: 1, coords: [464.495361328125, 468.1363525390625, 514.29833984375, 480.14129638671875], replacements: ['as'] },
+    { text: 'past decade, a new ', explanation: 'expl3', type: 2, coords: [126.9016876220703, 157.89927673339844, 213.29876708984375, 169.56455993652344], replacements: ['a', 'b', 'c'] },
+    { text: 'semantics', explanation: 'expl4', type: 3, coords: [390.88116455078125, 858.056518555, 430.1736755371094, 870.061454773], replacements: [] },
   ];
 
 
@@ -163,38 +167,44 @@ function Document() {
    * @returns TextBoxExplanation component
    */
   const TextBoxExplanation = (props) => {
-    return(
+    return (
       <div className={showTextbox[props.number] ? 'textBoxExpl' : 'hidden'} id={'textBoxExpl' + props.number}
-           style={{backgroundColor: typeToColor(props.type), borderColor: typeToColor(props.type)}}>
-        <Typography className='textBoxType' style={{color: typeToColor(props.type), fontSize: 'calc(8px + 0.5vw)'}}>
+        style={{ backgroundColor: typeToColor(props.type), borderColor: typeToColor(props.type) }}>
+        <Typography className='textBoxType' style={{ color: typeToColor(props.type), fontSize: 'calc(8px + 0.5vw)' }}>
           <b>{typeToName(props.type)}</b>
         </Typography>
-        <Typography variant='body1' className='textBoxWord' style={{fontSize: 'calc(12px + 0.3vw)'}}>
+        <Typography variant='body1' className='textBoxWord' style={{ fontSize: 'calc(12px + 0.3vw)' }}>
           <b>{props.text}</b>
         </Typography>
-        <Typography variant='body2' sx={{marginTop: '5px', marginBottom:'10px', fontSize: 'calc(12px + 0.2vw)'}}>
+        <Typography variant='body2' sx={{ marginTop: '5px', marginBottom: '10px', fontSize: 'calc(12px + 0.2vw)' }}>
           {props.expl}
         </Typography>
         <Typography className={props.replacements.length > 0 ? 'replacementsText' : 'hidden'}
-                    style={{fontSize: 'calc(11px + 0.2vw)'}} variant='body2'>
+          style={{ fontSize: 'calc(11px + 0.2vw)' }} variant='body2'>
           Possible replacements:
         </Typography>
         <Typography className={props.replacements.length > 0 ? 'textBoxReplacements' : 'hidden'}
-                    variant='body1'
-                    style={{borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
-                      marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'}}>
+          variant='body1'
+          style={{
+            borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
+            marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'
+          }}>
           {props.replacements[0]}
         </Typography>
         <Typography className={props.replacements.length > 1 ? 'textBoxReplacements' : 'hidden'}
-                    variant='body1'
-                    style={{borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
-                      marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'}}>
+          variant='body1'
+          style={{
+            borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
+            marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'
+          }}>
           {props.replacements[1]}
         </Typography>
         <Typography className={props.replacements.length > 2 ? 'textBoxReplacements' : 'hidden'}
-                    variant='body1'
-                    style={{borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
-                      marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'}}>
+          variant='body1'
+          style={{
+            borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
+            marginLeft: 'calc(2px + 0.2vw)', marginRight: 'calc(2px + 0.2vw)'
+          }}>
           {props.replacements[2]}
         </Typography>
       </div>
@@ -209,12 +219,14 @@ function Document() {
    * @returns ClickableTextDiv component
    */
   const ClickableTextDiv = (props) => {
-    return(
-     <div onClick={e=>handleHighlightClick(e, props.coords)} className='clickableTextDiv'
-          style={{ backgroundColor: typeToColor(props.type), left: props.coords[0] - 2, top: props.coords[1],
-            width: props.coords[2] - props.coords[0] + 4,
-            height: props.coords[3] - props.coords[1], borderRadius:'4px'}}>
-     </div>
+    return (
+      <div onClick={e => handleHighlightClick(e, props.coords)} className='clickableTextDiv'
+        style={{
+          backgroundColor: typeToColor(props.type), left: props.coords[0] - 2, top: props.coords[1],
+          width: props.coords[2] - props.coords[0] + 4,
+          height: props.coords[3] - props.coords[1], borderRadius: '4px'
+        }}>
+      </div>
     );
   };
 
@@ -257,20 +269,53 @@ function Document() {
 
   return (
     <>
-      <div className="all-page-container" id="all-page-container">
+      <div className="all-page-container" id="all-page-container" style={{width: '50%'}}>
         {/** potentially convert document to pdf and show document on page */}
-        <AllPagesPDFViewer pdf={`https://127.0.0.1:5000/converttopdf/convert?filepath=${path}&filetype=${type}`} />
+        <AllPagesPDFViewer pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`} />
         {mistakes.map((mistake, i) =>
-          <ClickableTextDiv key={i} number={i} coords={mistake.coords} type={mistake.type}/>
+          <ClickableTextDiv key={i} number={i} coords={mistake.coords} type={mistake.type} />
         )}
       </div>
-      <div className='rightFloat'>
-        <img className='smallGraph' src={placeholder} />
+      <div className='rightFloat' style={{width: '50%'}}>
+        {/* The barchart for the scores of this tool: */}
+        <Plot
+          data={[
+            {
+              // Order of the bars is as follows: first source integration, then cohesion, then structure, then language & style:
+              x: ['Language & style', 'Cohesion', 'Structure', 'Source integration & <br> content'],
+              y: currentData,
+              marker: { color: ['#785EF0', '#FE6100', '#FFB000', '#DC267F'] },
+              type: 'bar',
+            },
+          ]}
+          // The title of the char is 'scores':
+          layout={{
+            title: 'Scores',
+            // Scores can be between 0 and 10, so the y-axis range is set accordingly:
+            yaxis: {
+              range: [0, 10],
+              type: 'linear'
+            }
+          }}
+          // Do not display the plotly modebar:
+          config={{
+            displayModeBar: false, // this is the line that hides the bar.
+          }}
+          // So that you can do stuff if you click on a bar (TODO: remove):
+          onClick={(data) => {
+            console.log("data", data.points[0].pointNumber)
+          }}
+          // So the chart can resize:
+          useResizeHandler={true}
+          style={{ width: '100%', height: '50%' }}
+        />
+
         <br />
+
         {mistakes.map((mistake, i) =>
           <TextBoxExplanation
-          key={i} number={i} text={mistake.text} type={mistake.type} expl={mistake.explanation}
-          replacements={mistake.replacements}
+            key={i} number={i} text={mistake.text} type={mistake.type} expl={mistake.explanation}
+            replacements={mistake.replacements}
           />
         )}
       </div>
