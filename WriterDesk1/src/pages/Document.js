@@ -32,7 +32,7 @@ function Document() {
   });
 
   // TODO take file path and file type from database
-  const path = 'C:\\Users\\20192543\\Documents\\GitHub\\SEP2021\\WriterDesk1\\src\\example2.pdf'
+  const path = 'C:\\Users\\20192435\\Downloads\\SEP2021\\WriterDesk1\\src\\example2.pdf'
   const type = 'pdf'
 
   //TODO: retrieve mistakes from database
@@ -210,7 +210,7 @@ function Document() {
     <>
       <div className="all-page-container" id="all-page-container" style={{width: '50%'}}>
         {/** potentially convert document to pdf and show document on page */}
-        <AllPagesPDFViewer pdf={`https://127.0.0.1:5000/converttopdf/convert?filepath=${path}&filetype=${type}`} />
+        <AllPagesPDFViewer pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`} />
         {mistakes.map((mistake, i) =>
           <ClickableTextDiv key={i} number={i} coords={mistake.coords} type={mistake.type} />
         )}

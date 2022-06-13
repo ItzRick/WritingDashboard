@@ -1,13 +1,15 @@
 import os
 # from types import NoneType
 from werkzeug.utils import secure_filename
-from flask import current_app, request, session, jsonify
+from flask import current_app, request, session, jsonify, send_file
 from app.models import Files
 from app.fileapi import bp
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from magic import from_buffer 
 from datetime import date
 from mimetypes import guess_extension
+from fpdf import FPDF
+from docx2pdf import convert
 
 @bp.route('/upload', methods = ['POST'])
 def fileUpload():
@@ -163,3 +165,36 @@ def searchId():
     for file in files:
         list += (str(file.id) + ' ')
     return list, 200
+
+@bp.route('/display', methods= ['GET'])
+def displayFile():
+    '''
+        Function to convert a document of type docx or txt to a document of
+        type pdf. And returns this file.
+        Attributes:
+            filepath: the path to the document to be converted.
+            filetype: the type of the document to be converted.
+            pdf: used in making a pdf from a txt file.
+        Return:
+            Take the converted document from the disk and send it. 
+    '''
+    filepath = request.args.get('filepath')
+    filetype = request.args.get('filetype')
+    # if the document is a docx file, use the convert method from the docx2pdf module and return the converted document.
+    if filetype == 'docx':
+        if not os.path.isfile(filepath.replace("docx", "pdf")):
+            convert(filepath)
+        return send_file(filepath.replace("docx", "pdf"))
+    # if the document is a txt file, convert it to a pdf by making a new pdf using the contents of the txt file, 
+    # then return the converted document.
+    if filetype == 'txt':
+        if not os.path.isfile(filepath.replace("txt", "pdf")):
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=15)
+            f = open(filepath, "r")
+            for x in f:
+                pdf.multi_cell(w=0, h=10, txt = x, align = 'L')
+            pdf.output(filepath.replace("txt", "pdf"))
+        return send_file(filepath.replace("txt", "pdf"))
+    return send_file(filepath)
