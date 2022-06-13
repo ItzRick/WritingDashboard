@@ -47,8 +47,15 @@ const Projects = () => {
 
     ]
 
+    // upon first render, set the table data
+    useEffect(() => {
+        // TODO: replace table data with real data
+        setTableData(projects);
+    }, []);
+
+
     //data displayed in the table
-    const [tableData, setTableData] = useState(projects)
+    const [tableData, setTableData] = useState([])
     //list of selected items
     const [selectedInstances, setSelectedInstances] = useState([])
     // project selected in download user data
@@ -109,11 +116,12 @@ const Projects = () => {
                     type='number'
                     label={"Number of Participants"}
                 />
-                <BlueButton style={{ verticalAlign: 'middle' }}>Add project</BlueButton>
+                <BlueButton idStr='addProject' style={{ verticalAlign: 'middle' }}>Add project</BlueButton>
             </div>
             <div />
             <div className="topBorder">
                 {/* downloading user data */}
+                {/* Select start data */}
                 <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ margin: '1vh', verticalAlign: 'middle' }}>
                     <DatePicker
                         sx={{ margin: '1vh', verticalAlign: 'middle' }}
@@ -127,6 +135,7 @@ const Projects = () => {
                         renderInput={(params) => <TextField sx={{ margin: '1vh', verticalAlign: 'middle' }} {...params} />}
                     />
                 </LocalizationProvider>
+                {/* Select end date */}
                 <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ margin: '1vh', verticalAlign: 'middle' }}>
                     <DatePicker
                         sx={{ margin: '1vh', verticalAlign: 'middle' }}
@@ -140,25 +149,26 @@ const Projects = () => {
                         renderInput={(params) => <TextField sx={{ margin: '1vh', verticalAlign: 'middle' }} {...params} />}
                     />
                 </LocalizationProvider>
+                {/* Project Dropdown */}
                 <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
                     <InputLabel id="project-down-participants">Project</InputLabel>
                     <Select
-                        labelId="project-down-participants"
+                        labelId="project-down-participants-label"
                         id="project-down-participants"
                         value={projectDown}
                         label="Project"
                         onChange={handleProjDown}
                     >
                         {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)}
-                </Select>
+                    </Select>
                 </FormControl>
-                <BlueButton style={{ margin: '1vh', verticalAlign: 'middle' }}>Download user data</BlueButton>
+                <BlueButton idStr='downloadUserData' style={{ margin: '1vh', verticalAlign: 'middle' }}>Download user data</BlueButton>
             </div>
             <div className="topBorder">
                 {/* downloading participants and user data */}
-                <BlueButton>Download participants of selected projects</BlueButton>
+                <BlueButton idStr='downloadParticipants' >Download participants of selected projects</BlueButton>
                 <div style={{ paddingLeft: '2vw', display: 'inline' }} />
-                <BlueButton>Download user data of participants of selected project</BlueButton>
+                <BlueButton idStr='downloadUserDataForSelectedProject' >Download user data of participants of selected project</BlueButton>
             </div>
             {/* displaying projects */}
             <div style={{ justifyContent: 'center', display: 'flex' }}>
