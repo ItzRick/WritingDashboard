@@ -21,10 +21,6 @@ def testRetrieveFileSingle(testClient, initDatabaseEmpty):
 
     # Add file to the database
     try:
-        db.session.commit()
-    except:
-        db.session.rollback()
-    try:
         file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', fileType='.pdf',
                      date=datetime(2019, 2, 12), userId=100, courseCode='2IPE0', id=200)
         db.session.add(file)
@@ -88,10 +84,6 @@ def testRetrieveFileMultiple(testClient, initDatabaseEmpty):
 
     # Add two files to the database
     try:
-        db.session.commit()
-    except:
-        db.session.rollback()
-    try:
         file1 = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', fileType='.pdf',
                       date=datetime(2019, 2, 12), userId=100, courseCode='2IPE0', id=200)
         db.session.add(file1)
@@ -132,10 +124,6 @@ def testRetrieveFileNonExistent(testClient, initDatabaseEmpty):
 
     # Add two files to the database
     try:
-        db.session.commit()
-    except:
-        db.session.rollback()
-    try:
         file1 = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', fileType='.pdf',
                       date=datetime(2019, 2, 12), userId=100, courseCode='2IPE0', id=200)
         db.session.add(file1)
@@ -175,10 +163,6 @@ def testRetrieveFileDocx(testClient, initDatabaseEmpty):
 
     # Add docx file to the database
     try:
-        db.session.commit()
-    except:
-        db.session.rollback()
-    try:
         file = Files(path='C:/normal/path/File-1.docx', filename='File-1.docx', fileType='.docx',
                       date=datetime(2018, 12, 5), userId=100, courseCode='2ABC1', id=200)
         db.session.add(file)
@@ -215,10 +199,6 @@ def testRetrieveFileTxt(testClient, initDatabaseEmpty):
     data = {'fileId': 200}  # Define file id
 
     # Add txt file to the database
-    try:
-        db.session.commit()
-    except:
-        db.session.rollback()
     try:
         file = Files(path='C:/normal/path/File-1.txt', filename='File-1.txt', fileType='.txt',
                       date=datetime(2014, 1, 1), userId=100, courseCode='2JRV11', id=200)
