@@ -83,14 +83,14 @@ def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructur
         Attributes: 
             data: The data we are trying to test the getScore with.
             response: Response of the get request.
-            data: response data, i.e. the score
+            dataResponse: response data, i.e. the score
         Arguments:
             testClient:  The test client we test this for.
             fileId: fileId of file related to this test
-            sStyle: language and style score
-            sCohesion: cohesion score
-            sStructure: structure score
-            sIntegration: source integration and content score
+            scoreStyle: language and style score
+            scoreCohesion: cohesion score
+            scoreStructure: structure score
+            scoreIntegration: source integration and content score
     '''
     # data for get request
     data = {
@@ -102,11 +102,11 @@ def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructur
     # Check if we get the correct status_code:
     assert response.status_code == 200
     # Check response
-    data = json.loads(response.data)
-    assert float(data['scoreStyle']) == scoreStyle
-    assert float(data['scoreCohesion']) == scoreCohesion
-    assert float(data['scoreStructure']) == scoreStructure
-    assert float(data['scoreIntegration']) == scoreIntegration
+    dataResponse = json.loads(response.data)
+    assert float(dataResponse['scoreStyle']) == scoreStyle
+    assert float(dataResponse['scoreCohesion']) == scoreCohesion
+    assert float(dataResponse['scoreStructure']) == scoreStructure
+    assert float(dataResponse['scoreIntegration']) == scoreIntegration
     
 def testSpecificScores(testClient, initDatabase):
     '''

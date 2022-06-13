@@ -10,7 +10,7 @@ def setScore():
         This functions handles setting the score as requested by the frontend.
         If the score is in [0..10], it sets the score. Scores are acurate to 2 decimal points
         If the score is -1, it does not override the old score
-        If the score is something else, we set -2
+        If the score is something else, we set -2 to indicate a null value
         Attributes:
             fileId: Id of the file for which the score and explanation has to be set
             scoreStyle: Score for Language and Style
@@ -40,14 +40,14 @@ def compareScores(current, new, NULL_VALUE):
     '''
         If the new is in [0..10], it returns new
         If the new is -1, it returns current
-        If the new is something else, we set -2
+        If the new is something else, we set -2 to indicate a null value
         arguments:
             current: score that is currently in the database
             new: score that is destined for the database
         returns:
             If the new is in [0..10], it returns new
             If the new is -1, it returns current
-            If the new is something else, we set -2
+            If the new is something else, we set -2 to indicate a null value
     '''
     #first check if is none, or if 'something else'
     if new is None or (not isValid(float(new)) and float(new) != -1):
@@ -61,7 +61,7 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
     '''
         This functions handles setting the score and explanations for a file.
         If score is -1, the previous score is used
-        If score is not in [0..10], and not -1. The score is set to -2
+        If score is not in [0..10], and not -1. The score is set to -2 to indicate a null value
         Scores are acurate to 2 decimal points
         Arguments:
             fileId: Id of the file for which the score and explanation has to be set
