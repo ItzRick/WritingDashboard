@@ -1,10 +1,9 @@
 import os
-# from types import NoneType
 from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify
 from app.models import Files
 from app.fileapi import bp
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup
 from magic import from_buffer 
 from datetime import date
 from mimetypes import guess_extension
@@ -31,6 +30,7 @@ def fileUpload():
             existing: current existing files with the same userId and fileName 
             associated in the database for the current file that is being handled.
     '''
+    # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
     # Retrieve the files as send by the react frontend and give this to the fileUpload function, 
     # which does all the work:
     files = request.files.getlist('files')

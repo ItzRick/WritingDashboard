@@ -1,8 +1,7 @@
-from distutils.command.upload import upload
-from app.models import Files
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
+from app.models import Files, Scores, Explanations
+from app.database import uploadToDatabase, getFilesByUser
 from app import db
-from datetime import datetime, date
+from datetime import datetime
 # import os
 
 def testValidFile(testClient, initDatabase):
@@ -115,16 +114,104 @@ def testCreateDatabase(testClient):
     del testClient
     db.create_all()
 
-def testFiles(testClient, initDatabase):
+def testExplanation():
     '''
-        Test if we get the correct display if we run Files.query.all(), so the representation of '<File <filename>>'. 
+        Test if the Explanations model in database works properly
         Attributes: 
-            files: all files of the type Files in the database.
+            explanation: explanation model
+    '''
+    explanation = Explanations(
+        fileId      = 0,
+        explId      = 1,
+        type        = 2,
+        explanation = 'explan lange zin',
+        mistakeText = 'error',
+        X1          = 3.0001,
+        X2          = 4.101,
+        Y1          = 5.990,
+        Y2          = 6.4,
+        replacement1= 'vier',
+        replacement2= '',
+        replacement3= '',
+    )
+    assert explanation.fileId == 0
+    assert explanation.explId == 1
+    assert explanation.type == 2
+    assert explanation.explanation == 'explan lange zin'
+    assert explanation.mistakeText == 'error'
+    assert explanation.X1 == 3.0001
+    assert explanation.X2 == 4.101
+    assert explanation.Y1 == 5.990
+    assert explanation.Y2 == 6.4
+    assert explanation.replacement1== 'vier'
+    assert explanation.replacement2== ''
+    assert explanation.replacement3== ''
+    
+
+def testUploadToDBScore(testClient, initDatabase):
+    '''
+        Test if the uploadToDatabase function form the database module works for scores. 
+        Attributes:
+            preScore: Scores to be added to the database.
+            score: This same scores, only then retrieved from the database.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
     '''
     del testClient, initDatabase
-    files = Files.query.all()
-    assert str(files[0]) == '<File URD_Group3_vers03_Rc.pdf>'
-    assert str(files[1]) == '<File SEP.pdf>'
+    preScore = Scores(
+        fileId = 12,
+        scoreStyle = 0.01,
+        scoreCohesion = 2,
+        scoreStructure = 3,
+        scoreIntegration = 10.0,
+    )
+    uploadToDatabase(preScore)
+    # Retrieve this file with query.filter_by and check if all attributes are retrieved correctly:
+    score = Scores.query.filter_by(fileId=12).first()
+    assert score.fileId == 12
+    assert str(score.scoreStyle) == '0.01'
+    assert str(score.scoreCohesion) == '2.00'
+    assert str(score.scoreStructure) == '3.00'
+    assert str(score.scoreIntegration) == '10.00'
+
+def testUploadToDBExplanation(testClient, initDatabase):
+    '''
+        Test if the uploadToDatabase function form the database module works for Explanations. 
+        Attributes:
+            preExplanation: Explanations to be added to the database.
+            score: This same Explanations, only then retrieved from the database.
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+    del testClient, initDatabase
+    preExplanation = Explanations(
+        fileId      = 0,
+        explId      = 1,
+        type        = 2,
+        explanation = 'explan lange zin',
+        mistakeText = 'error',
+        X1          = 3.0001,
+        X2          = 4.101,
+        Y1          = 5.990,
+        Y2          = 6.4,
+        replacement1= 'vier',
+        replacement2= '',
+        replacement3= '',
+    )
+    uploadToDatabase(preExplanation)
+    # Retrieve this file with query.filter_by and check if all attributes are retrieved correctly:
+    explanation = Explanations.query.filter_by(fileId=0).first()
+    assert explanation.fileId == 0
+    assert explanation.explId == 1
+    assert explanation.type == 2
+    assert explanation.explanation == 'explan lange zin'
+    assert explanation.mistakeText == 'error'
+    assert explanation.X1 == 3.0001
+    assert explanation.X2 == 4.101
+    assert explanation.Y1 == 5.990
+    assert explanation.Y2 == 6.4
+    assert explanation.replacement1== 'vier'
+    assert explanation.replacement2== ''
+    assert explanation.replacement3== ''
