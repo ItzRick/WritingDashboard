@@ -19,16 +19,17 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    
     jwt.init_app(app)
 
     from app.fileapi import bp as fileapi_bp
     app.register_blueprint(fileapi_bp, url_prefix='/fileapi')
 
-    from app.loginapi import bp as loginapi_bp
-    app.register_blueprint(loginapi_bp, url_prefix='/loginapi')
+    from app.loginapi import bp as loginapi_db
+    app.register_blueprint(loginapi_db, url_prefix='/loginapi')
+
+    from app.scoreapi import bp as scoreapi_bp
+    app.register_blueprint(scoreapi_bp, url_prefix='/scoreapi')
 
     # Return the app:
     return app
-
-
-from app import models
