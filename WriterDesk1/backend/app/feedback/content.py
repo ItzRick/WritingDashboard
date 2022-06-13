@@ -164,7 +164,6 @@ def getWordsSources(links, links_doi, englishStopwords, userId):
             wordReferences: set of the words without stopwords of all sources in links and links_doi.
             count: Number of sources actually retrieved the words from.
     '''
-    # Initialize wordReferences and count:
     wordsReferences = set()
     count = 0
     # For each link in links:
@@ -275,9 +274,6 @@ def textDoi(doi, userId):
     text = ''
     # Get (and join) the paths:
     basePath = os.path.join(current_app.config['UPLOAD_FOLDER'], str(userId))
-    # TODO: Remove:
-    # BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    # basePath = os.path.join(BASEDIR, str(userId))
     tempPath = os.path.join(basePath, 'temp')
     filePath = os.path.join(tempPath, 'temp.pdf')
     # If this folder does not yet exist, create it:
