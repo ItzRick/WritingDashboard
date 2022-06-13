@@ -27,17 +27,15 @@ function Document() {
 
   const [showTextbox, setShowTextbox] = useState([]);
 
-  // State to save the data to display in the barchart in:
-  const [currentData, setCurrentData] = useState([2, 6, 3, 4])
-
   const [path, setPath] = useState([]);
   const [type, setType] = useState([]);
 
-  const [scoreLanguage, setScoreLanguage] = useState([]);
-  const [scoreStructure, setScoreStructure] = useState([]);
-  const [scoreCohesion, setScoreCohesion] = useState([]);
-  const [scoreSourceIntegration, setScoreSourceIntegration] = useState([]);
+  const [scoreStyle, setScoreStyle] = useState();
+  const [scoreStructure, setScoreStructure] = useState();
+  const [scoreCohesion, setScoreCohesion] = useState();
+  const [scoreIntegration, setScoreIntegration] = useState();
 
+  const [explanations, setExplanations] = useState([]);
 
 
   useEffect(() => {
@@ -48,7 +46,7 @@ function Document() {
     const fileId = location.state.fileId; // Get file id from previous page.
     fetchFilePath(fileId); // Set file path and type
     fetchScores(fileId); // Set scores of current file
-    fetchMistakes(fileId); //Set mistakes of current file
+    fetchExplanations(fileId); //Set mistakes of current file
   }, [location.state.fileId]);
 
 
@@ -69,39 +67,44 @@ function Document() {
       })
   }
 
-//TODO: Retrieve scores from database.
+
+  /**
+   * Make the backend call to retrieve and set the correct scores for the given file id.
+   * @param {number} fileId: id of the file that that is shown.
+   */
   const fetchScores = (fileId) => {
     // // Url of the server:
-    //const url = 'https://127.0.0.1:5000/scoreapi/getScores';
-
-    // // Make the call to the backend:
-    // axios.get(url, {params: {fileId: fileId}})
-    //   .then((response) => {
-    //     setScoreLanguage(response.data.scoreLanguage);
-    //     setScoreStructure(response.data.scoreStructure);
-    //     setScoreCohesion(response.data.scoreCohesion);
-    //     setScoreSourceIntegration(response.data.scoreSourceIntegration);
-    //   })
-  }
-
-//TODO: Retrieve mistakes from database.
-  const fetchMistakes = (fileId) => {
-    // Url of the server:
-    //const url = 'https://127.0.0.1:5000/mistakeapi/getMistakes';
+    const url = 'https://127.0.0.1:5000/scoreapi/getScores';
 
     // Make the call to the backend:
-    // axios.get(url, {params: {fileId: fileId}})
-    //   .then((response) => {
-    //
-    //   })
+    axios.get(url, {params: {fileId: fileId}})
+      .then((response) => {
+        setScoreStyle(response.data.scoreStyle);
+        setScoreStructure(response.data.scoreStructure);
+        setScoreCohesion(response.data.scoreCohesion);
+        setScoreIntegration(response.data.scoreIntegration);
+      })
   }
 
-  const mistakes = [
-    { text: 'decade', explanation: 'expl1', type: 0, coords: [156.9016876220703, 157.89927673339844, 183.29876708984375, 169.56455993652344], replacements: ['ab', 'b', 'ba'] },
-    { text: 'Furthermore', explanation: 'expl2', type: 1, coords: [464.495361328125, 468.1363525390625, 514.29833984375, 480.14129638671875], replacements: ['as'] },
-    { text: 'past decade, a new ', explanation: 'expl3', type: 2, coords: [126.9016876220703, 157.89927673339844, 213.29876708984375, 169.56455993652344], replacements: ['a', 'b', 'c'] },
-    { text: 'semantics', explanation: 'expl4', type: 3, coords: [390.88116455078125, 858.056518555, 430.1736755371094, 870.061454773], replacements: [] },
-  ];
+  /**
+   * Make the backend call to retrieve and set the correct explanations for the given file id.
+   * @param {number} fileId: id of the file that that is shown.
+   */
+  const fetchExplanations = (fileId) => {
+    // Url of the server:
+    const url = 'https://127.0.0.1:5000/scoreapi/getExplanationForFile';
+
+    // Make the call to the backend:
+    axios.get(url, {params: {fileId: fileId}})
+      .then((response) => {
+        let explanationsArray = []  // Array of all explanations in the response from the backend call
+        for (let i = 0; i < response.data.length; i++) {  // Loop over all explanations
+          // Append explanation to array
+          explanationsArray = [...explanationsArray, response.data[i]];
+        }
+        setExplanations(explanationsArray);
+      })
+  }
 
 
   /**
@@ -116,12 +119,12 @@ function Document() {
 
     let newArrShowTextbox = []; // Create new array to overwrite showTextbox
 
-    for (let i = 0; i < mistakes.length; i++) {
+    for (let i = 0; i < explanations.length; i++) {
       // Loop over all mistakes to check if there is clicked on that mistake.
-      let left = mistakes[i].coords[0] - 2; // x1 of mistake[i] coordinates
-      let right = mistakes[i].coords[2] + 2; // x2 of mistake[i] coordinates
-      let top = mistakes[i].coords[1]; // y1 of mistake[i] coordinates
-      let bottom = mistakes[i].coords[3]; // y2 of mistake[i] coordinates
+      let left = explanations[i].X1 - 2; // x1 of mistake[i] coordinates
+      let right = explanations[i].X2 + 2; // x2 of mistake[i] coordinates
+      let top = explanations[i].Y1; // y1 of mistake[i] coordinates
+      let bottom = explanations[i].Y2; // y2 of mistake[i] coordinates
 
       //Set showTextbox true for every mistake that is clicked
       newArrShowTextbox[i] = (left <= x) && (x <= right) && (top <= y) && (y <= bottom);
@@ -136,17 +139,17 @@ function Document() {
   const showAllExplanationsOfType = (type) => {
     let allOpenOfType = true; // Boolean that indicate if all explanations of given type are shown
 
-    for (let i = 0; i < mistakes.length; i++) {
+    for (let i = 0; i < explanations.length; i++) {
       // Check if explanation of mistake is shown
-      if (mistakes[i].type === type && !showTextbox[i]) {
+      if (explanations[i].type === type && !showTextbox[i]) {
         allOpenOfType = false; // Not all explanations of the given type are shown
       }
     }
 
     let newArrShowTextbox = []; // Create new array to overwrite showTextbox
 
-    for (let i = 0; i < mistakes.length; i++) {
-      if (mistakes[i].type === type) {
+    for (let i = 0; i < explanations.length; i++) {
+      if (explanations[i].type === type) {
         // Show all explanations of the given type
         // If this is already the case, hide them all
         newArrShowTextbox[i] = !allOpenOfType;
@@ -273,8 +276,11 @@ function Document() {
       <div className="all-page-container" id="all-page-container" style={{width: '50%'}}>
         {/** potentially convert document to pdf and show document on page */}
         <AllPagesPDFViewer pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`} />
-        {mistakes.map((mistake, i) =>
-          <ClickableTextDiv key={i} number={i} coords={mistake.coords} type={mistake.type} />
+        {explanations.map((explanation, i) =>
+          <ClickableTextDiv
+            key={explanation.explId} number={i}
+            coords={[explanation.X1, explanation.Y1, explanation.X2, explanation.Y2]} type={explanation.type}
+          />
         )}
       </div>
       <div className='rightFloat' style={{width: '50%'}}>
@@ -284,7 +290,7 @@ function Document() {
             {
               // Order of the bars is as follows: first source integration, then cohesion, then structure, then language & style:
               x: ['Language & style', 'Cohesion', 'Structure', 'Source integration & <br> content'],
-              y: currentData,
+              y: [scoreStyle, scoreCohesion, scoreStructure, scoreIntegration],
               marker: { color: ['#785EF0', '#FE6100', '#FFB000', '#DC267F'] },
               type: 'bar',
             },
@@ -313,10 +319,11 @@ function Document() {
 
         <br />
 
-        {mistakes.map((mistake, i) =>
+        {explanations.map((explanation, i) =>
           <TextBoxExplanation
-            key={i} number={i} text={mistake.text} type={mistake.type} expl={mistake.explanation}
-            replacements={mistake.replacements}
+            key={explanation.explId} number={i} text={explanation.mistakeText}
+            type={explanation.type} expl={explanation.explanation}
+            replacements={[explanation.replacement1, explanation.replacement2, explanation.replacement3]}
           />
         )}
       </div>
