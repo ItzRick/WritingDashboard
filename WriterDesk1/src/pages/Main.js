@@ -6,10 +6,12 @@ import {
   Typography 
 } from "@mui/material";
 import chartImg from '../images/chartImage.png';
+import BlueButton from "./../components/BlueButton";
 
 // routing
 import { Link, useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
+import ProgressVisualization from "../components/ProgressVisualization";
 
 
 /**
@@ -30,9 +32,7 @@ const Main = () => {
       </div>
       <div className='home2'>
         <div className='vertCenter'>
-          <Button id='upload' variant='contained' className='uploadButton' sx={{
-            fontSize: '2vw', textTransform: 'none', bgcolor: 'button.main', color: 'button.text'
-          }} component={Link} to='/Upload'>Upload a document</Button>
+          <BlueButton id='upload' className='uploadButton' pathName='/Upload' addStyle={{width: '20vw', height: '7vw', fontSize: '2vw', textTransform: 'none'}}>Upload a document</BlueButton>
         </div>
       </div>
       <div className='home3'>
@@ -46,10 +46,13 @@ const Main = () => {
       <div className='home4'>
         <div className='subTitle'>
             <br />
-            <Typography style={{ fontSize: '2vw' }}><u>Progress</u></Typography>
+            <Typography className='progressLink' style={{ fontSize: 'calc(1vw + 12px)', color: '#44749D'}}
+                        component={Link} to='/Progress'>
+              <u>Progress</u>
+            </Typography>
         </div>
-        <div className='vertCenter'>
-          <img className='graph' src={chartImg} />
+        <div className='plotContainer'>
+          <ProgressVisualization />
         </div>
       </div>
     </div>

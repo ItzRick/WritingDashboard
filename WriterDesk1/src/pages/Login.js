@@ -1,17 +1,18 @@
 import './../css/main.css';
 
 // materials 
-import { 
-    Button, 
+import {
     TextField, 
     Typography,
-    IconButton 
+    IconButton,
+    Button
 } from "@mui/material";
 import logo from '../images/logo.png'
+import BlueButton from "./../components/BlueButton";
 
 // routing
-import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import { Link, useOutletContext  } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 // Login request setup
 import axios from 'axios';
@@ -24,6 +25,11 @@ const BASE_URL = "https://localhost:5000/loginapi";
  * @returns login page
  */
 const Login = () => {
+    //set title in parent 'base' 
+    const { setTitle } = useOutletContext();
+    useEffect(() => {
+        setTitle('Login');
+    });
 
     // Set username from textfield
     const [username, setUsername] = useState("");
@@ -62,14 +68,12 @@ const Login = () => {
                     <IconButton style={{ float: 'left' }} component={Link} to='/LandingPage'>
                         <img className='logo' src={logo} />
                     </IconButton>
-                    <Typography variant='h3'>Login</Typography>
-                    <div className='filler2'></div>
                 </div>
                 <div className='div2'>
                     <div className='text_boxes'>
                         <Typography>Username:</Typography>
                         <TextField id='username' label='Username' variant='outlined' value={username} onChange={(e) => setUsername(e.target.value)} />
-                        <br />
+                        <br /><br />
                         <Typography>Password:</Typography>
                         <TextField id='password' label='Password' variant='outlined' type='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
                     </div>
