@@ -62,6 +62,6 @@ def postUser(username, password):
         return False
 
     # Add user to the database with student role
-    user = models.Student(username=username, password_plaintext=password)
+    user = models.User(username=username, password_plaintext=password, role="student")
     uploadToDatabase(user)
     return True

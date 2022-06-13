@@ -1,5 +1,5 @@
 from distutils.command.upload import upload
-from app.models import Files, User, Student
+from app.models import Files, User
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, postUser
 from app import db
 from datetime import datetime, date

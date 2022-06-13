@@ -28,14 +28,8 @@ class User(db.Model, Serializer):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), index=True, unique=True)
     passwordHash = db.Column(db.String(128))
-    
-    def __init__(self, username: str, password_plaintext: str):
-        ''' Create new user, use set_password to create hashed password for plaintext password'''
-        self.type = "user"
-        self.username = username
-        self.set_password(password_plaintext)
 
-    def __init__(self, username: str, password_plaintext: str, role: str):
+    def __init__(self, username: str, password_plaintext: str, role: str = "user"):
         ''' Create new user, use set_password to create hashed password for plaintext password'''
         self.type = role
         self.username = username
