@@ -5,6 +5,10 @@ import reportWebVitals from './reportWebVitals';
 
 // routing
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { history } from './helpers/history';
+
+// authentication
+import { ProtectedR, ProtectedA } from './services/ProtectedRoutes';
 
 // theme and style
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -13,6 +17,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 // base pages
 import Base from './components/Base.js'
 import BaseOut from './components/BaseOut.js';
+import Projects from './pages/Projects';
 
 // pages outside login
 import Settings from './pages/Settings';
@@ -24,6 +29,7 @@ import Main from './pages/Main.js';
 import Upload from './pages/Upload';
 import Progress from './pages/Progress';
 import Documents from './pages/Documents';
+import Document from './pages/Document';
 // pages for researchers (and admin)
 import Participants from './pages/Participants';
 import FeedbackModels from './pages/FeedbackModels';
@@ -87,11 +93,11 @@ const theme = createTheme({
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+root.render(     
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       {/* Router encapsules the application */}
-      <BrowserRouter>
+      <BrowserRouter history={history}>
         <Routes>
           {/* public part of the router, accessible for public */}
           <Route path='/' element={<BaseOut />}>
@@ -110,14 +116,18 @@ root.render(
             <Route name='Upload' path='Upload' element={<Upload />} />
             <Route name='Progress' path='Progress' element={<Progress />} />
             <Route name='Documents' path='Documents' element={<Documents />} />
+            <Route name='Document' path='Document' element={<Document />} />
 
-            {/* For researchers and admin users */}
-            <Route name='Participants' path='Participants' element={<Participants />} />
-            <Route name='FeedbackModels' path='FeedbackModels' element={<FeedbackModels />} />
+            <Route element={<ProtectedR/>}>
+              <Route name='Participants' path='Participants' element={<Participants />} />
+              <Route name='Projects' path='Projects' element={<Projects />} />
+              <Route name='FeedbackModels' path='FeedbackModels' element={<FeedbackModels />} />
+            </Route>
 
             {/* For admin users */}
-            <Route name='Users' path='Users' element={<Users />} />
-
+            <Route element={<ProtectedA/>}>
+              <Route name='Users' path='Users' element={<Users />} />
+            </Route>
             <Route path='/' element={<Main />} />
 
 
