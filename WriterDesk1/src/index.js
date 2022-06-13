@@ -5,7 +5,7 @@ import reportWebVitals from './reportWebVitals';
 
 // routing
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { history } from './helpers/history';
+import { history } from './helpers/history'; // used for redirects
 
 // authentication
 import { ProtectedR, ProtectedA } from './services/ProtectedRoutes';
@@ -118,6 +118,7 @@ root.render(
             <Route name='Documents' path='Documents' element={<Documents />} />
             <Route name='Document' path='Document' element={<Document />} />
 
+             {/* For researcher users */}
             <Route element={<ProtectedR/>}>
               <Route name='Participants' path='Participants' element={<Participants />} />
               <Route name='Projects' path='Projects' element={<Projects />} />

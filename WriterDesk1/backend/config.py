@@ -14,4 +14,3 @@ class Config(object):
     #authentication
     JWT_SECRET_KEY = "super-secret"  # TODO CHANGE SECRET KEY
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
