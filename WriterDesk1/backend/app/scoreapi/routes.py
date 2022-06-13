@@ -8,9 +8,9 @@ from app.database import uploadToDatabase, removeFromDatabase
 def setScore():
     '''
         This functions handles setting the score as requested by the frontend.
-        If the score is in [0..10], it sets the score
+        If the score is in [0..10], it sets the score. Scores are acurate to 2 decimal points
         If the score is -1, it does not override the old score
-        If the score is something else, we set NULL
+        If the score is something else, we set -2
         Attributes:
             fileId: Id of the file for which the score and explanation has to be set
             scoreStyle: Score for Language and Style
@@ -194,7 +194,7 @@ def getExplanationForFile():
                 Y2: Y of the bottom left corner of the boxing rectangle
                 replacement1..3: Three possible replacements for the mistakeText
         returns:
-            list of explanations and code
+            list of explanations and code: code is return code, so 200 if it succeeded
     '''
     # get fileId from request
     fileId = request.args.get('fileId')

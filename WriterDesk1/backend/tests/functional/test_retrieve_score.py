@@ -9,8 +9,8 @@ def uploadFile(testClient):
         General function to upload file
         Attributes:
             courseCode: courseCode when initializing a file
-            fileName: filename when initializing a file
-            BASEDIR: Location of the conftest.py file.
+            fileName: filename of testing file
+            BASEDIR: Location of the current testing file
             fileDir: Location of the file we are testing the upload of.
             response: the result fo retrieving the scores in the specified order
             file: file instance 
@@ -77,7 +77,21 @@ def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegrat
     assert score.scoreIntegration == sIntegration
 
 def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
-
+    '''
+        A general method to test retrieving a score.
+        Check if the file related to fileId has scores and if they equal the given scores
+        Attributes: 
+            data: The data we are trying to test the getScore with.
+            response: Response of the get request.
+            data: response data, i.e. the score
+        Arguments:
+            testClient:  The test client we test this for.
+            fileId: fileId of file related to this test
+            sStyle: language and style score
+            sCohesion: cohesion score
+            sStructure: structure score
+            sIntegration: source integration and content score
+    '''
     # data for get request
     data = {
         'fileId':fileId,
