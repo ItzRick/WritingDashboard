@@ -5,6 +5,8 @@ from app.models import Files, User
 import os
 from datetime import datetime
 import shutil
+import nltk
+from nltk.corpus import stopwords
 
 class TestConfig(Config):
     '''
@@ -129,3 +131,13 @@ def initDatabaseEmpty(testClient):
     # Empties the database after the application has finished testing:
     db.session.commit()
     db.drop_all()
+
+@pytest.fixture(scope='module')
+def englishStopwords():
+    '''
+        Downloads the nltk stopwords and punkt and returns englishStopwords, the english stopwords.
+    '''
+    nltk.download('stopwords')
+    nltk.download('punkt')
+    english_stopwords = stopwords.words('english')
+    return english_stopwords
