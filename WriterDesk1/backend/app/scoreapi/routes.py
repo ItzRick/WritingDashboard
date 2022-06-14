@@ -3,6 +3,7 @@ from app.scoreapi import bp
 from flask import request, jsonify
 from app.models import Files, Scores, Explanations
 from app.database import uploadToDatabase, removeFromDatabase
+from sqlalchemy import func
 
 @bp.route('/setScore', methods = ['POST'])
 def setScore():
@@ -173,6 +174,59 @@ def getExplanation():
     
     # return explanation
     return explanation.serialize, 200
+
+@bp.route('/getAllScores', methods = ['GET'])
+def getAverageScores():
+    # get UserID from request
+    userId = request.args.get('userId')
+
+    avgBasedOn = 5 # Average scores is based on num:avgBasedOn files
+
+    # Check if user has files
+    if (Files.query.filter_by(userId=userId) is None):
+        return 'No files for user', 400
+    
+    files = Files.query.filter_by(userId=userId)
+
+    list = []
+
+    for file in files:
+        list.append(file.id)
+
+    # get all scores for the user
+    scores = Scores.query.filter(Scores.fileId.in_(list)).all()
+
+    subq =  Files.query.\
+            filter_by(userId = userId).\
+            order_by(Files.date.desc()).\
+            limit(avgBasedOn).\
+            subquery()
+
+    q = Scores.query.join(subq, Scores.fileId == subq.c.id)
+    
+    avgScores = q.all()
+
+    avgScoreStyle = sum(x.scoreStyle for x in avgScores) / len(avgScores)
+    avgscoreCohesion = sum(x.scoreCohesion for x in avgScores) / len(avgScores)
+    avgscoreStructure = sum(x.scoreStructure for x in avgScores) / len(avgScores)
+    avgscoreIntegration = sum(x.scoreIntegration for x in avgScores) / len(avgScores)
+#db.session.query(func.avg(Scores.scoreStyle)).join(subq, Scores.fileId == subq.c.id)
+    return {
+        'scoreStyle'       :avgScoreStyle,
+        'scoreCohesion'    :avgscoreCohesion,
+        'scoreStructure'   :avgscoreStructure,
+        'scoreIntegration' :avgscoreIntegration
+    }, 200
+    
+    #print(Scores.query.filter(Scores.fileId.in_(list)).with_entities(func.avg(Scores.scoreStyle)).first())
+
+    # return average scores
+    # return {
+    #     'avgscoreStyle'       :scores.query.with_entities(func.avg(Scores.scoreStyle)).first(), 
+    #     'avgscoreCohesion'    :scores.query.with_entities(func.avg(Scores.scoreCohesion)).first(), 
+    #     'avgscoreStructure'   :scores.query.with_entities(func.avg(Scores.scoreStructure)).first(), 
+    #     'avgscoreIntegration' :scores.query.with_entities(func.avg(Scores.scoreIntegration)).first()
+    # }, 200
 
 @bp.route('/getExplanationForFile', methods = ['GET'])
 def getExplanationForFile(): 
