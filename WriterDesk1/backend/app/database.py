@@ -1,6 +1,20 @@
 from app import db
 from app import models
 
+# helper function, TODO remove before deploy
+def initialSetup():
+    db.session.commit()
+    db.drop_all()
+    db.create_all()
+    # create initial user
+    u = models.User(username='john', password_plaintext='password')
+    uploadToDatabase(u)
+
+    # comment out:
+    #   - fileapi > fileUpload() > initialSetup()
+    #   - models > Users > __init__() > self.id ...
+
+
 # Upload the given file to the database of this session
 def uploadToDatabase(toUpload):
     db.session.add(toUpload)
