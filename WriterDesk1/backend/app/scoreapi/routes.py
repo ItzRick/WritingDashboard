@@ -1,5 +1,5 @@
 from app.scoreapi import bp
-from app.scoreapi.scores import setScoreDB
+from app.scoreapi.scores import setScoreDB, setExplanationDB
 from flask import request, jsonify
 from app.models import Files, Scores, Explanations
 from app.database import uploadToDatabase, removeFromDatabase
@@ -168,53 +168,9 @@ def setExplanation():
     replacement2= request.form.get('replacement2')
     replacement3= request.form.get('replacement3')
 
-    # check if file exists
-    if (Files.query.filter_by(id=fileId).first() is None):
-        return 'No file found with fileId', 400
+    isSuccesful, message = setExplanationDB(fileId, explId, type, explanation, mistakeText, X1, X2, Y1, Y2, replacement1, replacement2, replacement3)
 
-    # if explId = -1, create new record, else override one
-    if explId == -1:
-        # create new record
-        # create Explanations object
-        explanationIndb = Explanations(
-            fileId = fileId,
-            type        = type,
-            explanation = explanation,
-            mistakeText = mistakeText,
-            X1          = X1,
-            X2          = X2,
-            Y1          = Y1,
-            Y2          = Y2,
-            replacement1= replacement1,
-            replacement2= replacement2,
-            replacement3= replacement3,
-        )
-    else:
-        # already in Explanations
-        # retreive current Explanation
-        current = Explanations.query.filter_by(
-            fileId=fileId, explId=explId).first()
-        if current is not None:
-            # remove from database, current scores
-            removeFromDatabase(current)
-
-        # create Explanations object
-        explanationIndb = Explanations(
-            fileId = fileId,
-            explId = explId,
-            type = type,
-            explanation = explanation,
-            mistakeText = mistakeText,
-            X1          = X1,
-            X2          = X2,
-            Y1          = Y1,
-            Y2          = Y2,
-            replacement1= replacement1,
-            replacement2= replacement2,
-            replacement3= replacement3,
-        )
-    
-    # upload
-    uploadToDatabase(explanationIndb)
-
-    return 'successfully uploaded Explanations'
+    if isSuccesful:
+        return message, 200
+    else: 
+        return message, 400

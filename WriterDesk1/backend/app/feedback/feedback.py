@@ -2,12 +2,14 @@ from app.feedback.retrieveText.convertDocxTxtToText import getTXTText, getDOCXTe
 from app.feedback.retrieveText.convertPdfToText import getPDFText
 from app.feedback.content import sourceIntegration
 from app.feedback.languageAndStyle import feedbackLanguageStyle
+from app.scoreapi.scores import setScoreDB, setExplanationDB
 from app import cache
 import nltk
 from nltk.corpus import stopwords
 
 
 def genFeedback(file):
+    fileId = file.id
     fileType = file.fileType
     path = file.path
     userId = file.userId
@@ -23,7 +25,9 @@ def genFeedback(file):
     englishStopwords = getEnglishStopwords()
     try:
         mistakesStyle, scoreStyle = feedbackLanguageStyle(text)
-        scoreContent, explanationsContent = sourceIntegration(text, references, englishStopwords, userId)
+        scoreContent, explanationContent = sourceIntegration(text, references, englishStopwords, userId)
+        setScoreDB(fileId, scoreStyle, -2, -2, scoreContent)
+        setExplanationDB(fileId = fileId, explId = -1, type = 3, explanation = explanationContent)
     except Exception as e:
         return False, e
     return True

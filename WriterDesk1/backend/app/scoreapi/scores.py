@@ -1,4 +1,4 @@
-from app.models import Files, Scores
+from app.models import Files, Scores, Explanations
 from app.database import uploadToDatabase, removeFromDatabase
 
 def isValid(score):
@@ -77,3 +77,55 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
     # upload
     uploadToDatabase(scoreIndb)
     return 'successfully uploaded Scores'
+
+def setExplanationDB(fileId, explId, type, explanation, mistakeText = '', X1 = -1, X2 = -1, Y1 = -1, Y2 = -1, 
+    replacement1 = '', replacement2 = '', replacement3 = ''):
+    if (Files.query.filter_by(id=fileId).first() is None):
+        return False, 'No file found with fileId'
+
+    # if explId = -1, create new record, else override one
+    if explId == -1:
+        # create new record
+        # create Explanations object
+        explanationIndb = Explanations(
+            fileId = fileId,
+            type        = type,
+            explanation = explanation,
+            mistakeText = mistakeText,
+            X1          = X1,
+            X2          = X2,
+            Y1          = Y1,
+            Y2          = Y2,
+            replacement1= replacement1,
+            replacement2= replacement2,
+            replacement3= replacement3,
+        )
+    else:
+        # already in Explanations
+        # retreive current Explanation
+        current = Explanations.query.filter_by(
+            fileId=fileId, explId=explId).first()
+        if current is not None:
+            # remove from database, current scores
+            removeFromDatabase(current)
+
+        # create Explanations object
+        explanationIndb = Explanations(
+            fileId = fileId,
+            explId = explId,
+            type = type,
+            explanation = explanation,
+            mistakeText = mistakeText,
+            X1          = X1,
+            X2          = X2,
+            Y1          = Y1,
+            Y2          = Y2,
+            replacement1= replacement1,
+            replacement2= replacement2,
+            replacement3= replacement3,
+        )
+    
+    # upload
+    uploadToDatabase(explanationIndb)
+
+    return True, 'successfully uploaded Explanations'

@@ -3,7 +3,7 @@ from nltk.tokenize import word_tokenize
 from flask import current_app
 import os
 from app.feedback.retrieveText.convertPdfToText import getPDFText
-from app.feedback.pageDownload import scrapePage, downloadDoi
+from app.feedback.retrieveText.pageDownload import scrapePage, downloadDoi
 from math import ceil
 
 def sourceIntegration(text, references, englishStopwords, userId):
