@@ -52,7 +52,7 @@ def create_token():
             refresh_token=refresh_token,
             user_id = user.id,
             username = user.username,
-            role = user.type
+            role = user.role
         ) 
 
 @jwt.user_identity_loader
@@ -74,14 +74,14 @@ def protected():
     return jsonify(
         id=current_user.id,
         username=current_user.username,
-        role = current_user.type
+        role = current_user.role
     )
 
-@jwt_required(refresh=True)
-@bp.route("/changeRole", methods=["POST"])
-def changeRole():
+@jwt_required()
+@bp.route("/setRole", methods=["POST"])
+def setRole():
     '''
-        This function handles updating the role of a user with given userId. This function is only available to admins
+        This function handles setting the role of a user with given userId. This function is only available to admins
         Function requires a user to be logged in, use helpers > auth-header.js
         Attributes:
             userId: id of the user of whom we want to change the role
@@ -91,25 +91,25 @@ def changeRole():
             Returns success if it succeeded, or an 
             error message:
                 404, if there exists no user with userId
-                403, if the current user is not an admin
                 404, if the role name is not one of ['admin', 'participant', 'researcher', 'student']
+                403, if the current user is not an admin
     '''
     # retrieve data from call
-    userId = request.args.get('userId')
-    newRole = request.args.get('newRole')
-
+    userId = request.form.get('userId')
+    newRole = request.form.get('newRole')
     # get targetUser
-    targetUser = User.query.filter_by(userId=userId).first()
+    targetUser = User.query.filter_by(id=userId).first()
 
     # check if userId exists
     if targetUser is None:
         return 'user with userId not found', 404
-    # check if current_user is Admin
-    if current_user.role != 'admin':
-        return "Method only accessible for admin users", 403 # return Unauthorized response status code
     # check if role is valid
     if newRole not in ['admin', 'participant', 'researcher', 'student']:
         return 'Invalid role', 404
+    # check if current_user is Admin
+    if current_user.role != 'admin':
+        return "Method only accessible for admin users", 403 # return Unauthorized response status code
+    
     
     # update role
     targetUser.role = newRole
@@ -117,7 +117,7 @@ def changeRole():
     db.session.commit()
     return 'success'
 
-@jwt_required(refresh=True)
+@jwt_required()
 @bp.route("/setPassword", methods=["POST"])
 def setPassword():
     '''
@@ -132,7 +132,7 @@ def setPassword():
                 404, if the current user's id does not exist in User table
     '''
     # retrieve data from call
-    newPassword = request.args.get('newPassword')
+    newPassword = request.form.get('newPassword')
 
     # check if current_user is actually in Users
     if User.query.filter_by(userId=current_user.id).first() is None:
