@@ -98,7 +98,7 @@ const Projects = () => {
         formData.append('userId', userId);
         formData.append('projectName', projectName);
         axios.post(`https://localhost:5000/projectapi/setProject`, formData).then(response => {
-
+            //TODO: Set table data
         });
 
         //TODO: Create participant accounts
@@ -113,21 +113,23 @@ const Projects = () => {
         formData.append('projectId', params.id);
         // Make the call to the backend:
         axios.delete(url, { data: formData }).then(response => {
-
+            //TODO: Set table data
         });
-
+        //TODO: Delete all accounts and files corresponding to research project
     }
 
     const deleteSelectedProjects = (e) => {
-        // // Url of the server:
-        // const url = 'https://127.0.0.1:5000/projectapi/projectdelete'
-        // // Create a new formdata:
-        // const formData = new FormData();
-        // // For each of the selected instances, add this id to the formdata:
-        // selectedInstances.forEach(id => alert(id));
-        // // Make the backend call:
-        // axios.delete(url, { data: formData })
-        //   .then(() => {  });
+        // Url of the server:
+        const url = 'https://127.0.0.1:5000/projectapi/deleteProject'
+        // Create a new formdata:
+        const formData = new FormData();
+        // For each of the selected instances, add this id to the formdata:
+        selectedInstances.forEach(id => formData.append('projectId', id));
+        // Make the backend call:
+        axios.delete(url, { data: formData }).then(response => {
+            //TODO: Set table data
+        });
+        //TODO: Delete all accounts and files corresponding to research project
     }
 
 
@@ -140,7 +142,7 @@ const Projects = () => {
                         sx={{ mr: '1vw', verticalAlign: 'middle' }}
                         id="projectName"
                         label={"Project name"}
-                        inputProps={{ maxLength: 264 }}
+                        inputProps={{ maxLength: 256 }}
                         onChange={(e) => setProjectName(e.target.value)}
                     />
                     <TextField
