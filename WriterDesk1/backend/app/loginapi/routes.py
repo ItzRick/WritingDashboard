@@ -137,7 +137,7 @@ def setPassword():
     newPassword = request.form.get('newPassword')
 
     # check if current_user is actually in Users
-    if User.query.filter_by(userId=current_user.id).first() is None:
+    if User.query.filter_by(id=current_user.id).first() is None:
         return 'user not found', 404
     
     # set password using user function
