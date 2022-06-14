@@ -1,12 +1,16 @@
 from decimal import ROUND_HALF_UP, Decimal
 
-def getParagraphScore(text):
+def getParagraphScoreAndExplanations(text):
     '''
         Calculates the score for each paragraph based on the amount of words
         in each paragraph. At the end, the average score for all paragraphs is
-        returned.
+        returned. Also generates feedback for "wrong" paragraphs and returns a
+        dictionary with the text contained in the "wrong" paragraphs and their
+        corresponding explanation.
         Attributes:
             paragraphScores: List that contains the scores of each paragraph.
+            explanations: a dictionary containing explanations for certain 
+            pieces of text that are wrong.
             paragraphScore: The score of a paragraph.
             paragraphScoreRounded: The paraGraphScore rounded to one decimal
             behind the comma.
@@ -17,6 +21,8 @@ def getParagraphScore(text):
         Return: 
             scoreRounded: the score from 0 to 10 based on the average of the
             scores based on the amount of words in each paragraph.
+            explanations: the wrong parts of text and their corresponding 
+            explanations in a dictionary.
 
     '''
     # If the input text is empty.
@@ -25,6 +31,10 @@ def getParagraphScore(text):
 
     # A list containing the scores for each paragraph in the text.
     paragraphScores = []
+
+    # A dictionary that contains the paragraphs that are not good as keys and
+    # their corresponding explanations as value.
+    explanations = dict()
 
     # Split the text on white space to get each paragraph.
     for paragraph in text.splitlines():
@@ -42,6 +52,8 @@ def getParagraphScore(text):
             paragraphScoreRounded = Decimal(paragraphScore).quantize(
                 Decimal('0.1'), rounding=ROUND_HALF_UP) 
             paragraphScores.append(paragraphScoreRounded)
+            explanations[paragraph] = ('This paragraph is too long, '
+                'try to make paragraphs with approximately 200 words.')
         # If the paragraph is less than 100 words.
         elif len(paragraph.split()) < 100:
             # paragraphScore is calculated by taking the max between 0.0 and 
@@ -53,6 +65,8 @@ def getParagraphScore(text):
             paragraphScoreRounded = Decimal(paragraphScore).quantize(
                 Decimal('0.1'), rounding=ROUND_HALF_UP)
             paragraphScores.append(paragraphScoreRounded)        
+            explanations[paragraph] = ('This paragraph is too short, '
+                'try to make paragraphs with approximately 200 words.')         
         else:
         # If the paragraph is between 100 and 300 words.
             paragraphScores.append(Decimal(10.0).quantize(
@@ -64,7 +78,7 @@ def getParagraphScore(text):
     scoreRounded = Decimal(score).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
 
-    return scoreRounded
+    return scoreRounded, explanations
 
 def getStructureScore(text):
     '''
@@ -89,7 +103,12 @@ def getStructureScore(text):
     scores = []
     # Multiple different ways of getting scores for the structure writing 
     # skill can be added here.
-    scores.append(getParagraphScore(text))
+    scores.append(getParagraphScoreAndExplanations(text)[0])
+
+    explanations = dict()
+    # Multiple different ways of getting explanations for the structure writing
+    # skill can be added here.
+    explanations.update(getParagraphScoreAndExplanations(text)[1])
 
     # Take the average score of each submethod of getting scores for the 
     # structure writing skill and round it to one decimal behind the comma.
@@ -97,43 +116,4 @@ def getStructureScore(text):
     scoreRounded = Decimal(score).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
 
-    return scoreRounded
-
-def getExplanationsStructure(text):
-    '''
-        Gets the "mistakes" and their corresponding explanations regarding the
-        structure writing skill. At the end a dictionary containing the 
-        "mistakes" and explanations is returned.
-        Attributes:
-            explanations: a dictionary containing explanations for certain 
-            pieces of text that are wrong.
-        Arguments:
-            text: the text on which explanations should be generated
-        Return: 
-            explanations: the wrong parts of text and their corresponding 
-            explanations in a dictionary.
-    '''
-
-    # A dictionary that contains the paragraphs that are not good as keys and
-    #  their corresponding explanations as value.
-    explanations = dict()
-
-    # If the input text is empty.
-    if len(text) == 0:
-        return None
-
-    # Split the text on white space to get each paragraph.
-    for paragraph in text.splitlines():
-        # If there are multiple white spaces in a row, continue.
-        if len(paragraph.split()) == 0:
-            continue
-        # If the paragraph is more than 300 words.
-        elif len(paragraph.split()) > 300:
-            explanations[paragraph] = ('This paragraph is too long, '
-                'try to make paragraphs with less words.')
-        # If the paragraph is less than 100 words.
-        elif len(paragraph.split()) < 100:
-            explanations[paragraph] = ('This paragraph is too short, '
-                'try to make paragraphs with more words.')  
-    
-    return explanations
+    return scoreRounded, explanations
