@@ -25,23 +25,25 @@ def getMistakesInformationStructure(mistakes, filePath):
     listForDatabase = []
     doc = fitz.open(filePath)
 
+    # go over all mistakes in the input
     for mistake in mistakes:
         pageHeight = 0
+        # go over all pages in the input document
         for page in doc:
+            # search for all occurences of the mistake
             textInstances = page.search_for(mistake)
+            # add the height of the page to the coordinates for returning
             if page.number != 0:
                 pageHeight += page.rect.y1
 
+            # go over all occurences of the mistake
             for inst in textInstances:
                 # list contains coordinates, type number, explanation and 
                 # mistake text
                 values = [inst.x0, inst.y0 + pageHeight, inst.x1, 
                 inst.y1 + pageHeight, 2, mistakes[mistake], mistake]
-
-                # possible method for adding information to database here
-                # addToDB(values)
-
                 listForDatabase.append(values)
+
     return listForDatabase
 
 def getMistakesInformationStyle(mistakes, filePath):
@@ -77,19 +79,25 @@ def getMistakesInformationStyle(mistakes, filePath):
     listForDatabase = []
     doc = fitz.open(filePath)
 
+    # go over all mistakes in the input
     for mistake in mistakes[0]:
         word = mistake[0]
         sentence = mistake[1]
 
         pageHeight = 0
 
+        # go over all pages in the input document
         for page in doc:
+            # search for all occurences of the mistake
             wordInstances = page.search_for(word)
+            # search for all occurences of the sentence
             sentenceInstances = page.search_for(sentence)
 
+            # add the height of the page to the coordinates for returning
             if page.number != 0:
                 pageHeight += page.rect.y1
 
+            # check if the word found is in the sentence
             wordsInSentence = []
             for i in sentenceInstances:
                 for j in wordInstances:
@@ -105,15 +113,6 @@ def getMistakesInformationStyle(mistakes, filePath):
             # mistake text and replacement(s)
             values = [corWord.x0, corWord.y0 + pageHeight, corWord.x1, 
                 corWord.y1 + pageHeight, 0, mistake[3], mistake[0], mistake[4]]
-            
-            # possible method for adding information to database here
-            # addToDB(values)
-
             listForDatabase.append(values)
 
     return listForDatabase
-
-
-def getMistakesInformationCohesion(mistakes):
-    # cohesion = 1
-    print('todo')
