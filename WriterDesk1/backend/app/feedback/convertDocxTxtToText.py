@@ -62,24 +62,28 @@ def getTXTText(path):
     fullText = re.sub(r'\n+', '\n\n', fullText).strip()
     return fullText
 
+
 def getDOCXText(path):
     """
     Retrieves text from a docx file at path and returns a string with the text
     Attributes:
         fullText: String of extracted text
+        referencesText: String of extracted references text
         stylesToRemove: List of styles to exclude from fullText
         referencesParagraph: Boolean which is true if the current paragraph consists of references
         doc: Word document
         para: Paragraph of text
         documentXML: document.xml of docx file
         tag: tags inside documentXML
-    Arguments: 
+    Arguments:
         path: Path of docx file which will be extracted.
     Returns:
-        fullText Text of docx file as a string.
+        fullText: Text of docx file as a string (does not contain references).
+        referencesText: Text of references from docx file as a string.
     """
 
     fullText = ""
+    referencesText = ""
     stylesToRemove = ["Title", "Subtitle", "List Paragraph", "Quote", "Intense Quote", "Caption"]
     referencesParagraph = False
 
@@ -89,8 +93,8 @@ def getDOCXText(path):
 
         # iterate over paragraphs
         for para in doc.paragraphs:
-            # Remove titles, headings, lists, quotes, captions and references
-            if not (para.style.name.startswith("Heading") or para.style.name in stylesToRemove) and not referencesParagraph:
+            # Remove titles, headings, lists, quotes, captions
+            if not (para.style.name.startswith("Heading") or para.style.name in stylesToRemove):
                 # Get document.xml from word file
                 documentXML = bs.BeautifulSoup(para._p.xml, 'lxml')
 
@@ -98,13 +102,23 @@ def getDOCXText(path):
                 for textbox in documentXML.find_all('w:txbxcontent'):
                     textbox.decompose()
 
-                # Find text and line breaks
-                for tag in documentXML.findAll(["w:t", "w:br"]):
-                    if tag.name == "w:t":
-                        fullText += tag.text
-                    else:
-                        fullText += '\n'  # Add newline
-                fullText += "\n"  # Add newline
+                if not referencesParagraph:  # Paragraph does not contain references
+                    # Find text and line breaks
+                    for tag in documentXML.findAll(["w:t", "w:br"]):
+                        if tag.name == "w:t":
+                            fullText += tag.text  # Append text to fullText
+                        else:
+                            fullText += '\n'  # Add newline
+                    fullText += "\n"  # Add newline
+
+                else:  # Paragraph consists of references
+                    # Find text and line break
+                    for tag in documentXML.findAll(["w:t", "w:br"]):
+                        if tag.name == "w:t":
+                            referencesText += tag.text  # Append text to referencesText
+                        else:
+                            referencesText += '\n'  # Add newline
+                    referencesText += "\n"  # Add newline
 
             elif para.style.name.startswith('Heading'):
                 if 'references' in para.text.lower() or 'bibliography' in para.text.lower():
@@ -118,4 +132,6 @@ def getDOCXText(path):
 
     # Remove redundant newlines
     fullText = re.sub(r'\n+', '\n\n', fullText).strip()
-    return fullText
+    referencesText = re.sub(r'\n+', '\n\n', referencesText).strip()
+
+    return fullText, referencesText
