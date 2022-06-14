@@ -175,7 +175,7 @@ def getExplanation():
     # return explanation
     return explanation.serialize, 200
 
-@bp.route('/getAllScores', methods = ['GET'])
+@bp.route('/getAvgScores', methods = ['GET'])
 def getAverageScores():
     '''
         This function handles returning the average scores of the latest (date) files
@@ -194,8 +194,7 @@ def getAverageScores():
     userId = request.args.get('userId')
 
     # Average scores is based on num:avgBasedOn files 
-    #TODO Moeten we dit ergens in de config neerzetten?
-    avgBasedOn = 5 
+    AVGBASEDON = 5 
 
     # Check if user has files
     if (Files.query.filter_by(userId=userId).first() is None):
@@ -205,18 +204,17 @@ def getAverageScores():
     subq =  Files.query.\
             filter_by(userId = userId).\
             order_by(Files.date.desc()).\
-            limit(avgBasedOn).\
+            limit(AVGBASEDON).\
             subquery()
 
     # All recents scores from user
-    #TODO hoe zal ik deze variabele noemen?
-    avgScores = Scores.query.join(subq, Scores.fileId == subq.c.id).all()
+    recentScores = Scores.query.join(subq, Scores.fileId == subq.c.id).all()
 
-    # Average value each explanation type for avgScores 
-    avgscoreStyle = sum(x.scoreStyle for x in avgScores) / len(avgScores)
-    avgscoreCohesion = sum(x.scoreCohesion for x in avgScores) / len(avgScores)
-    avgscoreStructure = sum(x.scoreStructure for x in avgScores) / len(avgScores)
-    avgscoreIntegration = sum(x.scoreIntegration for x in avgScores) / len(avgScores)
+    # Average value each explanation type for recentScores 
+    avgscoreStyle = sum(x.scoreStyle for x in recentScores) / len(recentScores)
+    avgscoreCohesion = sum(x.scoreCohesion for x in recentScores) / len(recentScores)
+    avgscoreStructure = sum(x.scoreStructure for x in recentScores) / len(recentScores)
+    avgscoreIntegration = sum(x.scoreIntegration for x in recentScores) / len(recentScores)
 
     return {
         'scoreStyle'       :round(avgscoreStyle,2),
