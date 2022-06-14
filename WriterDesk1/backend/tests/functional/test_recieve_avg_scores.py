@@ -1,5 +1,5 @@
 from app import db
-from app.models import Scores, Files
+from app.models import User, Scores, Files
 from datetime import datetime
 import json
 
@@ -116,6 +116,7 @@ def testAvgEmptyUser(testClient, initDatabaseEmpty):
     data = {
         'userId' : 1,
     }
+    assert User.query.get(1) is None
 
     # Retrieve average scores for user which don't have any scores
     response = testClient.get('/scoreapi/getAvgScores', query_string=data)
