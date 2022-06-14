@@ -65,3 +65,38 @@ def postUser(username, password):
     user = models.User(username=username, password_plaintext=password, role="student")
     uploadToDatabase(user)
     return True
+
+def postParticipant(username, password):
+    '''
+        This function handles the query that generates a partipant account. When there is no participant present in the database with the given username,
+        a new participant is posted in the database with a unique id, the given username, the participant role and a hash of the given password.
+        Attributes:
+            user: user object that is to be added to the database
+        Arguments:
+            username: username as given in frontend
+            password: password as given in frontend
+        Return:
+            Returns the user id when a new user was added to the database
+    '''
+
+    # Check if there is already a user with this username
+    if db.session.query(models.User).filter_by(username=username).count() > 0:
+        raise Exception('User exists already')
+
+    # Add user to the database with participant role
+    user = models.User(username=username, password_plaintext=password, role="participant")
+    uploadToDatabase(user)
+    return user.id
+
+def postParticipantToProject(userId, projectId):
+    '''
+        This function handles the query that creates an entry in ParticipantToProject, to link a participant to a research project. 
+        Attributes:
+            dataTuple: object that is to be added to the database
+        Arguments:
+            userId: id of the participant
+            projectId: id of the research project
+    '''
+
+    dataTuple = models.ParticipantToProject(userId=userId, projectId=projectId)
+    uploadToDatabase(dataTuple)

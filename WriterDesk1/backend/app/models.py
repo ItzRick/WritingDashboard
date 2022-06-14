@@ -44,8 +44,6 @@ class User(db.Model, Serializer):
     def check_password(self, password):
         return check_password_hash(self.passwordHash, password)
 
-
-
 class Files(db.Model, Serializer):
     '''
         Class to enter files in the database. 
@@ -68,3 +66,39 @@ class Files(db.Model, Serializer):
 
     def __repr__(self):
         return '<File {}>'.format(self.filename)
+
+class ParticipantToProject(db.Model, Serializer):
+    '''
+        Model containing user id's and project id's, linking a participant to a research project.
+        Attributes:
+            userId: id of the participant
+            projectId: id of the research project
+            participant: User object linked by userId
+            project: Projects object linked by projectId
+    '''
+    __tablename__ = "participanttoproject"
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, autoincrement=False)
+    projectId = db.Column(db.Integer, db.ForeignKey('projects.id'))
+    participant = db.relationship('User', backref='participanttoproject', lazy=True)
+    project = db.relationship('Projects', backref='participanttoproject', lazy=True)
+
+    def __init__(self, userId: int, projectId: int):
+        ''' Create new tuple'''
+        self.userId = userId
+        self.projectId = projectId
+
+    def __repr__(self):
+        return '<ParticipantToProject {}>'.format(self.userId)
+
+#Temporary, to make ParticipantToProject work
+#To be replaced with real projects table
+class Projects(db.Model, Serializer):
+    __tablename__ = "projects"
+    id = db.Column(db.Integer, primary_key=True)
+    field = db.Column(db.Integer)
+
+    def __init__(self, field: int):
+        self.field = field
+
+    def __repr__(self):
+        return '<Project {}>'.format(self.userId)
