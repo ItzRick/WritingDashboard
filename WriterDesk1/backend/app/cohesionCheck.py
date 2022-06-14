@@ -1,3 +1,7 @@
+# Import the functions that are called in this function.
+import getTTRScore
+import getConnectiveScore
+
 def generateExplanation(text):
     """
         Calculates the final score of the cohesion in the text, this score is

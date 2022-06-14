@@ -1,3 +1,6 @@
+# Import natural language toolkit.
+import nltk
+
 def getConnectiveScore(text):
     """
         Calculates the score of the connectives use, this score is in the 
