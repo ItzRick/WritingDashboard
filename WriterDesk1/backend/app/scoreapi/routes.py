@@ -182,18 +182,21 @@ def getAverageScores():
         from a given user, the number of files is dependend on the variable avgBasedOn
         Attributes:
             userId: user id as given by the frontend
+            AVGBASEDON: integer, which is the number of recent files that the function uses for the average
         Arguments:
             avgscoreStyle: Average score for Language and Style
             avgscoreCohesion: Average score for Cohesion
             avgscoreStructure: Average score for Structure
             avgscoreIntegration: Average score for Source Integration and Content
         Returns:
-            Average scores and status code
+            Average scores and status code, 
+                status code 200: succes
+                status code 400: no files found for given userId
     '''
     # get UserID from request
     userId = request.args.get('userId')
 
-    # Average scores is based on num:avgBasedOn files 
+    # Average scores is based on num:AVGBASEDON files 
     AVGBASEDON = 5 
 
     # Check if user has files
