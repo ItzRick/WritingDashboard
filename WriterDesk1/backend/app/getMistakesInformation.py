@@ -96,9 +96,10 @@ def getMistakesInformationStyle(mistakes, filePath):
                     if i.contains(j):
                         wordsInSentence.append(j)
             
-            # the coordinates of string that is wrong
+            # if there are no mistakes on this page
             if len(wordsInSentence) == 0:
                 continue
+            # the coordinates of string that is wrong
             corWord = wordsInSentence[mistake[2]]
             # list contains coordinates, type number, explanation, 
             # mistake text and replacement(s)
