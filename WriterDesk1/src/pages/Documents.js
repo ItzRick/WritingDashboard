@@ -5,7 +5,8 @@ import {
 } from "@mui/material";
 import {
   DeleteOutline,
-  Grading
+  Grading,
+  Refresh,
 } from "@mui/icons-material";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
@@ -178,6 +179,7 @@ const Documents = () => {
         Toolbar: () => (
           <GridToolbarContainer>
             <IconButton onClick={deleteAllFiles} ><DeleteOutline /></IconButton>
+            <IconButton onClick={setData} ><Refresh /></IconButton>
           </GridToolbarContainer>
         )
       }}
