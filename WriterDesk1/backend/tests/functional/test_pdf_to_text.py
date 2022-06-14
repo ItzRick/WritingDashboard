@@ -1,4 +1,4 @@
-from app.convertPdfToText import getPDFText, splitBlocks, getFrequencyX, postProcessText, getLineText, filterLineList, filterLineNoLetters, getBlockText, isBlockTable, isTextCaption
+from app.feedback.convertPdfToText import getPDFText, splitBlocks, getFrequencyX, postProcessText, getLineText, filterLineList, filterLineNoLetters, getBlockText, isBlockTable, isTextCaption
 import os
 import fitz
 

@@ -9,10 +9,10 @@ import TestingComponent from "./../components/TestingComponent";
  * @returns Testing Page
  */
 const TestingPage = () => {
-    
+
     return (
         <>
-            Testing
+            TestingPage
         </>
     );
 }
