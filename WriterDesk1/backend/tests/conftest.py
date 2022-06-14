@@ -135,3 +135,13 @@ def englishStopwords():
     nltk.download('punkt')
     english_stopwords = stopwords.words('english')
     return english_stopwords
+
+@pytest.fixture(scope='module')
+def englishStopwords():
+    '''
+        Downloads the nltk stopwords and punkt and returns englishStopwords, the english stopwords.
+    '''
+    nltk.download('stopwords')
+    nltk.download('punkt')
+    english_stopwords = stopwords.words('english')
+    return english_stopwords

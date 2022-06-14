@@ -112,9 +112,23 @@ class Files(db.Model):
     scores       = db.relationship('Scores', backref='scoredFile', lazy='dynamic', cascade='all,delete')
     explanations = db.relationship('Explanations', backref='explainedFile', lazy='dynamic', cascade='all,delete')
 
+    def serializeFile(self):
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            if not c == 'scores' and not c == 'explanations' and not c == 'owner':
+                dict[c] =  getattr(self, c)
+        return dict
+
+    @staticmethod
+    def serializeList(l):
+        return [m.serializeFile() for m in l]
+
+    # relationships
+    scores       = db.relationship('Scores', backref='scoredFile', lazy='dynamic', cascade='all,delete')
+    explanations = db.relationship('Explanations', backref='explainedFile', lazy='dynamic', cascade='all,delete')
+
     def __repr__(self):
         return '<Files {}>'.format(self.filename)
-
 
 
 class Scores(db.Model):
