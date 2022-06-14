@@ -20,6 +20,9 @@ def setProject():
     userId = request.form.get('userId')
     projectName = request.form.get('projectName')
 
+    if userId is None:
+        return 'userId not specified', 400
+
     # create Projects object
     projectIndb = Projects(userId=userId, projectName=projectName)
 
