@@ -78,7 +78,7 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
     uploadToDatabase(scoreIndb)
     return 'successfully uploaded Scores'
 
-def setExplanationDB(fileId, explId, type, explanation, mistakeText = '', X1 = -1, X2 = -1, Y1 = -1, Y2 = -1, 
+def setExplanationDB(fileId, type, explanation, explId = -1, mistakeText = '', X1 = -1, X2 = -1, Y1 = -1, Y2 = -1, 
     replacement1 = '', replacement2 = '', replacement3 = ''):
     if (Files.query.filter_by(id=fileId).first() is None):
         return False, 'No file found with fileId'

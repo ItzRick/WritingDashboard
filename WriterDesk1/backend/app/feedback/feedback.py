@@ -29,6 +29,7 @@ def genFeedback(file):
         setScoreDB(fileId, scoreStyle, -2, -2, scoreContent)
         setExplanationDB(fileId = fileId, explId = -1, type = 3, explanation = explanationContent)
     except Exception as e:
+        print(e)
         return False, e
     return True
 

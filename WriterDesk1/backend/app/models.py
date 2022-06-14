@@ -102,6 +102,13 @@ class Files(db.Model):
         for c in inspect(self).attrs.keys():
             if not c == 'scores' and not c == 'explanations' and not c == 'owner':
                 dict[c] =  getattr(self, c)
+            elif c == 'scores':
+                for scores in self.scores.all():
+                    for d in inspect(scores).attrs.keys():
+                        if d != 'fileId' and d != 'scoredFile': 
+                            attr = getattr(scores, d)
+                            if attr >= 0:
+                                dict[d] = getattr(scores, d)
         return dict
 
     @staticmethod
@@ -157,7 +164,7 @@ class Explanations(db.Model):
             replacement1..3: Three possible replacements for the mistakeText
     '''
     fileId      = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
-    explId      = db.Column(db.Integer, primary_key=True)
+    explId      = db.Column(db.Integer, primary_key=True, autoincrement=True)
     type        = db.Column(db.Integer, default=-1)
     explanation = db.Column(db.String, default='')
     mistakeText = db.Column(db.String, default='')

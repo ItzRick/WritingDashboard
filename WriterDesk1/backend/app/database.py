@@ -1,5 +1,5 @@
 from app import db
-from app import models
+from app.models import User, Scores, Files 
 
 # helper function, TODO remove before deploy
 def initialSetup():
@@ -7,7 +7,7 @@ def initialSetup():
     db.drop_all()
     db.create_all()
     # create initial user
-    u = models.User(username='john', password_plaintext='password')
+    u = User(username='john', password_plaintext='password')
     uploadToDatabase(u)
 
     # comment out:
@@ -29,19 +29,19 @@ def removeFromDatabase(document):
 # Orders on sortingAttribute
 # Returns list of Files objects as dictionary
 def getFilesByUser(user, sortingAttribute):
-    files = db.session.query(models.Files).filter_by(userId=user)
+    files = db.session.query(Files).filter_by(userId=user)
 
     if sortingAttribute == "filename.asc":
-        files = files.order_by(models.Files.filename)
+        files = files.order_by(Files.filename)
     elif sortingAttribute == "filename.desc":
-        files = files.order_by(models.Files.filename.desc())
+        files = files.order_by(Files.filename.desc())
     elif sortingAttribute == "course.asc":
-        files = files.order_by(models.Files.courseCode)
+        files = files.order_by(Files.courseCode)
     elif sortingAttribute == "course.desc":
-        files = files.order_by(models.Files.courseCode.desc())
+        files = files.order_by(Files.courseCode.desc())
     elif sortingAttribute == "date.asc":
-        files = files.order_by(models.Files.date)
+        files = files.order_by(Files.date)
     elif sortingAttribute == "date.desc":
-        files = files.order_by(models.Files.date.desc())
+        files = files.order_by(Files.date.desc())
 
-    return models.Files.serializeList(files.all())
+    return Files.serializeList(files.all())
