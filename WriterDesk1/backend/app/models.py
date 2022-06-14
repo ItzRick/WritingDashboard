@@ -18,13 +18,13 @@ class User(db.Model):
     '''
         Declare user model containing usernames and passwords (hashed), we use single table inheritance for different types of users.
         Attributes:
-            type: used as discrimator, indicates type of object in row
+            role: Identifies role of user
             id: Unique primary key User ID 
             username: email address or username from user
             passwordHash: hashed password from user, hashed using werkzeug.security
     '''
     __tablename__ = "user"
-    type = db.Column(db.String(32))
+    role = db.Column(db.String(32))
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), index=True, unique=True)
     passwordHash = db.Column(db.String(128))
@@ -37,7 +37,7 @@ class User(db.Model):
                 password_plaintext: Password (to be hashed) for new user
                 role: Role of new user, standard is: 'user'        
         '''
-        self.type = role
+        self.role = role
         self.username = username
         self.set_password(password_plaintext)
 

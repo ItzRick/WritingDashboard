@@ -42,7 +42,7 @@ def create_token():
             access_token=access_token,
             user_id = user.id,
             username = user.username,
-            role = user.type
+            role = user.role
         ) 
 
 @jwt.user_identity_loader
@@ -74,5 +74,5 @@ def protected():
     return jsonify(
         id=current_user.id,
         username=current_user.username,
-        role = current_user.type
+        role = current_user.role
     )
