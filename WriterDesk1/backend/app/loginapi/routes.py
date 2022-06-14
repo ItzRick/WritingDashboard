@@ -77,8 +77,8 @@ def protected():
         role = current_user.role
     )
 
-@jwt_required()
 @bp.route("/setRole", methods=["POST"])
+@jwt_required()
 def setRole():
     '''
         This function handles setting the role of a user with given userId. This function is only available to admins
@@ -90,10 +90,15 @@ def setRole():
         Return:
             Returns success if it succeeded, or an 
             error message:
+                403, if the current user is not an admin
                 404, if there exists no user with userId
                 404, if the role name is not one of ['admin', 'participant', 'researcher', 'student']
-                403, if the current user is not an admin
     '''
+    # check if current_user is Admin
+    if current_user.role != 'admin':
+        return "Method only accessible for admin users", 403 # return Unauthorized response status code
+    
+
     # retrieve data from call
     userId = request.form.get('userId')
     newRole = request.form.get('newRole')
@@ -106,9 +111,6 @@ def setRole():
     # check if role is valid
     if newRole not in ['admin', 'participant', 'researcher', 'student']:
         return 'Invalid role', 404
-    # check if current_user is Admin
-    if current_user.role != 'admin':
-        return "Method only accessible for admin users", 403 # return Unauthorized response status code
     
     
     # update role
@@ -117,8 +119,8 @@ def setRole():
     db.session.commit()
     return 'success'
 
-@jwt_required()
 @bp.route("/setPassword", methods=["POST"])
+@jwt_required()
 def setPassword():
     '''
         This function handles setting the password for the user
