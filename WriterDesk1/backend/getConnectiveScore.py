@@ -1,5 +1,6 @@
 # Import natural language toolkit.
 import nltk
+from sqlalchemy import null
 
 def getConnectiveScore(text):
     """
@@ -33,6 +34,10 @@ def getConnectiveScore(text):
                     the size of tokens (the total number of tokens/words) in 
                     the text.
     """
+
+    # If the text string is empty the function returns null.
+    if text == "":
+        return null
 
     # Array containing a list of connectives, from the TAACO user guide.
     connectivesCheck = ['actually', 'admittedly', 'after', 'again', 

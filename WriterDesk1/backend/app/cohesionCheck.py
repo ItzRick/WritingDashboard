@@ -1,4 +1,5 @@
 # Import the functions that are called in this function.
+from sqlalchemy import null
 import getTTRScore
 import getConnectiveScore
 
@@ -40,6 +41,10 @@ def generateExplanation(text):
                     TTRScoreExplanation and connectivesScoreExplanation. This
                     is the feedback that the user will see.
     """
+
+    # If the text string is empty the function returns null.
+    if text == "":
+        return null
 
     # Retrieve variables from getTTRScore and getConnectiveScore.
     TTRScore, mostCommon = getTTRScore(text)

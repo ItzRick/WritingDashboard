@@ -3,6 +3,8 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 from collections import Counter
 
+from sqlalchemy import null
+
 def getTTRScore(text):
     """
         Calculates the score of the Type-Token Ratio, this score is in the 
@@ -35,6 +37,10 @@ def getTTRScore(text):
                     as strings, to be used in generateFeedback.
     """
     
+    # If the text string is empty the function returns null.
+    if text == "":
+        return null
+
     # Function from nltk that lemmatizes tokens/words.
     lemmatizer = WordNetLemmatizer()
 
