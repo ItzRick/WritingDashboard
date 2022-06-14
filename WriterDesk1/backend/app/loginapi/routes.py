@@ -48,14 +48,18 @@ def create_token():
 @jwt.user_identity_loader
 def user_identity_lookup(user):
     '''
-        callback funtion will convert any User object used to create a JWT into a JSON serializable format
+        Callback funtion will convert any User object used to create a JWT into a JSON serializable format
+        Return:
+            Returns User.id
     '''
     return user.id
 
 @jwt.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data):
     '''
-        callback function to automatically load  User object when a JWT is present in the request. 
+        Callback function to automatically load User object when a JWT is present in the request.
+        Return:
+            Returns User, corresponding to JWT token that is used in route
     '''
     identity = jwt_data["sub"] # get user id from token
     return User.query.filter_by(id=identity).one_or_none()
