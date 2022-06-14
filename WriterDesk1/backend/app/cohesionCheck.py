@@ -1,196 +1,117 @@
-# Import natural language toolkit.
-import nltk
-from nltk.stem import WordNetLemmatizer
-from collections import Counter
+# Import the functions that are called in this function.
+import getTTRScore
+import getConnectiveScore
 
-def getTTRscore(text):
+def generateExplanation(text):
     """
-        Calculates the score of the Type-Token Ratio, this score is in the 
-        range [0,10]. This is calculated by dividing the number of unique lemmas
-        in a text by the total number of lemmas in a text times 10. This is 
-        done in a window of 50 tokens.
+        Calculates the final score of the cohesion in the text, this score is
+        in the range [0,10]. This is calculated by taking the "gemiddelde" of
+        the TTRScore and the connectivesScore. 
+        Generates feedback text as a string. This feedback is determined by how
+        high the TTR score and connective score are.
         Attributes:
-            tokens: list containing the text split up into tokens as strings.
-            tagged: list containing tokens from text with an assigned 
-                    part-of-speach tag as tuples consisting of two strings.
-            lemmatizedTokens: list containing all the words from the text in
-                    their lemmatized form as strings.
-            uniqueTokensInWindow: list containing the number of unique 
-                    tokens in every window of windowSize as integers.
+            TTRScore: float, TTR score retrieved from function getTTRScore.
             mostCommon: list containing the three most used words in the text
-                    as strings, to be used in generateFeedback.
-            uniqueTokens: float that is the average number of unique tokens 
-                    per windowSize.
-            windowSize: integer that decides the size of the window mentioned
-                    before; initially this is 50, if there are less than 50 
-                    tokens then it is the number of tokens.
-            TTRScore: float, (average of) unique tokens / window length * 10,
-                    rounded to 2 decimals.
+                    as strings, retrieved from getTTRScore.
+            connectivesScore: float, connectives score retrieved from function
+                    getConnectivesScore.
+            indexScore: float, index score retrieved from function
+                    getConnectivesScore.
+            cohesionScore: float, calculated by calculating the average of
+                    TTRScore and connectivesScore, rounded to 2 decimals. This
+                    is the final score that the user will get.
+            scoreExplanation: string, gives the final score; cohesionScore.
+            TTRScoreExplanation: string, gives feedback on how to improve the
+                    TTRScore.
+            connectivesScoreExplanation: string, gives feedback on how to
+                    improve the connectivesScore, the indexScore has some
+                    influence on this as well.
+            feedback: string, combination of scoreExplanation, 
+                    TTRScoreExplanation and connectivesScoreExplanation. This
+                    is the feedback that the user will see.
         Arguments:
-            text: string, the text on which the TTR score should be calculated.
-        Return:
-            TTRScore: float, TTR score calculated as follows: (average of) 
-                    unique tokens / window length * 10, rounded to 2 decimals.
-            mostCommon: list containing the three most used words in the text
-                    as strings, to be used in generateFeedback.
-    """
-    
-    # Function from nltk that lemmatizes tokens/words.
-    lemmatizer = WordNetLemmatizer()
-
-    # Function that splits text into tokens.
-    tokens = nltk.word_tokenize(text)    
-
-    # Only keep words in token list.
-    # (get rid of things like dots or comma's)
-    for i in tokens:
-        if i.isalpha() == False:
-            tokens.pop(tokens.index(i))
-
-    # Function that assigns a part-of-speach tag to each token.
-    tagged = nltk.pos_tag(tokens)
-
-    # Create list with all tokens lemmatized.
-    # (and in lowercase for comparison)
-    lemmatizedTokens = []
-    for i in tagged:
-        # Verbs        
-        if (i[1][0:2] == "VB"):
-            lemmatizedTokens.append(lemmatizer.lemmatize(i[0], pos="v")\
-                .lower())
-        # Adjectives
-        elif (i[1][0:2] == "JJ"):
-            lemmatizedTokens.append(lemmatizer.lemmatize(i[0], pos="a")\
-                .lower())
-        # Adverbs
-        elif (i[1][0:2] == "RB"):
-            lemmatizedTokens.append(lemmatizer.lemmatize(i[0], pos="r")\
-                .lower())
-        # Nouns (and everything else)
-        else:
-            lemmatizedTokens.append(lemmatizer.lemmatize(i[0]).lower())
-    
-    # Calculate the number of unique tokens for every 50 tokens.
-    uniqueTokensInWindow = []
-    if len(lemmatizedTokens) > 50:
-        for i in range(len(lemmatizedTokens)-50):
-            uniqueTokensInWindow.append(len(Counter(lemmatizedTokens\
-                [i:50+i]).values()))            
-    else:
-        uniqueTokensInWindow.append(len(Counter(lemmatizedTokens)\
-            .values()))     
-
-    # Get the three most common words out of the text.
-    # This is for the feedback.
-    mostCommon = [word[0] for word in Counter(lemmatizedTokens).most_common(3)]
-
-    # Take average of unique tokens.
-    uniqueTokens = sum(uniqueTokensInWindow)/len(uniqueTokensInWindow)
-
-    # Size of window (in case the text is smaller than the window)
-    windowSize = len(lemmatizedTokens)
-    if len(lemmatizedTokens) > 50:
-        windowSize = 50
-
-    # Calculate the score.
-    # (average of) unique tokens / window length
-    # Then we round the result to 2 decimals.
-    TTRScore = round(uniqueTokens/windowSize*10, 2)
-    
-    # Return calculated TTR score and 3 most common words.
-    return (TTRScore, mostCommon)
-
-def getConnectiveScore(text):
-    """
-        Calculates the score of the connectives use, this score is in the 
-        range [0,10]. This is calculated by putting the division of the number
-        of connectives used in a text by the total number of tokens in a text 
-        into a formula which calculates the score. This formula is a 2nd order 
-        polynomial in which we took into account the borders of the client for 
-        a proper grade. 
-        Attributes:
-            connectivesCheck: list filled with all connectives from the TAACO
-                    user manual as strings.
-            tokens: list containing the text split up into tokens as strings.
-            numberOfConnectives: integer, number of connectives in text
-            indexScore: float, calculated by dividing numberOfConnectives by
-                    the size of tokens (the total number of tokens/words) in 
-                    the text.
-            connectivesScore: float, connectives score calculated as follows: 
-                    -3.5 + 300*indexScore - 1666.667*indexScore^2. We take the
-                    max of this result and 0, then we round the result to 2 
-                    decimals.
-        Arguments:
-            text: string, the text on which the connective score should be 
+            text: string, the text on which the cohesion score should be
                     calculated.
         Return:
-            connectivesScore: float, connectives score calculated as follows: 
-                    -3.5 + 300*indexScore - 1666.667*indexScore^2. We take the
-                    max of this result and 0, then we round the result to 2 
-                    decimals.
-            indexScore: float, calculated by dividing numberOfConnectives by
-                    the size of tokens (the total number of tokens/words) in 
-                    the text.
+            cohesionScore: float, calculated by calculating the average of
+                    TTRScore and connectivesScore, rounded to 2 decimals. This
+                    is the final score that the user will get.
+            feedback: string, combination of scoreExplanation, 
+                    TTRScoreExplanation and connectivesScoreExplanation. This
+                    is the feedback that the user will see.
     """
 
-    connectivesCheck = ['actually', 'admittedly', 'after', 'again', 
-    'all in all', 'all this time', 'also', 'alternatively', 'although', 'and',
-    'anyhow', 'anyway', 'arise', 'arises', 'arising', 'arose', 'as', 'at last', 
-    'at least', 'at once', 'at the same time', 'at this moment', 
-    'at this point', 'because', 'before', 'besides', 'but', 'by', 'cause', 
-    'caused', 'causes', 'causing', 'condition', 'conditional upon', 
-    'conditions', 'consequence', 'consequences', 'consequent', 'consequently', 
-    'contrasted with', 'correspondingly', 'desire', 'desired', 'desires', 
-    'desiring', 'despite the fact that', 'due to', 'enable', 'enabled', 
-    'enables', 'enabling', 'except that', 'finally', 'first', 'follow that',
-    'follow the', 'follow this', 'followed that', 'followed the', 
-    'followed this', 'following that', 'follows the', 'follows this', 
-    'fortunately', 'from now on', 'further', 'furthermore', 'goal', 'goals',
-    'hence', 'however', 'if', 'immediately', 'in actual fact', 'in addition',
-    'in any case', 'in any event', 'in case', 'in conclusion', 'in contrast',
-    'in fact', 'in order', 'in other words', 'in short', 'in sum', 
-    'in the end', 'in the meantime', 'incidentally', 'instead', 
-    'it followed that', 'it follows', 'it follows that', 'likewise', 'made',
-    'make', 'makes', 'making', 'meanwhile', 'moreover', 'nevertheless', 'next',
-    'nonetheless', 'nor', 'notwithstanding that', 'now that', 
-    'on another occasion', 'on one hand', 'on the contrary', 'on the one hand',
-    'on the other hand', 'once more', 'or', 'otherwise', 'presently', 
-    'previously', 'provided that', 'purpose of which', 'pursuant to', 'rather',
-    'secondly', 'similarly', 'simultaneously', 'since', 'so', 'summarizing', 
-    'summing up', 'that is', 'the last time', 'the previous moment', 'then', 
-    'therefore', 'thereupon', 'this time', 'though', 'throughout', 'thus', 
-    'to conclude', 'to return to', 'to sum up', 'to summarize', 
-    'to take an example', 'to that end', 'to these ends', 'to this end', 
-    'to those ends', 'too', 'unless', 'until', 'up till that time', 
-    'up to now', 'well at any rate', 'whenever', 'whereas', 'while', 'yet']  
+    # Retrieve variables from getTTRScore and getConnectiveScore.
+    TTRScore, mostCommon = getTTRScore(text)
+    connectivesScore, indexScore = getConnectiveScore(text)
 
-    # Function that splits text into tokens.
-    tokens = nltk.word_tokenize(text.lower())
+    # Calculate the cohesionScore.    
+    cohesionScore = round((TTRScore + connectivesScore)/2, 2)
 
-    # Check how many connectives are in the text by checking if each token is 
-    # in connectivesCheck. 
-    numberOfConnectives = 0
-    for i in tokens:
-        if i in connectivesCheck:
-            numberOfConnectives += 1
+    # Message that gives the final score.
+    scoreExplanation = "Your score for cohesion is " + str(cohesionScore) + "."
 
-    # Only keep words in token list.
-    # (get rid of things like dots or comma's)
-    for i in tokens:
-        if i.isalpha() == False:
-            tokens.pop(tokens.index(i))
+    # Generate feedback on the TTR score.
+    # Depending on how high the TTR score is, different feedback is provided. 
+    # If the grade is lower than a 9, the feedback also provides the three most
+    # used words.
+    if TTRScore >= 9:
+        TTRScoreExplanation = "The amount of variation of words you use is\
+            very good."
+    elif TTRScore >= 7:
+        TTRScoreExplanation = "You used enough variation of words, however you\
+            could improve this some more. These are your three most used words\
+            : \"" + mostCommon[0] + "\", \"" + mostCommon[1] + "\" and \"" + \
+            mostCommon[2] + "\"."
+    elif TTRScore >= 5:
+        TTRScoreExplanation = "You barely have enough variation of words, you\
+            should improve on this. These are your three most used words: \"" \
+            + mostCommon[0] + "\", \"" + mostCommon[1] + "\" and \"" + \
+            mostCommon[2] + "\"."
+    else: 
+        TTRScoreExplanation - "You did not use enough variation in terms of\
+            words, you are using the same words too much. These are your three\
+            most used words: \"" + mostCommon[0] + "\", \"" + mostCommon[1] + \
+            "\" and \"" + mostCommon[2] + "\"."
 
-    # Calculate index score by dividing the number of connectives in the text
-    # by the total number of tokens (words) in the text.
-    indexScore = numberOfConnectives/len(tokens)
+    # Generate feedback on the connectives score.
+    # Depending on how high the connectives score is, different feedback is 
+    # provided. 
+    # This is also dependend of the indexScore, since if you have a low index
+    # score then you are not using enough connectives, whereas if it is too 
+    # high then you are using too many. 
+    if connectivesScore >= 9:
+        connectivesScoreExplanation = "The amount of connectives you used is\
+            very good."
+    elif connectivesScore >= 7:
+        if indexScore < 0.9:
+            connectivesScoreExplanation = "You could use some more connectives\
+                in your text."
+        else: 
+            connectivesScoreExplanation = "You could use a bit less\
+                connectives in your text."
+    elif connectivesScore >= 5:
+        if indexScore < 0.9:
+            connectivesScoreExplanation = "You should use more connectives in\
+                your text."
+        else: 
+            connectivesScoreExplanation = "You should use less connectives in\
+                your text."
+    else: 
+        if indexScore < 0.9:
+            connectivesScoreExplanation = "You don't have enough connectives\
+                in your text."
+        else: 
+            connectivesScoreExplanation = "You have too many connectives in\
+                your text."    
 
-    # Calculate the connectives score by putting the indexScore into the 
-    # following 2nd order polynomial: y = -3.5 + 300*x - 1666.667*x^2, where 
-    # y is the connectives score and x is the indexScore. 
-    # We take the max of this result and 0, since we grade in the range [0,10].
-    # Then we round the result to 2 decimals.
-    connectivesScore = round(max(-3.5 + 300*indexScore - 1666.667*indexScore**\
-        2, 0), 2)
+    # A small explanation of what connectives are.
+    connectivesExplanation = "Connectives are words or phrases that link other\
+        linguistic units."
 
-    # Return the calculated connectives score and indexScore.
-    return (connectivesScore, indexScore)
+    # The resulting feedback, containing the overall score, feedback on how to
+    # improve your score and a small explanation on what connectives are.
+    feedback = scoreExplanation + "\n" + TTRScoreExplanation + "\n" + \
+        connectivesScoreExplanation + "\n" + connectivesExplanation
+
+    return cohesionScore, feedback
