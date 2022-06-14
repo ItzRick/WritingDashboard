@@ -105,6 +105,10 @@ const Projects = () => {
     const [projectName, setProjectName] = useState();
     const [numberOfParticipants, setNumberOfParticipants] = useState();
 
+     /**
+      * Create a research project in the database. Also generate accounts for the participants based on the given input.
+      * @param {event} e: event data pushed with the call, not required
+      */
     const createProject = (e) => {
         if (!(numberOfParticipants !== '' && numberOfParticipants >= 0 && numberOfParticipants <= 10000)) {
             alert('Make sure the number of participants is a valid number between 0 and 10000');
@@ -123,6 +127,11 @@ const Projects = () => {
 
     }
 
+    /**
+      * Delete the research project with the given id from the database. Also delete all corresponding data to the project.
+      * @param {event} e: event data pushed with the call, not required
+      * @param {params} params: params of the row where the current project that is removed is in, to be able to remove the correct project.
+      */
     const deleteProject = (e, params) => {
         // Url of the server:
         const url = 'https://127.0.0.1:5000/projectapi/deleteProject'
@@ -136,6 +145,10 @@ const Projects = () => {
         //TODO: Delete all accounts and files corresponding to research project
     }
 
+    /**
+      * Delete all selected research project from the database. Also delete all corresponding data to the projects.
+      * @param {event} e: event data pushed with the call, not required
+      */
     const deleteSelectedProjects = (e) => {
         // Url of the server:
         const url = 'https://127.0.0.1:5000/projectapi/deleteProject'
