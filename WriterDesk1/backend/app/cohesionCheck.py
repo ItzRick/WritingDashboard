@@ -17,6 +17,8 @@ def getTTRscore(text):
                     their lemmatized form as strings.
             uniqueTokensInWindow: list containing the number of unique 
                     tokens in every window of windowSize as integers.
+            mostCommon: list containing the three most used words in the text
+                    as strings, to be used in generateFeedback.
             uniqueTokens: float that is the average number of unique tokens 
                     per windowSize.
             windowSize: integer that decides the size of the window mentioned
@@ -74,7 +76,12 @@ def getTTRscore(text):
                 [i:50+i]).values()))            
     else:
         uniqueTokensInWindow.append(len(Counter(lemmatizedTokens)\
-            .values()))        
+            .values()))     
+
+    # Get the three most common words out of the text.
+    # This is for the feedback.
+    mostCommon = [word[0] for word in Counter(lemmatizedTokens).most_common(3)]
+    print(mostCommon)
 
     # Take average of unique tokens.
     uniqueTokens = sum(uniqueTokensInWindow)/len(uniqueTokensInWindow)
@@ -89,8 +96,8 @@ def getTTRscore(text):
     # Then we round the result to 2 decimals.
     TTRScore = round(uniqueTokens/windowSize*10, 2)
 
-    # Return calculated TTR score.
-    return TTRScore
+    # Return calculated TTR score and 3 most common words.
+    return (TTRScore, mostCommon)
 
 def getConnectiveScore(text):
     """
@@ -121,7 +128,7 @@ def getConnectiveScore(text):
                     max of this result and 0, then we round the result to 2 
                     decimals.
     """
-    
+
     connectivesCheck = ['actually', 'admittedly', 'after', 'again', 
     'all in all', 'all this time', 'also', 'alternatively', 'although', 'and',
     'anyhow', 'anyway', 'arise', 'arises', 'arising', 'arose', 'as', 'at last', 
@@ -183,3 +190,22 @@ def getConnectiveScore(text):
 
     # Return the calculated connectives score.
     return connectivesScore 
+
+def generateExplanation():
+    """
+        explanation
+        Attributes:
+            first one:
+            second one:
+    """
+
+    #RETURN THE LAST 3 THINGS
+
+    #check which of the two scores is lowest
+
+    #get message like this for ttr and this for connectives
+    #leg uit wat een connective is
+    #leg uit wat TTR is
+
+
+    return "lol"
