@@ -177,56 +177,54 @@ def getExplanation():
 
 @bp.route('/getAllScores', methods = ['GET'])
 def getAverageScores():
+    '''
+        This function handles returning the average scores of the latest (date) files
+        from a given user, the number of files is dependend on the variable avgBasedOn
+        Attributes:
+            userId: user id as given by the frontend
+        Arguments:
+            avgscoreStyle: Average score for Language and Style
+            avgscoreCohesion: Average score for Cohesion
+            avgscoreStructure: Average score for Structure
+            avgscoreIntegration: Average score for Source Integration and Content
+        Returns:
+            Average scores and status code
+    '''
     # get UserID from request
     userId = request.args.get('userId')
 
-    avgBasedOn = 5 # Average scores is based on num:avgBasedOn files
+    # Average scores is based on num:avgBasedOn files 
+    #TODO Moeten we dit ergens in de config neerzetten?
+    avgBasedOn = 5 
 
     # Check if user has files
-    if (Files.query.filter_by(userId=userId) is None):
+    if (Files.query.filter_by(userId=userId).first() is None):
         return 'No files for user', 400
-    
-    files = Files.query.filter_by(userId=userId)
 
-    list = []
-
-    for file in files:
-        list.append(file.id)
-
-    # get all scores for the user
-    scores = Scores.query.filter(Scores.fileId.in_(list)).all()
-
+    # Subquery selects num:avgBasedOn files from user orded by most recent date
     subq =  Files.query.\
             filter_by(userId = userId).\
             order_by(Files.date.desc()).\
             limit(avgBasedOn).\
             subquery()
 
-    q = Scores.query.join(subq, Scores.fileId == subq.c.id)
-    
-    avgScores = q.all()
+    # All recents scores from user
+    #TODO hoe zal ik deze variabele noemen?
+    avgScores = Scores.query.join(subq, Scores.fileId == subq.c.id).all()
 
-    avgScoreStyle = sum(x.scoreStyle for x in avgScores) / len(avgScores)
+    # Average value each explanation type for avgScores 
+    avgscoreStyle = sum(x.scoreStyle for x in avgScores) / len(avgScores)
     avgscoreCohesion = sum(x.scoreCohesion for x in avgScores) / len(avgScores)
     avgscoreStructure = sum(x.scoreStructure for x in avgScores) / len(avgScores)
     avgscoreIntegration = sum(x.scoreIntegration for x in avgScores) / len(avgScores)
-#db.session.query(func.avg(Scores.scoreStyle)).join(subq, Scores.fileId == subq.c.id)
-    return {
-        'scoreStyle'       :avgScoreStyle,
-        'scoreCohesion'    :avgscoreCohesion,
-        'scoreStructure'   :avgscoreStructure,
-        'scoreIntegration' :avgscoreIntegration
-    }, 200
-    
-    #print(Scores.query.filter(Scores.fileId.in_(list)).with_entities(func.avg(Scores.scoreStyle)).first())
 
-    # return average scores
-    # return {
-    #     'avgscoreStyle'       :scores.query.with_entities(func.avg(Scores.scoreStyle)).first(), 
-    #     'avgscoreCohesion'    :scores.query.with_entities(func.avg(Scores.scoreCohesion)).first(), 
-    #     'avgscoreStructure'   :scores.query.with_entities(func.avg(Scores.scoreStructure)).first(), 
-    #     'avgscoreIntegration' :scores.query.with_entities(func.avg(Scores.scoreIntegration)).first()
-    # }, 200
+    return {
+        'scoreStyle'       :round(avgscoreStyle,2),
+        'scoreCohesion'    :round(avgscoreCohesion,2),
+        'scoreStructure'   :round(avgscoreStructure,2),
+        'scoreIntegration' :round(avgscoreIntegration,2)
+    }, 200
+
 
 @bp.route('/getExplanationForFile', methods = ['GET'])
 def getExplanationForFile(): 
