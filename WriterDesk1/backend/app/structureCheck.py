@@ -103,7 +103,12 @@ def getStructureScore(text):
     scores = []
     # Multiple different ways of getting scores for the structure writing 
     # skill can be added here.
-    scores.append(getParagraphScore(text))
+    scores.append(getParagraphScoreAndExplanations(text)[0])
+
+    explanations = dict()
+    # Multiple different ways of getting explanations for the structure writing
+    # skill can be added here.
+    explanations.update(getParagraphScoreAndExplanations(text)[1])
 
     # Take the average score of each submethod of getting scores for the 
     # structure writing skill and round it to one decimal behind the comma.
@@ -111,7 +116,7 @@ def getStructureScore(text):
     scoreRounded = Decimal(score).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
 
-    return scoreRounded
+    return scoreRounded, explanations
 
 def getExplanationsStructure(text):
     '''
