@@ -2,6 +2,7 @@ from app import db
 from app import models
 
 # helper function, TODO remove before deploy
+
 def initialSetup():
     db.session.commit()
     db.drop_all()
@@ -30,7 +31,6 @@ def removeFromDatabase(document):
 # Returns list of Files objects as dictionary
 def getFilesByUser(user, sortingAttribute):
     files = db.session.query(models.Files).filter_by(userId=user)
-
     if sortingAttribute == "filename.asc":
         files = files.order_by(models.Files.filename)
     elif sortingAttribute == "filename.desc":
@@ -45,3 +45,7 @@ def getFilesByUser(user, sortingAttribute):
         files = files.order_by(models.Files.date.desc())
 
     return models.Files.serializeList(files.all())
+
+def getUsers() :
+    users = db.session.query(models.User).filter(models.User.type != 'participant').all()
+    return models.User.serializeList(users)

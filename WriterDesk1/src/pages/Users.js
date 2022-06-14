@@ -1,53 +1,28 @@
+// materials
+import {
+  IconButton,
+  Stack,
+} from "@mui/material";
+import {
+  DeleteOutline,
+  PersonOutline,
+} from "@mui/icons-material";
+import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
+
+// routing
 import { useOutletContext } from 'react-router-dom';
-import { useEffect } from 'react';
-import {DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
-import IconButton from "@mui/material/IconButton";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 
+import React from 'react';
+import "../css/styles.css";
+import "../css/main.css";
 
 /**
  * 
  * @returns Users Page
  */
-
-const columns: GridColDef[] = [
-  {
-    field: 'username',
-    headerName: 'Username',
-    editable: false,
-  },
-  {
-    field: 'role',
-    headerName: 'Role',
-    editable: false,
-  },
-  {
-    field: "actions",
-    headerName: "Actions",
-    sortable: false,
-    renderCell: (params) => {
-      const onClick = (e) => {
-        e.stopPropagation(); // don't select this row after clicking
-
-        const api: GridApi = params.api;
-        const thisRow: Record<string, GridCellValue> = {};
-
-        api
-          .getAllColumns()
-          .filter((c) => c.field !== "__check__" && !!c)
-          .forEach(
-            (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-          );
-
-        return alert(JSON.stringify(thisRow, null, 4));
-      };
-
-      return <div><IconButton><PersonOutlineIcon /></IconButton><IconButton><DeleteOutlineIcon /></IconButton></div>;
-    }
-  }
-];
 
 const rows = [
   {id: 1, username: 'Bob', role: 'Researcher'},
@@ -58,22 +33,75 @@ const rows = [
 ];
 
 const Users = () => {
+
+  // State to keep track of the data inside the table:
+  const [tableData, setTableData] = useState([])
+
     //set title in parent 'base' 
     const { setTitle } = useOutletContext();
     useEffect(() => {
         setTitle('Users');
     });
+
+    const columns = [
+    {
+      field: 'username',
+      headerName: 'Username',
+      editable: false,
+      flex: 1,
+      minWidth: 250
+    },
+    {
+      field: 'type',
+      headerName: 'Role',
+      editable: false,
+      flex: 1
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      sortable: false,
+      flex: 1,
+
+        renderCell: (params) => {
+          return <div><IconButton><PersonOutline /></IconButton><IconButton><DeleteOutline /></IconButton></div>;
+        }
+    }
+    ];
+
+  const setData = () => {
+    //   The backend url:
+    const url = 'https://127.0.0.1:5000/usersapi/users';
+    // Make the backend call and set the table data from the response data:
+    axios.get(url)
+      .then((response) => {
+        setTableData(response.data)
+      })
+  }
+
+  useEffect(() => {
+    setData();
+  }, []);
+
     return (
         <>
             <div style={{height: '80vh', maxHeight: '400px'}} >
                 <DataGrid
-                  rows={rows}
-                  columns={columns}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                  checkboxSelection
-                  disableSelectionOnClick
-                />
+      style={{ maxHeight: '100%'}}
+      rows={tableData}
+      columns={columns}
+      pageSize={15}
+      rowsPerPageOptions={[15]}
+      checkboxSelection
+      disableSelectionOnClick
+      components={{
+        NoRowsOverlay: () => (
+          <Stack height="100%" alignItems="center" justifyContent="center">
+            No users found!
+          </Stack>
+        ),
+      }}
+    />
             </div>
         </>
     );

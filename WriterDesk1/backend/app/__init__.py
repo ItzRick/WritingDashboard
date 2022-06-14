@@ -34,5 +34,8 @@ def create_app(config_class=Config):
     from app.scoreapi import bp as scoreapi_bp
     app.register_blueprint(scoreapi_bp, url_prefix='/scoreapi')
 
+    from app.usersapi import bp as usersapi_bp
+    app.register_blueprint(usersapi_bp, url_prefix='/usersapi')
+
     # Return the app:
     return app
