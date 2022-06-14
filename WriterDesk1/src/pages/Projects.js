@@ -92,25 +92,29 @@ const Projects = () => {
             alert('Make sure the number of participants is a valid number between 0 and 10000');
             return null;
         }
-        axios.post(`https://localhost:5000/projectapi/setProject`,{
-                "projectName": projectName,
-                "numberOfParticipants": numberOfParticipants,
-            }).then(response =>{
-            alert(123)
-        })
+        let userId = 1; //TODO: Change to current userId
+
+        const formData = new FormData();
+        formData.append('userId', userId);
+        formData.append('projectName', projectName);
+        axios.post(`https://localhost:5000/projectapi/setProject`, formData).then(response => {
+
+        });
+
+        //TODO: Create participant accounts
 
     }
 
     const deleteProject = (e, params) => {
-       // alert(params.id);
-       //  //   Url of the server:
-       //  const url = 'https://127.0.0.1:5000/projectapi/projectdelete'
-       //  // Formdata for the backend call, to which the id has been added:
-       //  const formData = new FormData();
-       //  formData.append('id', params.id);
-       //  // Make the call to the backend:
-       //  axios.delete(url, { data: formData })
-       //    .then(() => {  });
+        // Url of the server:
+        const url = 'https://127.0.0.1:5000/projectapi/deleteProject'
+        // Formdata for the backend call, to which the id has been added:
+        const formData = new FormData();
+        formData.append('projectId', params.id);
+        // Make the call to the backend:
+        axios.delete(url, { data: formData }).then(response => {
+
+        });
 
     }
 
