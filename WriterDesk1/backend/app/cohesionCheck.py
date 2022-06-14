@@ -35,7 +35,14 @@ def getTTRscore(text):
     lemmatizer = WordNetLemmatizer()
 
     # Function that splits text into tokens.
-    tokens = nltk.word_tokenize(text)
+    tokens = nltk.word_tokenize(text)    
+
+    # Only keep words in token list.
+    # (get rid of things like dots or comma's)
+    for i in tokens:
+        if i.isalpha() == False:
+            tokens.pop(tokens.index(i))
+
     # Function that assigns a part-of-speach tag to each token.
     tagged = nltk.pos_tag(tokens)
 
@@ -58,23 +65,17 @@ def getTTRscore(text):
         # Nouns (and everything else)
         else:
             lemmatizedTokens.append(lemmatizer.lemmatize(i[0]).lower())
-
-    # Only keep words in token list.
-    # (get rid of things like dots or comma's)
-    for i in lemmatizedTokens:
-        if i.isalpha() == False:
-            lemmatizedTokens.pop(lemmatizedTokens.index(i))
-
+    
     # Calculate the number of unique tokens for every 50 tokens.
     uniqueTokensInWindow = []
     if len(lemmatizedTokens) > 50:
         for i in range(len(lemmatizedTokens)-50):
             uniqueTokensInWindow.append(len(Counter(lemmatizedTokens\
-                [i:50+i]).values()))
+                [i:50+i]).values()))            
     else:
         uniqueTokensInWindow.append(len(Counter(lemmatizedTokens)\
-            .values()))
-    
+            .values()))        
+
     # Take average of unique tokens.
     uniqueTokens = sum(uniqueTokensInWindow)/len(uniqueTokensInWindow)
 
@@ -120,7 +121,7 @@ def getConnectiveScore(text):
                     max of this result and 0, then we round the result to 2 
                     decimals.
     """
-
+    
     connectivesCheck = ['actually', 'admittedly', 'after', 'again', 
     'all in all', 'all this time', 'also', 'alternatively', 'although', 'and',
     'anyhow', 'anyway', 'arise', 'arises', 'arising', 'arose', 'as', 'at last', 
