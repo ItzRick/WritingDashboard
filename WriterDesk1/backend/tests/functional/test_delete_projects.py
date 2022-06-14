@@ -9,10 +9,11 @@ def testRemoveFromDatabase(testClient, initDatabase):
         Test if we can remove a project from the database. We first add a project to the database and then delete it.
         After we have removed this instance, we check that we can indeed not query on this project anymore.
         Attributes:
-            project: Project we create to add and remove in the database.
-        Arguments:
             testClient: The test client we test this for.
             initDatabase: The database instance we test this for.
+        Arguments:
+            project: Project we create to add and remove in the database.
+            response: The response of the deleteProject backend call
     '''
     del initDatabase
     # Create the project instance to be added:
@@ -42,10 +43,11 @@ def testRemoveFromDatabaseMultiple(testClient, initDatabase):
         Test if we can remove multiple projects from the database. We first add the projects to the database and then
         delete it. After we have removed the instances, we check that we can indeed not query these projects anymore.
         Attributes:
-            project1, project2: Projects we create to add and remove in the database.
-        Arguments:
             testClient: The test client we test this for.
             initDatabase: The database instance we test this for.
+        Arguments:
+            project1, project2: Projects we create to add and remove in the database.
+            response: The response of the deleteProject backend call
     '''
     del initDatabase
     # Create the project instances to be added:
@@ -76,4 +78,26 @@ def testRemoveFromDatabaseMultiple(testClient, initDatabase):
     # Check if we can indeed not retrieve the projects anymore:
     assert Projects.query.filter_by(id=123).first() is None
     assert Projects.query.filter_by(id=124).first() is None
+
+
+def testRemoveFromDatabaseInvalidId(testClient, initDatabase):
+    '''
+        Test if we get a 404 status code response when we try to remove a project from the database with
+        a project id that does not exist in the database.
+        Attributes:
+            testClient: The test client we test this for.
+            initDatabase: The database instance we test this for.
+        Arguments:
+            response: The response of the deleteProject backend call
+    '''
+    del initDatabase
+
+    # Check if the id does not exist in the database:
+    assert Projects.query.filter_by(id=123).first() is None
+
+    # Try to delete the project from the database
+    response = testClient.delete('/projectapi/deleteProject', data={'projectId': 123})
+
+    # Check if we get the correct status_code:
+    assert response.status_code == 404
 
