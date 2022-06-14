@@ -1,3 +1,4 @@
+from app import db
 from app.models import User
 from app.database import postParticipant, postParticipantToProject
 import random, string
@@ -18,12 +19,13 @@ def generateParticipants(count, projectId):
         # Post participant, raise error if this fails
         try:
             userId = postParticipant(username, password)
+            postParticipantToProject(userId, projectId)
         except Exception as e:
+            db.session.rollback()
             raise e
 
-        postParticipantToProject(userId, projectId)
-
         lastParticipantNumber += 1
+    db.session.commit()
 
 def getLastParticipantNumber():
     return max([0, *(int(r.username[4:]) for r in User.query.filter(User.username.startswith("par_")))])

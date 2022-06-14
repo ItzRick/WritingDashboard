@@ -85,7 +85,8 @@ def postParticipant(username, password):
 
     # Add user to the database with participant role
     user = models.User(username=username, password_plaintext=password, role="participant")
-    uploadToDatabase(user)
+    db.session.add(user)
+    db.session.flush()
     return user.id
 
 def postParticipantToProject(userId, projectId):
@@ -99,4 +100,5 @@ def postParticipantToProject(userId, projectId):
     '''
 
     dataTuple = models.ParticipantToProject(userId=userId, projectId=projectId)
-    uploadToDatabase(dataTuple)
+    db.session.add(dataTuple)
+    db.session.flush()

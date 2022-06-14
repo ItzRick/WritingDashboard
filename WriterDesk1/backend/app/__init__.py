@@ -27,6 +27,9 @@ def create_app(config_class=Config):
     from app.loginapi import bp as loginapi_db
     app.register_blueprint(loginapi_db, url_prefix='/loginapi')
 
+    from app.projectapi import bp as projectapi_db
+    app.register_blueprint(projectapi_db, url_prefix='/projectapi')
+
     from app.convertToPDF import bp as convertToPDF_db
     app.register_blueprint(convertToPDF_db, url_prefix='/converttopdf')
 
