@@ -31,6 +31,8 @@ def getTTRscore(text):
         Return:
             TTRScore: float, TTR score calculated as follows: (average of) 
                     unique tokens / window length * 10, rounded to 2 decimals.
+            mostCommon: list containing the three most used words in the text
+                    as strings, to be used in generateFeedback.
     """
     
     # Function from nltk that lemmatizes tokens/words.
@@ -81,7 +83,6 @@ def getTTRscore(text):
     # Get the three most common words out of the text.
     # This is for the feedback.
     mostCommon = [word[0] for word in Counter(lemmatizedTokens).most_common(3)]
-    print(mostCommon)
 
     # Take average of unique tokens.
     uniqueTokens = sum(uniqueTokensInWindow)/len(uniqueTokensInWindow)
@@ -95,7 +96,7 @@ def getTTRscore(text):
     # (average of) unique tokens / window length
     # Then we round the result to 2 decimals.
     TTRScore = round(uniqueTokens/windowSize*10, 2)
-
+    
     # Return calculated TTR score and 3 most common words.
     return (TTRScore, mostCommon)
 
@@ -127,6 +128,9 @@ def getConnectiveScore(text):
                     -3.5 + 300*indexScore - 1666.667*indexScore^2. We take the
                     max of this result and 0, then we round the result to 2 
                     decimals.
+            indexScore: float, calculated by dividing numberOfConnectives by
+                    the size of tokens (the total number of tokens/words) in 
+                    the text.
     """
 
     connectivesCheck = ['actually', 'admittedly', 'after', 'again', 
@@ -182,30 +186,11 @@ def getConnectiveScore(text):
 
     # Calculate the connectives score by putting the indexScore into the 
     # following 2nd order polynomial: y = -3.5 + 300*x - 1666.667*x^2, where 
-    # y is the connectives score. 
+    # y is the connectives score and x is the indexScore. 
     # We take the max of this result and 0, since we grade in the range [0,10].
     # Then we round the result to 2 decimals.
     connectivesScore = round(max(-3.5 + 300*indexScore - 1666.667*indexScore**\
         2, 0), 2)
 
-    # Return the calculated connectives score.
-    return connectivesScore 
-
-def generateExplanation():
-    """
-        explanation
-        Attributes:
-            first one:
-            second one:
-    """
-
-    #RETURN THE LAST 3 THINGS
-
-    #check which of the two scores is lowest
-
-    #get message like this for ttr and this for connectives
-    #leg uit wat een connective is
-    #leg uit wat TTR is
-
-
-    return "lol"
+    # Return the calculated connectives score and indexScore.
+    return (connectivesScore, indexScore)
