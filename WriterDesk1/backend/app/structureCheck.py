@@ -53,7 +53,7 @@ def getParagraphScoreAndExplanations(text):
                 Decimal('0.1'), rounding=ROUND_HALF_UP) 
             paragraphScores.append(paragraphScoreRounded)
             explanations[paragraph] = ('This paragraph is too long, '
-                'try to make paragraphs with less words.')
+                'try to make paragraphs with approximately 200 words.')
         # If the paragraph is less than 100 words.
         elif len(paragraph.split()) < 100:
             # paragraphScore is calculated by taking the max between 0.0 and 
@@ -66,7 +66,7 @@ def getParagraphScoreAndExplanations(text):
                 Decimal('0.1'), rounding=ROUND_HALF_UP)
             paragraphScores.append(paragraphScoreRounded)        
             explanations[paragraph] = ('This paragraph is too short, '
-                'try to make paragraphs with more words.')         
+                'try to make paragraphs with approximately 200 words.')         
         else:
         # If the paragraph is between 100 and 300 words.
             paragraphScores.append(Decimal(10.0).quantize(

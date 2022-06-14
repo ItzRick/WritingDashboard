@@ -97,12 +97,14 @@ def getMistakesInformationStyle(mistakes, filePath):
             if page.number != 0:
                 pageHeight += page.rect.y1
 
-            # check if the word found is in the sentence
+            # check if the word found is in the sentence, if this is the case
+            # it gets added to a list that contains all specific words found in
+            # that sentence
             wordsInSentence = []
-            for i in sentenceInstances:
-                for j in wordInstances:
-                    if i.contains(j):
-                        wordsInSentence.append(j)
+            for sentenceFound in sentenceInstances:
+                for wordFound in wordInstances:
+                    if sentenceFound.contains(wordFound):
+                        wordsInSentence.append(wordFound)
             
             # if there are no mistakes on this page
             if len(wordsInSentence) == 0:

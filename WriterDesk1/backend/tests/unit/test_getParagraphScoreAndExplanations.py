@@ -5,7 +5,10 @@ from app.structureCheck import getParagraphScoreAndExplanations
 def test_zero_words():
     '''
         Test if a text with zero words returns None.
+        Attributes:
+            output: the returning value from running the function
     '''
+    # generate the output on an empty text
     output = getParagraphScoreAndExplanations('')
     assert output == None
 
@@ -17,10 +20,18 @@ def test_400_words():
         returns a dictionary with the paragraph as key and the string 
         'This paragraph is too long, try to make paragraphs with less words.'
         as value.
+        Attributes:
+            testText: the text the function is run on.
+            score: the score given for the structure writing skill.
+            explanations: the explanations given for this text for the structure
+            writing skill.
     '''
+    # generate a text with 400 words by multiplying a text with 8 words 50 times
     testText = ('This is a large text with 400 words. ' * 50).strip()
+    # retrieve the scores and explanations by running the function on the text
     score = getParagraphScoreAndExplanations(testText)[0]
     explanations = getParagraphScoreAndExplanations(testText)[1]
+    # check if the output scores and explanations match 
     assert score == Decimal(6.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
     assert list(explanations.keys()) == [testText]
@@ -35,9 +46,12 @@ def test_50_words():
         'This paragraph is too short, try to make paragraphs with more words.'
         as value.
     '''
+    # generate a text with 50 words by multiplying a text with 5 words 10 times
     testText = ('A short 50 word text. ' * 10).strip()
+    # retrieve the scores and explanations by running the function on the text
     score = getParagraphScoreAndExplanations(testText)[0]
     explanations = getParagraphScoreAndExplanations(testText)[1]
+    # check if the output scores and explanations match 
     assert score == Decimal(7.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
     assert list(explanations.keys()) == [testText]
@@ -49,9 +63,12 @@ def test_200_words():
         Test if a text with 200 words returns 10.0 as score and returns an empty
         dictionary since 200 words in a paragraph is good.
     '''
+    # generate a text with 200 words by multiplying a text with 8 words 25 times
     testText = ('This is a good text with 200 words. ' * 25).strip()
+    # retrieve the scores and explanations by running the function on the text
     score = getParagraphScoreAndExplanations(testText)[0]
     explanations = getParagraphScoreAndExplanations(testText)[1]
+    # check if the output scores and explanations match 
     assert score == Decimal(10.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
     assert list(explanations.keys()) == []
@@ -67,11 +84,15 @@ def test_2_paragraphs_large_different_lengths():
         'This paragraph is too long, try to make paragraphs with less words.'
         as values.
     '''
+    # generate a text with 350 and 450 words by multiplying a text with 5 words 
+    # 70 times and 90 times and then adding them together
     testTextPart1 = ('A big 350 word text. ' * 70).strip()
     testTextPart2 = ('A bigger 450 word text. ' * 90).strip()
     testText = testTextPart1 + '\n' + testTextPart2
+    # retrieve the scores and explanations by running the function on the text
     score = getParagraphScoreAndExplanations(testText)[0]
     explanations = getParagraphScoreAndExplanations(testText)[1]
+    # check if the output scores and explanations match 
     assert score == Decimal(6.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
     assert list(explanations.keys()) == [testTextPart1, testTextPart2]
@@ -89,11 +110,15 @@ def test_2_paragraphs_small_different_lengths():
         'This paragraph is too short, try to make paragraphs with more words.'
         as values.
     '''
+    # generate a text with 30 and 70 words by multiplying a text with 6 words 
+    # 5 times and a text with 7 words 10 times and then adding them together
     testTextPart1 = ('A very short 30 word text. ' * 5).strip()
     testTextPart2 = ('A small bit longer 70 word text. ' * 10).strip()
     testText = testTextPart1 + '\n' + testTextPart2
+    # retrieve the scores and explanations by running the function on the text
     score = getParagraphScoreAndExplanations(testText)[0]
     explanations = getParagraphScoreAndExplanations(testText)[1]
+    # check if the output scores and explanations match 
     assert score == Decimal(7.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
     assert list(explanations.keys()) == [testTextPart1, testTextPart2]
@@ -107,11 +132,15 @@ def test_2_paragraphs_good_different_lengths():
         The score should be (10.0 + 10.0) / 2 = 10.0 and it returns an empty
         dictionary since 150 and 250 words in a paragraph is good.
     '''
+    # generate a text with 150 and 250 words by multiplying a text with 5 words 
+    # 30 times and 50 times and then adding them together
     testTextPart1 = ('A good 150 word text. ' * 30).strip()
     testTextPart2 = ('Another good 250 word text ' * 50).strip()
     testText = testTextPart1 + '\n' + testTextPart2
+    # retrieve the scores and explanations by running the function on the text
     score = getParagraphScoreAndExplanations(testText)[0]
     explanations = getParagraphScoreAndExplanations(testText)[1]
+    # check if the output scores and explanations match 
     assert score == Decimal(10.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
     assert list(explanations.keys()) == []
@@ -128,14 +157,19 @@ def test_4_paragraphs_all_lengths():
         words.' and 'This paragraph is too short, try to make paragraphs with 
         more words.' as correspoding values.
     '''
+    # generate a text with 0, 400, 50 and 200 words by multiplying a text with 8
+    # words 50 times, a text with 5 words 10 times and a text with 9 words 25
+    # times and then adding them together
     testTextPart1 = ' '
     testTextPart2 = ('This is a large text with 400 words. ' * 50).strip()
     testTextPart3 = ('A short 50 word text. ' * 10).strip()
     testTextPart4 = ('This is a good text with 200 words. ' * 25).strip()
     testText = (testTextPart1 + '\n' + testTextPart2 + '\n' + testTextPart3 +
      '\n' + testTextPart4)
+    # retrieve the scores and explanations by running the function on the text
     score = getParagraphScoreAndExplanations(testText)[0]
     explanations = getParagraphScoreAndExplanations(testText)[1]
+    # check if the output scores and explanations match 
     assert score == Decimal(7.7).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
     assert list(explanations.keys()) == [testTextPart2, testTextPart3]
@@ -153,13 +187,17 @@ def test_2_paragraphs_large_same_content():
         'This paragraph is too long, try to make paragraphs with less words.'
         as value.
     '''
+    # generate a text with 400 and 400 words by multiplying a text with 8 words 
+    # 50 times twice and then adding them together
     testTextPart1 = ('This is a large text with 400 words. ' * 50).strip()
     testTextPart2 = testTextPart1
     testText = testTextPart1 + '\n' + testTextPart2
+    # retrieve the scores and explanations by running the function on the text
     score = getParagraphScoreAndExplanations(testText)[0]
     explanations = getParagraphScoreAndExplanations(testText)[1]
     # Since both testTextPart1 and testTextPart2 are the same, there should be
     # one key in explanations that is equal to testTextPart1 and testTextPart2
+    # then check if the output scores and explanations match 
     assert score == Decimal(6.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
     assert list(explanations.keys()) == [testTextPart1]
