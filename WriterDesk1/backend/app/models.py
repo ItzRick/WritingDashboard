@@ -10,7 +10,7 @@ class User(db.Model):
         Declare user model containing usernames and passwords (hashed), we use single table inheritance for different types of users.
         Cascade makes sure that if a User is removed, related files instances in the db are also removed
         Attributes:
-            role: Identifies role of user
+            role: Identifies role of user, role is one of: ['admin', 'participant', 'researcher', 'student']
             id: Unique primary key User ID 
             username: email address or username from user
             passwordHash: hashed password from user, hashed using werkzeug.security
@@ -56,8 +56,6 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.passwordHash, password)
-
-
 
 class Files(db.Model):
     '''
