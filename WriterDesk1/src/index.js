@@ -5,6 +5,10 @@ import reportWebVitals from './reportWebVitals';
 
 // routing
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { history } from './helpers/history'; // used for redirects
+
+// authentication
+import { ProtectedR, ProtectedA } from './services/ProtectedRoutes';
 
 // theme and style
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -89,11 +93,11 @@ const theme = createTheme({
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+root.render(     
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       {/* Router encapsules the application */}
-      <BrowserRouter>
+      <BrowserRouter history={history}>
         <Routes>
           {/* public part of the router, accessible for public */}
           <Route path='/' element={<BaseOut />}>
@@ -114,14 +118,17 @@ root.render(
             <Route name='Documents' path='Documents' element={<Documents />} />
             <Route name='Document' path='Document' element={<Document />} />
 
-            {/* For researchers and admin users */}
-            <Route name='Participants' path='Participants' element={<Participants />} />
-            <Route name='Projects' path='Projects' element={<Projects />} />
-            <Route name='FeedbackModels' path='FeedbackModels' element={<FeedbackModels />} />
+             {/* For researcher users */}
+            <Route element={<ProtectedR/>}>
+              <Route name='Participants' path='Participants' element={<Participants />} />
+              <Route name='Projects' path='Projects' element={<Projects />} />
+              <Route name='FeedbackModels' path='FeedbackModels' element={<FeedbackModels />} />
+            </Route>
 
             {/* For admin users */}
-            <Route name='Users' path='Users' element={<Users />} />
-
+            <Route element={<ProtectedA/>}>
+              <Route name='Users' path='Users' element={<Users />} />
+            </Route>
             <Route path='/' element={<Main />} />
 
 

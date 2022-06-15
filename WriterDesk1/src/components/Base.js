@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 // components
@@ -31,6 +31,10 @@ import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 
 // routing
 import { Link, Outlet } from 'react-router-dom';
+import { history } from '../helpers/history';
+
+// authentication
+import { AuthenticationService } from '../services/authenticationService';
 
 
 //Width of the opened drawer
@@ -138,9 +142,11 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
  */
 const Base = ({
   enableNav = true,
-  researcher = true,
-  admin = true,
 }) => {
+
+  const [admin, setAdmin] = useState(false); // true when user has admin rights
+  const [researcher, setResearcher] = useState(false); // true when user has researcher rights
+
   //handle opening and closing the drawer (left side menu)
   const [open, setOpen] = useState(false);
   const handleDrawer = () => {
@@ -152,6 +158,20 @@ const Base = ({
 
   // general theme, defined in index.js
   const theme = useTheme();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (user === null) {
+      history.push("/Login");
+    } else {
+      if (user.role === 'admin') {
+        setAdmin(true);
+      }
+      if (user.role === 'researcher' || user.role === 'admin') {
+        setResearcher(true); 
+      }
+    }
+  },[]);
 
   return (
     <Box sx={{ display: 'flex' }} color="textPrimary" className='baseRoot'>
