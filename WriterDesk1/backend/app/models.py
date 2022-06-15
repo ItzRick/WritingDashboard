@@ -69,7 +69,7 @@ class Student(User):
 
 class Participant(User):
     '''
-        Subclass of User table, for participantszz
+        Subclass of User table, for participants
     '''
     __tablename__ = None
     
