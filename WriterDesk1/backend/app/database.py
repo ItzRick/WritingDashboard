@@ -76,7 +76,7 @@ def postParticipant(username, password):
             username: username as given in frontend
             password: password as given in frontend
         Return:
-            Returns the user id when a new user was added to the database
+            Returns the user when a new user was added to the database
     '''
 
     # Check if there is already a user with this username
@@ -93,6 +93,7 @@ def postParticipantToProject(userId, projectId):
     '''
         This function handles the query that creates an entry in ParticipantToProject, to link a participant to a research project. 
         Attributes:
+            project: query result to check if there exists a project with the given id
             dataTuple: object that is to be added to the database
         Arguments:
             userId: id of the participant

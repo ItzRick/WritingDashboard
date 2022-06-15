@@ -108,6 +108,9 @@ function Participants() {
 
   const [participantCount, setParticipantCount] = useState(0);
 
+  /*
+   * Do POST request containing participantCount and projectAdd variable, recieve status of response.
+   */
   const handleAddToProject = () => {
     // If input is valid, do post request
     const data = {

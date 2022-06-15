@@ -151,9 +151,9 @@ def testPostUser(testClient, initDatabase):
 
 def testPostParticipant(testClient, initDatabase):
     '''
-        Test if postParticipant() correctly adds a user to the database and returns id
+        Test if postParticipant() correctly adds a user to the database and returns user object.
         Attributes:
-            userId: returned id from postParticipant() 
+            user: returned user from postParticipant() 
             users: all participants with username 'test@tue.nl'
         Arguments:
             testClient: the test client we test this for
@@ -173,8 +173,9 @@ def testPostParticipant(testClient, initDatabase):
 
 def testPostParticipantToProject(testClient, initDatabase):
     '''
-        Test if postParticipantToProject() correctly adds an entry to the database
+        Test if postParticipantToProject() correctly adds an entry to the database.
         Attributes:
+            project: project entry that will be linked with a participant
             entries: all entries in ParticipantToProject 
         Arguments:
             testClient: the test client we test this for
