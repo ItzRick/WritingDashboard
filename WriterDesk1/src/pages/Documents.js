@@ -10,7 +10,7 @@ import {
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
 // routing
-import { useOutletContext, useNavigate } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -25,9 +25,6 @@ import "../css/main.css";
  * @returns Documents Page
  */
 const Documents = () => {
-  const navigate = useNavigate();
-
-
   // State to keep track of the data inside the table:
   const [tableData, setTableData] = useState([])
 
@@ -101,20 +98,10 @@ const Documents = () => {
       sortable: false,
       flex: 1,
       renderCell: (params) => {
-        return <div><IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton><IconButton onClick={(e) => { deleteFile(e, params) }}  ><DeleteOutline /></IconButton></div>;
+        return <div><IconButton><Grading /></IconButton><IconButton onClick={(e) => { deleteFile(e, params) }}  ><DeleteOutline /></IconButton></div>;
       }
     }
   ];
-
-
-  /**
-   * Navigate to the Document page and add the file id as state parameter.
-   * @param {event} _event: event data pushed with the call, not required
-   * @param {params} params: params of the row where the current file is that needs to be navigated to.
-   */
-  const navigateToDoc = (_event, params) => {
-    navigate('/Document', {state: {fileId: params.id}});
-  }
 
 
   /**

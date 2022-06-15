@@ -6,32 +6,25 @@ import graphPlaceholder from '../images/chartImage.png';
 import Plot from 'react-plotly.js';
 import './../css/main.css';
 
-// routing
-import { useNavigate } from 'react-router-dom';
 
 /**
  * Line chart of progress
  * @returns ProgressVisualization Component
  */
 const ProgressVisualization = () => {
-  const navigate = useNavigate();
 
   const documents = [
-    {id: 21, date: new Date('6/7/22'), Title: 'Title1', scoreLanguage: 6.5, scoreStructure: 5, scoreCohesion: 7, scoreSourceIntegration: 5.5},
-    {id: 22, date: new Date('6/8/22'), Title: 'Title2', scoreLanguage: 7, scoreStructure: 5, scoreCohesion: 7.5, scoreSourceIntegration: 8},
-    {id: 23, date: new Date('6/8/22'), Title: 'Title3', scoreLanguage: 7.5, scoreStructure: 6, scoreCohesion: 6, scoreSourceIntegration: 9},
-    {id: 24, date: new Date('6/10/22'), Title: 'Title4', scoreLanguage: 8, scoreStructure: 5.5, scoreCohesion: 5.5, scoreSourceIntegration: 8},
-    {id: 25, date: new Date('6/11/22'), Title: 'Title5', scoreLanguage: 9, scoreStructure: 6, scoreCohesion: 5, scoreSourceIntegration: 8.5},
-    {id: 26, date: new Date('6/12/22'), Title: 'Title6', scoreLanguage: 9.5, scoreStructure: 7.4, scoreCohesion: 5.5, scoreSourceIntegration: 8}
+    {date: '2020-10-04', Title: 'Title1', scoreLanguage: 6.5, scoreStructure: 5, scoreCohesion: 7, scoreSourceIntegration: 5.5},
+    {date: '2021-11-04', Title: 'Title2', scoreLanguage: 7, scoreStructure: 5, scoreCohesion: 7.5, scoreSourceIntegration: 8},
+    {date: '2022-12-04', Title: 'Title3', scoreLanguage: 7.5, scoreStructure: 6, scoreCohesion: 6, scoreSourceIntegration: 9},
+    {date: '2022-12-04', Title: 'Title4', scoreLanguage: 8, scoreStructure: 5.5, scoreCohesion: 5.5, scoreSourceIntegration: 8},
+    {date: '2023-01-04', Title: 'Title5', scoreLanguage: 9, scoreStructure: 6, scoreCohesion: 5, scoreSourceIntegration: 8.5},
+    {date: '2023-03-04', Title: 'Title6', scoreLanguage: 9.5, scoreStructure: 7.4, scoreCohesion: 5.5, scoreSourceIntegration: 8}
   ]; //TODO: Retrieve document data. Has to be in order of date.
 
-
-  /**
-   * Function to navigate to the correct document when clicked on.
-   * @param {Object} data - Object of data of the point that is clicked.
-   */
-  const handlePointClick = (data) => {
-    navigate('/Document', {state: {fileId: documents[data.pointNumber].id}});
+  //TODO: Add onclick event to go to document page
+  const handlePointClick = (date) => {
+    alert(date)
   }
 
 
@@ -156,7 +149,7 @@ const ProgressVisualization = () => {
     } }
     config={{ modeBarButtonsToRemove: ['toImage', 'lasso2d', 'select2d', 'resetScale2d'], displaylogo: false, responsive: true}}
     onClick={
-      (data) => handlePointClick(data.points[0]) // Call function to handle point click
+      (data) => handlePointClick(data.points[0].x) // Call function to handle point click
     }
     onHover={e => {
       e.event.target.style.cursor = 'pointer' // Changes cursor on hover to pointer

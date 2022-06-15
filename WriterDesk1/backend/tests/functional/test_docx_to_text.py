@@ -8,7 +8,6 @@ def testGetDocxHeading(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
-            references: String that contains the references extracted from the docx file.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -16,9 +15,8 @@ def testGetDocxHeading(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'headingTest.docx')
 
-    text, references = getDOCXText(fileDir)
+    text = getDOCXText(fileDir)
     assert text == 'This is some text.\n\nMore text.'
-    assert references == ''
 
 
 def testGetDocxReferences(testClient):
@@ -27,7 +25,6 @@ def testGetDocxReferences(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
-            references: String that contains the references extracted from the docx file.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -35,9 +32,8 @@ def testGetDocxReferences(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'referencesTest.docx')
 
-    text, references = getDOCXText(fileDir)
+    text = getDOCXText(fileDir)
     assert text == 'Text.\n\nMore text.\n\nNew text.'
-    assert references == 'Reference 1\n\nReference 2\n\nReference 1\n\nReference 2'
 
 
 def testGetDocxImages(testClient):
@@ -46,7 +42,6 @@ def testGetDocxImages(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
-            references: String that contains the references extracted from the docx file.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -54,9 +49,8 @@ def testGetDocxImages(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'imagesTest.docx')
 
-    text, references = getDOCXText(fileDir)
+    text = getDOCXText(fileDir)
     assert text == 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa.'
-    assert references == ''
 
 
 def testGetDocxTextboxes(testClient):
@@ -65,7 +59,6 @@ def testGetDocxTextboxes(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
-            references: String that contains the references extracted from the docx file.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -73,9 +66,8 @@ def testGetDocxTextboxes(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'textboxTest.docx')
 
-    text, references = getDOCXText(fileDir)
+    text = getDOCXText(fileDir)
     assert text == 'This is text outside a textbox.'
-    assert references == ''
 
 
 def testGetDocxEmptyFile(testClient):
@@ -84,7 +76,6 @@ def testGetDocxEmptyFile(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
-            references: String that contains the references extracted from the docx file.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -92,9 +83,8 @@ def testGetDocxEmptyFile(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'emptyFile.docx')
 
-    text, references = getDOCXText(fileDir)
+    text = getDOCXText(fileDir)
     assert text == ''
-    assert references == ''
 
 
 def testGetDocxCorruptedFile(testClient):
@@ -103,7 +93,6 @@ def testGetDocxCorruptedFile(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
-            references: String that contains the references extracted from the docx file.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -111,9 +100,8 @@ def testGetDocxCorruptedFile(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'corruptedFile.docx')
 
-    text, references = getDOCXText(fileDir)
+    text = getDOCXText(fileDir)
     assert text == ''
-    assert references == ''
 
 
 def testGetDocxInvalidFile(testClient):
@@ -122,7 +110,6 @@ def testGetDocxInvalidFile(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
-            references: String that contains the references extracted from the docx file.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -130,9 +117,8 @@ def testGetDocxInvalidFile(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'invalidFileName.docx')
 
-    text, references = getDOCXText(fileDir)
+    text = getDOCXText(fileDir)
     assert text == ''
-    assert references == ''
 
 
 def testGetDocxInvalidExtension(testClient):
@@ -141,7 +127,6 @@ def testGetDocxInvalidExtension(testClient):
         Attributes:
             dir_path: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
-            references: String that contains the references extracted from the docx file.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -149,6 +134,5 @@ def testGetDocxInvalidExtension(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'invalidFileExtension.pdf')
 
-    text, references = getDOCXText(fileDir)
+    text = getDOCXText(fileDir)
     assert text == ''
-    assert references == ''
