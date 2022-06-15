@@ -1,12 +1,12 @@
 import os
 from fpdf import FPDF
-from docx2pdf import convert
+import aspose.words as aw
 
 def convertDocx(filePath):
     '''
-        This function converts a docx file to a pdf file using the docx2pdf
-        module convert method. It then placed the newly made pdf file in the
-        same location as the docx file.
+        This function converts a docx file to a pdf file using the aspose-words
+        module. It then placed the newly made pdf file in the same location as 
+        the docx file.
         Attributes:
             newPath: The path to the new pdf file.
         Arguments:
@@ -16,7 +16,8 @@ def convertDocx(filePath):
     '''
     newPath = filePath.replace(".docx", ".pdf")
     if not os.path.isfile(newPath):
-        convert(filePath, newPath)
+        doc = aw.Document(filePath)
+        doc.save(newPath)
     return newPath
 
 def convertTxt(filePath):
