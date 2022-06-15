@@ -1,7 +1,7 @@
 from app.fileapi.convert import convertDocx, convertTxt
 import os
 
-def test_convertDocx():
+def test_convertDocx(testClient):
     '''
         Tests if a docx file gets converted to a pdf file and the location of
         the converted file is returned
@@ -11,6 +11,7 @@ def test_convertDocx():
             convertedFileLoc: pointer to the pdf file.
             output: the location of the converted file.
     '''
+    del testClient
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'test_convertDocx.docx')
     # the pdf file is in the same location but the extension is different
@@ -26,7 +27,7 @@ def test_convertDocx():
     # remove the converted file for repeated testing
     os.remove(convertedFileLoc)
 
-def test_convertTxt():
+def test_convertTxt(testClient):
     '''
         Tests if a txt file gets converted to a pdf file and the location of
         the converted file is returned
@@ -36,6 +37,7 @@ def test_convertTxt():
             convertedFileLoc: pointer to the pdf file.
             output: the location of the converted file.
     '''
+    del testClient
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'test_convertTxt.txt')
     # the pdf file is in the same location but the extension is different
