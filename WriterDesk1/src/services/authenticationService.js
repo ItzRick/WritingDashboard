@@ -38,7 +38,7 @@ function login(username, password) {
 }
 
 /**
- * Logout user
+ * Logout current user
  */
 function logout() {
     localStorage.removeItem('currentUser');
@@ -54,7 +54,7 @@ function getCurrentUser() {
 
 /**
  * 
- * @returns user ID
+ * @returns userID of current user
  */
 function getCurrentUserId() {
     if(JSON.parse(localStorage.getItem('currentUser')) !== null) {
@@ -75,7 +75,7 @@ function checkAuth () {
 
 /**
  * 
- * @returns user role
+ * @returns role of current user
  */
 function getRole (){
     return JSON.parse(localStorage.getItem('currentUser')).role;
