@@ -137,9 +137,9 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
 const Base = ({
   enableNav = true,
 }) => {
-  // store whether the user is an admin or researcher to hide part of the sidebar
-  const [admin, setAdmin] = useState(false);
-  const [researcher, setResearcher] = useState(false);
+
+  const [admin, setAdmin] = useState(false); // true when user has admin rights
+  const [researcher, setResearcher] = useState(false); // true when user has researcher rights
 
   //handle opening and closing the drawer (left side menu)
   const [open, setOpen] = useState(false);

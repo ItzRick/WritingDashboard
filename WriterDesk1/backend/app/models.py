@@ -10,7 +10,7 @@ class User(db.Model):
         Declare user model containing usernames and passwords (hashed), we use single table inheritance for different types of users.
         Cascade makes sure that if a User is removed, related files instances in the db are also removed
         Attributes:
-            role: used as discrimator, indicates role of object in row; role is one of: ['admin', 'participant', 'researcher', 'student']
+            role: Identifies role of user, role is one of: ['admin', 'participant', 'researcher', 'student']
             id: Unique primary key User ID 
             username: email address or username from user
             passwordHash: hashed password from user, hashed using werkzeug.security
@@ -21,8 +21,14 @@ class User(db.Model):
     username = db.Column(db.String(120), index=True, unique=True)
     passwordHash = db.Column(db.String(128))
 
-    def __init__(self, username: str, password_plaintext: str, role: str='user'):
-        ''' Create new user, use set_password to create hashed password for plaintext password'''
+    def __init__(self, username: str, password_plaintext: str, role: str ='user'):
+        ''' 
+            Create new user, use set_password to create hashed password for plaintext password
+            Arguments:
+                username: Username of new user
+                password_plaintext: Password (to be hashed) for new user
+                role: Role of new user, standard is: 'user'        
+        '''
         self.role = role
         self.username = username
         self.set_password(password_plaintext)
@@ -50,28 +56,6 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.passwordHash, password)
-
-
-class Student(User):
-    '''
-        Subclass of User table, for students
-    '''
-
-    __tablename__ = None
-    
-    __mapper_args__ = {
-        'polymorphic_identity': "student",
-    }
-
-class Participant(User):
-    '''
-        Subclass of User table, for participantszz
-    '''
-    __tablename__ = None
-    
-    __mapper_args__ = {
-        'polymorphic_identity': "participant",
-    }
 
 class Files(db.Model):
     '''

@@ -42,7 +42,9 @@ const Login = () => {
     // Change page using formError when we find an error
     const [formError, setFormError] = useState(false);
 
-    // Do POST request containing username and password variable, recieve data when username and password are correct
+     /**
+     * Do POST request containing username and password variable, go to main page when login succeeds 
+     */
     const handleClick = () => {
         AuthenticationService.login(username, password).then(() => {
             history.push("/Main");
