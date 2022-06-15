@@ -32,6 +32,7 @@ import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 // routing
 import { Link, Outlet } from 'react-router-dom';
 import { history } from '../helpers/history';
+import { AuthenticationService } from '../services/authenticationService';
 
 //Width of the opened drawer
 const drawerWidth = 240;
@@ -158,6 +159,7 @@ const Base = ({
     const user = JSON.parse(localStorage.getItem('currentUser'));
     if (user === null) {
       history.push("/Login");
+      window.location.reload();
     } else {
       if (user.role === 'admin') {
         setAdmin(true);
