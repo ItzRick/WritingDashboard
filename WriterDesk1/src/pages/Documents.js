@@ -160,7 +160,7 @@ const Documents = () => {
     const url = 'https://127.0.0.1:5000/fileapi/fileretrieve';
     // id of current user
     const userId = AuthenticationService.getCurrentUserId();
-    // The parameters, sortingAttribute and userId need to be changed later:
+    // The parameter, sortingAttribute need to be changed later:
     const params = {
       userId: userId,
       sortingAttribute: '',

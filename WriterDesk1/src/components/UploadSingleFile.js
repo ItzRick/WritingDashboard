@@ -45,7 +45,7 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
             const formData = new FormData();
             formData.append('files', file);
             formData.append('fileName', file.name);
-            formData.append('userId', userId);         //TODO change to real uid
+            formData.append('userId', userId);
             formData.append('date', date.toISOString().substring(0, 10));
             formData.append('courseCode', course);
             //add header
