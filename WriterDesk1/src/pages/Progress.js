@@ -28,8 +28,12 @@ function Progress() {
     const [scoreCohesion, setScoreCohesion] = useState();
     const [scoreIntegration, setScoreIntegration] = useState();
 
+    /*
+     * This function fetches the 5 most recent scores of each type from the database,
+     * then calculates the averages and sets the variables.
+     */
     const fetchScores = () => {
-        // // Url of the server:
+        // Url of the server:
         const url = 'https://127.0.0.1:5000/scoreapi//getAvgScores';
 
         // Make the call to the backend:

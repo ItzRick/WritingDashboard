@@ -200,18 +200,20 @@ def getAverageScores():
     AVGBASEDON = 5 
 
     # Check if user has files
-    if (Files.query.filter_by(userId=userId).first() is None):
+    if (Files.query.filter_by(userId=userId).first() is None) :
         return 'No files for user', 400
 
     # Subquery selects num:avgBasedOn files from user orded by most recent date
     subq =  Files.query.\
             filter_by(userId = userId).\
             order_by(Files.date.desc()).\
-            limit(AVGBASEDON).\
             subquery()
 
     # All recents scores from user
-    recentScores = Scores.query.join(subq, Scores.fileId == subq.c.id).all()
+    recentScores = Scores.query.join(subq, Scores.fileId == subq.c.id).limit(AVGBASEDON).all()
+
+    if (len(recentScores) == 0) :
+        return 'No files with scores for user', 400
 
     # Average value each explanation type for recentScores 
     avgscoreStyle = sum(x.scoreStyle for x in recentScores) / len(recentScores)
