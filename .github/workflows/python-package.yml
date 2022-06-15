@@ -25,6 +25,8 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt install -y libreoffice
+    - name: Install dependencies
+      run: |
         python -m pip install --upgrade pip
         python -m pip install pytest pytest-cov
         if [ -f WriterDesk1/requirements.txt ]; then pip install -r WriterDesk1/requirements.txt; fi
