@@ -1,4 +1,4 @@
-from app.getMistakesInformation import getMistakesInformationStyle
+from app.feedback.getMistakesInformation import getMistakesInformationStyle
 import fitz
 import os
 

@@ -80,7 +80,7 @@ def getMistakesInformationStyle(mistakes, filePath):
     doc = fitz.open(filePath)
 
     # go over all mistakes in the input
-    for mistake in mistakes[0]:
+    for mistake in mistakes:
         word = mistake[0]
         sentence = mistake[1]
 

@@ -3,6 +3,8 @@ from app.feedback.retrieveText.convertPdfToText import getPDFText
 from app.feedback.content import sourceIntegration
 from app.feedback.languageAndStyle import feedbackLanguageStyle
 from app.feedback.getMistakesInformation import getMistakesInformationStructure, getMistakesInformationStyle
+from app.feedback.structureCheck import getStructureScore
+from app.fileapi.convert import convertDocx, convertTxt
 from app.scoreapi.scores import setScoreDB, setExplanationDB
 from app import cache
 import nltk
@@ -19,20 +21,44 @@ def genFeedback(file):
     print(path)
     if fileType == '.docx':
         text = getDOCXText(path)
+        path = convertDocx(path)
     elif fileType == '.pdf':
         text, references = getPDFText(path, returnReferences=True)
     elif fileType == '.txt':
         text = getTXTText(path)
+        path = convertTxt(path)
     englishStopwords = getEnglishStopwords()
     try:
-        mistakesStyle, scoreStyle = feedbackLanguageStyle(text)
         scoreContent, explanationContent = sourceIntegration(text, references, englishStopwords, userId)
-        setScoreDB(fileId, scoreStyle, -2, -2, scoreContent)
+        mistakesStyle, scoreStyle = feedbackLanguageStyle(text)
+        scoreStructure, explanationsStructure = getStructureScore(text)
+        setScoreDB(fileId, scoreStyle, -2, scoreStructure, scoreContent)
+        setFeedbackStyle(mistakesStyle, path, fileId)
         setExplanationDB(fileId = fileId, explId = -1, type = 3, explanation = explanationContent)
     except Exception as e:
         print(e)
         return False, e
     return True
+
+def setFeedbackStyle(mistakesStyle, path, fileId):
+    feedbacks = getMistakesInformationStyle(mistakesStyle, path)
+    for feedback in feedbacks:
+        replacements = feedback[8]
+        if len(replacements) == 0:
+            setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
+            type = feedback[5], explanation = feedback[6], mistakeText = feedback[7])
+        elif len(replacements) == 1:
+            setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
+            type = feedback[5], explanation = feedback[6], mistakeText = feedback[7], replacement1 = replacements[0])
+        elif len(replacements) == 2:
+            setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
+            type = feedback[5], explanation = feedback[6], mistakeText = feedback[7], replacement1 = replacements[0], 
+            replacement2 = replacements[1])
+        elif len(replacements) == 3:
+            setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
+            type = feedback[5], explanation = feedback[6], mistakeText = feedback[7], replacement1 = replacements[0], 
+            replacement2 = replacements[1], replacement3 = replacements[2])
+
 
 @cache.memoize(30*24*60*60)
 def getEnglishStopwords():
