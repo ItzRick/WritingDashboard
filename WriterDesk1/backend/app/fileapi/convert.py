@@ -3,13 +3,13 @@ from fpdf import FPDF
 from docx2pdf import convert
 
 def convertDocx(filePath):
-    newPath = filePath.replace("docx", "pdf")
+    newPath = filePath.replace(".docx", ".pdf")
     if not os.path.isfile(newPath):
         convert(filePath, newPath)
     return newPath
 
 def convertTxt(filePath):
-    newPath = filePath.replace("txt", "pdf")
+    newPath = filePath.replace(".txt", ".pdf")
     if not os.path.isfile(newPath):
         pdf = FPDF()
         pdf.add_page()
