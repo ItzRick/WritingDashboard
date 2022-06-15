@@ -111,8 +111,8 @@ class ParticipantToProject(db.Model, Serializer):
     __tablename__ = "participanttoproject"
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, autoincrement=False)
     projectId = db.Column(db.Integer, db.ForeignKey('projects.id'))
-    participant = db.relationship('User', backref='participanttoproject', lazy=True)
-    project = db.relationship('Projects', backref='participanttoproject', lazy=True)
+    participant = db.relationship('User', backref='participanttoproject', lazy=True, cascade='all,delete')
+    project = db.relationship('Projects', backref='participanttoproject', lazy=True, cascade='all,delete')
 
     def __init__(self, userId: int, projectId: int):
         ''' Create new tuple'''
@@ -195,9 +195,17 @@ class Projects(db.Model):
             userId: Id of the researcher corresponding to the research project.
             projectName: Name of the research project.
     '''
+    __tablename__ = "projects"
     id = db.Column(db.Integer, primary_key=True)
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))
     projectName = db.Column(db.String(256), index=True, unique=False, default='')
+
+    participants = db.relationship('ParticipantToProject', backref='projects', lazy='dynamic', cascade='all,delete')
+
+    def __init__(self, userId: int, projectName: str):
+        ''' Create new tuple'''
+        self.userId = userId
+        self.projectName = projectName
 
     def __repr__(self):
         return '<Project {}>'.format(self.projectName)

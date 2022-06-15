@@ -110,6 +110,7 @@ const Projects = () => {
       * @param {event} e: event data pushed with the call, not required
       */
     const createProject = (e) => {
+        // Check if the number of participants is valid
         if (!(numberOfParticipants !== '' && numberOfParticipants >= 0 && numberOfParticipants <= 10000)) {
             alert('Make sure the number of participants is a valid number between 0 and 10000');
             return null;
@@ -117,13 +118,16 @@ const Projects = () => {
         let userId = 1; //TODO: Change to current userId
 
         const formData = new FormData();
-        formData.append('userId', userId);
-        formData.append('projectName', projectName);
+        formData.append('userId', userId);  // Add userId to form
+        formData.append('projectName', projectName);  // Add input name to form
+
+        // Create project request
         axios.post(`https://localhost:5000/projectapi/setProject`, formData).then(response => {
             const data = {
                 "count": numberOfParticipants,
                 "projectid": 1, //TODO: Change projectId
             }
+            // Add participants request
             axios.post(`https://localhost:5000/projectapi/addparticipants`, data).then(response => {
                 //TODO: Set table data
             });
@@ -147,7 +151,6 @@ const Projects = () => {
         axios.delete(url, { data: formData }).then(response => {
             //TODO: Set table data
         });
-        //TODO: Delete all accounts and files corresponding to research project
     }
 
     /**
@@ -165,7 +168,6 @@ const Projects = () => {
         axios.delete(url, { data: formData }).then(response => {
             //TODO: Set table data
         });
-        //TODO: Delete all accounts and files corresponding to research project
     }
 
 

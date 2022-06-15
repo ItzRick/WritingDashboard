@@ -145,7 +145,7 @@ function Participants() {
     //     formData.append('id', params.id);
     //     // Make the call to the backend:
     //     axios.delete(url, { data: formData }).then(response => {
-    //         //TODO: Set table data
+    //         //TODO: reload table data
     //     });
     }
 
@@ -163,7 +163,7 @@ function Participants() {
         // selectedInstances.forEach(id => formData.append('id', id));
         // // Make the backend call:
         // axios.delete(url, { data: formData }).then(response => {
-        //     //TODO: Set table data
+        //     //TODO: reload table data
         // });
     }
 
