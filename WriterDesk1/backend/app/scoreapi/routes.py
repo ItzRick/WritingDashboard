@@ -3,6 +3,7 @@ from app.scoreapi import bp
 from flask import request, jsonify
 from app.models import Files, Scores, Explanations
 from app.database import uploadToDatabase, removeFromDatabase
+from sqlalchemy import func
 
 @bp.route('/setScore', methods = ['POST'])
 def setScore():
@@ -173,6 +174,60 @@ def getExplanation():
     
     # return explanation
     return explanation.serialize, 200
+
+@bp.route('/getAvgScores', methods = ['GET'])
+def getAverageScores():
+    '''
+        This function handles returning the average scores of the latest (date) files
+        from a given user, the number of files is dependend on the variable avgBasedOn
+        Attributes:
+            userId: user id as given by the frontend
+            AVGBASEDON: integer, which is the number of recent files that the function uses for the average
+        Arguments:
+            avgscoreStyle: Average score for Language and Style
+            avgscoreCohesion: Average score for Cohesion
+            avgscoreStructure: Average score for Structure
+            avgscoreIntegration: Average score for Source Integration and Content
+        Returns:
+            Average scores and status code, 
+                status code 200: succes
+                status code 400: no files found for given userId
+    '''
+    # get UserID from request
+    userId = request.args.get('userId')
+
+    # Average scores is based on num:AVGBASEDON files 
+    AVGBASEDON = 5 
+
+    # Check if user has files
+    if (Files.query.filter_by(userId=userId).first() is None) :
+        return 'No files for user', 400
+
+    # Subquery selects num:avgBasedOn files from user orded by most recent date
+    subq =  Files.query.\
+            filter_by(userId = userId).\
+            order_by(Files.date.desc()).\
+            subquery()
+
+    # All recents scores from user
+    recentScores = Scores.query.join(subq, Scores.fileId == subq.c.id).limit(AVGBASEDON).all()
+
+    if (len(recentScores) == 0) :
+        return 'No files with scores for user', 400
+
+    # Average value each explanation type for recentScores 
+    avgscoreStyle = sum(x.scoreStyle for x in recentScores) / len(recentScores)
+    avgscoreCohesion = sum(x.scoreCohesion for x in recentScores) / len(recentScores)
+    avgscoreStructure = sum(x.scoreStructure for x in recentScores) / len(recentScores)
+    avgscoreIntegration = sum(x.scoreIntegration for x in recentScores) / len(recentScores)
+
+    return {
+        'scoreStyle'       :round(avgscoreStyle,2),
+        'scoreCohesion'    :round(avgscoreCohesion,2),
+        'scoreStructure'   :round(avgscoreStructure,2),
+        'scoreIntegration' :round(avgscoreIntegration,2)
+    }, 200
+
 
 @bp.route('/getExplanationForFile', methods = ['GET'])
 def getExplanationForFile(): 
