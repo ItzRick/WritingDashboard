@@ -1,7 +1,6 @@
 from app.models import User
 import json
 
-#TODO ik gebruik deze ook in test_set_password en wil m eig naar een centrale file moven, maar welke????
 def loginHelper(testClient, username, password):
     '''
     Support function to log into the server as user with username and password

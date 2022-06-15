@@ -23,7 +23,7 @@ class User(db.Model):
 
     def __init__(self, username: str, password_plaintext: str, role: str='user'):
         ''' Create new user, use set_password to create hashed password for plaintext password'''
-        self.type = role
+        self.role = role
         self.username = username
         self.set_password(password_plaintext)
         # self.id = 123 # Activate me together with initialSetup() in fileapi > uploadfile() # TODO remove before deploy
