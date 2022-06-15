@@ -34,6 +34,7 @@ def genFeedback(file):
         scoreStructure, explanationsStructure = getStructureScore(text)
         setScoreDB(fileId, scoreStyle, -2, scoreStructure, scoreContent)
         setFeedbackStyle(mistakesStyle, path, fileId)
+        setFeedbackStructure(explanationsStructure, path, fileId)
         setExplanationDB(fileId = fileId, explId = -1, type = 3, explanation = explanationContent)
     except Exception as e:
         print(e)
@@ -58,6 +59,12 @@ def setFeedbackStyle(mistakesStyle, path, fileId):
             setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
             type = feedback[5], explanation = feedback[6], mistakeText = feedback[7], replacement1 = replacements[0], 
             replacement2 = replacements[1], replacement3 = replacements[2])
+
+def setFeedbackStructure(mistakesStructure, path, fileId):
+    mistakes = getMistakesInformationStructure(mistakesStructure, path)
+    for mistake in mistakes:
+        setExplanationDB(X1 = mistake[0], Y1 = mistake[1], X2 = mistake[2], Y2 = mistake[3], fileId = fileId, explId = -1, 
+            type = mistake[5], explanation = mistake[6], mistakeText = mistake[7])
 
 
 @cache.memoize(30*24*60*60)
