@@ -1,6 +1,6 @@
 import os
 from fpdf import FPDF
-from docx2pdf import convert
+import aspose.words as aw
 
 def convertDocx(filePath):
     '''
@@ -16,7 +16,8 @@ def convertDocx(filePath):
     '''
     newPath = filePath.replace(".docx", ".pdf")
     if not os.path.isfile(newPath):
-        convert(filePath, newPath)
+        doc = aw.Document(filePath)
+        doc.save(newPath)
     return newPath
 
 def convertTxt(filePath):
