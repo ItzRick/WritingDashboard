@@ -5,7 +5,7 @@ from docx2pdf import convert
 def convertDocx(filePath):
     newPath = filePath.replace("docx", "pdf")
     if not os.path.isfile(newPath):
-        convert(newPath)
+        convert(filePath, newPath)
     return newPath
 
 def convertTxt(filePath):
