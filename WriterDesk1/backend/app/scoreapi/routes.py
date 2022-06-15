@@ -212,6 +212,8 @@ def getAverageScores():
 
     # All recents scores from user
     recentScores = Scores.query.join(subq, Scores.fileId == subq.c.id).all()
+    if (recentScores is None):
+        return 'No scores for files', 400
 
     # Average value each explanation type for recentScores 
     avgscoreStyle = sum(x.scoreStyle for x in recentScores) / len(recentScores)
