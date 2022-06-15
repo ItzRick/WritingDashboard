@@ -39,3 +39,6 @@ def create_app(config_class=Config):
 
     # Return the app:
     return app
+
+
+from app import models

@@ -33,4 +33,4 @@ def test_invalid_login(testClient,initDatabase):
     }
 
     response = testClient.post('/loginapi/login', json=data, headers={"Content-Type": "application/json"})
-    assert response.status_code == 401
+    assert response.status_code == 403

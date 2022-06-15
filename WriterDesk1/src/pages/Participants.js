@@ -18,7 +18,9 @@ import BlueButton from './../components/BlueButton';
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-
+// Signup request setup
+import axios from 'axios';
+const BASE_URL = "https://localhost:5000/projectapi";
 
 /**
  * 
@@ -103,6 +105,29 @@ function Participants() {
     setProjectDown(event.target.value);
   };
 
+  const [participantCount, setParticipantCount] = useState(0);
+
+  /*
+   * Do POST request containing participantCount and projectAdd variable, recieve status of response.
+   */
+  const handleAddToProject = () => {
+    // If input is valid, do post request
+    const data = {
+      "count": participantCount,
+      "projectid": projectAdd,
+    }
+    const headers = {
+        "Content-Type": "application/json"
+    }
+    axios.post(`${BASE_URL}/addparticipants`, data).then(response =>{
+        // Post request is successful, participants are registered
+        // TODO: reload participant list 
+    }).catch(error =>{
+        // Post request failed, user is not created
+        console.error("Something went wrong:", error.response.data);
+    });
+  };
+
   return (
     <>
       <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
@@ -111,6 +136,8 @@ function Participants() {
           id="noOfParticipants"
           label="Number of participants"
           type="number"
+          value={participantCount}
+          onChange={(e) => {setParticipantCount(e.target.value)}}
           InputLabelProps={{
             shrink: true,
           }}
@@ -127,7 +154,7 @@ function Participants() {
             {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)}
           </Select>
         </FormControl>
-        <BlueButton idStr='addParticipants' >Add participants</BlueButton>
+        <BlueButton idStr='addParticipants' onClick={handleAddToProject}>Add participants</BlueButton>
       </div>
       <div className='topBorder'>
         <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>

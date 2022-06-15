@@ -5,7 +5,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy.inspection import inspect
 
-class User(db.Model):
+# Class to turn database models into dictionaries,
+# which are able to be turned into json
+class Serializer(object):
+    def serialize(self):
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+    @staticmethod
+    def serializeList(l):
+        return [m.serialize() for m in l]
+
+class User(db.Model, Serializer):
     '''
         Declare user model containing usernames and passwords (hashed), we use single table inheritance for different types of users.
         Cascade makes sure that if a User is removed, related files instances in the db are also removed
@@ -20,10 +30,10 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), index=True, unique=True)
     passwordHash = db.Column(db.String(128))
-    
-    def __init__(self, username: str, password_plaintext: str):
+
+    def __init__(self, username: str, password_plaintext: str, role: str ='user'):
         ''' Create new user, use set_password to create hashed password for plaintext password'''
-        self.type = "user"
+        self.type = role
         self.username = username
         self.set_password(password_plaintext)
         # self.id = 123 # Activate me together with initialSetup() in fileapi > uploadfile() # TODO remove before deploy
@@ -51,33 +61,7 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.passwordHash, password)
 
-    __mapper_args__ = {
-        'polymorphic_on': type,
-        'polymorphic_identity':"user",
-    }
-
-class Student(User):
-    '''
-        Subclass of User table, for students
-    '''
-
-    __tablename__ = None
-    
-    __mapper_args__ = {
-        'polymorphic_identity': "student",
-    }
-
-class Participant(User):
-    '''
-        Subclass of User table, for participantszz
-    '''
-    __tablename__ = None
-    
-    __mapper_args__ = {
-        'polymorphic_identity': "participant",
-    }
-
-class Files(db.Model):
+class Files(db.Model, Serializer):
     '''
         Class to enter files in the database. 
         Cascade makes sure that if a File is removed, related Scores and Explanations instances in the db are also removed
@@ -115,6 +99,28 @@ class Files(db.Model):
     def __repr__(self):
         return '<Files {}>'.format(self.filename)
 
+class ParticipantToProject(db.Model, Serializer):
+    '''
+        Model containing user id's and project id's, linking a participant to a research project.
+        Attributes:
+            userId: id of the participant
+            projectId: id of the research project
+            participant: User object linked by userId
+            project: Projects object linked by projectId
+    '''
+    __tablename__ = "participanttoproject"
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, autoincrement=False)
+    projectId = db.Column(db.Integer, db.ForeignKey('projects.id'))
+    participant = db.relationship('User', backref='participanttoproject', lazy=True)
+    project = db.relationship('Projects', backref='participanttoproject', lazy=True)
+
+    def __init__(self, userId: int, projectId: int):
+        ''' Create new tuple'''
+        self.userId = userId
+        self.projectId = projectId
+
+    def __repr__(self):
+        return '<ParticipantToProject {}>'.format(self.userId)
 
 class Scores(db.Model):
     '''

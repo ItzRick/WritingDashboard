@@ -1,15 +1,20 @@
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
+
 from flask import Flask
 from flask import jsonify
 from flask import request, current_app
 from app.loginapi import bp
 
 from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt
 from flask_jwt_extended import current_user
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from flask_jwt_extended import JWTManager
-from flask_jwt_extended import jwt_required
 
+from app.database import postUser
+from app.extensions import jwt
 from app.models import User
 
 @bp.route('/login', methods=['POST'])
@@ -29,22 +34,72 @@ def create_token():
     '''
     username = request.json.get("username", None) 
     password = request.json.get("password", None)
-
-    print(username)
-    print(password)
     user = User.query.filter_by(username=username).first() # Get user from database corresponding to username
     if user is None or not user.check_password(password): # When there doesn't exists a user corresponding to username or password doesnt match
-        return jsonify({"msg": "Bad username or password"}), 401 # return Unauthorized response status code
+        return jsonify(msg = "Bad username or password", access_token = None), 403 # return Unauthorized response status code
     
-    access_token = create_access_token(identity=user.id)
-    userid = user.id
-    return jsonify(access_token=access_token, user_id = userid) 
+    access_token = create_access_token(identity=user) # Create new access token, uses user_identitiy_lookup as identity
+    return jsonify(
+            access_token=access_token,
+            user_id = user.id,
+            username = user.username,
+            role = user.type
+        ) 
 
+@jwt.user_identity_loader
+def user_identity_lookup(user):
+    '''
+        Callback function will convert any User object used to create a JWT into a JSON serializable format
+    '''
+    return user.id
 
-@bp.route("/who_am_i", methods=["GET"])
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    '''
+        Callback function to automatically load User object when a JWT is present in the request. 
+    '''
+    identity = jwt_data["sub"] # get user id from token
+    return User.query.filter_by(id=identity).one_or_none()
+    
+@bp.route('/signup', methods=["POST"])
+def registerUser():
+    '''
+        This function handles the signup request. When there is no user present in the database with the given username,
+        a new user is registered with the given username.
+        Attributes:
+            username: username as given in frontend
+            password: password as given in frontend
+            isCreated: whether a new user has been registered
+        Return:
+            Returns request success status code with a message when a new user has been registered
+            Otherwise returns bad request status code with an error message
+    '''
+
+    # Retrieve data from request
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+
+    # Try to register new user in database
+    isCreated = postUser(username, password)
+
+    # Send response based on outcome
+    if isCreated:
+        # User successfully created
+        return "User was successfully created!", 200
+    else:
+        # User exists already
+        return "Account with this email already exists!", 400
+    
+
+@bp.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
+    '''
+        This is a function that uses jwt_required, this route needs a valid JWT token before this endpoint can be called.
+        We return the user id, name and role
+    '''
     return jsonify(
         id=current_user.id,
         username=current_user.username,
+        role = current_user.type
     )
