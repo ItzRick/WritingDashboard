@@ -1,4 +1,4 @@
-import { useState, } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import {
     Dialog,
@@ -6,6 +6,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Button,
 } from '@mui/material';
 
 import Avatar from '@mui/material/Avatar';
@@ -25,22 +26,25 @@ import { AdminPanelSettingsOutlined, BiotechOutlined, SchoolOutlined } from '@mu
  */
 function RoleDialog(props) {
     const {onClose, selectedValue, open} = props;
-
-    // change state of popup
-    const handleClose = () => {
-        onClose(selectedValue);
+    const [value, setValue] = useState(selectedValue);
+    
+    const handleCancel = () => {
+        onClose();
     }
+    
+    const handleOk = () => {
+       onClose(value);
+    };
 
     const handleListItemClick = (value) => {
-        onClose(value);
+        setValue(value);
     }
 
     return (
         <>
             <Dialog
                 open={open}
-                onClose={handleClose}
-                
+
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -48,7 +52,7 @@ function RoleDialog(props) {
                     {"Set user role"}
                 </DialogTitle>
                 <List>
-                    <ListItem button onClick={() => handleListItemClick('student')}>
+                    <ListItem button onClick={() => handleListItemClick('student')} selected={value === 'student'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <SchoolOutlined />
@@ -56,7 +60,7 @@ function RoleDialog(props) {
                         </ListItemAvatar>
                         <ListItemText primary="Student" />
                     </ListItem>
-                    <ListItem button onClick={() => handleListItemClick('researcher')}>
+                    <ListItem button onClick={() => handleListItemClick('researcher')} selected={value === 'researcher'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <BiotechOutlined />
@@ -64,7 +68,7 @@ function RoleDialog(props) {
                         </ListItemAvatar>
                         <ListItemText primary="Researcher" />
                     </ListItem>
-                    <ListItem button onClick={() => handleListItemClick('admin')}>
+                    <ListItem button onClick={() => handleListItemClick('admin')} selected={value === 'admin'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <AdminPanelSettingsOutlined />
@@ -73,6 +77,13 @@ function RoleDialog(props) {
                         <ListItemText primary="Admin" />
                     </ListItem>
                 </List>
+
+                <DialogActions>
+                    <Button autoFocus onClick={handleCancel}>
+                        Cancel
+                    </Button>
+                    <Button onClick={handleOk}>Ok</Button>
+                </DialogActions>
             </Dialog>
         </>
     );

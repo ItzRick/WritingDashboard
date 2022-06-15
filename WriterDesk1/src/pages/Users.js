@@ -74,7 +74,9 @@ const Users = () => {
 
     const handleClose = (value) => {
       setOpen(false);
-      setSelectedValue(value);
+      if (value) {
+        setSelectedValue(value);
+      }
     };
 
     return (
