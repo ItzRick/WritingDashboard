@@ -4,7 +4,7 @@ from subprocess import  Popen
 
 def convertDocx(filePath):
     '''
-        This function converts a docx file to a pdf file using the aspose-words
+        This function converts a docx file to a pdf file using libreoffice and calling it using the subprocess
         module. It then placed the newly made pdf file in the same location as 
         the docx file.
         Attributes:
@@ -16,7 +16,6 @@ def convertDocx(filePath):
     '''
     newPath = filePath.replace(".docx", ".pdf")
     if not os.path.isfile(newPath):
-        LIBRE_OFFICE = r"C:\\Program Files\\LibreOffice\\program\\soffice.exe"
         p = Popen(['soffice', '--headless', '--convert-to', 'pdf', '--outdir', os.path.split(filePath)[0], filePath])
         p.communicate()
     return newPath
