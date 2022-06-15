@@ -1,5 +1,5 @@
 from distutils.command.upload import upload
-from app.models import Files, User, ParticipantToProject
+from app.models import Files, User, ParticipantToProject, Projects
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, postUser, postParticipant, postParticipantToProject
 from app import db
 from datetime import datetime, date
@@ -162,14 +162,14 @@ def testPostParticipant(testClient, initDatabase):
 
     del testClient, initDatabase
     try:
-        userId = postParticipant("test@tue.nl", "TestPassword1")
+        user = postParticipant("test@tue.nl", "TestPassword1")
         db.session.commit()
     except:
         db.session.rollback()
     users = User.query.filter_by(type="participant", username="test@tue.nl").all()
     assert len(users) == 1
     assert users[0].check_password("TestPassword1")
-    assert userId == users[0].id
+    assert user.id == users[0].id
 
 def testPostParticipantToProject(testClient, initDatabase):
     '''
@@ -182,12 +182,15 @@ def testPostParticipantToProject(testClient, initDatabase):
     '''
 
     del testClient, initDatabase
+    project = Projects(field=0)
+    db.session.add(project)
+    db.session.commit()
     try:
-        postParticipantToProject(1, 2)
+        postParticipantToProject(1, project.id)
         db.session.commit()
     except:
         db.session.rollback()
     entries = ParticipantToProject.query.all()
     assert len(entries) == 1
     assert entries[0].userId == 1
-    assert entries[0].projectId == 2
+    assert entries[0].projectId == project.id

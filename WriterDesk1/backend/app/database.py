@@ -87,7 +87,7 @@ def postParticipant(username, password):
     user = models.User(username=username, password_plaintext=password, role="participant")
     db.session.add(user)
     db.session.flush()
-    return user.id
+    return user
 
 def postParticipantToProject(userId, projectId):
     '''
@@ -98,6 +98,9 @@ def postParticipantToProject(userId, projectId):
             userId: id of the participant
             projectId: id of the research project
     '''
+    project = models.Projects.query.filter_by(id=projectId).all()
+    if len(project) == 0:
+        raise Exception('Project does not exist')
 
     dataTuple = models.ParticipantToProject(userId=userId, projectId=projectId)
     db.session.add(dataTuple)

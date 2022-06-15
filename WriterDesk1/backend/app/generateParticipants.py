@@ -6,32 +6,25 @@ import random, string
 def generateParticipants(count, projectId):
     PASSWORD_LENGTH = 10
 
-    lastParticipantNumber = None
     for participant in range(count):
 
-        if lastParticipantNumber is None:
-            lastParticipantNumber = getLastParticipantNumber()
-
-        # Generate username and password
-        username = generateParticipantUsername(lastParticipantNumber)
+        # Generate password
         password = generateParticipantPassword(PASSWORD_LENGTH)
 
         # Post participant, raise error if this fails
         try:
-            userId = postParticipant(username, password)
-            postParticipantToProject(userId, projectId)
+            user = postParticipant("username", password)
+            user.username = generateParticipantUsername(user.id)
+            db.session.flush()
+            postParticipantToProject(user.id, projectId)
         except Exception as e:
             db.session.rollback()
             raise e
-
-        lastParticipantNumber += 1
+    # No exception raised so changes can be committed
     db.session.commit()
 
-def getLastParticipantNumber():
-    return max([0, *(int(r.username[4:]) for r in User.query.filter(User.username.startswith("par_")))])
-
-def generateParticipantUsername(lastParticipantNumber):
-    return "par_" + str(lastParticipantNumber + 1)
+def generateParticipantUsername(id):
+    return "par_" + str(id)
 
 def generateParticipantPassword(length):
     characters = [random.choice(string.ascii_lowercase),
