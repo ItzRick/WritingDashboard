@@ -1,6 +1,11 @@
 describe('Test the homepage', () => {
     beforeEach(() => {
-        cy.visit('https://localhost:3000/Main')
+        cy.visit('https://localhost:3000/Login')
+        cy.get('[id="username"]')
+            .type('admin')
+        cy.get('[id="password"]')
+            .type('admin')
+        cy.get('[id="loginButton"]').click()
       })
 
     it('Checks if all elements are present.', () => {
