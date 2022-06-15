@@ -1,9 +1,9 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify, send_file
-from app.models import Files
+from app.models import Files, User
 from app.fileapi import bp
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup, recordsToCsv
 from magic import from_buffer
 from datetime import date
 from mimetypes import guess_extension
@@ -233,3 +233,24 @@ def displayFile():
             pdf.output(filepath.replace("txt", "pdf"))
         return send_file(filepath.replace("txt", "pdf"))
     return send_file(filepath)
+
+
+@bp.route('/csv', methods=['GET'])
+def getCsv():
+    # Create csv file
+    path = os.path.join(current_app.config['UPLOAD_FOLDER'], "result.csv")
+    records = User.serializeList(User.query.filter_by(role="participant").all())
+    recordsToCsv(path, records)
+
+    # Generator to delete file after sending
+    def generate():
+        with open(path) as f:
+            yield from f
+
+        os.remove(path)
+
+    # Create response
+    response = current_app.response_class(generate(), mimetype='text/csv')
+    response.headers.set('Content-Disposition', 'attachment')
+    response.headers.set('custom-filename', 'data.csv')
+    return response

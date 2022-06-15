@@ -17,8 +17,9 @@ import BlueButton from './../components/BlueButton';
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
-
+import axios from 'axios'
+import fileDownload from 'js-file-download';
+const BASE_URL = "https://localhost:5000/fileapi";
 
 /**
  * 
@@ -103,6 +104,17 @@ function Participants() {
     setProjectDown(event.target.value);
   };
 
+  const download = () => {
+    axios.get(`${BASE_URL}/csv`).then(response => {
+      //File retrieval successful, start download
+      const fileName = response.headers["custom-filename"];
+      fileDownload(response.data, fileName);
+      
+    }).catch(error => {        
+      console.log(error.data.data)  
+    });
+  }
+
   return (
     <>
       <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
@@ -142,7 +154,7 @@ function Participants() {
             {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)}
           </Select>
         </FormControl>
-        <BlueButton idStr='downloadParticipants' >Download participants</BlueButton>
+        <BlueButton idStr='downloadParticipants' onClick={download}>Download participants</BlueButton>
       </div>
       <div className='topBorder'>
         <BlueButton idStr='downloadSelectedParticipants'>Download selected participants</BlueButton>

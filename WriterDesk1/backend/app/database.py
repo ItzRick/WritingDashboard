@@ -1,5 +1,6 @@
 from app import db
 from app import models
+import csv
 
 # helper function, TODO remove before deploy
 def initialSetup():
@@ -45,3 +46,12 @@ def getFilesByUser(user, sortingAttribute):
         files = files.order_by(models.Files.date.desc())
 
     return models.Files.serializeList(files.all())
+
+def recordsToCsv(path, records):
+    outfile = open(path, 'w', newline='')
+
+    outcsv = csv.DictWriter(outfile, fieldnames=[column[0] for column in records[0].items()])
+    outcsv.writeheader()
+    [outcsv.writerow(record) for record in records]
+
+    outfile.close()
