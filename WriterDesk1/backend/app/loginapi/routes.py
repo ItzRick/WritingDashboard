@@ -69,7 +69,8 @@ def user_lookup_callback(_jwt_header, jwt_data):
 def protected():
     '''
         This is a function that uses jwt_required, this route needs a valid JWT token before this endpoint can be called.
-        We return the user id, name and role
+        Return:
+           Returns User.id, User.username and User.role that matches access token in header of request
     '''
     return jsonify(
         id=current_user.id,
