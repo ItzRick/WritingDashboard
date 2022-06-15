@@ -31,7 +31,7 @@ class User(db.Model):
     def serializeUser(self):
         dict = {}
         for c in inspect(self).attrs.keys():
-            if not c == 'file':
+            if not c == 'file' and not c == 'passwordHash':
                 dict[c] =  getattr(self, c)
         return dict
 
