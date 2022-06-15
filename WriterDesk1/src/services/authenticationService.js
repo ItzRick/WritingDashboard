@@ -58,7 +58,7 @@ function getCurrentUser() {
  */
 function getCurrentUserId() {
     if(JSON.parse(localStorage.getItem('currentUser')) !== null) {
-        return JSON.parse(localStorage.getItem('currentUser')).id;
+        return JSON.parse(localStorage.getItem('currentUser')).user_id;
     } else {
         return Error("No user found");
     }
