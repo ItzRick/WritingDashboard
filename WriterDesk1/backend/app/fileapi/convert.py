@@ -4,9 +4,9 @@ from pypandoc import convert_file
 
 def convertDocx(filePath):
     '''
-        This function converts a docx file to a pdf file using the docx2pdf
-        module convert method. It then placed the newly made pdf file in the
-        same location as the docx file.
+        This function converts a docx file to a pdf file using the aspose-words
+        module. It then placed the newly made pdf file in the same location as 
+        the docx file.
         Attributes:
             newPath: The path to the new pdf file.
         Arguments:
