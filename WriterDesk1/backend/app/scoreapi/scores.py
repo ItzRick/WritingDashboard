@@ -80,6 +80,28 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
 
 def setExplanationDB(fileId, type, explanation, explId = -1, mistakeText = '', X1 = -1, X2 = -1, Y1 = -1, Y2 = -1, 
     replacement1 = '', replacement2 = '', replacement3 = ''):
+    '''
+        This functions handles adding an explanation to the database
+        attributes: 
+            current: Possibly current instance of this explanation if a explId has been supplied. 
+        arguments:
+            fileId: Id for the file
+            explId: Id for the explanation, if -1, create new explanation
+            type: Explanation type, what type of mistake is explained,
+                    0=style, 1=cohesion, 2=structure, 3=integration
+            explanation: String containing a comment on a part of the text in the file
+            mistakeText: String, What text in the document is wrong, default empty string if this is not supplied.
+            X1: X of the top right corner of the boxing rectangle. Default -1, to indicate no position in the text, if this is not supplied.
+            X2: X of the bottom left corner of the boxing rectangle. Default -1, to indicate no position in the text has been supplied.
+            Y1: Y of the top right corner of the boxing rectangle. Default -1, to indicate that no position in the text has been supplied.
+            Y2: Y of the bottom left corner of the boxing rectangle. Default -1, to indicate that no position in the text has been supplied.
+            replacement1: First possible replacements for the mistakeText, default empty string to indicate there is no replacement.
+            replacement2: Second possible replacements for the mistakeText, default empty string to indicate there is no replacement.
+            replacement3: Third possible replacements for the mistakeText, default empty string to indicate there is no replacement.
+        returns:
+            return true if the upload to the database was successful else false, for example if a explId was given that was not found.
+            a message containing an error message or a message with a succesful upload to the database.
+    '''
     if (Files.query.filter_by(id=fileId).first() is None):
         return False, 'No file found with fileId'
 
