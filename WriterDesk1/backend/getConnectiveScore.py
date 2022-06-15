@@ -1,5 +1,6 @@
 # Import natural language toolkit.
 import nltk
+nltk.download('punkt')
 from sqlalchemy import null
 
 def getConnectiveScore(text):

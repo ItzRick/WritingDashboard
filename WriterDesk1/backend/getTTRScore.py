@@ -1,5 +1,9 @@
 # Import natural language toolkit.
 import nltk
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
 from nltk.stem import WordNetLemmatizer
 from collections import Counter
 
@@ -105,5 +109,3 @@ def getTTRScore(text):
     
     # Return calculated TTR score and 3 most common words.
     return TTRScore, mostCommon
-
-getTTRScore("test")
