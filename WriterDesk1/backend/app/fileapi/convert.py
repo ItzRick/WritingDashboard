@@ -1,6 +1,6 @@
 import os
 from fpdf import FPDF
-from pypandoc import convert_file
+from subprocess import  Popen
 
 def convertDocx(filePath):
     '''
@@ -16,7 +16,9 @@ def convertDocx(filePath):
     '''
     newPath = filePath.replace(".docx", ".pdf")
     if not os.path.isfile(newPath):
-        convert_file(filePath, 'latex', outputfile=newPath)
+        LIBRE_OFFICE = r"C:\\Program Files\\LibreOffice\\program\\soffice.exe"
+        p = Popen(['soffice', '--headless', '--convert-to', 'pdf', '--outdir', os.path.split(filePath)[0], filePath])
+        p.communicate()
     return newPath
 
 def convertTxt(filePath):
