@@ -53,7 +53,7 @@ def testSetRole(testClient, initDatabase):
     # get user pietje
     user = User.query.filter_by(username='Pietje').first()
     #check current role
-    assert user.role == None
+    assert user.role == 'user'
     # set user id and new role
     userId = user.id
     newRole = 'student'
