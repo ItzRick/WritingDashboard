@@ -6,7 +6,7 @@ import Plot from 'react-plotly.js';
 
 // routing
 import {useOutletContext} from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import ProgressVisualization from "../components/ProgressVisualization";
 import axios from "axios";
 
