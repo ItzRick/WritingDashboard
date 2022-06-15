@@ -2,6 +2,7 @@ from app.feedback.retrieveText.convertDocxTxtToText import getTXTText, getDOCXTe
 from app.feedback.retrieveText.convertPdfToText import getPDFText
 from app.feedback.content import sourceIntegration
 from app.feedback.languageAndStyle import feedbackLanguageStyle
+from app.feedback.getMistakesInformation import getMistakesInformationStructure, getMistakesInformationStyle
 from app.scoreapi.scores import setScoreDB, setExplanationDB
 from app import cache
 import nltk
