@@ -59,7 +59,7 @@ class User(db.Model):
 
 
 
-class Files(db.Model, Serializer):
+class Files(db.Model):
     '''
         Class to enter files in the database. 
         Cascade makes sure that if a File is removed, related Scores and Explanations instances in the db are also removed
