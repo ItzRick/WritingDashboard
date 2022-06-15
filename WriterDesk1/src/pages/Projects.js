@@ -120,10 +120,15 @@ const Projects = () => {
         formData.append('userId', userId);
         formData.append('projectName', projectName);
         axios.post(`https://localhost:5000/projectapi/setProject`, formData).then(response => {
-            //TODO: Set table data
+            const data = {
+                "count": numberOfParticipants,
+                "projectid": 1, //TODO: Change projectId
+            }
+            axios.post(`https://localhost:5000/projectapi/addparticipants`, data).then(response => {
+                //TODO: Set table data
+            });
         });
 
-        //TODO: Create participant accounts
 
     }
 

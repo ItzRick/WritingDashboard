@@ -107,6 +107,9 @@ function Participants() {
 
   const [participantCount, setParticipantCount] = useState(0);
 
+  //list of selected items
+  const [selectedInstances, setSelectedInstances] = useState([])
+
   /*
    * Do POST request containing participantCount and projectAdd variable, recieve status of response.
    */
@@ -127,6 +130,42 @@ function Participants() {
         console.error("Something went wrong:", error.response.data);
     });
   };
+
+
+    /**
+      * Delete the participant with the given id from the database. Also delete all corresponding data to the user.
+      * @param {event} e: event data pushed with the call, not required
+      * @param {params} params: params of the row where the current participant that is removed is in, to be able to remove the correct user.
+      */
+    const deleteParticipant = (e, params) => {
+        // Url of the server:
+        //const url = 'https://127.0.0.1:5000/...'
+        // Formdata for the backend call, to which the id has been added:
+    //     const formData = new FormData();
+    //     formData.append('id', params.id);
+    //     // Make the call to the backend:
+    //     axios.delete(url, { data: formData }).then(response => {
+    //         //TODO: Set table data
+    //     });
+    }
+
+
+    /**
+      * Delete all selected participants from the database. Also delete all corresponding data to the users.
+      * @param {event} e: event data pushed with the call, not required
+      */
+    const deleteSelectedParticipants = (e) => {
+        // // Url of the server:
+        // const url = 'https://127.0.0.1:5000/...'
+        // // Create a new formdata:
+        // const formData = new FormData();
+        // // For each of the selected instances, add this id to the formdata:
+        // selectedInstances.forEach(id => formData.append('id', id));
+        // // Make the backend call:
+        // axios.delete(url, { data: formData }).then(response => {
+        //     //TODO: Set table data
+        // });
+    }
 
   return (
     <>
@@ -184,6 +223,7 @@ function Participants() {
             pageSize={5}
             rowsPerPageOptions={[5]}
             checkboxSelection
+            onSelectionModelChange={e => setSelectedInstances(e)}
             disableSelectionOnClick
           />
         </div>
