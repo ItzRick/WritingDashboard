@@ -12,6 +12,8 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import BlueButton from "./BlueButton"; 
 
+import { AuthenticationService } from "../services/authenticationService";
+
 /**
  * 
  * @param {*} ref reference to the parent Upload.js
@@ -36,12 +38,14 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
         uploadFile() {
             // url of the file api's upload function
             const url = 'https://localhost:5000/fileapi/upload';
+            // id of current user
+            const userId = AuthenticationService.getCurrentUserId();
 
             // create form with all the file information
             const formData = new FormData();
             formData.append('files', file);
             formData.append('fileName', file.name);
-            formData.append('userId', 123);         //TODO change to real uid
+            formData.append('userId', userId);
             formData.append('date', date.toISOString().substring(0, 10));
             formData.append('courseCode', course);
             //add header
