@@ -15,13 +15,13 @@ def test_convertDocx(testClient):
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'test_convertDocx.docx')
     # the pdf file is in the same location but the extension is different
-    convertedFileLoc = fileLoc.replace('docx', 'pdf')
+    convertedFileLoc = fileLoc.replace('.docx', '.pdf')
     # check is there is no converted file yet
-    assert os.path.exists(convertedFileLoc) == False
+    assert not os.path.exists(convertedFileLoc)
     # convert the docx file to a pdf file and return the location of the pdf
     output = convertDocx(fileLoc)
     # check if there now is a converted file
-    assert os.path.exists(convertedFileLoc) == True
+    assert os.path.exists(convertedFileLoc)
     # check if the output is the location of the converted file
     assert output == convertedFileLoc
     # remove the converted file for repeated testing

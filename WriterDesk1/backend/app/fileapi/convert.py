@@ -1,6 +1,6 @@
 import os
 from fpdf import FPDF
-import aspose.words as aw
+from pypandoc import convert_file
 
 def convertDocx(filePath):
     '''
@@ -16,8 +16,7 @@ def convertDocx(filePath):
     '''
     newPath = filePath.replace(".docx", ".pdf")
     if not os.path.isfile(newPath):
-        doc = aw.Document(filePath)
-        doc.save(newPath)
+        convert_file(filePath, 'latex', outputfile=newPath)
     return newPath
 
 def convertTxt(filePath):
