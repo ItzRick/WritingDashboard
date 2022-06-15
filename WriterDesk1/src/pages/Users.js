@@ -20,9 +20,13 @@ const columns: GridColDef[] = [
     editable: false,
   },
   {
+    //DOORGEVEN VAN PARAM WERKT NIET
     field: 'role',
     headerName: 'Role',
     editable: false,
+    renderCell: (params) => {
+      return <div><RoleDialog userRole={"TEKST HIER"}></RoleDialog></div> 
+    }
   },
   {
     field: "actions",
@@ -65,20 +69,6 @@ const Users = () => {
         setTitle('Users');
     });
 
-    const [open, setOpen] = useState(false);
-    const [selectedValue, setSelectedValue] = useState('');
-  
-    const handleClickOpen = () => {
-      setOpen(true);
-    }
-
-    const handleClose = (value) => {
-      setOpen(false);
-      if (value) {
-        setSelectedValue(value);
-      }
-    };
-
     return (
         <>
             <div style={{height: '80vh', maxHeight: '400px'}} >
@@ -92,14 +82,6 @@ const Users = () => {
                 />
             </div>
             {/* dialog for changing role */}
-            <IconButton variant="outlined" onClick={handleClickOpen}>
-            <PersonOutlineIcon/>
-            </IconButton>
-            <RoleDialog
-              selectedValue={selectedValue}
-              open={open}
-              onClose={handleClose}
-            />
         </>
     );
 }

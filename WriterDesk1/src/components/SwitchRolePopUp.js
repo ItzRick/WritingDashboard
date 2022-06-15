@@ -17,16 +17,13 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { AdminPanelSettingsOutlined, BiotechOutlined, SchoolOutlined } from '@mui/icons-material';
 
-/**
- * Popup with button
- * 
- * @param {func} func function activated when main button is clicked
- * 
- * @returns popup with button for upload page
- */
-function RoleDialog(props) {
-    const {onClose, selectedValue, open} = props;
-    const [value, setValue] = useState(selectedValue);
+const RoleDialog = ({userRole}) => {
+    const[open, setOpen] = useState(false);
+    const [value, setValue] = useState('');
+
+    const onClose = () => {
+        setOpen(false);
+    }
     
     const handleCancel = () => {
         onClose();
@@ -40,8 +37,13 @@ function RoleDialog(props) {
         setValue(value);
     }
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    }
+
     return (
         <>
+            {userRole}
             <Dialog
                 open={open}
 
