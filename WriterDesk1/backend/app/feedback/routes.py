@@ -9,6 +9,5 @@ def generateFeedback():
     file = Files.query.filter_by(id=fileId).first()
     if file == None: 
         return f'The file with id {fileId} can not be found in the database.', 400
-    print(file.path)
     genFeedback(file)
     return 'Feedback has been generated.', 200
