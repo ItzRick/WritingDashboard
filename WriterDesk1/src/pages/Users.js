@@ -1,10 +1,11 @@
 import { useOutletContext } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
+import RoleDialog from "./../components/SwitchRolePopUp";
 
 
 /**
@@ -63,6 +64,19 @@ const Users = () => {
     useEffect(() => {
         setTitle('Users');
     });
+
+    const [open, setOpen] = useState(false);
+    const [selectedValue, setSelectedValue] = useState('');
+  
+    const handleClickOpen = () => {
+      setOpen(true);
+    }
+
+    const handleClose = (value) => {
+      setOpen(false);
+      setSelectedValue(value);
+    };
+
     return (
         <>
             <div style={{height: '80vh', maxHeight: '400px'}} >
@@ -75,6 +89,15 @@ const Users = () => {
                   disableSelectionOnClick
                 />
             </div>
+            {/* dialog for changing role */}
+            <IconButton variant="outlined" onClick={handleClickOpen}>
+            <PersonOutlineIcon/>
+            </IconButton>
+            <RoleDialog
+              selectedValue={selectedValue}
+              open={open}
+              onClose={handleClose}
+            />
         </>
     );
 }
