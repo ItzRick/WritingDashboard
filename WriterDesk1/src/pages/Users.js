@@ -24,14 +24,6 @@ import "../css/main.css";
  * @returns Users Page
  */
 
-const rows = [
-  {id: 1, username: 'Bob', role: 'Researcher'},
-  {id: 2, username: 'Alice', role: 'Researcher'},
-  {id: 3, username: 'Felix', role: 'Student'},
-  {id: 4, username: 'Patrick', role: 'Student'},
-  {id: 5, username: 'Carla', role: 'Researcher'},
-];
-
 const Users = () => {
 
   // State to keep track of the data inside the table:
@@ -52,7 +44,7 @@ const Users = () => {
       minWidth: 250
     },
     {
-      field: 'type',
+      field: 'role',
       headerName: 'Role',
       editable: false,
       flex: 1

@@ -8,13 +8,12 @@ def initialSetup():
     db.drop_all()
     db.create_all()
     # create initial user
-    u = models.User(username='john', password_plaintext='password')
+    u = models.User(username='admin', password_plaintext='admin')
+    u.role = 'admin'
     uploadToDatabase(u)
 
     # comment out:
-    #   - fileapi > fileUpload() > initialSetup()
-    #   - models > Users > __init__() > self.id ...
-
+    #   - loginapi > createToken() > initialSetup()
 
 # Upload the given file to the database of this session
 def uploadToDatabase(toUpload):
@@ -47,5 +46,5 @@ def getFilesByUser(user, sortingAttribute):
     return models.Files.serializeList(files.all())
 
 def getUsers() :
-    users = db.session.query(models.User).filter(models.User.type != 'participant').all()
+    users = db.session.query(models.User).filter(models.User.role != 'participant').all()
     return models.User.serializeList(users)

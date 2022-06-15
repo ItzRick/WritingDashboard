@@ -98,7 +98,6 @@ def fileRetrieve():
                which are sorted based on the sortingAttribute
         file: one of the files of the list files
     '''
-
     # Retrieve list of files that were uploaded by the current user,
     # ordered by the sorting attribute in the request
     if 'user_id' in session or True:

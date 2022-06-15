@@ -37,11 +37,6 @@ def testRetrieveUsers(testClient, initDatabaseEmpty):
         user3 = User(username='Samantha', password_plaintext='bleurgh')
         user3.role = 'participant'
         db.session.add(user3)
-        user4 = User(username='Timothy', password_plaintext='bleeeeeh')
-        db.session.add(user4)
-        user5 = User(username='Bobby', password_plaintext='blaargh')
-
-        db.session.add(user5)
         db.session.commit()
     except:
         db.session.rollback()
@@ -52,21 +47,13 @@ def testRetrieveUsers(testClient, initDatabaseEmpty):
     # Check if we get the correct status_code:
     assert response.status_code == 200
     # Create the expected response:
-    expected_response = [dict(type='user',
-                              id='123',
+    expected_response = [dict(role='user',
+                              id=User.query.filter_by(username='John').first().id,
                               username='John'
                               ),
-                         dict(type='user',
-                              id='124',
+                         dict(role='user',
+                              id=User.query.filter_by(username='Kevin').first().id,
                               username='Kevin'
-                              ),
-                         dict(type='user',
-                              id='126',
-                              username='Timothy'
-                              ),
-                         dict(type='user',
-                              id='127',
-                              username='Bobby'
                               ),
                          ]
 
