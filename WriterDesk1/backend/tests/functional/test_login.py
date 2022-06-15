@@ -21,7 +21,7 @@ def test_valid_login(testClient, initDatabase):
 
 def test_invalid_login(testClient,initDatabase):
     '''
-    Test if login gives a 401 status code with an invalid username and password
+    Test if login gives a 403 status code with an invalid username and password
     Arguments:
         testClient:  The test client we test this for.
         initDatabase: the database instance we test this for.
