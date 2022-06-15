@@ -7,7 +7,7 @@ def testNewUser(newUser):
         Arguments:
             newUser: the user of which the parameters should be checked 
     '''
-    assert newUser.type == "user"
+    assert newUser.role == "user"
     assert newUser.username == "m.l.langedijk@student.tue.nl"
     assert newUser.passwordHash != "wachtwoord"
 
