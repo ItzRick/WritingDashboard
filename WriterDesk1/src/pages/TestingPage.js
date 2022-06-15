@@ -11,10 +11,12 @@ import { useEffect, useState } from "react";
  * @returns Testing Page
  */
 const TestingPage = () => {
+
     return (
-    <>
-    </>
-    )
+        <>
+            TestingPage
+        </>
+    );
 }
 
 

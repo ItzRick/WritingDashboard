@@ -2,6 +2,10 @@ import {
     TextField,
     IconButton,
     Stack,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
 } from "@mui/material";
 import {
     DeleteOutline,
@@ -29,8 +33,8 @@ const Projects = () => {
         setTitle('Projects');
     });
 
-    // TODO remove toyData here and from tableData
-    const toyData = [{
+    // TODO replace with real projects
+    const projects = [{
         id: '0',
         projectName: 'toyProject',
         partCount: '12'
@@ -43,10 +47,24 @@ const Projects = () => {
 
     ]
 
+    // upon first render, set the table data
+    useEffect(() => {
+        // TODO: replace table data with real data
+        setTableData(projects);
+    }, []);
+
+
     //data displayed in the table
-    const [tableData, setTableData] = useState(toyData)
+    const [tableData, setTableData] = useState([])
     //list of selected items
     const [selectedInstances, setSelectedInstances] = useState([])
+    // project selected in download user data
+    const [projectDown, setProjectDown] = useState('');
+
+    // dropdown handler for project add
+    const handleProjDown = (event) => {
+        setProjectDown(event.target.value);
+    };
 
     // columns in data-grid
     const columns = [
@@ -85,87 +103,100 @@ const Projects = () => {
 
     return (
         <>
-            <div style={{ height: '30%' }}>
-                {/* adding projects */}
-                <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
-                    <TextField
-                        sx={{ mr: '1vw', verticalAlign: 'middle' }}
-                        id="projectName"
-                        label={"Project name"}
-                    />
-                    <TextField
-                        sx={{ mr: '1vw', verticalAlign: 'middle' }}
-                        id="partCount"
-                        type='number'
-                        label={"Number of Participants"}
-                    />
-                    <BlueButton style={{ verticalAlign: 'middle' }}>Add project</BlueButton>
-                </div>
-                <div />
-                <div className="topBorder">
-                    {/* downloading user data */}
-                    <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ margin: '1vh', verticalAlign: 'middle' }}>
-                        <DatePicker
-                            sx={{ margin: '1vh', verticalAlign: 'middle' }}
-                            label="Start date"
-                            openTo="day"
-                            views={['year', 'month', 'day']}
-                            value={startData}
-                            onChange={(newDate) => {
-                                setStartData(newDate);
-                            }}
-                            renderInput={(params) => <TextField sx={{ margin: '1vh', verticalAlign: 'middle' }} {...params} />}
-                        />
-                    </LocalizationProvider>
-                    <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ margin: '1vh', verticalAlign: 'middle' }}>
-                        <DatePicker
-                            sx={{ margin: '1vh', verticalAlign: 'middle' }}
-                            label="End date"
-                            openTo="day"
-                            views={['year', 'month', 'day']}
-                            value={endData}
-                            onChange={(newDate) => {
-                                setEndData(newDate);
-                            }}
-                            renderInput={(params) => <TextField sx={{ margin: '1vh', verticalAlign: 'middle' }} {...params} />}
-                        />
-                    </LocalizationProvider>
-                    <TextField
+            {/* adding projects */}
+            <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
+                <TextField
+                    sx={{ mr: '1vw', verticalAlign: 'middle' }}
+                    id="projectName"
+                    label={"Project name"}
+                />
+                <TextField
+                    sx={{ mr: '1vw', verticalAlign: 'middle' }}
+                    id="partCount"
+                    type='number'
+                    label={"Number of Participants"}
+                />
+                <BlueButton idStr='addProject' style={{ verticalAlign: 'middle' }}>Add project</BlueButton>
+            </div>
+            <div />
+            <div className="topBorder">
+                {/* downloading user data */}
+                {/* Select start data */}
+                <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ margin: '1vh', verticalAlign: 'middle' }}>
+                    <DatePicker
                         sx={{ margin: '1vh', verticalAlign: 'middle' }}
-                        id="projectName3"
-                        label={"Project name"}
+                        label="Start date"
+                        openTo="day"
+                        views={['year', 'month', 'day']}
+                        value={startData}
+                        onChange={(newDate) => {
+                            setStartData(newDate);
+                        }}
+                        renderInput={(params) => <TextField sx={{ margin: '1vh', verticalAlign: 'middle' }} {...params} />}
                     />
-                    <BlueButton style={{ margin: '1vh', verticalAlign: 'middle' }}>Download user data</BlueButton>
-                </div>
-                <div className="topBorder">
-                    {/* downloading participants and user data */}
-                    <BlueButton addStyle={{ margin: '1vh', verticalAlign: 'middle', }}>Download participants of selected projects</BlueButton>
-                    <BlueButton addStyle={{ margin: '1vh', verticalAlign: 'middle', }}>Download user data of participants of selected project</BlueButton>
-                </div>
+                </LocalizationProvider>
+                {/* Select end date */}
+                <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ margin: '1vh', verticalAlign: 'middle' }}>
+                    <DatePicker
+                        sx={{ margin: '1vh', verticalAlign: 'middle' }}
+                        label="End date"
+                        openTo="day"
+                        views={['year', 'month', 'day']}
+                        value={endData}
+                        onChange={(newDate) => {
+                            setEndData(newDate);
+                        }}
+                        renderInput={(params) => <TextField sx={{ margin: '1vh', verticalAlign: 'middle' }} {...params} />}
+                    />
+                </LocalizationProvider>
+                {/* Project Dropdown */}
+                <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
+                    <InputLabel id="project-down-participants">Project</InputLabel>
+                    <Select
+                        labelId="project-down-participants-label"
+                        id="project-down-participants"
+                        value={projectDown}
+                        label="Project"
+                        onChange={handleProjDown}
+                    >
+                        {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)}
+                    </Select>
+                </FormControl>
+                <BlueButton idStr='downloadUserData' style={{ margin: '1vh', verticalAlign: 'middle' }}>Download user data</BlueButton>
+            </div>
+            <div className="topBorder">
+                {/* downloading participants and user data */}
+                <BlueButton idStr='downloadParticipants' >Download participants of selected projects</BlueButton>
+                <div style={{ paddingLeft: '2vw', display: 'inline' }} />
+                <BlueButton idStr='downloadUserDataForSelectedProject' >Download user data of participants of selected project</BlueButton>
             </div>
             {/* displaying projects */}
-            <DataGrid
-                style={{ height: '70%' }}
-                rows={tableData}
-                columns={columns}
-                pageSize={15}
-                rowsPerPageOptions={[15]}
-                checkboxSelection
-                onSelectionModelChange={e => setSelectedInstances(e)}
-                disableSelectionOnClick
-                components={{
-                    NoRowsOverlay: () => (
-                        <Stack height="100%" alignItems="center" justifyContent="center">
-                            No projects created, please create a project!
-                        </Stack>
-                    ),
-                    Toolbar: () => (
-                        <GridToolbarContainer>
-                            <IconButton><DeleteOutline /></IconButton>
-                        </GridToolbarContainer>
-                    )
-                }}
-            />
+            <div style={{ justifyContent: 'center', display: 'flex' }}>
+                <div style={{ height: '80vh', maxHeight: '400px', width: '50vw' }} >
+                    <DataGrid
+                        style={{ height: '70%' }}
+                        rows={tableData}
+                        columns={columns}
+                        pageSize={15}
+                        rowsPerPageOptions={[15]}
+                        checkboxSelection
+                        onSelectionModelChange={e => setSelectedInstances(e)}
+                        disableSelectionOnClick
+                        components={{
+                            NoRowsOverlay: () => (
+                                <Stack height="100%" alignItems="center" justifyContent="center">
+                                    No projects created, please create a project!
+                                </Stack>
+                            ),
+                            Toolbar: () => (
+                                <GridToolbarContainer>
+                                    <IconButton><DeleteOutline /></IconButton>
+                                </GridToolbarContainer>
+                            )
+                        }}
+                    />
+                </div>
+            </div>
         </>
     );
 }
