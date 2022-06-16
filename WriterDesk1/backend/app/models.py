@@ -37,7 +37,7 @@ class User(db.Model):
     def serializeUser(self):
         dict = {}
         for c in inspect(self).attrs.keys():
-            if not c == 'file':
+            if not c == 'file' and not c == 'click':
                 dict[c] =  getattr(self, c)
         return dict
 
@@ -47,6 +47,7 @@ class User(db.Model):
     
     # relationships
     file = db.relationship('Files', backref='owner', lazy='dynamic', cascade='all,delete')
+    click = db.relationship('Clicks', backref='clicker', lazy='dynamic', cascade='all,delete')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -118,7 +119,7 @@ class Scores(db.Model):
     scoreIntegration = db.Column(db.Numeric(4,2), unique=False, default=None)
 
     def __repr__(self):
-        return '<ScoresExplanations {}>'.format(self.fileId)
+        return '<Scores {}>'.format(self.fileId)
 
 class Explanations(db.Model):
     '''
@@ -160,3 +161,20 @@ class Explanations(db.Model):
             if not c == 'explainedFile':
                 dict[c] = getattr(self, c)
         return dict
+
+class Clicks(db.Model):
+    '''
+        Class to enter scores and explanations related to a file. 
+        Each instance here is one-to-one related to an instance in Files
+        Scores should be between 0 and 10. Additionally, values are rounded to 2 decimals
+        Attributes:
+            userId: 
+            clickId: 
+            timestamp: 
+    '''
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    clickId = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, unique=False, default=datetime.utcnow())
+
+    def __repr__(self):
+        return '<Clicks {}>'.format(self.fileId)
