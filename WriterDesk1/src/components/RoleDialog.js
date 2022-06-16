@@ -19,6 +19,8 @@ import { AdminPanelSettingsOutlined, MoreHorizOutlined, BiotechOutlined, SchoolO
 
 import axios from 'axios';
 import { authHeader } from '../helpers/auth-header';
+import { AuthenticationService } from '../services/authenticationService';
+import { history } from '../helpers/history';
 
 
 /**
@@ -80,6 +82,12 @@ const RoleDialog = ({userRole, userId, userName}) => {
 
     // handle conformation of selection
     const handleOk = () => {
+        if (AuthenticationService.getCurrentUserId() === userId) {
+            if (!window.confirm("You're about to change your own role.\n Do you want to continue?")) {
+                return;
+            }
+        }
+
         onClose(selectedValue);
         // Send request and handle possible error
         ChangeRole(userId, selectedValue.toLowerCase()).catch((error) => {
@@ -87,6 +95,12 @@ const RoleDialog = ({userRole, userId, userName}) => {
             let alertText = "Error while changing role: \n" + error.message;
             alert(alertText);
         });
+
+        if (AuthenticationService.getCurrentUserId() === userId && selectedValue !== 'Admin'){
+            AuthenticationService.logout();
+            history.push("/Login");
+            window.location.reload();
+        }
      };
     
      // handle cancel of selection
