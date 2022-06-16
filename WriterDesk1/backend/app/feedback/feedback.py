@@ -13,7 +13,25 @@ from nltk.corpus import stopwords
 
 def genFeedback(file):
     '''
-        
+        Generate the feedback for a certain file, by calling the methods to retrieve the text, 
+        generate the feedback for the four different skill categories. Next, add this feedback including the explanations
+        to the database. 
+        arguments:
+            file: File we need to generate this feedback for.
+        attributes:
+            fileId: fileId of the file we need to generate this feedback for.
+            fileType: fileType, of the file we generate this feedback for. 
+            path: Path of the file we generate this feedback for.
+            userId: userId of the user we generate this feedback for. 
+            references: References as retrieved by any of the get...Text methods.
+            text: Text as retrieved by any of the get...Text methods.
+            englishStopwords: English stopwords, as returned by the getEnglishStopwords method.
+            mistakesStyle: explanations for the mistakes for the style, as returned by the feedbackLanguageStyle method.
+            scoreStyle: Score for the style, as returned by the feedbackLanguageStyle method.
+            scoreContent: Score for the source integration and content, as returned by the sourceIntegration method.
+            explanationContent: Explanations for the source integration and content, as retrieved by the sourceIntegration method.
+            scoreStructure: Score for the structure, as returned by the getStructureScore method.
+            explanationsStructures, as returned by the getStructureScore method.
     '''
     fileId = file.id
     fileType = file.fileType
