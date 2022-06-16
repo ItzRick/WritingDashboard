@@ -176,4 +176,4 @@ class Clicks(db.Model):
     timestamp = db.Column(db.DateTime, unique=False, default=datetime.utcnow())
 
     def __repr__(self):
-        return '<Clicks {}>'.format(self.fileId)
+        return '<Clicks {}>'.format(self.userId, self.clickId)
