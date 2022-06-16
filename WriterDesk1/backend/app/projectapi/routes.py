@@ -1,7 +1,10 @@
+import os
+import shutil
+
 from app.projectapi import bp
 
-from flask import request, jsonify
-from app.models import Projects, User
+from flask import request, jsonify, current_app
+from app.models import Projects, User, ParticipantToProject
 
 from app.database import uploadToDatabase, removeFromDatabase, getParticipantsByResearcher, getProjectsByResearcher
 from app import generateParticipants as gp
@@ -65,6 +68,8 @@ def deleteProject():
     # Get the data as sent by the react frontend:
     projectIds = request.form.getlist('projectId')
 
+    DeleteAllFilesFromProject(projectIds)  # Remove all files corresponding to the project ids from the server
+
     for projectId in projectIds:
         # Retrieve the row that needs to be removed
         projectToBeRemoved = Projects.query.filter_by(id=projectId).first()
@@ -100,4 +105,25 @@ def viewProjectsOfUser():
         return 'researcher has no projects', 404
 
     return jsonify(projects)
-    
+
+
+def DeleteAllFilesFromProject(projectIds):
+    '''
+    This function handles the deletion of files corresponding to all users from a project.
+    Attributes:
+        users: Users corresponding to project removed
+        folderToRemove: path of folder that needs to be removed
+    Arguments:
+        projectIds: List of project id's as given by the frontend
+    '''
+
+    for projectId in projectIds:
+        # Retrieve users of project with project id
+        users = ParticipantToProject.query.filter_by(projectId=projectId).all()
+        for user in users:
+            try:
+                folderToRemove = os.path.join(current_app.config['UPLOAD_FOLDER'], str(user.userId))
+                shutil.rmtree(folderToRemove)  # Try to remove folder recursively
+            except FileNotFoundError:
+                print('Folder not found')
+    return 'success', 200

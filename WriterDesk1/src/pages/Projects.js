@@ -148,13 +148,12 @@ const Projects = () => {
     const deleteProject = (e, projId) => {
         setShowDeleteDialog(false);  // Don't show dialog anymore
 
-        // Url of the server:
-        const url = 'https://127.0.0.1:5000/projectapi/deleteProject'
-        // Formdata for the backend call, to which the id has been added:
+        // Formdata for the project id to be added:
         const formData = new FormData();
         formData.append('projectId', projId);
-        // Make the call to the backend:
-        axios.delete(url, { data: formData }).then(response => {
+
+        // Delete project from all tables in database and delete files from the server:
+        axios.delete('https://127.0.0.1:5000/projectapi/deleteProject', { data: formData }).then(response => {
             //TODO: Set table data
         });
     }
@@ -177,16 +176,16 @@ const Projects = () => {
     const deleteSelectedProjects = (e) => {
         setShowDeleteDialogMultiple(false);  // Don't show confirmation dialog anymore
 
-        // Url of the server:
-        const url = 'https://127.0.0.1:5000/projectapi/deleteProject'
         // Create a new formdata:
         const formData = new FormData();
         // For each of the selected instances, add this id to the formdata:
         selectedInstances.forEach(id => formData.append('projectId', id));
-        // Make the backend call:
-        axios.delete(url, { data: formData }).then(response => {
+
+        // Delete projects from all tables in database and delete files from the server:
+        axios.delete('https://127.0.0.1:5000/projectapi/deleteProject', { data: formData }).then(response => {
             //TODO: Set table data
         });
+
     }
 
 
