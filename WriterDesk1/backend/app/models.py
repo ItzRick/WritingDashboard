@@ -32,7 +32,6 @@ class User(db.Model):
         self.role = role
         self.username = username
         self.set_password(password_plaintext)
-        # self.id = 123 # Activate me together with initialSetup() in fileapi > uploadfile() # TODO remove before deploy
 
     def serializeUser(self):
         dict = {}
@@ -171,9 +170,13 @@ class Clicks(db.Model):
             clickId: 
             timestamp: 
     '''
-    userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    clickId = db.Column(db.Integer, primary_key=True)
+    clickId = db.Column(db.Integer, primary_key=True, auto_incement=True)
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
     timestamp = db.Column(db.DateTime, unique=False, default=datetime.utcnow())
+
+    def __init__(self, userId, url):
+        self.userId = userId
+        self.url = url
 
     def __repr__(self):
         return '<Clicks {}>'.format(self.userId, self.clickId)
