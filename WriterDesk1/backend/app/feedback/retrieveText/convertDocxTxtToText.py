@@ -1,13 +1,6 @@
-# import fitz
-# import os
 from docx import Document
-# import pdfplumber
 import re
 import bs4 as bs
-# import regex
-# from collections import Counter
-# from copy import deepcopy
-
 
 # Methods used for extracting text from txt and docx files and converting them to strings or text files.
 # Usage: call extract_string_from_file(path) or convert_file_to_txt(pathIn, pathOut) in a try/catch to catch type/value errors

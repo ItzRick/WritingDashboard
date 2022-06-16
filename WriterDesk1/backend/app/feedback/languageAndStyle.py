@@ -7,7 +7,7 @@ def feedbackLanguageStyle(text):
     Generates feedback on the language & style of the input string.
     This includes grammar mistakes and spelling mistakes.
     Attributes:
-        tool: LanguageTool object to generate feedback.
+        languageToolEn: LanguageTool object to generate feedback, this is a single object in the application.
         matches: List of Match objects containing the feedback.
         match: Match object containing the feedback.
         prevMatchEnd: End character of previous match in loop.
@@ -17,7 +17,6 @@ def feedbackLanguageStyle(text):
         context: context of mistake text.
     Arguments:
         text: Input string that will be given feedback on.
-        tool: Language tool used to give the feedback on the language and style.
     Returns:
         mistakes: List of mistakes in text including matched text, context,
                   occurrence of text in context, explanation, and possible replacements.

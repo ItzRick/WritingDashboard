@@ -15,7 +15,9 @@ def convertDocx(filePath):
             newPath: The location of the newly made pdf file.
     '''
     newPath = filePath.replace(".docx", ".pdf")
+    # If the file is not yet converted:
     if not os.path.isfile(newPath):
+        # Convert the file by using a libreoffice subprocess, that is making an libreoffice call to convert this docx file to a pdf:
         p = Popen(['soffice', '--headless', '--convert-to', 'pdf', '--outdir', os.path.split(filePath)[0], filePath])
         p.communicate()
     return newPath

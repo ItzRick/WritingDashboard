@@ -88,6 +88,7 @@ def testGenFeedbackDocxFile(testClient, initDatabase):
     # Get all explanations for this file from the database.
     explanations = Explanations.query.filter_by(fileId = file.id).all()
     # Check if all information about the style mistakes mistake has been added to this database correctly:
+    assert len(explanations) == 8
     assert explanations[0].mistakeText == 'a'
     assert explanations[0].explanation == 'Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.'
     assert explanations[0].type == 0
@@ -175,6 +176,7 @@ def testGenFeedbackPdfFile(testClient, initDatabase):
     # Get all explanations for this file from the database.
     explanations = Explanations.query.filter_by(fileId = file.id).all()
     # Check if all information about the style mistakes mistake has been added to this database correctly:
+    assert len(explanations) == 8
     assert explanations[0].mistakeText == 'a'
     assert explanations[0].explanation == 'Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.'
     assert explanations[0].type == 0
@@ -262,6 +264,7 @@ def testGenFeedbackTxtFile(testClient, initDatabase):
     # Get all explanations for this file from the database.
     explanations = Explanations.query.filter_by(fileId = file.id).all()
     # Check if all information about the style mistakes mistake has been added to this database correctly:
+    assert len(explanations) == 10
     assert explanations[0].mistakeText == 'a'
     assert explanations[0].explanation == 'Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.'
     assert explanations[0].type == 0

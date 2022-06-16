@@ -12,9 +12,9 @@ from nltk.corpus import stopwords
 
 def genFeedback(file):
     '''
-        Generate the feedback for a specific file, that is run the methods to generate the feedback for the file, for each
-        of the four categories. To do this, we first retrieve the text by means of the get...Text methods. Lastly, we 
-        run the getMistakeInformation... methods and add these explanations of the mistakes to the database.
+        Generate the feedback for a specific file, that is run the methods to generate the explanations and scores for 
+        the file, for each of the four categories. To do this, we first retrieve the text by means of the get...Text methods. 
+        Lastly, we run the getMistakeInformation... methods and add these explanations of the mistakes to the database.
         attributes:
             fileId: The file Id of the file we are currently generating feedback for.
             fileType: The FileType of the file we are currently generating feedback for.
@@ -74,7 +74,14 @@ def setFeedbackStyle(mistakesStyle, path, fileId):
         category and upload these explanations to the database.
         attributes:
             feedbacks: List with feedback as retrieved by the getMistakesInformationStyle method.
-            feedback: Single feedback instance from the feedbacks list.
+            X1: The first x coordinate as retrieved from the getMistakesInformationStyle method.
+            X2: The second x coordinate as retrieved from the getMistakesInformationStyle method.
+            Y1: The first y coordinate as retrieved from the getMistakesInformationStyle method.
+            Y1: The second y coordinate as retrieved from the getMistakesInformationStyle method.
+            type: The type of the explanation as retrieved from the getMistakesInformationStyle method.
+            expl: The explanation text as retrieved from the getMistakesInformationStyle method.
+            mistake: The mistake text as retrieved from the getMistakesInformationStyle method.
+            replacements: Possible replacements as retrieved from the getMistakesInformationStyle method.
         arguments: 
             mistakesStyle: mistakes as gotten from the feedbackLanguageStyle method.
             path: path corresponding to the pdf file, the coordinates of the mistakes should be retrieved from.
@@ -83,24 +90,19 @@ def setFeedbackStyle(mistakesStyle, path, fileId):
     # Retrieve the mistakes with locations and possible replacements from the getMistakesInformationStyle method:
     feedbacks = getMistakesInformationStyle(mistakesStyle, path)
     # For each mistake, add it to the database together with required information:
-    for feedback in feedbacks:
-        # Get the replacements:
-        replacements = feedback[7]
+    for (X1, Y1, X2, Y2, type, expl, mistake, replacements) in feedbacks:
+        # Initialize the replacements to the empty string:
+        replacement1 = replacement2 = replacement3 = ''
         # Add as much replacements as required, at most 3 and at least 0:
-        if len(replacements) == 0:
-            setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
-            type = feedback[4], explanation = feedback[5], mistakeText = feedback[6])
-        elif len(replacements) == 1:
-            setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
-            type = feedback[4], explanation = feedback[5], mistakeText = feedback[6], replacement1 = replacements[0])
-        elif len(replacements) == 2:
-            setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
-            type = feedback[4], explanation = feedback[5], mistakeText = feedback[6], replacement1 = replacements[0], 
-            replacement2 = replacements[1])
-        elif len(replacements) == 3:
-            setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
-            type = feedback[4], explanation = feedback[5], mistakeText = feedback[6], replacement1 = replacements[0], 
-            replacement2 = replacements[1], replacement3 = replacements[2])
+        if len(replacements) > 0:
+           replacement1 = replacements[0]
+        if len(replacements) > 1:
+            replacement2 = replacements[1]
+        if len(replacements) > 2:
+            replacement3 = replacements[2]
+        # Upload the actual explanations tot he database:
+        setExplanationDB(X1 = X1, Y1 = Y1, X2 = X2, Y2 = Y2, fileId = fileId, explId = -1, type = type, explanation = expl, 
+        mistakeText = mistake, replacement1 = replacement1, replacement2 = replacement2, replacement3 = replacement3)
 
 def setFeedbackStructure(mistakesStructure, path, fileId):
     '''
@@ -108,7 +110,13 @@ def setFeedbackStructure(mistakesStructure, path, fileId):
         and add each mistake to the database using the setExplanationDB method. 
         attributes:
             mistakes: Mistakes as retrieved by the getMistakesInformationStructure method.
-            mistake: Single mistake from the mistakes list.
+            X1: The first x coordinate as retrieved from the getMistakesInformationStructure method.
+            X2: The second x coordinate as retrieved from the getMistakesInformationStructure method.
+            Y1: The first y coordinate as retrieved from the getMistakesInformationStructure method.
+            Y1: The second y coordinate as retrieved from the getMistakesInformationStructure method.
+            type: The type of the explanation as retrieved from the getMistakesInformationStructure method.
+            expl: The explanation text as retrieved from the getMistakesInformationStructure method.
+            mistake: The mistake text as retrieved from the getMistakesInformationStructure method.
         arguments: 
             mistakesStructure: mistakes as gotten from the getStructureScore method.
             path: path corresponding to the pdf file, the coordinates of the mistakes should be retrieved from.
@@ -117,16 +125,17 @@ def setFeedbackStructure(mistakesStructure, path, fileId):
     # Retrieve the mistakes with locations from the getMistakesInformationStructure method:
     mistakes = getMistakesInformationStructure(mistakesStructure, path)
     # For each mistake, add it to the database together with all required data:
-    for mistake in mistakes:
-        setExplanationDB(X1 = mistake[0], Y1 = mistake[1], X2 = mistake[2], Y2 = mistake[3], fileId = fileId, explId = -1, 
-            type = mistake[4], explanation = mistake[5], mistakeText = mistake[6])
+    for (X1, Y1, X2, Y2, type, expl, mistake) in mistakes:
+        setExplanationDB(X1 = X1, Y1 = Y1, X2 = X2, Y2 = Y2, fileId = fileId, explId = -1, 
+            type = type, explanation = expl, mistakeText = mistake)
 
 
 @cache.memoize(30*24*60*60)
 def getEnglishStopwords():
     ''' 
         Method to retrieve english stop words from the nltk library. Downloads the punkt and stopwords, to be able to use the 
-        word_tokenize method. This is memoized for a month using flask_cache.
+        word_tokenize method. This englishStopwords list as downloaded from nltk is memoized, that is stored, 
+        for a month using flask_cache.
         returns:
             englishStopwords: The english stopwords from the nltk library.
     '''
