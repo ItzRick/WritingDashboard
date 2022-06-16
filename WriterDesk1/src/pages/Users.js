@@ -24,7 +24,7 @@ const columns: GridColDef[] = [
     headerName: 'Role',
     editable: false,
     renderCell: (params) => {
-      return <div><RoleDialog userRole={params.row.role}></RoleDialog></div> 
+      return <div><RoleDialog params={params}></RoleDialog></div> 
     }
   },
   {

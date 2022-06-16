@@ -17,32 +17,56 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { AdminPanelSettingsOutlined, BiotechOutlined, SchoolOutlined } from '@mui/icons-material';
 
-const RoleDialog = ({userRole}) => {
+import axios from 'axios';
+import { authHeader } from '../helpers/auth-header';
+
+const ChangeRole = (userId, newRole) => {
+    const url = 'https://127.0.0.1:5000/loginapi/setRole';
+
+    const formData = new FormData();
+    formData.append('userId', userId);
+    formData.append('newRole', newRole)
+
+    axios.post(url, formData, {
+        headers: authHeader(),
+    }).catch((error) => {
+        console.error(error.response.data);
+    });
+}
+
+const RoleDialog = ({params}) => {
+    const userRole = params.row.role;
+    const userId = params.id;
+
     const[open, setOpen] = useState(false);
     const [value, setValue] = useState(userRole);
+    const [selectedValue, setSelected] = useState(userRole);
 
+    const handleClickOpen = () => {
+        setSelected(value);
+        setOpen(true);
+    }
+    
     const onClose = (value) => {
         setOpen(false);
         if (value) {
             setValue(value);
         }
     }
+
+    const handleListItemClick = (value) => {
+        setSelected(value);
+    }
+
+    const handleOk = () => {
+        onClose(selectedValue);
+        ChangeRole(userId, selectedValue.toLowerCase());
+     };
     
     const handleCancel = () => {
         onClose();
     }
-    
-    const handleOk = () => {
-       onClose(value);
-    };
 
-    const handleListItemClick = (value) => {
-        setValue(value);
-    }
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    }
 
     return (
         <>
@@ -57,7 +81,7 @@ const RoleDialog = ({userRole}) => {
                     {"Set user role"}
                 </DialogTitle>
                 <List>
-                    <ListItem button onClick={() => handleListItemClick('Student')} selected={value === 'student'}>
+                    <ListItem button onClick={() => handleListItemClick('Student')} selected={selectedValue === 'Student'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <SchoolOutlined />
@@ -65,7 +89,7 @@ const RoleDialog = ({userRole}) => {
                         </ListItemAvatar>
                         <ListItemText primary="Student" />
                     </ListItem>
-                    <ListItem button onClick={() => handleListItemClick('Researcher')} selected={value === 'researcher'}>
+                    <ListItem button onClick={() => handleListItemClick('Researcher')} selected={selectedValue === 'Researcher'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <BiotechOutlined />
@@ -73,7 +97,7 @@ const RoleDialog = ({userRole}) => {
                         </ListItemAvatar>
                         <ListItemText primary="Researcher" />
                     </ListItem>
-                    <ListItem button onClick={() => handleListItemClick('Admin')} selected={value === 'admin'}>
+                    <ListItem button onClick={() => handleListItemClick('Admin')} selected={selectedValue === 'Admin'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <AdminPanelSettingsOutlined />
