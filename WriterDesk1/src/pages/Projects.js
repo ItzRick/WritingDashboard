@@ -129,8 +129,8 @@ const Projects = () => {
         // Create project request
         axios.post(`https://localhost:5000/projectapi/setProject`, formData).then(response => {
             const data = {
-                "count": numberOfParticipants,
-                "projectid": 1, //TODO: Change projectId
+                "count": numberOfParticipants,  // Add input of numberOfParticipants
+                "projectid": response.data,  // Get project id from response
             }
             // Add participants request
             axios.post(`https://localhost:5000/projectapi/addparticipants`, data).then(response => {
@@ -197,7 +197,7 @@ const Projects = () => {
                            buttonCancel={<Button style={{color: "red"}} onClick={(e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
               />}
             {showDeleteDialogMultiple &&
-              <AlertDialog title = "Delete projects" text = "Are you sure you want to delete these projects?"
+              <AlertDialog title = "Delete projects" text = "Are you sure you want to delete the selected projects?"
                            buttonAgree={<Button onClick={(e) => {deleteSelectedProjects(e)}}>Yes</Button>}
                            buttonCancel={<Button style={{color: "red"}} onClick={(e) => {setShowDeleteDialogMultiple(false)}}>Cancel</Button>}
               />}

@@ -5,6 +5,7 @@ from app.models import Projects
 
 from app.database import uploadToDatabase, removeFromDatabase
 from app import generateParticipants as gp
+from app import db
 
 @bp.route('/addparticipants', methods=["POST"])
 def addParticipantsToExistingProject():
@@ -41,9 +42,11 @@ def setProject():
     projectIndb = Projects(userId=userId, projectName=projectName)
 
     # Upload row to database
-    uploadToDatabase(projectIndb)
+    db.session.add(projectIndb)
+    db.session.flush()
+    db.session.commit()
 
-    return 'successfully created project', 200
+    return str(projectIndb.id), 200
 
 
 @bp.route('/deleteProject', methods=['DELETE'])
