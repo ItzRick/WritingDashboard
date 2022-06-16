@@ -10,7 +10,7 @@ import {
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
 // routing
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -19,12 +19,17 @@ import React from 'react';
 import "../css/styles.css";
 import "../css/main.css";
 
+import { AuthenticationService } from "../services/authenticationService";
+
 
 /**
  * 
  * @returns Documents Page
  */
 const Documents = () => {
+  const navigate = useNavigate();
+
+
   // State to keep track of the data inside the table:
   const [tableData, setTableData] = useState([])
 
@@ -98,10 +103,20 @@ const Documents = () => {
       sortable: false,
       flex: 1,
       renderCell: (params) => {
-        return <div><IconButton><Grading /></IconButton><IconButton onClick={(e) => { deleteFile(e, params) }}  ><DeleteOutline /></IconButton></div>;
+        return <div><IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton><IconButton onClick={(e) => { deleteFile(e, params) }}  ><DeleteOutline /></IconButton></div>;
       }
     }
   ];
+
+
+  /**
+   * Navigate to the Document page and add the file id as state parameter.
+   * @param {event} _event: event data pushed with the call, not required
+   * @param {params} params: params of the row where the current file is that needs to be navigated to.
+   */
+  const navigateToDoc = (_event, params) => {
+    navigate('/Document', {state: {fileId: params.id}});
+  }
 
 
   /**
@@ -143,9 +158,11 @@ const Documents = () => {
   const setData = () => {
     //   The backend url:
     const url = 'https://127.0.0.1:5000/fileapi/fileretrieve';
-    // The parameters, sortingAttribute and userId need to be changed later:
+    // id of current user
+    const userId = AuthenticationService.getCurrentUserId();
+    // The parameter, sortingAttribute need to be changed later:
     const params = {
-      userId: 123,
+      userId: userId,
       sortingAttribute: '',
     }
     // Make the backend call and set the table data from the response data:

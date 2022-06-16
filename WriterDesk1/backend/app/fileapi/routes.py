@@ -1,13 +1,14 @@
 import os
-# from types import NoneType
 from werkzeug.utils import secure_filename
-from flask import current_app, request, session, jsonify
+from flask import current_app, request, session, jsonify, send_file
 from app.models import Files
 from app.fileapi import bp
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
-from magic import from_buffer 
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup
+from magic import from_buffer
 from datetime import date
 from mimetypes import guess_extension
+from fpdf import FPDF
+from docx2pdf import convert
 
 @bp.route('/upload', methods = ['POST'])
 def fileUpload():
@@ -31,7 +32,8 @@ def fileUpload():
             existing: current existing files with the same userId and fileName 
             associated in the database for the current file that is being handled.
     '''
-    # Retrieve the files as send by the react frontend and give this to the fileUpload function, 
+    # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
+    # Retrieve the files as send by the react frontend and give this to the fileUpload function,
     # which does all the work:
     files = request.files.getlist('files')
     # If the length of the files, as retrieved is 0, no file has been uploaded, indicate with an error message
@@ -50,7 +52,7 @@ def fileUpload():
         isDocx = (fileType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
         isTxt = (fileType == 'text/plain')
         extension = guess_extension(fileType)
-       
+
         # If the filetype is not accepted, indicate this by returning this in a message and a 400 code:
         if (not (isPdf or isDocx or isTxt)):
             return 'Incorrect filetype ' + str(idx + 1), 400
@@ -107,14 +109,14 @@ def fileRetrieve():
         # Put dates in format
         for file in files:
             file['date'] = file.get('date').strftime('%d/%m/%y')
-            
+
         # Return http response with list as json in response body
         return jsonify(files)
     else:
         return 'No user available', 400
 
 @bp.route('/filedelete', methods = ['DELETE'])
-def fileDelete(): 
+def fileDelete():
     '''
     This function handles the deletion of files using the corresponding file id. 
     Attributes: 
@@ -130,7 +132,7 @@ def fileDelete():
         fileToBeRemoved = Files.query.filter_by(id=fileID).first()
         # Check if the file is nonexistent
         # And if so, throw an error message 
-        if fileToBeRemoved == None: 
+        if fileToBeRemoved == None:
             return 'file does not exist in database', 404
         # Retrieve the paths of the file to be removed
         path = fileToBeRemoved.path
@@ -142,13 +144,14 @@ def fileDelete():
             removeFromDatabase(fileToBeRemoved)
             if not os.listdir(basepath):
                 os.rmdir(basepath)
-        else: 
+        else:
             return 'file does not exist', 404
     # Return a success message when done
     return 'succes', 200
 
+
 @bp.route('/searchId', methods = ['GET'])
-def searchId(): 
+def searchId():
     '''
     This function handles making a list of the file ids, 
     such that it can be used later to search for a file. 
@@ -163,3 +166,70 @@ def searchId():
     for file in files:
         list += (str(file.id) + ' ')
     return list, 200
+
+
+@bp.route('/getFileById', methods = ['GET'])
+def getFileById():
+    '''
+    This function handles the retrieval of a single file by the fileId.
+    Attributes:
+        fileId: File id as given by the frontend.
+    Arguments:
+        file: File of the user corresponding to the file id.
+        filedict: Dictionary containing all the attributes of a file.
+    '''
+    # Get the data as sent by the react frontend
+    fileId = request.args.get('fileId')
+
+    # Check if the fileId exists in Files
+    if Files.query.filter_by(id=fileId).first() is None:
+        return 'No file found with fileId', 400
+
+    # Query the correct file
+    file = Files.query.filter_by(id=fileId).first()
+
+    # Create dictionary for the correct file
+    filedict = {
+        "id": file.id,
+        "userId": file.userId,
+        "path": file.path,
+        "filename": file.filename,
+        "filetype": file.fileType,
+        "courseCode": file.courseCode,
+        "date": file.date.strftime('%d/%m/%y')
+    }
+    return filedict, 200
+
+
+@bp.route('/display', methods= ['GET'])
+def displayFile():
+    '''
+        Function to convert a document of type docx or txt to a document of
+        type pdf. And returns this file.
+        Attributes:
+            filepath: the path to the document to be converted.
+            filetype: the type of the document to be converted.
+            pdf: used in making a pdf from a txt file.
+        Return:
+            Take the converted document from the disk and send it.
+    '''
+    filepath = request.args.get('filepath')
+    filetype = request.args.get('filetype')
+    # if the document is a docx file, use the convert method from the docx2pdf module and return the converted document.
+    if filetype == 'docx':
+        if not os.path.isfile(filepath.replace("docx", "pdf")):
+            convert(filepath)
+        return send_file(filepath.replace("docx", "pdf"))
+    # if the document is a txt file, convert it to a pdf by making a new pdf using the contents of the txt file,
+    # then return the converted document.
+    if filetype == 'txt':
+        if not os.path.isfile(filepath.replace("txt", "pdf")):
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=15)
+            f = open(filepath, "r")
+            for x in f:
+                pdf.multi_cell(w=0, h=10, txt = x, align = 'L')
+            pdf.output(filepath.replace("txt", "pdf"))
+        return send_file(filepath.replace("txt", "pdf"))
+    return send_file(filepath)
