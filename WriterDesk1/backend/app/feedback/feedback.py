@@ -19,17 +19,17 @@ def genFeedback(file):
     fileType = file.fileType
     path = file.path
     userId = file.userId
-    references = ''
-    if fileType == '.docx':
-        text = getDOCXText(path)
-        path = convertDocx(path)
-    elif fileType == '.pdf':
-        text, references = getPDFText(path, returnReferences=True)
-    elif fileType == '.txt':
-        text = getTXTText(path)
-        path = convertTxt(path)
-    englishStopwords = getEnglishStopwords()
     try:
+        references = ''
+        if fileType == '.docx':
+            text, references = getDOCXText(path)
+            path = convertDocx(path)
+        elif fileType == '.pdf':
+            text, references = getPDFText(path, returnReferences=True)
+        elif fileType == '.txt':
+            text = getTXTText(path)
+            path = convertTxt(path)
+        englishStopwords = getEnglishStopwords()
         scoreContent, explanationContent = sourceIntegration(text, references, englishStopwords, userId)
         mistakesStyle, scoreStyle = feedbackLanguageStyle(text)
         scoreStructure, explanationsStructure = getStructureScore(text)
@@ -58,21 +58,21 @@ def setFeedbackStyle(mistakesStyle, path, fileId):
     # For each mistake, add it to the database together with required information:
     for feedback in feedbacks:
         # Get the replacements:
-        replacements = feedback[8]
+        replacements = feedback[7]
         # Add as much replacements as required, at most 3 and at least 0:
         if len(replacements) == 0:
             setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
-            type = feedback[5], explanation = feedback[6], mistakeText = feedback[7])
+            type = feedback[4], explanation = feedback[5], mistakeText = feedback[6])
         elif len(replacements) == 1:
             setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
-            type = feedback[5], explanation = feedback[6], mistakeText = feedback[7], replacement1 = replacements[0])
+            type = feedback[4], explanation = feedback[5], mistakeText = feedback[6], replacement1 = replacements[0])
         elif len(replacements) == 2:
             setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
-            type = feedback[5], explanation = feedback[6], mistakeText = feedback[7], replacement1 = replacements[0], 
+            type = feedback[4], explanation = feedback[5], mistakeText = feedback[6], replacement1 = replacements[0], 
             replacement2 = replacements[1])
         elif len(replacements) == 3:
             setExplanationDB(X1 = feedback[0], Y1 = feedback[1], X2 = feedback[2], Y2 = feedback[3], fileId = fileId, explId = -1, 
-            type = feedback[5], explanation = feedback[6], mistakeText = feedback[7], replacement1 = replacements[0], 
+            type = feedback[4], explanation = feedback[5], mistakeText = feedback[6], replacement1 = replacements[0], 
             replacement2 = replacements[1], replacement3 = replacements[2])
 
 def setFeedbackStructure(mistakesStructure, path, fileId):
@@ -92,7 +92,7 @@ def setFeedbackStructure(mistakesStructure, path, fileId):
     # For each mistake, add it to the database together with all required data:
     for mistake in mistakes:
         setExplanationDB(X1 = mistake[0], Y1 = mistake[1], X2 = mistake[2], Y2 = mistake[3], fileId = fileId, explId = -1, 
-            type = mistake[5], explanation = mistake[6], mistakeText = mistake[7])
+            type = mistake[4], explanation = mistake[5], mistakeText = mistake[6])
 
 
 @cache.memoize(30*24*60*60)
