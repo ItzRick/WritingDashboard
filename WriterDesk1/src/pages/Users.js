@@ -84,9 +84,6 @@ const Users = () => {
                   rowsPerPageOptions={[5]}
                   checkboxSelection
                   disableSelectionOnClick
-                  onCellClick={(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
-                    event.defaultMuiPrevented = true;
-                  }}
                 />
             </div>
         </>
