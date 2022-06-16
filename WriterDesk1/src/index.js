@@ -8,7 +8,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { history } from './helpers/history'; // used for redirects
 
 // authentication
-import { ProtectedR, ProtectedA } from './services/ProtectedRoutes';
+import { ProtectedU, ProtectedR, ProtectedA } from './services/ProtectedRoutes';
 
 // theme and style
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -110,14 +110,14 @@ root.render(
           {/* Private part of the router, requires authentication */}
           <Route path='/' element={<Base />}>
             {/* For all users */}
-            <Route name='Settings' path='Settings' element={<Settings />} />
-
-            <Route name='Main' path='Main' element={<Main />} />
-            <Route name='Upload' path='Upload' element={<Upload />} />
-            <Route name='Progress' path='Progress' element={<Progress />} />
-            <Route name='Documents' path='Documents' element={<Documents />} />
-            <Route name='Document' path='Document' element={<Document />} />
-
+            <Route element={<ProtectedU/>}>
+              <Route name='Settings' path='Settings' element={<Settings />} />
+              <Route name='Main' path='Main' element={<Main />} />
+              <Route name='Upload' path='Upload' element={<Upload />} />
+              <Route name='Progress' path='Progress' element={<Progress />} />
+              <Route name='Documents' path='Documents' element={<Documents />} />
+              <Route name='Document' path='Document' element={<Document />} />
+            </Route>
              {/* For researcher users */}
             <Route element={<ProtectedR/>}>
               <Route name='Participants' path='Participants' element={<Participants />} />

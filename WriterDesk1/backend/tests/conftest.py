@@ -99,10 +99,16 @@ def initDatabase(testClient):
 
     user1 = User("Pietje", "Bell")
     user2 = User("Donald", "Duck")
+    admin = User('ad', 'min')
     db.session.add(user1)
     db.session.add(user2)
+    db.session.add(admin)
+    
+    # change adminRole to admin
+    admin.role = 'admin'
 
     db.session.commit()
+
 
     yield   # This is where the testing happens!
     

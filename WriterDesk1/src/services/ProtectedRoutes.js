@@ -5,7 +5,7 @@ import { AuthenticationService } from "./authenticationService";
 /**
  * Check role from user, and authenticate access token
  * 
- * @returns 
+ * @returns Role of current user, if there isn't a current user the user will be send to login page
  */
 const getRole = () => {
     AuthenticationService.checkAuth().catch(() => {
@@ -16,9 +16,21 @@ const getRole = () => {
 }
 
 /**
+ * Load pages when user is logged in
+ * 
+ * @returns protected page when user is logged in, else user will be send to homepage
+ */
+ const ProtectedU = () => {
+    const role = getRole()
+    //set title in parent 'base' 
+    const { setTitle } = useOutletContext();
+    return (role != 'user') ? <Outlet context={{ setTitle }} /> : <Navigate to="/" />;
+}
+
+/**
  * Load pages for researchers when user has correct role
  * 
- * @returns 
+ * @returns protected page when user has access to protected pages, else user will be send to homepage
  */
 const ProtectedR = () => {
     const role = getRole()
@@ -30,7 +42,7 @@ const ProtectedR = () => {
 /**
  * * Load pages for admins when user has correct role
  * 
- * @returns 
+ * @returns protected page when user has access to protected pages, else user will be send to homepage
  */
 const ProtectedA = () => {
     const role = getRole();
@@ -39,4 +51,4 @@ const ProtectedA = () => {
     return (role === 'admin') ? <Outlet context={{ setTitle }}/> : <Navigate to="/" />;
 }
 
-export {ProtectedR, ProtectedA};
+export {ProtectedU, ProtectedR, ProtectedA};
