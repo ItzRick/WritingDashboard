@@ -22,11 +22,17 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Install libreoffice
+      run: |
+        sudo apt-get install -y libreoffice
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install pytest pytest-cov
         if [ -f WriterDesk1/requirements.txt ]; then pip install -r WriterDesk1/requirements.txt; fi
+    - name: Test with pytest
+      run: |
+        pytest
     - name: Test with pytest
       run: |
         pytest --junitxml=pytest.xml --cov=app --cov-report=term-missing --cov-report=xml > pytest-coverage.txt
