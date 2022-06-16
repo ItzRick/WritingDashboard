@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
@@ -13,3 +14,4 @@ class Config(object):
     UPLOAD_FOLDER = os.path.join(basedir, "saved_documents")
     #authentication
     JWT_SECRET_KEY = "super-secret"  # TODO CHANGE SECRET KEY
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=4)

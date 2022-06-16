@@ -20,6 +20,8 @@ import React from 'react';
 import "../css/styles.css";
 import "../css/main.css";
 
+import { AuthenticationService } from "../services/authenticationService";
+
 
 /**
  * 
@@ -157,9 +159,11 @@ const Documents = () => {
   const setData = () => {
     //   The backend url:
     const url = 'https://127.0.0.1:5000/fileapi/fileretrieve';
-    // The parameters, sortingAttribute and userId need to be changed later:
+    // id of current user
+    const userId = AuthenticationService.getCurrentUserId();
+    // The parameter, sortingAttribute need to be changed later:
     const params = {
-      userId: 123,
+      userId: userId,
       sortingAttribute: '',
     }
     // Make the backend call and set the table data from the response data:

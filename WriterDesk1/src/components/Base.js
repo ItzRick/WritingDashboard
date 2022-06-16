@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 // components
@@ -31,7 +31,8 @@ import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 
 // routing
 import { Link, Outlet } from 'react-router-dom';
-
+import { history } from '../helpers/history';
+import { AuthenticationService } from '../services/authenticationService';
 
 //Width of the opened drawer
 const drawerWidth = 240;
@@ -132,15 +133,15 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
  * Makes the BasePage
  * 
  * @param {bool} enableNav - The navigation drawer, on the left, is visible
- * @param {bool} researcher - The user is a researcher
- * @param {bool} admin - The user is an admin
  * @returns Base page for logged in user
  */
 const Base = ({
   enableNav = true,
-  researcher = true,
-  admin = true,
 }) => {
+
+  const [admin, setAdmin] = useState(false); // true when user has admin rights
+  const [researcher, setResearcher] = useState(false); // true when user has researcher rights
+
   //handle opening and closing the drawer (left side menu)
   const [open, setOpen] = useState(false);
   const handleDrawer = () => {
@@ -152,6 +153,23 @@ const Base = ({
 
   // general theme, defined in index.js
   const theme = useTheme();
+
+  // give rights depending on the role of the user that is logged in
+  // manage admin and researcher sidebar visibility
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (user === null) {
+      history.push("/Login");
+      window.location.reload();
+    } else {
+      if (user.role === 'admin') {
+        setAdmin(true);
+      }
+      if (user.role === 'researcher' || user.role === 'admin') {
+        setResearcher(true); 
+      }
+    }
+  },[]);
 
   return (
     <Box sx={{ display: 'flex' }} color="textPrimary" className='baseRoot'>
