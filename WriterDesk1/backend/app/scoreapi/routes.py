@@ -168,9 +168,11 @@ def setExplanation():
     replacement2= request.form.get('replacement2')
     replacement3= request.form.get('replacement3')
 
-    isSuccesful, message = setExplanationDB(fileId, explId, type, explanation, mistakeText, X1, X2, Y1, Y2, replacement1, replacement2, replacement3)
+    # Make the call to the backend function and retrieve if this is successful or not and the message:
+    isSuccessful, message = setExplanationDB(fileId, explId, type, explanation, mistakeText, X1, X2, Y1, Y2, replacement1, replacement2, replacement3)
 
-    if isSuccesful:
+    # Return message and the correct status code:
+    if isSuccessful:
         return message, 200
     else: 
         return message, 400
