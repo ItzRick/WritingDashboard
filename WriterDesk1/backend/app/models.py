@@ -95,7 +95,7 @@ class Files(db.Model):
     def __repr__(self):
         return '<Files {}>'.format(self.filename)
 
-class ParticipantToProject(db.Model, Serializer):
+class ParticipantToProject(db.Model):
     '''
         Model containing user id's and project id's, linking a participant to a research project.
         Attributes:
