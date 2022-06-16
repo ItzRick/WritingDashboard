@@ -30,7 +30,7 @@ def testSetPassword(testClient, initDatabase):
     # test response data
     response = testClient.post('/loginapi/setPassword', json=data, headers = {"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
-    assert response.data == b'success'
+    assert response.data == b'Successfully changed password!'
     assert user.check_password(newPass)
 
 def testSetPasswordIncorrectGiven(testClient, initDatabase):
@@ -62,6 +62,6 @@ def testSetPasswordIncorrectGiven(testClient, initDatabase):
     # test response data:
     response = testClient.post('/loginapi/setPassword', json=data, headers = {"Authorization": "Bearer " + access_token})
     assert response.status_code == 403
-    assert response.data == b'password incorrect'
+    assert response.data == b'Current password is incorrect!'
     # Check if the password is indeed not updated:
     assert user.check_password('Bell')

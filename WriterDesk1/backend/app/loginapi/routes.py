@@ -173,7 +173,7 @@ def setPassword():
     if current_user.check_password(oldPassword):
         current_user.set_password(newPassword)
     else:
-        return 'Current password is incorrect', 403
+        return 'Current password is incorrect!', 403
     # update the database
     db.session.commit()
     return 'Successfully changed password!'
