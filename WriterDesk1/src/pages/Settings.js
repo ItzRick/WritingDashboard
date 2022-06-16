@@ -1,5 +1,6 @@
 // materials
 import {Button, FormControlLabel, Radio, RadioGroup, TextField, Typography} from "@mui/material";
+import BlueButton from "./../components/BlueButton";
 
 // routing
 import { useOutletContext } from 'react-router-dom';
@@ -20,6 +21,8 @@ const Settings = () => {
     return (
         <>
             <div className='title'>
+                <BlueButton> Log out </BlueButton>
+                <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Data setting
                 </Typography>

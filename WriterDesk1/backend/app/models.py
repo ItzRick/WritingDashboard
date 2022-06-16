@@ -32,7 +32,6 @@ class User(db.Model):
         self.role = role
         self.username = username
         self.set_password(password_plaintext)
-        # self.id = 123 # Activate me together with initialSetup() in fileapi > uploadfile() # TODO remove before deploy
 
     def serializeUser(self):
         dict = {}
