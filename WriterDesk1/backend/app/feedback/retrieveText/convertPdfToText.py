@@ -15,7 +15,7 @@ from app.feedback.retrieveText.convertDocxTxtToText import getTXTText, getDOCXTe
 # All paths should be absolute paths
 
 
-def getPDFText(path, returnReferences=False, includeTables=False, includeCaptions=False, includeLists=True):
+def getPDFText(path, returnReferences=False, returnReferencesText=False, includeTables=False, includeCaptions=False, includeLists=True):
     """
     Retrieves text from a pdf file at path and returns a string with the text.
     If returnReferences is True, also returns a string with the references.
@@ -89,7 +89,7 @@ def getPDFText(path, returnReferences=False, includeTables=False, includeCaption
         # Invalid file or filename
         print("caught", repr(e), "when calling getPDFText")
 
-    text = postProcessText(text)
+    text = postProcessText(text, returnReferencesText)
     #Split references
     referenceSplit = regex.split(r"\n\P{L}*((?i)references|(?i)bibliography)[\n\s]", text)
     if len(referenceSplit) > 1:
@@ -214,7 +214,7 @@ def getFrequencyX(doc):
                     xlist.append(line["bbox"][0])
     return Counter(xlist)
 
-def postProcessText(text):  
+def postProcessText(text, returnReferences):  
     """
     Filters string on hyphenated words, number references, empty lines, excess spaces and in-text citations
     using regular expressions. Replaces new lines with double new lines for consistency with docx and txt files
@@ -238,9 +238,10 @@ def postProcessText(text):
     #Remove Excess spaces
     text = regex.sub(r" ( )+", " ", text)
     #Remove in-text citations
-    oneSource = r"([^\)]*(\n[^\)]*)?,[\s\n]*)?(\d{4}|n\.d\.)"
-    multipleSources = r"(("+ oneSource +r"|\setc\.)(;[\s\n]*)?)+"
-    text = regex.sub(r"(?<=[^\.])\s\((" + oneSource + "|" + multipleSources + r")\)", "", text)
+    if not returnReferences:
+        oneSource = r"([^\)]*(\n[^\)]*)?,[\s\n]*)?(\d{4}|n\.d\.)"
+        multipleSources = r"(("+ oneSource +r"|\setc\.)(;[\s\n]*)?)+"
+        text = regex.sub(r"(?<=[^\.])\s\((" + oneSource + "|" + multipleSources + r")\)", "", text)
     #Replace new lines with double new lines
     text = regex.sub(r"\n+", r"\n\n", text).strip()
     return text

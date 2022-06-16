@@ -32,6 +32,7 @@ def genFeedback(file):
             explanationContent: Explanations for the source integration and content, as retrieved by the sourceIntegration method.
             scoreStructure: Score for the structure, as returned by the getStructureScore method.
             explanationsStructures, as returned by the getStructureScore method.
+            textStructure: text for the getStructureScore method, including possible in-text references, which could be removed. 
     '''
     fileId = file.id
     fileType = file.fileType
@@ -42,15 +43,19 @@ def genFeedback(file):
         if fileType == '.docx':
             text, references = getDOCXText(path)
             path = convertDocx(path)
+            textStructure = text
         elif fileType == '.pdf':
+            textStructure, references = getPDFText(path, returnReferencesText=True, returnReferences=True)
             text, references = getPDFText(path, returnReferences=True)
         elif fileType == '.txt':
             text = getTXTText(path)
             path = convertTxt(path)
+            textStructure = text
+        print(text)
         englishStopwords = getEnglishStopwords()
-        scoreContent, explanationContent = sourceIntegration(text, references, englishStopwords, userId)
         mistakesStyle, scoreStyle = feedbackLanguageStyle(text)
-        scoreStructure, explanationsStructure = getStructureScore(text)
+        scoreStructure, explanationsStructure = getStructureScore(textStructure)
+        scoreContent, explanationContent = sourceIntegration(text, references, englishStopwords, userId)
         setScoreDB(fileId, scoreStyle, -2, scoreStructure, scoreContent)
         setFeedbackStyle(mistakesStyle, path, fileId)
         setFeedbackStructure(explanationsStructure, path, fileId)

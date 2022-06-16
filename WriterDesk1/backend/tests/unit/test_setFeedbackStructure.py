@@ -14,6 +14,8 @@ def testSetFeedbackStructure(testClient, initDatabase):
             BASEPATH: Path of the current test_setFeedbackStructure.py file.
             fileLoc: Location of the file we test this for.
             explanations: Database for the current file, containing explanations, as retrieved from the database.
+            doc: The file opened by fitz.
+            page: page of the document as opened by fitz.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -43,7 +45,7 @@ def testSetFeedbackStructure(testClient, initDatabase):
     assert explanations[0].type == 2
     assert explanations[1].mistakeText == 'Short 2'
     assert explanations[1].explanation == explanationText
-    assert explanations[0].type == 2
+    assert explanations[1].type == 2
     # Check if the coordinates of the mistakes have also been found correctly:
     doc = fitz.open(fileLoc)
     page = doc.load_page(0)

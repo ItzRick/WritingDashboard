@@ -64,6 +64,8 @@ def testSetFeedbackStyleOneAlternative(testClient, initDatabase):
             BASEPATH: Path of the current test_setFeedbackStyle.py file.
             fileLoc: Location of the file we test this for.
             explanations: Database for the current file, containing explanations, as retrieved from the database.
+            doc: The file opened by fitz.
+            page: page of the document as opened by fitz.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -116,6 +118,8 @@ def testSetFeedbackStyleTwoAlternatives(testClient, initDatabase):
             BASEPATH: Path of the current test_setFeedbackStyle.py file.
             fileLoc: Location of the file we test this for.
             explanations: Database for the current file, containing explanations, as retrieved from the database.
+            doc: The file opened by fitz.
+            page: page of the document as opened by fitz.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -170,6 +174,8 @@ def testSetFeedbackStyleThreeAlternatives(testClient, initDatabase):
             BASEPATH: Path of the current test_setFeedbackStyle.py file.
             fileLoc: Location of the file we test this for.
             explanations: Database for the current file, containing explanations, as retrieved from the database.
+            doc: The file opened by fitz.
+            page: page of the document as opened by fitz.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
