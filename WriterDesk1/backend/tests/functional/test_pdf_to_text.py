@@ -195,7 +195,7 @@ def testPostProcessText(testClient):
 
     del testClient
     inputText = "First [1] sen- \ntences are hard (Source, 2022) \n  \nSo now you know "
-    output = postProcessText(inputText)
+    output = postProcessText(inputText, False)
     assert output == "First sentences are hard \n\nSo now you know"
 
 def testGetLineText(testClient):

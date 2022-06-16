@@ -163,7 +163,7 @@ class Explanations(db.Model):
             Y2: Y of the bottom left corner of the boxing rectangle
             replacement1..3: Three possible replacements for the mistakeText
     '''
-    fileId      = db.Column(db.Integer, db.ForeignKey('files.id'), unique=True, index=True)
+    fileId      = db.Column(db.Integer, db.ForeignKey('files.id'), index=True)
     explId      = db.Column(db.Integer, primary_key=True, autoincrement=True)
     type        = db.Column(db.Integer, default=-1)
     explanation = db.Column(db.String, default='')

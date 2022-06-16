@@ -214,7 +214,7 @@ def displayFile():
     '''
     filepath = request.args.get('filepath')
     filetype = request.args.get('filetype')
-    # if the document is a docx file, use the convert method from the docx2pdf module and return the converted document.
+    # if the document is a docx file, convert using the convertDocx module and return the converted document.
     if filetype == 'docx':
         newPath = convertDocx(filepath)
         return send_file(newPath)

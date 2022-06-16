@@ -62,8 +62,13 @@ def calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsReferences, num
             score: Score for this number of sources, the number of paragraphs and the percentage of words also occurring in the sources.
             explanation: General explanation for this score as string.
     '''
+    # If there are no sources, we get a standard of only a 0 as max score:
+    if numSources == 0:
+        score = 0
+        explanation = (f'Your score for source integration and content is {score}. You only used {numSources} sources ' + 
+        f'in {numParagraphs} paragraphs of text. Try adding more sources.' )
     # If there are not at least 1 source per 3 paragraphs, set the score according to the number of paragraphs per source:
-    if ceil(numParagraphs / numSources)  > 3:
+    elif ceil(numParagraphs / numSources)  > 3:
         if ceil(numParagraphs / numSources) > 5:
             score = 0
         elif ceil(numParagraphs / numSources)  > 4:
@@ -102,8 +107,11 @@ def calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs):
             score: Score for this number of sources and number of paragraphs.
             explanation: General explanation for this score as string.
     '''
+    # If there are no sources, we get a standard of only a 0 as max score:
+    if numSources == 0:
+        score = 0
     # Calculate the score:
-    if ceil(numParagraphs / numSources)  > 5:
+    elif ceil(numParagraphs / numSources)  > 5:
         score = 0
     elif ceil(numParagraphs / numSources)  > 4:
         score = 2
@@ -307,8 +315,12 @@ def getUrlsSources(sourceString):
     # Create arrays to store the results:
     links = []
     links_doi =[]
+    numSources = 0
     # For each source:
     for source in sources:
+        # If there was a source, increment the number of sources:
+        if source != '':
+            numSources += 1
         # Find the url:
         url = re.search('https?://.*', source)
         # If there is an url, look if this contains doi.org, if yes add to links_doi, else add to links:
@@ -320,6 +332,4 @@ def getUrlsSources(sourceString):
                 links_doi.append(url_doi.group(0))
             else: 
                 links.append(url1)
-    # Find the number of sources and return everything:
-    numSources = len(sources)
     return links, links_doi, numSources
