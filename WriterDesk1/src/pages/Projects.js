@@ -5,7 +5,7 @@ import {
     FormControl,
     InputLabel,
     MenuItem,
-    Select,
+    Select, Button,
 } from "@mui/material";
 import {
     DeleteOutline,
@@ -22,6 +22,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from "axios";
+import AlertDialog from "../components/AlertDialog";
 
 /**
  *
@@ -91,7 +92,7 @@ const Projects = () => {
                 return (<div>
                     <IconButton onClick={(e) => { }}  ><PersonSearch /></IconButton>
                     <IconButton onClick={(e) => { }}  ><Storage /></IconButton>
-                    <IconButton onClick={(e) => { deleteProject(e, params) }}  ><DeleteOutline /></IconButton>
+                    <IconButton onClick={(e) => { showDeleteProjectDialog(e, params) }}  ><DeleteOutline /></IconButton>
                 </div>);
             }
         }
@@ -104,6 +105,10 @@ const Projects = () => {
 
     const [projectName, setProjectName] = useState();
     const [numberOfParticipants, setNumberOfParticipants] = useState();
+
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);  // Show dialog when deleting single project
+    const [showDeleteDialogMultiple, setShowDeleteDialogMultiple] = useState(false);  // Show dialog when deleting multiple projects
+    const [deleteId, setDeleteId] = useState();  // Id that is going to be deleted when pressing delete button
 
      /**
       * Create a research project in the database. Also generate accounts for the participants based on the given input.
@@ -139,19 +144,31 @@ const Projects = () => {
     /**
       * Delete the research project with the given id from the database. Also delete all corresponding data to the project.
       * @param {event} e: event data pushed with the call, not required
-      * @param {params} params: params of the row where the current project that is removed is in, to be able to remove the correct project.
+      * @param {number} projId: projid of the project that needs to be removed.
       */
-    const deleteProject = (e, params) => {
+    const deleteProject = (e, projId) => {
         // Url of the server:
         const url = 'https://127.0.0.1:5000/projectapi/deleteProject'
         // Formdata for the backend call, to which the id has been added:
         const formData = new FormData();
-        formData.append('projectId', params.id);
+        formData.append('projectId', projId);
         // Make the call to the backend:
         axios.delete(url, { data: formData }).then(response => {
             //TODO: Set table data
         });
+        setShowDeleteDialog(false);  // Don't show dialog anymore
     }
+
+    /**
+     * Show the confirmation dialog that asks whether to delete the project or not
+     * @param {event} e: event data pushed with the call, not required
+     * @param {params} params: params of the row where the current project that is removed is in, to be able to remove the correct project.
+     */
+    const showDeleteProjectDialog = (e, params) => {
+        setDeleteId(params.id)  // Set id to be deleted
+        setShowDeleteDialog(true);  // Show confirmation dialog
+    }
+
 
     /**
       * Delete all selected research project from the database. Also delete all corresponding data to the projects.
@@ -168,11 +185,22 @@ const Projects = () => {
         axios.delete(url, { data: formData }).then(response => {
             //TODO: Set table data
         });
+        setShowDeleteDialogMultiple(false);  // Don't show confirmation dialog anymore
     }
 
 
     return (
         <>
+            {showDeleteDialog &&
+              <AlertDialog title = "Delete project" text = "Are you sure you want to delete this project?"
+                           buttonAgree={<Button onClick={(e) => {deleteProject(e, deleteId)}}>Yes</Button>}
+                           buttonCancel={<Button style={{color: "red"}} onClick={(e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
+              />}
+            {showDeleteDialogMultiple &&
+              <AlertDialog title = "Delete projects" text = "Are you sure you want to delete these projects?"
+                           buttonAgree={<Button onClick={(e) => {deleteSelectedProjects(e)}}>Yes</Button>}
+                           buttonCancel={<Button style={{color: "red"}} onClick={(e) => {setShowDeleteDialogMultiple(false)}}>Cancel</Button>}
+              />}
                 {/* adding projects */}
                 <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
                     <TextField
@@ -263,7 +291,7 @@ const Projects = () => {
                             ),
                             Toolbar: () => (
                                 <GridToolbarContainer>
-                                    <IconButton onClick={(e) => {deleteSelectedProjects(e)}}><DeleteOutline /></IconButton>
+                                    <IconButton onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton>
                                 </GridToolbarContainer>
                             )
                         }}
