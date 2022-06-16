@@ -7,12 +7,12 @@ def initialSetup():
     db.drop_all()
     db.create_all()
     # create initial user
-    u = models.User(username='john', password_plaintext='password')
+    u = models.User(username='admin', password_plaintext='admin')
+    u.role = 'admin'
     uploadToDatabase(u)
 
     # comment out:
-    #   - fileapi > fileUpload() > initialSetup()
-    #   - models > Users > __init__() > self.id ...
+    #   - loginapi > create_token() > initialSetup()
 
 
 # Upload the given file to the database of this session

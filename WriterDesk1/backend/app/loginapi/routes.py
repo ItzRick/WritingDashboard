@@ -16,6 +16,7 @@ from flask_jwt_extended import jwt_required
 from app.database import postUser
 from app.extensions import jwt
 from app.models import User
+from app.database import initialSetup
 
 @bp.route('/login', methods=['POST'])
 def create_token():
@@ -32,6 +33,7 @@ def create_token():
             Returns access_token used for authentication and user_id from user attribute when username and password corresponds to database
             Otherwise returns Unauthorized response status code
     '''
+    # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
     username = request.json.get("username", None) 
     password = request.json.get("password", None)
     user = User.query.filter_by(username=username).first() # Get user from database corresponding to username
