@@ -47,8 +47,8 @@ def genFeedback(file):
             path = convertDocx(path)
             textStructure = text
         elif fileType == '.pdf':
-            textStructure, references = getPDFText(path, returnReferencesText=True, returnReferences=True)
-            text, references = getPDFText(path, returnReferences=False)
+            textStructure = getPDFText(path, returnReferencesText=True)
+            text, references = getPDFText(path, returnReferences=True)
         elif fileType == '.txt':
             text = getTXTText(path)
             path = convertTxt(path)
@@ -57,8 +57,8 @@ def genFeedback(file):
         # Generate the score for the sourceIntegration, language and style and structure:
         mistakesStyle, scoreStyle = feedbackLanguageStyle(text)
         scoreStructure, explanationsStructure = getStructureScore(textStructure)
-        # Set the score correctly in the database:
         scoreContent, explanationContent = sourceIntegration(text, references, englishStopwords, userId)
+        # Set the score correctly in the database:
         setScoreDB(fileId, scoreStyle, -2, scoreStructure, scoreContent)
         # Set the feedback for all categories by either using a separate method or by simply using setExplanationDB:
         setFeedbackStyle(mistakesStyle, path, fileId)
