@@ -33,6 +33,8 @@ def genFeedback(file):
             scoreStructure: Score for the structure, as returned by the getStructureScore method.
             explanationsStructures, as returned by the getStructureScore method.
             textStructure: text for the getStructureScore method, including possible in-text references, which could be removed. 
+        returns:
+            True if successful, with a message indicating that it was successful. False with an error otherwise.
     '''
     fileId = file.id
     fileType = file.fileType
@@ -51,7 +53,6 @@ def genFeedback(file):
             text = getTXTText(path)
             path = convertTxt(path)
             textStructure = text
-        print(text)
         englishStopwords = getEnglishStopwords()
         mistakesStyle, scoreStyle = feedbackLanguageStyle(text)
         scoreStructure, explanationsStructure = getStructureScore(textStructure)
@@ -62,7 +63,7 @@ def genFeedback(file):
         setExplanationDB(fileId = fileId, explId = -1, type = 3, explanation = explanationContent)
     except Exception as e:
         return False, str(e)
-    return True
+    return True, 'Feedback has been generated!'
 
 def setFeedbackStyle(mistakesStyle, path, fileId):
     '''
