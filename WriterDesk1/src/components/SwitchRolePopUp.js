@@ -15,7 +15,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 
-import { AdminPanelSettingsOutlined, BiotechOutlined, SchoolOutlined } from '@mui/icons-material';
+import { AdminPanelSettingsOutlined, MoreHorizOutlined, BiotechOutlined, SchoolOutlined } from '@mui/icons-material';
 
 import axios from 'axios';
 import { authHeader } from '../helpers/auth-header';
@@ -35,6 +35,7 @@ const ChangeRole = (userId, newRole) => {
 const RoleDialog = ({params}) => {
     const userRole = params.row.role;
     const userId = params.id;
+    const userName = params.row.username;
 
     const[open, setOpen] = useState(false);
     const [value, setValue] = useState(userRole);
@@ -72,17 +73,20 @@ const RoleDialog = ({params}) => {
 
     return (
         <>
-            <div onClick={handleClickOpen}>{value}</div>
+            <div onClick={handleClickOpen} style={{width: 130, display:'flex', alignItems:'center', flexWrap: 'wrap', justifyContent: 'space-between'}}>{value } <MoreHorizOutlined/></div>
             <Dialog
+                fullWidth={true}
+                maxWidth='xs'
+
                 open={open}
 
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {"Set user role"}
+                    {"New role for: " + userName}
                 </DialogTitle>
-                <List>
+                <List sx={{ pt: 0 }}>
                     <ListItem button onClick={() => handleListItemClick('Student')} selected={selectedValue === 'Student'}>
                         <ListItemAvatar>
                             <Avatar>

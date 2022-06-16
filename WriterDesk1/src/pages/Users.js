@@ -22,6 +22,7 @@ const columns: GridColDef[] = [
   {
     field: 'role',
     headerName: 'Role',
+    width: 150,
     editable: false,
     renderCell: (params) => {
       return <div><RoleDialog params={params}></RoleDialog></div> 
@@ -48,7 +49,7 @@ const columns: GridColDef[] = [
         return alert(JSON.stringify(thisRow, null, 4));
       };
 
-      return <div><IconButton><PersonOutlineIcon /></IconButton><IconButton><DeleteOutlineIcon /></IconButton></div>;
+      return <div><IconButton><DeleteOutlineIcon /></IconButton></div>;
     }
   }
 ];
