@@ -33,9 +33,8 @@ import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 import { Link, Outlet } from 'react-router-dom';
 
 // tracking
-import TrackingWrapper from "./../components/TrackingWrapper";
+import TrackingWrapper from "./../services/TrackingWrapper";
 import { history } from '../helpers/history';
-import { AuthenticationService } from '../services/authenticationService';
 
 //Width of the opened drawer
 const drawerWidth = 240;
