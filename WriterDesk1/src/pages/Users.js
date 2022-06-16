@@ -3,9 +3,8 @@ import { useState, useEffect } from 'react';
 import {DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
-import RoleDialog from "./../components/SwitchRolePopUp";
+import RoleDialog from "./../components/RoleDialog";
 
 
 /**
@@ -25,7 +24,13 @@ const columns: GridColDef[] = [
     width: 150,
     editable: false,
     renderCell: (params) => {
-      return <div><RoleDialog params={params}></RoleDialog></div> 
+      // set arguments
+      const userRole = params.row.role;
+      const userId = params.id;
+      const userName = params.row.username;
+
+      // display role, and show dialog when clicked
+      return <div><RoleDialog userRole={userRole} userId={userId} userName={userName}></RoleDialog></div> 
     }
   },
   {
@@ -84,7 +89,6 @@ const Users = () => {
                   }}
                 />
             </div>
-            {/* dialog for changing role */}
         </>
     );
 }

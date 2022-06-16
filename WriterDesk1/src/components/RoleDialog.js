@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 
+import '../css/roledialog.css'
+
 import {
     Dialog,
     DialogActions,
-    DialogContent,
-    DialogContentText,
     DialogTitle,
     Button,
 } from '@mui/material';
@@ -20,32 +20,52 @@ import { AdminPanelSettingsOutlined, MoreHorizOutlined, BiotechOutlined, SchoolO
 import axios from 'axios';
 import { authHeader } from '../helpers/auth-header';
 
+
+/**
+ * This function sends a request to the server where we ask to change the role for a specific user
+ * 
+ * @param {int} userId ID of user of whom we want to change the role
+ * @param {String} newRole intended role of the user
+ * @returns Promise of axios post request where we try to change the role of the user
+ */
 const ChangeRole = (userId, newRole) => {
+    // url for request
     const url = 'https://127.0.0.1:5000/loginapi/setRole';
 
+    // data for request
     const formData = new FormData();
     formData.append('userId', userId);
     formData.append('newRole', newRole)
 
     return axios.post(url, formData, {
-        headers: authHeader(),
+        headers: authHeader(), // Autheader needed for request
     });
 }
 
-const RoleDialog = ({params}) => {
-    const userRole = params.row.role;
-    const userId = params.id;
-    const userName = params.row.username;
-
+/**
+ * Dialog component (pop up) where a new role can be set for user.
+ * Request to server is send to change role.
+ * 
+ * @param {String} userRole     current userole of user
+ * @param {Integer} userId      userid of user
+ * @param {String} userName     username of user
+ * @returns Dialog component where a new userRole can be selected for user with id: userId
+ */
+const RoleDialog = ({userRole, userId, userName}) => {
+    // popup shown
     const[open, setOpen] = useState(false);
-    const [value, setValue] = useState(userRole);
+    // current/set role value for user
+    const [value, setValue] = useState(userRole); 
+     // new role value for user
     const [selectedValue, setSelected] = useState(userRole);
 
+    // handle opening of popup
     const handleClickOpen = () => {
         setSelected(value);
         setOpen(true);
     }
     
+    // handle closing of popup; Set new role if given
     const onClose = (value) => {
         setOpen(false);
         if (value) {
@@ -53,12 +73,15 @@ const RoleDialog = ({params}) => {
         }
     }
 
+    // handle selection of item
     const handleListItemClick = (value) => {
         setSelected(value);
     }
 
+    // handle conformation of selection
     const handleOk = () => {
         onClose(selectedValue);
+        // Send request and handle possible error
         ChangeRole(userId, selectedValue.toLowerCase()).catch((error) => {
             setValue(userRole);
             let alertText = "Error while changing role: \n" + error.message;
@@ -66,6 +89,7 @@ const RoleDialog = ({params}) => {
         });
      };
     
+     // handle cancel of selection
     const handleCancel = () => {
         onClose();
     }
@@ -73,7 +97,7 @@ const RoleDialog = ({params}) => {
 
     return (
         <>
-            <div onClick={handleClickOpen} style={{width: 130, display:'flex', alignItems:'center', flexWrap: 'wrap', justifyContent: 'space-between'}}>{value } <MoreHorizOutlined/></div>
+            <div title={"Change role of user"} className={"roleColumn"} onClick={handleClickOpen}>{value } <MoreHorizOutlined/></div>
             <Dialog
                 fullWidth={true}
                 maxWidth='xs'
