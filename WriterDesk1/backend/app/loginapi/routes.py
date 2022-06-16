@@ -27,6 +27,7 @@ def create_token():
             Returns access_token used for authentication and user_id from user attribute when username and password corresponds to database
             Otherwise returns Unauthorized response status code
     '''
+    # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
     username = request.json.get("username", None) 
     password = request.json.get("password", None)
 
