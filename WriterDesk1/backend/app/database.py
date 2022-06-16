@@ -120,3 +120,55 @@ def postParticipantToProject(userId, projectId):
     dataTuple = models.ParticipantToProject(userId=userId, projectId=projectId)
     db.session.add(dataTuple)
     db.session.flush()
+
+def getParticipantsByResearcher(user):
+    '''
+        This function handles the query for retrieving a user's participants.
+        Attributes:
+            participants: result of the query, containing the participants of the given user
+        Arguments:
+            user: id of the user who's files need to be retrieved
+        Return:
+            Returns list of participants of the given user
+    '''
+    # Retrieve the projects of the user
+    projectIds = getProjectsByResearcher(user)
+
+    # Define the array for the participants ids and the participant information
+    participantIds = [] 
+    participantInformation = [] 
+
+    # Retrieve the ids of the participants in all projects of the user
+    for projectId in projectIds:
+        participantsOfProject = db.session.query(models.ParticipantToProject).filter_by(projectId=projectId)
+        participantIds.append(participantsOfProject)
+
+    # Retrieve the information of the participants in all projects of the user
+    for participantId in participantIds:
+        participantInfo = db.session.query(models.User).filter_by(id=participantId)
+        participantInformation.append(participantInfo)
+    
+    # Return the information of the participants in all projects of the user
+    return projectIds, participantInformation
+
+def getProjectsByResearcher(user):
+    '''
+        This function handles the query for retrieving a user's projects.
+        Attributes:
+            projects: result of the query, containing the projects of the given user
+        Arguments:
+            user: id of the user who's files need to be retrieved
+        Return:
+            Returns list of projects of the given user
+    '''
+    # Retrieve the projects of the user
+    projectIds = db.session.query(models.Projects).filter_by(userId=user)
+
+    # does projectIds also include all the information per row? 
+    # If so, then that's good for getParticipantsByResearcher
+    # However, for viewProjectsOfUser in routes.py we also need the information for each project
+    # Maybe return two things? So first is list of project ids, 
+    # Second is list of projects with their info
+
+    return projectIds 
+

@@ -3,7 +3,7 @@ from app.projectapi import bp
 from flask import request, jsonify
 from app.models import Projects
 
-from app.database import uploadToDatabase, removeFromDatabase
+from app.database import uploadToDatabase, removeFromDatabase, getParticipantsByResearcher, getProjectsByResearcher
 from app import generateParticipants as gp
 
 @bp.route('/addparticipants', methods=["POST"])
@@ -69,3 +69,28 @@ def deleteProject():
         removeFromDatabase(projectToBeRemoved)
 
     return 'success', 200
+
+@bp.route('/viewparticipantsofuser', methods=["GET"])
+def viewParticipantsOfUser():
+    # Get the user id as sent by the react frontend
+    userId = request.args.get('userId')
+
+    # Retrieve the information from the participants corresponding to the projects of the user
+    participants = getParticipantsByResearcher(userId)
+    if participants is None:
+        return 'researcher has no participants', 404
+
+    return jsonify(participants)
+
+@bp.route('/viewprojectsofuser', methods=["GET"])
+def viewProjectsOfUser():
+    # Get the user id as sent by the react frontend
+    userId = request.args.get('userId')
+
+    # Retrieve the information from the projects corresponding to the projects of the user
+    projects = getProjectsByResearcher(userId)
+    if projects is None:
+        return 'researcher has no projects', 404
+
+    return jsonify(projects)
+    

@@ -69,27 +69,41 @@ const columns: GridColDef[] = [
   }
 ];
 
-const rows = [
-  { id: 1, username: 'Bob', password: '123test', project: 'testProject1' },
-  { id: 2, username: 'Roger', password: 'password', project: 'testProject2' },
-  { id: 3, username: 'Eugene', password: 'secret', project: 'testProject3' },
-  { id: 4, username: 'Alice', password: 'qwertyuiop', project: 'testProject4' },
-  { id: 5, username: 'Claire', password: 'welcome1', project: 'testProject5' },
-];
+
+// replace with list of real users
+// const rows = [
+//   { id: 1, username: 'Bob', password: '123test', project: 'testProject1' },
+//   { id: 2, username: 'Roger', password: 'password', project: 'testProject2' },
+//   { id: 3, username: 'Eugene', password: 'secret', project: 'testProject3' },
+//   { id: 4, username: 'Alice', password: 'qwertyuiop', project: 'testProject4' },
+//   { id: 5, username: 'Claire', password: 'welcome1', project: 'testProject5' },
+// ];
 
 // replace with list of real projects, needed for project dropdowns
-const projects = [
-  { id: 1, projectName: 'test project 1'},
-  { id: 2, projectName: 'test project 2'},
-  { id: 3, projectName: 'test project 3'},
-]
+// const projects = [
+//   { id: 1, projectName: 'test project 1'},
+//   { id: 2, projectName: 'test project 2'},
+//   { id: 3, projectName: 'test project 3'},
+// ]
 
 function Participants() {
   //set title in parent 'base' 
   const { setTitle } = useOutletContext();
-  useEffect(() => {
-    setTitle('Participants');
-  });
+
+  // initialize participants and projects variables
+  const [participants, setParticipants] = useState([]);
+  const [projects, setProjects] = useState([]);
+
+
+  // useEffect(() => {
+  //   setTitle('Participants'),
+  //   getParticipants()});
+  useEffect(() => {setTitle('Participants')}, []);
+
+  useEffect(() => {getParticipants()}, []); /* TODO */
+
+      // // Call getFiles() on refresh page 
+      // useEffect(() => {getFiles()}, []);
 
   // project in project add
   const [projectAdd, setProjectAdd] = useState('');
@@ -110,8 +124,48 @@ function Participants() {
   //list of selected items
   const [selectedInstances, setSelectedInstances] = useState([])
 
+  // Perform GET request to retrieve participants of current user from backend
+  // Puts response in variable 'participants'
+  const getParticipants = () => {
+    const url = 'https://localhost:5000/viewparticipantsofuser';
+    const data = {
+        // params: {sortingAttribute: sortingAttribute}
+        params: {}
+    }
+    const headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    }
+    //Perform GET request
+    axios.get(url, data, headers).then((response) => { /* TODO */
+        setParticipants(response.data);
+    }).catch(err => {
+        console.log(err.response.data);
+    });
+  }
+
+  // Perform GET request to retrieve participants of current user from backend
+  // Puts response in variable 'participants'
+  const getProjects = () => {
+    const url = 'https://localhost:5000/viewprojectsofuser';
+    const data = {
+      // params: {sortingAttribute: sortingAttribute}
+      params: {}
+  }
+    const headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    }
+    //Perform GET request
+    axios.get(url, data, headers).then((response) => { /* TODO */
+        setProjects(response.data);
+    }).catch(err => {
+        console.log(err.response.data);
+    });
+  }
+
   /*
-   * Do POST request containing participantCount and projectAdd variable, recieve status of response.
+   * Do POST request containing participantCount and projectAdd variable, receive status of response.
    */
   const handleAddToProject = () => {
     // If input is valid, do post request
@@ -145,7 +199,7 @@ function Participants() {
     //     formData.append('id', params.id);
     //     // Make the call to the backend:
     //     axios.delete(url, { data: formData }).then(response => {
-    //         //TODO: reload table data
+    //         //TODO: Set table data
     //     });
     }
 
@@ -163,7 +217,7 @@ function Participants() {
         // selectedInstances.forEach(id => formData.append('id', id));
         // // Make the backend call:
         // axios.delete(url, { data: formData }).then(response => {
-        //     //TODO: reload table data
+        //     //TODO: Set table data
         // });
     }
 
@@ -190,10 +244,10 @@ function Participants() {
             label="Project"
             onChange={handleProjAddPart}
           >
-            {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)}
+            {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)} 
           </Select>
         </FormControl>
-        <BlueButton idStr='addParticipants' onClick={handleAddToProject}>Add participants</BlueButton>
+        <BlueButton idStr='addParticipants' onClick={handleAddToProject}>Add participants</BlueButton> 
       </div>
       <div className='topBorder'>
         <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
@@ -218,8 +272,8 @@ function Participants() {
       <div style={{ justifyContent: 'center', display: 'flex' }}>
         <div style={{ height: '80vh', maxHeight: '400px', width: '50vw' }} >
           <DataGrid
-            rows={rows}
-            columns={columns}
+            rows={participants} /* TODO, changed from rows to participants */
+            columns={columns} /* TODO */
             pageSize={5}
             rowsPerPageOptions={[5]}
             checkboxSelection
