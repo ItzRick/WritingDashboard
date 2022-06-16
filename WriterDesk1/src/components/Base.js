@@ -32,6 +32,8 @@ import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 // routing
 import { Link, Outlet } from 'react-router-dom';
 
+// tracking
+import TrackingWrapper from "./../components/TrackingWrapper";
 
 //Width of the opened drawer
 const drawerWidth = 240;
@@ -154,102 +156,106 @@ const Base = ({
   const theme = useTheme();
 
   return (
-    <Box sx={{ display: 'flex' }} color="textPrimary" className='baseRoot'>
-      <CssBaseline />
-      <CustomAppBar
-        position='fixed'
-        sx={{
-          bgcolor: 'appBar.background',
-          ...(open && { width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }),
-          ...(!open && {
-            width: enableNav ? `calc(100% - ${theme.spacing(7)} + 1px)` : `100%`,
-            [theme.breakpoints.up('sm')]: {
-              width: enableNav ? `calc(100% - ${theme.spacing(8)} + 1px)` : `100%`,
-            },
-          })
-        }}
-      >
-        <Toolbar sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
-          <Settings style={{ opacity: '0', margin: '8' }} />
-          <Typography variant="h6" component="div" sx={{color: "appBar.text",}}> {title} </Typography>
-          <IconButton
-            sx={{
-              justifySelf: "flex-end",
-              color: "appBar.icon",
-            }}
-            component={Link} to='settings'
-          >
-            <Person />
-          </IconButton>
-        </Toolbar>
-      </CustomAppBar>
-
-      <CustomDrawer
-        variant="permanent"
-        open={open}
-        sx={{
-          display: enableNav ? 'initial' : 'none',
-          bgcolor: 'drawer.background',
-          height: '100%',
-        }}
-      >
-        <CustomDrawerHeader
-          open={open}
+    // supply wrapper as TrackerProvider, 
+    // any object inside can use TrackerContext
+    <TrackingWrapper>
+      <Box sx={{ display: 'flex' }} color="textPrimary" className='baseRoot'>
+        <CssBaseline />
+        <CustomAppBar
+          position='fixed'
           sx={{
-            bgcolor: 'drawer.background',
+            bgcolor: 'appBar.background',
+            ...(open && { width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }),
+            ...(!open && {
+              width: enableNav ? `calc(100% - ${theme.spacing(7)} + 1px)` : `100%`,
+              [theme.breakpoints.up('sm')]: {
+                width: enableNav ? `calc(100% - ${theme.spacing(8)} + 1px)` : `100%`,
+              },
+            })
           }}
         >
-          <Tooltip title="Menu">
+          <Toolbar sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+            <Settings style={{ opacity: '0', margin: '8' }} />
+            <Typography variant="h6" component="div" sx={{ color: "appBar.text", }}> {title} </Typography>
             <IconButton
               sx={{
-                color: 'drawer.burger',
-                bgcolor: 'inherit',
+                justifySelf: "flex-end",
+                color: "appBar.icon",
               }}
-              aria-label="open drawer"
-              onClick={handleDrawer}
-              edge={false}
+              component={Link} to='settings'
             >
-              <Menu />
+              <Person />
             </IconButton>
-          </Tooltip>
-        </CustomDrawerHeader>
-        <Divider sx={{bgcolor:'drawer.divider',}} />
-        <List
+          </Toolbar>
+        </CustomAppBar>
+
+        <CustomDrawer
+          variant="permanent"
+          open={open}
           sx={{
+            display: enableNav ? 'initial' : 'none',
             bgcolor: 'drawer.background',
             height: '100%',
-          }}>
-          <NavigationLink open={open} text="Main" Icon={LogoDevIcon} allowed={enableNav} pageLink='Main' />
-          <NavigationLink open={open} text="Upload" Icon={FileUpload} allowed={enableNav} pageLink='Upload' />
-          <NavigationLink open={open} text="Progress" Icon={Timeline} allowed={enableNav} pageLink='Progress' />
-          <NavigationLink open={open} text="Documents" Icon={Article} allowed={enableNav} pageLink='Documents' />
-          <Divider sx={{
-            bgcolor:'drawer.divider',
-            display: admin || researcher ? 'block' : 'none'
-          }} />
-          <NavigationLink open={open} text="Participants" Icon={Group} allowed={researcher | admin} pageLink='Participants' />
-          <NavigationLink open={open} text="Projects" Icon={ListAlt} allowed={researcher | admin} pageLink='Projects' />
-          <NavigationLink open={open} text="Feedback Models" Icon={Build} allowed={researcher | admin} pageLink='FeedbackModels' />
-          <Divider sx={{
-            bgcolor:'drawer.divider',
-            display: admin ? 'block' : 'none'
-          }} />
-          <NavigationLink open={open} text="Users" Icon={Settings} allowed={admin} pageLink='Users' />
-        </List>
-      </CustomDrawer>
+          }}
+        >
+          <CustomDrawerHeader
+            open={open}
+            sx={{
+              bgcolor: 'drawer.background',
+            }}
+          >
+            <Tooltip title="Menu">
+              <IconButton
+                sx={{
+                  color: 'drawer.burger',
+                  bgcolor: 'inherit',
+                }}
+                aria-label="open drawer"
+                onClick={handleDrawer}
+                edge={false}
+              >
+                <Menu />
+              </IconButton>
+            </Tooltip>
+          </CustomDrawerHeader>
+          <Divider sx={{ bgcolor: 'drawer.divider', }} />
+          <List
+            sx={{
+              bgcolor: 'drawer.background',
+              height: '100%',
+            }}>
+            <NavigationLink open={open} text="Main" Icon={LogoDevIcon} allowed={enableNav} pageLink='Main' />
+            <NavigationLink open={open} text="Upload" Icon={FileUpload} allowed={enableNav} pageLink='Upload' />
+            <NavigationLink open={open} text="Progress" Icon={Timeline} allowed={enableNav} pageLink='Progress' />
+            <NavigationLink open={open} text="Documents" Icon={Article} allowed={enableNav} pageLink='Documents' />
+            <Divider sx={{
+              bgcolor: 'drawer.divider',
+              display: admin || researcher ? 'block' : 'none'
+            }} />
+            <NavigationLink open={open} text="Participants" Icon={Group} allowed={researcher | admin} pageLink='Participants' />
+            <NavigationLink open={open} text="Projects" Icon={ListAlt} allowed={researcher | admin} pageLink='Projects' />
+            <NavigationLink open={open} text="Feedback Models" Icon={Build} allowed={researcher | admin} pageLink='FeedbackModels' />
+            <Divider sx={{
+              bgcolor: 'drawer.divider',
+              display: admin ? 'block' : 'none'
+            }} />
+            <NavigationLink open={open} text="Users" Icon={Settings} allowed={admin} pageLink='Users' />
+          </List>
+        </CustomDrawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p:3}} >
-        <CustomDrawerHeader/>
-        <Box className='content'sx={{ height:'93.5%'}}>
-          <Outlet context={{ setTitle }} />
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }} >
+          <CustomDrawerHeader />
+          <Box className='content' sx={{ height: '93.5%' }}>
+            <Outlet context={{ setTitle }} />
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </TrackingWrapper>
   );
 }
 
