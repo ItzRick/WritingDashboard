@@ -27,10 +27,8 @@ const ChangeRole = (userId, newRole) => {
     formData.append('userId', userId);
     formData.append('newRole', newRole)
 
-    axios.post(url, formData, {
+    return axios.post(url, formData, {
         headers: authHeader(),
-    }).catch((error) => {
-        console.error(error.response.data);
     });
 }
 
@@ -60,7 +58,11 @@ const RoleDialog = ({params}) => {
 
     const handleOk = () => {
         onClose(selectedValue);
-        ChangeRole(userId, selectedValue.toLowerCase());
+        ChangeRole(userId, selectedValue.toLowerCase()).catch((error) => {
+            setValue(userRole);
+            let alertText = "Error while changing role: \n" + error.message;
+            alert(alertText);
+        });
      };
     
     const handleCancel = () => {
