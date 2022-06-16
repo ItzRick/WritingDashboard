@@ -4,24 +4,29 @@ import {Button, FormControlLabel, Radio, RadioGroup, TextField, Typography} from
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
-
+// Change password request setup
+import { authHeader } from '../helpers/auth-header';
+import axios from 'axios';
+const BASE_URL = "https://localhost:5000/loginapi";
+const PASSWORD_LENGTH = 8;
 
 /**
  * 
  * @returns Settings Page
  */
 const Settings = () => {
-    const PASSWORD_LENGTH = 8;
     //set title in parent 'base' 
     const { setTitle } = useOutletContext();
     useEffect(() => {
         setTitle('Settings');
     });
 
+    // Create states for the old password, new Password (including conformation) and states for success or error messages.
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const [formError, setFormError] = useState("");
 
     /* 
      * Check if password input is valid.
@@ -55,11 +60,36 @@ const Settings = () => {
         return "";
     }
 
-    // Change page using formError when we find an error
-    const [formError, setFormError] = useState("");
-
+    
+    /*
+     * Do POST request containing new and old password variables, recieve status of response.
+     */
     const changePassword = () => {
-        console.log(oldPassword);
+        // Check if input is valid
+        if (oldPassword === "" || newPassword === "" || newPasswordConfirm === "") {
+            setFormError("One or more fields are empty!");
+            return;
+        }
+        if (checkPassword() !== "" || confirmPassword() !== "") {
+            setFormError("One or more fields are not complete!");
+            return;
+        }
+        // If input is valid, do post request
+        const data = {
+            "oldPassword": oldPassword,
+            "newPassword": newPassword,
+        }
+        axios.post(`${BASE_URL}/setPassword`, data, {headers: authHeader()}).then(response =>{
+            // Set a success message, reset the field.
+            setSuccessMessage(response.data);
+            // Reset all the fields:
+            setOldPassword("");
+            setNewPassword("");
+            setNewPasswordConfirm("");
+        }).catch(error =>{
+            // Post request failed, user is not created
+            setFormError(error.response.data);
+        });
     }
     return (
         <>
@@ -87,20 +117,27 @@ const Settings = () => {
                     Change password
                 </Typography>
                 <br />
-                <TextField value = {oldPassword} onChange={(e) => {setOldPassword(e.target.value); setFormError("")}} id='currPass' label='Insert current password.' variant='outlined' type = 'password'
-                style={{marginBottom: '1vw'}} />
+                <TextField value = {oldPassword} onChange={(e) => {setOldPassword(e.target.value); 
+                setFormError(""); setSuccessMessage("")}} id='currPass' label='Insert current password.' 
+                variant='outlined' type = 'password' style={{marginBottom: '1vw'}} />
                 <br />
-                <TextField value = {newPassword} onChange={(e) => {setNewPassword(e.target.value); setFormError("")}} id='newPass' label='Insert new password.' variant='outlined' type='password'
+                <TextField value = {newPassword} onChange={(e) => {setNewPassword(e.target.value); 
+                setFormError(""); setSuccessMessage("")}} id='newPass' label='Insert new password.' variant='outlined' type='password'
                 style={{marginBottom: '1vw'}} 
                 error={checkPassword() !== ""} helperText={checkPassword() !== "" ? checkPassword() : " "}
                 />
                 <br />
-                <TextField value = {newPasswordConfirm} onChange={(e) => {setNewPasswordConfirm(e.target.value)}} id='newPass2' label='Insert new password again.' variant='outlined' type='password'
-                style={{marginBottom: '1vw'}}
+                <TextField value = {newPasswordConfirm} onChange={(e) => {setNewPasswordConfirm(e.target.value); 
+                setFormError(""); setSuccessMessage("")}} id='newPass2' label='Insert new password again.' 
+                variant='outlined' type='password' style={{marginBottom: '1vw'}}
                 error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : " "}
                 />
                 <br />
                 <Button variant='contained' onClick={changePassword}>Update password</Button>
+                <br />
+                {/* If the password change has failed, or we have a successful change, relay this message: */}
+                    {formError !== "" && <Typography color="red">{formError}</Typography>}
+                    {successMessage !== "" && <Typography>{successMessage}</Typography>}
                 <br /><br /><br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Delete account
