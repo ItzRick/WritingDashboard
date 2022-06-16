@@ -170,7 +170,7 @@ class Clicks(db.Model):
             clickId: 
             timestamp: 
     '''
-    clickId = db.Column(db.Integer, primary_key=True, auto_incement=True)
+    clickId = db.Column(db.Integer, primary_key=True, autoincement=True)
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
     timestamp = db.Column(db.DateTime, unique=False, default=datetime.utcnow())
 
