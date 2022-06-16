@@ -1,16 +1,9 @@
-from datetime import datetime
-from datetime import timedelta
-from datetime import timezone
-
-from flask import Flask
 from flask import jsonify
-from flask import request, current_app
+from flask import request
 from app.loginapi import bp
 
 from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt
 from flask_jwt_extended import current_user
-from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
 from app.database import postUser
