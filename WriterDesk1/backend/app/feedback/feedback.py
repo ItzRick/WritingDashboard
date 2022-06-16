@@ -56,7 +56,7 @@ def genFeedback(file):
         setFeedbackStructure(explanationsStructure, path, fileId)
         setExplanationDB(fileId = fileId, explId = -1, type = 3, explanation = explanationContent)
     except Exception as e:
-        return False, e
+        return False, str(e)
     return True
 
 def setFeedbackStyle(mistakesStyle, path, fileId):
