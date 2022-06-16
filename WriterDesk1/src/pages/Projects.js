@@ -147,6 +147,8 @@ const Projects = () => {
       * @param {number} projId: projid of the project that needs to be removed.
       */
     const deleteProject = (e, projId) => {
+        setShowDeleteDialog(false);  // Don't show dialog anymore
+
         // Url of the server:
         const url = 'https://127.0.0.1:5000/projectapi/deleteProject'
         // Formdata for the backend call, to which the id has been added:
@@ -156,7 +158,6 @@ const Projects = () => {
         axios.delete(url, { data: formData }).then(response => {
             //TODO: Set table data
         });
-        setShowDeleteDialog(false);  // Don't show dialog anymore
     }
 
     /**
@@ -175,6 +176,8 @@ const Projects = () => {
       * @param {event} e: event data pushed with the call, not required
       */
     const deleteSelectedProjects = (e) => {
+        setShowDeleteDialogMultiple(false);  // Don't show confirmation dialog anymore
+
         // Url of the server:
         const url = 'https://127.0.0.1:5000/projectapi/deleteProject'
         // Create a new formdata:
@@ -185,7 +188,6 @@ const Projects = () => {
         axios.delete(url, { data: formData }).then(response => {
             //TODO: Set table data
         });
-        setShowDeleteDialogMultiple(false);  // Don't show confirmation dialog anymore
     }
 
 
