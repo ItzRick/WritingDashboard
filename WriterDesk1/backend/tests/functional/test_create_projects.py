@@ -1,6 +1,7 @@
-from app.models import Projects
+from app.models import Projects, User
 from app import db
 
+from test_set_role import loginHelper
 
 def testAddToDatabase(testClient, initDatabase):
     '''
@@ -17,8 +18,11 @@ def testAddToDatabase(testClient, initDatabase):
     # Check if the project is not yet in the database:
     assert Projects.query.filter_by(projectName='Project1').first() is None
 
+    # get access token for Pietje Bell
+    access_token = loginHelper(testClient, 'Pietje', 'Bell')
     # Add the project to the database
-    response = testClient.post('/projectapi/setProject', data={'userId': 1, 'projectName': 'Project1'})
+    response = testClient.post('/projectapi/setProject', data={'projectName': 'Project1'},
+                               headers = {"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status code:
     assert response.status_code == 200
@@ -26,7 +30,7 @@ def testAddToDatabase(testClient, initDatabase):
     # Check if the project is added to the database:
     project = Projects.query.filter_by(projectName='Project1').first()
     assert project.projectName == 'Project1'
-    assert project.userId == 1
+    assert project.userId == User.query.filter_by(username='Pietje').first().id
 
 
 def testAddToDatabaseMultiple(testClient, initDatabase):
@@ -45,9 +49,14 @@ def testAddToDatabaseMultiple(testClient, initDatabase):
     assert Projects.query.filter_by(projectName='Project1').first() is None
     assert Projects.query.filter_by(projectName='Project2').first() is None
 
+    # get access token for Pietje Bell
+    access_token = loginHelper(testClient, 'Pietje', 'Bell')
+
     # Add the projects to the database
-    response1 = testClient.post('/projectapi/setProject', data={'userId': 1, 'projectName': 'Project1'})
-    response2 = testClient.post('/projectapi/setProject', data={'userId': 1, 'projectName': 'Project2'})
+    response1 = testClient.post('/projectapi/setProject', data={'projectName': 'Project1'},
+                                headers = {"Authorization": "Bearer " + access_token})
+    response2 = testClient.post('/projectapi/setProject', data={'projectName': 'Project2'},
+                                headers = {"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status codes:
     assert response1.status_code == 200
@@ -56,11 +65,11 @@ def testAddToDatabaseMultiple(testClient, initDatabase):
     # Check if the projects are added to the database:
     project1 = Projects.query.filter_by(projectName='Project1').first()
     assert project1.projectName == 'Project1'
-    assert project1.userId == 1
+    assert project1.userId == User.query.filter_by(username='Pietje').first().id
 
     project2 = Projects.query.filter_by(projectName='Project2').first()
     assert project2.projectName == 'Project2'
-    assert project2.userId == 1
+    assert project2.userId == User.query.filter_by(username='Pietje').first().id
 
 
 def testAddToDatabaseEmptyProjectName(testClient, initDatabase):
@@ -78,8 +87,11 @@ def testAddToDatabaseEmptyProjectName(testClient, initDatabase):
     # Check if the project is not yet in the database:
     assert Projects.query.filter_by(projectName='').first() is None
 
+    # get access token for Pietje Bell
+    access_token = loginHelper(testClient, 'Pietje', 'Bell')
+
     # Add the project to the database
-    response = testClient.post('/projectapi/setProject', data={'userId': 1})
+    response = testClient.post('/projectapi/setProject', data={'userId': 1}, headers = {"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status code:
     assert response.status_code == 200
@@ -87,7 +99,7 @@ def testAddToDatabaseEmptyProjectName(testClient, initDatabase):
     # Check if the project is added to the database:
     project = Projects.query.filter_by(projectName='').first()
     assert project.projectName == ''
-    assert project.userId == 1
+    assert project.userId == User.query.filter_by(username='Pietje').first().id
 
 
 def testAddToDatabaseEmptyUserId(testClient, initDatabase):
@@ -108,7 +120,7 @@ def testAddToDatabaseEmptyUserId(testClient, initDatabase):
     response = testClient.post('/projectapi/setProject', data={'projectName': 'Project1'})
 
     # Check if we get the correct status code:
-    assert response.status_code == 400
+    assert response.status_code == 401
 
     # Check if the project is still not added to the database:
     assert Projects.query.filter_by(projectName='Project1').first() is None

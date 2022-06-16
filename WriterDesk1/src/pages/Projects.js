@@ -23,6 +23,7 @@ import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from "axios";
 import AlertDialog from "../components/AlertDialog";
+import {authHeader} from "../helpers/auth-header";
 
 /**
  *
@@ -120,14 +121,12 @@ const Projects = () => {
             alert('Make sure the number of participants is a valid number between 0 and 10000');
             return null;
         }
-        let userId = 1; //TODO: Change to current userId
 
         const formData = new FormData();
-        formData.append('userId', userId);  // Add userId to form
         formData.append('projectName', projectName);  // Add input name to form
 
         // Create project request
-        axios.post(`https://localhost:5000/projectapi/setProject`, formData).then(response => {
+        axios.post(`https://localhost:5000/projectapi/setProject`, formData, {headers: authHeader()}).then(response => {
             const data = {
                 "count": numberOfParticipants,  // Add input of numberOfParticipants
                 "projectid": response.data,  // Get project id from response

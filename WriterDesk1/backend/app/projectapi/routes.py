@@ -1,11 +1,15 @@
 from app.projectapi import bp
 
 from flask import request, jsonify
-from app.models import Projects
+from app.models import Projects, User
 
 from app.database import uploadToDatabase, removeFromDatabase, getParticipantsByResearcher, getProjectsByResearcher
 from app import generateParticipants as gp
 from app import db
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import current_user
+
+
 
 @bp.route('/addparticipants', methods=["POST"])
 def addParticipantsToExistingProject():
@@ -22,24 +26,24 @@ def addParticipantsToExistingProject():
         return str(e), 400
 
 @bp.route('/setProject', methods=['POST'])
+@jwt_required()
 def setProject():
     '''
     This function handles the creation of research projects using a user id and a project name.
     Attributes:
-        userId: user id as given by the frontend
         projectName: project name as given by the frontend
+        current_user: the user currently logged in
     Arguments:
         projectIndb: project object that is uploaded to the database
     '''
     # Get the data as sent by the react frontend:
-    userId = request.form.get('userId')
     projectName = request.form.get('projectName')
 
-    if userId is None:
-        return 'userId not specified', 400
+    if User.query.filter_by(id=current_user.id).first() is None:
+        return 'user not found', 404
 
     # create Projects object
-    projectIndb = Projects(userId=userId, projectName=projectName)
+    projectIndb = Projects(userId=current_user.id, projectName=projectName)
 
     # Upload row to database
     db.session.add(projectIndb)
