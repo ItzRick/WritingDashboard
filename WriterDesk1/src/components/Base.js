@@ -32,10 +32,7 @@ import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 // routing
 import { Link, Outlet } from 'react-router-dom';
 import { history } from '../helpers/history';
-
-// authentication
 import { AuthenticationService } from '../services/authenticationService';
-
 
 //Width of the opened drawer
 const drawerWidth = 240;
@@ -136,8 +133,6 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
  * Makes the BasePage
  * 
  * @param {bool} enableNav - The navigation drawer, on the left, is visible
- * @param {bool} researcher - The user is a researcher
- * @param {bool} admin - The user is an admin
  * @returns Base page for logged in user
  */
 const Base = ({
@@ -159,11 +154,12 @@ const Base = ({
   // general theme, defined in index.js
   const theme = useTheme();
 
-  // give rights depending on the role of the user that is logged in
+  // manage admin and researcher sidebar visibility
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     if (user === null) {
       history.push("/Login");
+      window.location.reload();
     } else {
       if (user.role === 'admin') {
         setAdmin(true);

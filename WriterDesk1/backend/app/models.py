@@ -5,35 +5,31 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy.inspection import inspect
 
-# Class to turn database models into dictionaries,
-# which are able to be turned into json
-class Serializer(object):
-    def serialize(self):
-        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
-
-    @staticmethod
-    def serializeList(l):
-        return [m.serialize() for m in l]
-
-class User(db.Model, Serializer):
+class User(db.Model):
     '''
         Declare user model containing usernames and passwords (hashed), we use single table inheritance for different types of users.
         Cascade makes sure that if a User is removed, related files instances in the db are also removed
         Attributes:
-            type: used as discrimator, indicates type of object in row
+            role: Identifies role of user, role is one of: ['admin', 'participant', 'researcher', 'student']
             id: Unique primary key User ID 
             username: email address or username from user
             passwordHash: hashed password from user, hashed using werkzeug.security
     '''
     __tablename__ = "user"
-    type = db.Column(db.String(32))
+    role = db.Column(db.String(32))
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), index=True, unique=True)
     passwordHash = db.Column(db.String(128))
 
     def __init__(self, username: str, password_plaintext: str, role: str ='user'):
-        ''' Create new user, use set_password to create hashed password for plaintext password'''
-        self.type = role
+        '''
+            Create new user, use set_password to create hashed password for plaintext password
+            Arguments:
+                username: Username of new user
+                password_plaintext: Password (to be hashed) for new user
+                role: Role of new user, standard is: 'user'
+        '''
+        self.role = role
         self.username = username
         self.set_password(password_plaintext)
         # self.id = 123 # Activate me together with initialSetup() in fileapi > uploadfile() # TODO remove before deploy
@@ -61,7 +57,7 @@ class User(db.Model, Serializer):
     def check_password(self, password):
         return check_password_hash(self.passwordHash, password)
 
-class Files(db.Model, Serializer):
+class Files(db.Model):
     '''
         Class to enter files in the database. 
         Cascade makes sure that if a File is removed, related Scores and Explanations instances in the db are also removed
@@ -135,7 +131,7 @@ class Scores(db.Model):
             scoreIntegration: Score for Source Integration and Content
     '''
     fileId = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
-    # Scores are numeric values with 2 decimals before and 2 decimals after the point.
+    # Scores are numeric values with 2 decimals before and 2 decimals after the point. 
     # Thus, allowing us at least values between 10.00 and 0.00
     scoreStyle       = db.Column(db.Numeric(4,2), unique=False, default=None)
     scoreCohesion    = db.Column(db.Numeric(4,2), unique=False, default=None)
@@ -147,7 +143,7 @@ class Scores(db.Model):
 
 class Explanations(db.Model):
     '''
-        Class to enter explanations related to a file.
+        Class to enter explanations related to a file. 
         Attributes:
             fileId: Id of this database instance, of this file that has been added in the database.
             explId: Id of the file corresponding to a file in the Files

@@ -36,7 +36,7 @@ function login(username, password) {
 }
 
 /**
- * Logout user
+ * Logout current user
  */
 function logout() {
     localStorage.removeItem('currentUser');
@@ -52,11 +52,11 @@ function getCurrentUser() {
 
 /**
  * 
- * @returns user ID
+ * @returns userID of current user
  */
 function getCurrentUserId() {
     if(JSON.parse(localStorage.getItem('currentUser')) !== null) {
-        return JSON.parse(localStorage.getItem('currentUser')).id;
+        return JSON.parse(localStorage.getItem('currentUser')).user_id;
     } else {
         return Error("No user found");
     }
@@ -73,7 +73,7 @@ function checkAuth () {
 
 /**
  * 
- * @returns user role
+ * @returns role of current user
  */
 function getRole (){
     return JSON.parse(localStorage.getItem('currentUser')).role;
