@@ -16,6 +16,18 @@ const getRole = () => {
 }
 
 /**
+ * Load pages when user is logged in
+ * 
+ * @returns protected page when user is logged in, else user will be send to homepage
+ */
+ const ProtectedU = () => {
+    const role = getRole()
+    //set title in parent 'base' 
+    const { setTitle } = useOutletContext();
+    return (role != 'user') ? <Outlet context={{ setTitle }} /> : <Navigate to="/" />;
+}
+
+/**
  * Load pages for researchers when user has correct role
  * 
  * @returns protected page when user has access to protected pages, else user will be send to homepage
@@ -39,4 +51,4 @@ const ProtectedA = () => {
     return (role === 'admin') ? <Outlet context={{ setTitle }}/> : <Navigate to="/" />;
 }
 
-export {ProtectedR, ProtectedA};
+export {ProtectedU, ProtectedR, ProtectedA};
