@@ -3,7 +3,7 @@ import {Button, FormControlLabel, Radio, RadioGroup, TextField, Typography} from
 
 // routing
 import { useOutletContext } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 
 
@@ -12,11 +12,55 @@ import { useEffect } from 'react';
  * @returns Settings Page
  */
 const Settings = () => {
+    const PASSWORD_LENGTH = 8;
     //set title in parent 'base' 
     const { setTitle } = useOutletContext();
     useEffect(() => {
         setTitle('Settings');
     });
+
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
+
+    /* 
+     * Check if password input is valid.
+     * According to URC 1.2-1.5, a valid password has at least 8 characters,
+     * with at least 1 lowercase character, uppercase character and number.
+     * @returns helper text for password textfield
+     */
+    const checkPassword = () => {
+        if(newPassword === "") {
+            return "";
+        } else if(newPassword.length < PASSWORD_LENGTH) {
+            return "Must contain at least 8 characters";
+        } else if((newPassword.match(/[a-z]/g) || []).length < 1) {
+            return "Must contain at least 1 lowercase letter";
+        } else if((newPassword.match(/[A-Z]/g) || []).length < 1) {
+            return "Must contain at least 1 uppercase letter";
+        } else if((newPassword.match(/[0-9]/g) || []).length < 1) {
+            return "Must contain at least 1 number";
+        }
+        return "";
+    }
+
+    /* 
+     * Check if repeated password input is valid.
+     * @returns helper text for second password textfield
+     */
+    const confirmPassword = () => {
+        if(newPassword !== "" && newPassword !== newPasswordConfirm) {
+            return "Must match Password";
+        }
+        return "";
+    }
+
+    // Change page using formError when we find an error
+    const [formError, setFormError] = useState("");
+
+    const changePassword = () => {
+        console.log(oldPassword);
+    }
     return (
         <>
             <div className='title'>
@@ -43,16 +87,20 @@ const Settings = () => {
                     Change password
                 </Typography>
                 <br />
-                <TextField id='currPass' label='Insert current password.' variant='outlined'
+                <TextField value = {oldPassword} onChange={(e) => {setOldPassword(e.target.value); setFormError("")}} id='currPass' label='Insert current password.' variant='outlined' type = 'password'
                 style={{marginBottom: '1vw'}} />
                 <br />
-                <TextField id='newPass' label='Insert new password.' variant='outlined' type='password'
-                style={{marginBottom: '1vw'}} />
+                <TextField value = {newPassword} onChange={(e) => {setNewPassword(e.target.value); setFormError("")}} id='newPass' label='Insert new password.' variant='outlined' type='password'
+                style={{marginBottom: '1vw'}} 
+                error={checkPassword() !== ""} helperText={checkPassword() !== "" ? checkPassword() : " "}
+                />
                 <br />
-                <TextField id='newPass2' label='Insert new password again.' variant='outlined' type='password'
-                style={{marginBottom: '1vw'}} />
+                <TextField value = {newPasswordConfirm} onChange={(e) => {setNewPasswordConfirm(e.target.value)}} id='newPass2' label='Insert new password again.' variant='outlined' type='password'
+                style={{marginBottom: '1vw'}}
+                error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : " "}
+                />
                 <br />
-                <Button variant='contained'>Update password</Button>
+                <Button variant='contained' onClick={changePassword}>Update password</Button>
                 <br /><br /><br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Delete account
