@@ -1,4 +1,4 @@
-from app.scoreapi import bp
+from app.clickapi import bp
 
 from flask import request, jsonify
 from app.models import Clicks, User
@@ -8,7 +8,7 @@ from flask_jwt_extended import jwt_required, current_user
 
 @bp.route('/setClick', methods = ['POST'])
 @jwt_required()
-def setScore():
+def setClick():
     '''
         set score for the current user
         Attributes:
@@ -34,9 +34,12 @@ def setScore():
     # check if userId is exists
     if User.query.filter_by(id=userId).first() is None:
         return 'User not Found', 404
-    # check if user wants to be tracked (and this user is not just an participant)
-    if current_user.id == '' and current_user.role != 'participant':
-        return 'Do not track this user', 451
+    # check if user wants to be tracked (ignoring trackability for participants)
+    if not current_user.trackable and current_user.role != 'participant':
+        return 'User clicks not trackable', 451
+
+    # TODO: valid url?
+
 
     # TODO: more checks?
 
