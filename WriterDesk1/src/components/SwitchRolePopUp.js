@@ -19,10 +19,13 @@ import { AdminPanelSettingsOutlined, BiotechOutlined, SchoolOutlined } from '@mu
 
 const RoleDialog = ({userRole}) => {
     const[open, setOpen] = useState(false);
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(userRole);
 
-    const onClose = () => {
+    const onClose = (value) => {
         setOpen(false);
+        if (value) {
+            setValue(value);
+        }
     }
     
     const handleCancel = () => {
@@ -43,7 +46,7 @@ const RoleDialog = ({userRole}) => {
 
     return (
         <>
-            {userRole}
+            <div onClick={handleClickOpen}>{value}</div>
             <Dialog
                 open={open}
 
@@ -54,7 +57,7 @@ const RoleDialog = ({userRole}) => {
                     {"Set user role"}
                 </DialogTitle>
                 <List>
-                    <ListItem button onClick={() => handleListItemClick('student')} selected={value === 'student'}>
+                    <ListItem button onClick={() => handleListItemClick('Student')} selected={value === 'student'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <SchoolOutlined />
@@ -62,7 +65,7 @@ const RoleDialog = ({userRole}) => {
                         </ListItemAvatar>
                         <ListItemText primary="Student" />
                     </ListItem>
-                    <ListItem button onClick={() => handleListItemClick('researcher')} selected={value === 'researcher'}>
+                    <ListItem button onClick={() => handleListItemClick('Researcher')} selected={value === 'researcher'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <BiotechOutlined />
@@ -70,7 +73,7 @@ const RoleDialog = ({userRole}) => {
                         </ListItemAvatar>
                         <ListItemText primary="Researcher" />
                     </ListItem>
-                    <ListItem button onClick={() => handleListItemClick('admin')} selected={value === 'admin'}>
+                    <ListItem button onClick={() => handleListItemClick('Admin')} selected={value === 'admin'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <AdminPanelSettingsOutlined />

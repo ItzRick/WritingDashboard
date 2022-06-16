@@ -20,12 +20,11 @@ const columns: GridColDef[] = [
     editable: false,
   },
   {
-    //DOORGEVEN VAN PARAM WERKT NIET
     field: 'role',
     headerName: 'Role',
     editable: false,
     renderCell: (params) => {
-      return <div><RoleDialog userRole={"TEKST HIER"}></RoleDialog></div> 
+      return <div><RoleDialog userRole={params.row.role}></RoleDialog></div> 
     }
   },
   {
@@ -79,6 +78,9 @@ const Users = () => {
                   rowsPerPageOptions={[5]}
                   checkboxSelection
                   disableSelectionOnClick
+                  onCellClick={(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
+                    event.defaultMuiPrevented = true;
+                  }}
                 />
             </div>
             {/* dialog for changing role */}
