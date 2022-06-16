@@ -1,5 +1,5 @@
 import {
-    Button, tabClasses,
+    Button,
 } from '@mui/material';
 
 import { Link } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 // tracking
 import { useContext } from 'react';
 import { TrackingContext } from '@vrbo/react-event-tracking';
-
 
 /**
  * Default blue action button
@@ -23,13 +22,17 @@ import { TrackingContext } from '@vrbo/react-event-tracking';
 const BlueButton = ({children, idStr='', pathName='', onClick= ()=>{}, addStyle}) => {
     // context as given by the Tracking Provider
     const tc = useContext(TrackingContext);
-    
+
     const handleClick = () => {
         if (tc.hasProvider) {
-            tc.trigger(`button.click`)
+            if (pathName == '') {
+                tc.trigger(`BlueButton.click`)
+            } else {
+                tc.trigger(`BlueButton.link`)
+            }
+            
         } else {
-            // no provider available, error
-            console.log('No Provider Available, error')
+            // no provider available
         }
 
         // usual button action
