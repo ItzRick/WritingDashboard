@@ -5,11 +5,10 @@ from flask import request
 from app.loginapi import bp
 
 from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt
 from flask_jwt_extended import current_user
-from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
+from app.database import postUser
 from app.extensions import jwt
 from app.models import User
 
@@ -60,6 +59,36 @@ def user_lookup_callback(_jwt_header, jwt_data):
     '''
     identity = jwt_data["sub"] # get user id from token
     return User.query.filter_by(id=identity).one_or_none()
+    
+@bp.route('/signup', methods=["POST"])
+def registerUser():
+    '''
+        This function handles the signup request. When there is no user present in the database with the given username,
+        a new user is registered with the given username.
+        Attributes:
+            username: username as given in frontend
+            password: password as given in frontend
+            isCreated: whether a new user has been registered
+        Return:
+            Returns request success status code with a message when a new user has been registered
+            Otherwise returns bad request status code with an error message
+    '''
+
+    # Retrieve data from request
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+
+    # Try to register new user in database
+    isCreated = postUser(username, password)
+
+    # Send response based on outcome
+    if isCreated:
+        # User successfully created
+        return "User was successfully created!", 200
+    else:
+        # User exists already
+        return "Account with this email already exists!", 400
+    
 
 @bp.route("/protected", methods=["GET"])
 @jwt_required()
