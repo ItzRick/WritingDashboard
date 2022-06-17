@@ -95,30 +95,7 @@ def getDOCXText(path):
         for para in doc.paragraphs:
             # Remove titles, headings, lists, quotes, captions
             if not (para.style.name.startswith("Heading") or para.style.name in stylesToRemove):
-                # Get document.xml from word file
-                documentXML = bs.BeautifulSoup(para._p.xml, 'lxml')
-
-                # Find and remove textboxes
-                for textbox in documentXML.find_all('w:txbxcontent'):
-                    textbox.decompose()
-
-                if not referencesParagraph:  # Paragraph does not contain references
-                    # Find text and line breaks
-                    for tag in documentXML.findAll(["w:t", "w:br"]):
-                        if tag.name == "w:t":
-                            fullText += tag.text  # Append text to fullText
-                        else:
-                            fullText += '\n'  # Add newline
-                    fullText += "\n"  # Add newline
-
-                else:  # Paragraph consists of references
-                    # Find text and line break
-                    for tag in documentXML.findAll(["w:t", "w:br"]):
-                        if tag.name == "w:t":
-                            referencesText += tag.text  # Append text to referencesText
-                        else:
-                            referencesText += '\n'  # Add newline
-                    referencesText += "\n"  # Add newline
+                fullText, referencesText = subtractTextFromParagraph(para, referencesParagraph, fullText, referencesText)
 
             elif para.style.name.startswith('Heading'):
                 if 'references' in para.text.lower() or 'bibliography' in para.text.lower():
@@ -134,4 +111,47 @@ def getDOCXText(path):
     fullText = re.sub(r'\n+', '\n\n', fullText).strip()
     referencesText = re.sub(r'\n+', '\n\n', referencesText).strip()
 
+    return fullText, referencesText
+
+
+def subtractTextFromParagraph(para, referencesParagraph, fullText, referencesText):
+    """
+    Function to subtract text from a paragraph. Returns normal text and text from references in different strings.
+    Attributes:
+        documentXML: document.xml of paragraph
+        textbox: text inside textbox
+        tag: tags inside documentXML
+    Arguments:
+        para: Paragraph of text
+        referencesParagraph: Boolean which is true if the current paragraph consists of references
+        fullText: String of extracted text
+        referencesText: Text of references from docx file as a string
+    Returns:
+        fullText: String of extracted text
+        referencesText: Text of references from docx file as a string
+        """
+    # Get document.xml from word file
+    documentXML = bs.BeautifulSoup(para._p.xml, 'lxml')
+
+    # Find and remove textboxes
+    for textbox in documentXML.find_all('w:txbxcontent'):
+        textbox.decompose()
+
+    if not referencesParagraph:  # Paragraph does not contain references
+        # Find text and line breaks
+        for tag in documentXML.findAll(["w:t", "w:br"]):
+            if tag.name == "w:t":
+                fullText += tag.text  # Append text to fullText
+            else:
+                fullText += '\n'  # Add newline
+        fullText += "\n"  # Add newline
+
+    else:  # Paragraph consists of references
+        # Find text and line break
+        for tag in documentXML.findAll(["w:t", "w:br"]):
+            if tag.name == "w:t":
+                referencesText += tag.text  # Append text to referencesText
+            else:
+                referencesText += '\n'  # Add newline
+        referencesText += "\n"  # Add newline
     return fullText, referencesText
