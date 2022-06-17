@@ -3,11 +3,18 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
+from flask_caching import Cache
 from app.extensions import jwt
+from language_tool_python import LanguageTool
+
+
 
 # Database instance:
 db = SQLAlchemy()
 migrate = Migrate()
+cache = Cache()
+languageToolEn = LanguageTool('en-US')
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -19,6 +26,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    cache.init_app(app)
     
     jwt.init_app(app)
 

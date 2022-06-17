@@ -26,9 +26,7 @@ function login(username, password) {
     }).then(response => {
         localStorage.setItem('currentUser', JSON.stringify(response.data));
 
-        if (JSON.parse(localStorage.getItem('currentUser')).access_token !== null && JSON.parse(localStorage.getItem('currentUser')).access_token !== "undefined") {
-            console.log("Inloggen gelukt!");
-        } else {
+        if (JSON.parse(localStorage.getItem('currentUser')).access_token == null || JSON.parse(localStorage.getItem('currentUser')).access_token == "undefined") {
             return Promise.reject();
         }
     })
@@ -58,7 +56,7 @@ function getCurrentUser() {
  */
 function getCurrentUserId() {
     if(JSON.parse(localStorage.getItem('currentUser')) !== null) {
-        return JSON.parse(localStorage.getItem('currentUser')).id;
+        return JSON.parse(localStorage.getItem('currentUser')).user_id;
     } else {
         return Error("No user found");
     }

@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify, send_file
 from app.models import Files, User
 from app.fileapi import bp
+from app.fileapi.convert import convertDocx, convertTxt
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup, recordsToCsv
 from magic import from_buffer
 from datetime import date
@@ -215,25 +216,17 @@ def displayFile():
     '''
     filepath = request.args.get('filepath')
     filetype = request.args.get('filetype')
-    # if the document is a docx file, use the convert method from the docx2pdf module and return the converted document.
+    # if the document is a docx file, convert using the convertDocx module and return the converted document.
     if filetype == 'docx':
-        if not os.path.isfile(filepath.replace("docx", "pdf")):
-            convert(filepath)
-        return send_file(filepath.replace("docx", "pdf"))
+        newPath = convertDocx(filepath)
+        return send_file(newPath)
     # if the document is a txt file, convert it to a pdf by making a new pdf using the contents of the txt file,
     # then return the converted document.
-    if filetype == 'txt':
-        if not os.path.isfile(filepath.replace("txt", "pdf")):
-            pdf = FPDF()
-            pdf.add_page()
-            pdf.set_font("Arial", size=15)
-            f = open(filepath, "r")
-            for x in f:
-                pdf.multi_cell(w=0, h=10, txt = x, align = 'L')
-            pdf.output(filepath.replace("txt", "pdf"))
-        return send_file(filepath.replace("txt", "pdf"))
+    elif filetype == 'txt':
+        newPath = convertTxt(filepath)
+        return send_file(newPath)
+    # The file has not been converted, send the original file.
     return send_file(filepath)
-
 
 @bp.route('/csv', methods=['GET'])
 def getCsv():

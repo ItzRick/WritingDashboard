@@ -1,5 +1,5 @@
 from app.models import Files, Scores, Explanations, User
-from app.database import uploadToDatabase, getFilesByUser, recordsToCsv
+from app.database import uploadToDatabase, getFilesByUser, recordsToCsv, postUser
 from app import db
 from datetime import datetime
 import os
@@ -160,6 +160,11 @@ def testUploadToDBScore(testClient, initDatabase):
             initDatabase: the database instance we test this for. 
     '''
     del testClient, initDatabase
+    files = Files.query.all()
+    assert str(files[0]) == '<Files URD_Group3_vers03_Rc.pdf>'
+    assert str(files[1]) == '<Files SEP.pdf>'
+
+
     preScore = Scores(
         fileId = 12,
         scoreStyle = 0.01,
@@ -175,6 +180,26 @@ def testUploadToDBScore(testClient, initDatabase):
     assert str(score.scoreCohesion) == '2.00'
     assert str(score.scoreStructure) == '3.00'
     assert str(score.scoreIntegration) == '10.00'
+
+def testPostUser(testClient, initDatabase):
+    '''
+        Test if postUser() correctly adds a user to the database
+        Attributes: 
+            users: all users with username 'test@tue.nl'
+        Arguments:
+            testClient: the test client we test this for
+            initDatabase: the database instance we test this for
+    '''
+
+    del testClient, initDatabase
+    try:
+        postUser("test@tue.nl", "TestPassword1")
+        db.session.commit()
+    except:
+        db.session.rollback()
+    users = User.query.filter_by(username="test@tue.nl").all()
+    assert len(users) == 1
+    assert users[0].check_password("TestPassword1")
 
 def testUploadToDBExplanation(testClient, initDatabase):
     '''
