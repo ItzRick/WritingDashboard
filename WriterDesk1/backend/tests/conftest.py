@@ -145,8 +145,9 @@ def englishStopwords():
 @pytest.fixture(scope='module')
 def downloadNltk():
     '''
-        Downloads the nltk averaged_perceptron_tagger, wordnet and omw-1.4 corporas, to be able to use them in test cases.
+        Downloads the nltk punkt, averaged_perceptron_tagger, wordnet and omw-1.4 corporas, to be able to use them in test cases.
     '''
+    nltk.download('punkt')
     nltk.download('averaged_perceptron_tagger')
     nltk.download('wordnet')
     nltk.download('omw-1.4')
