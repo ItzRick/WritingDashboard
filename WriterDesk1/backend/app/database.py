@@ -7,7 +7,9 @@ def initialSetup():
     db.drop_all()
     db.create_all()
     # create admin user
-    u = User(username='admin', password_plaintext='admin')
+    u = User.query.filter_by(username='admin').first()
+    if u is None:
+        u = User(username='admin', password_plaintext='admin')
     u.role = 'admin'
     uploadToDatabase(u)
 
