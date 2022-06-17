@@ -7,12 +7,13 @@ def testAddToDatabase(testClient, initDatabase):
     '''
         Test if we can add a project to the database. We first check if the project does not exist yet.
         After the function has been executed, we check whether the project appears now in the database.
-        Attributes:
+        Arguments:
             testClient: The test client we test this for.
             initDatabase: The database instance we test this for.
-        Arguments:
+        Attributes:
             response: The response of the setProject backend call
             project: Project that is added to the database.
+            access_token: Access token for user Pietje Bell
     '''
     del initDatabase
     # Check if the project is not yet in the database:
@@ -37,12 +38,13 @@ def testAddToDatabaseMultiple(testClient, initDatabase):
     '''
         Test if we can add multiple project to the database. We first check if the projects do not exist yet.
         After the function has been executed, we check whether the projects appear now in the database.
-        Attributes:
+        Arguments:
             testClient: The test client we test this for.
             initDatabase: The database instance we test this for.
-        Arguments:
+        Attributes:
             response1, response2: The responses of the setProject backend call
             project1, project2: Projects that are added to the database.
+            access_token: Access token for user Pietje Bell
     '''
     del initDatabase
     # Check if the projects are not yet in the database:
@@ -76,12 +78,13 @@ def testAddToDatabaseEmptyProjectName(testClient, initDatabase):
     '''
         Test if we can add a project to the database with empty project name. We first check if the project does not exist yet.
         After the function has been executed, we check whether the project appears now in the database.
-        Attributes:
+        Arguments:
             testClient: The test client we test this for.
             initDatabase: The database instance we test this for.
-        Arguments:
+        Attributes:
             response: The response of the setProject backend call
             project: Project that is added to the database.
+            access_token: Access token for user Pietje Bell
     '''
     del initDatabase
     # Check if the project is not yet in the database:
@@ -106,10 +109,10 @@ def testAddToDatabaseEmptyUserId(testClient, initDatabase):
     '''
         Test if we can not add a project to the database with empty user id. We first check if the project does not exist yet.
         After the function has been executed, we check if the project is still not added to the database.
-        Attributes:
+        Arguments:
             testClient: The test client we test this for.
             initDatabase: The database instance we test this for.
-        Arguments:
+        Attributes:
             response: The response of the setProject backend call
     '''
     del initDatabase

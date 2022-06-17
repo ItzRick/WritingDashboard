@@ -190,6 +190,7 @@ class Projects(db.Model):
             id: Id of this database instance, of this project that has been added in the database.
             userId: Id of the researcher corresponding to the research project.
             projectName: Name of the research project.
+            participants: participants object linked by projectId
     '''
     __tablename__ = "projects"
     id = db.Column(db.Integer, primary_key=True)

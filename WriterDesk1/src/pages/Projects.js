@@ -14,6 +14,7 @@ import {
 } from "@mui/icons-material";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import BlueButton from './../components/BlueButton';
+import AlertDialog from "../components/AlertDialog";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -22,7 +23,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from "axios";
-import AlertDialog from "../components/AlertDialog";
+
+// User authentication
 import {authHeader} from "../helpers/auth-header";
 
 /**
@@ -104,11 +106,13 @@ const Projects = () => {
     // end date of project
     const [endData, setEndData] = useState(new Date());
 
-    const [projectName, setProjectName] = useState();
-    const [numberOfParticipants, setNumberOfParticipants] = useState();
+    const [projectName, setProjectName] = useState();  // Project name for project to be created
+    const [numberOfParticipants, setNumberOfParticipants] = useState();  // Number of participants for project to be created
 
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);  // Show dialog when deleting single project
     const [showDeleteDialogMultiple, setShowDeleteDialogMultiple] = useState(false);  // Show dialog when deleting multiple projects
+    const [showNrOfParticipantsDialog, setShowNrOfParticipantsDialog] = useState(false);  // Show dialog when trying to add invalid number of participants
+
     const [deleteId, setDeleteId] = useState();  // Id that is going to be deleted when pressing delete button
 
      /**
@@ -118,7 +122,7 @@ const Projects = () => {
     const createProject = (e) => {
         // Check if the number of participants is valid
         if (!(numberOfParticipants !== '' && numberOfParticipants >= 0 && numberOfParticipants <= 10000)) {
-            alert('Make sure the number of participants is a valid number between 0 and 10000');
+            setShowNrOfParticipantsDialog(true);
             return null;
         }
 
@@ -201,6 +205,11 @@ const Projects = () => {
                            buttonAgree={<Button onClick={(e) => {deleteSelectedProjects(e)}}>Yes</Button>}
                            buttonCancel={<Button style={{color: "red"}} onClick={(e) => {setShowDeleteDialogMultiple(false)}}>Cancel</Button>}
               />}
+            {showNrOfParticipantsDialog &&
+              <AlertDialog title = "Number of participants" text = "Make sure the number of participants is a valid number between 0 and 10000!"
+                           buttonAgree={<Button onClick={(e) => {setShowNrOfParticipantsDialog(false)}}>Ok</Button>}
+              />}
+
                 {/* adding projects */}
                 <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
                     <TextField

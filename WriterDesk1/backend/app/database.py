@@ -1,5 +1,5 @@
 from app import db
-from app import models
+from app.models import User, Files, Projects, ParticipantToProject
 
 # helper function, TODO remove before deploy
 def initialSetup():
@@ -7,7 +7,7 @@ def initialSetup():
     db.drop_all()
     db.create_all()
     # create initial user
-    u = models.User(username='admin', password_plaintext='admin')
+    u = User(username='admin', password_plaintext='admin')
     u.role = 'admin'
     uploadToDatabase(u)
 
@@ -40,24 +40,23 @@ def getFilesByUser(user, sortingAttribute):
             Returns list of files of the given user, ordered on the given sorting attribute
     '''
 
-    files = db.session.query(models.Files).filter_by(userId=user)
+    files = db.session.query(Files).filter_by(userId=user)
 
     if sortingAttribute == "filename.asc":
-        files = files.order_by(models.Files.filename)
+        files = files.order_by(Files.filename)
     elif sortingAttribute == "filename.desc":
-        files = files.order_by(models.Files.filename.desc())
+        files = files.order_by(Files.filename.desc())
     elif sortingAttribute == "course.asc":
-        files = files.order_by(models.Files.courseCode)
+        files = files.order_by(Files.courseCode)
     elif sortingAttribute == "course.desc":
-        files = files.order_by(models.Files.courseCode.desc())
+        files = files.order_by(Files.courseCode.desc())
     elif sortingAttribute == "date.asc":
-        files = files.order_by(models.Files.date)
+        files = files.order_by(Files.date)
     elif sortingAttribute == "date.desc":
-        files = files.order_by(models.Files.date.desc())
+        files = files.order_by(Files.date.desc())
 
-    return models.Files.serializeList(files.all())
+    return Files.serializeList(files.all())
 
-# Registers new user with username and password
 def postUser(username, password):
     '''
         This function handles the signup query. When there is no user present in the database with the given username,
@@ -72,11 +71,11 @@ def postUser(username, password):
     '''
 
     # Check if there is already a user with this username
-    if db.session.query(models.User).filter_by(username=username).count() > 0:
+    if db.session.query(User).filter_by(username=username).count() > 0:
         return False
 
     # Add user to the database with student role
-    user = models.User(username=username, password_plaintext=password, role="student")
+    user = User(username=username, password_plaintext=password, role="student")
     uploadToDatabase(user)
     return True
 
@@ -90,22 +89,23 @@ def postParticipant(username, password):
             username: username as given in frontend
             password: password as given in frontend
         Return:
-            Returns the user when a new user was added to the database
+            Returns the user when a new user was added to the database. When there was already a user with the given username, the function raises an exception.
     '''
 
     # Check if there is already a user with this username
-    if db.session.query(models.User).filter_by(username=username).count() > 0:
+    if db.session.query(User).filter_by(username=username).count() > 0:
         raise Exception('User exists already')
 
     # Add user to the database with participant role
-    user = models.User(username=username, password_plaintext=password, role="participant")
+    user = User(username=username, password_plaintext=password, role="participant")
     db.session.add(user)
     db.session.flush()
     return user
 
 def postParticipantToProject(userId, projectId):
     '''
-        This function handles the query that creates an entry in ParticipantToProject, to link a participant to a research project. 
+        This function handles the query that creates an entry in ParticipantToProject, to link a participant to a research project.
+        When the project with projectId does not exist in the database, the function raises an erro.
         Attributes:
             project: query result to check if there exists a project with the given id
             dataTuple: object that is to be added to the database
@@ -113,11 +113,12 @@ def postParticipantToProject(userId, projectId):
             userId: id of the participant
             projectId: id of the research project
     '''
-    project = models.Projects.query.filter_by(id=projectId).all()
+    project = Projects.query.filter_by(id=projectId).all()
     if len(project) == 0:
+        # Project does not exist in the database
         raise Exception('Project does not exist')
 
-    dataTuple = models.ParticipantToProject(userId=userId, projectId=projectId)
+    dataTuple = ParticipantToProject(userId=userId, projectId=projectId)
     db.session.add(dataTuple)
     db.session.flush()
 
@@ -125,11 +126,16 @@ def getParticipantsByResearcher(user):
     '''
         This function handles the query for retrieving a user's participants.
         Attributes:
-            participants: result of the query, containing the participants of the given user
+            projectIds: Project ids of projects created by the user
+            participantIds: Ids for participants in the projects created by the user
+            participantInformation: userId and ProjectId of participant
+            participantsOfProject: Participants in the project
+            participantInfo: userId and ProjectId of participants in the projects created by the user
         Arguments:
             user: id of the user who's files need to be retrieved
         Return:
-            Returns list of participants of the given user
+            projectIds: Project ids of projects created by the user
+            participantInformation: userId and ProjectId of participant of projects created by the user
     '''
     # Retrieve the projects of the user
     projectIds = getProjectsByResearcher(user)
@@ -140,12 +146,12 @@ def getParticipantsByResearcher(user):
 
     # Retrieve the ids of the participants in all projects of the user
     for projectId in projectIds:
-        participantsOfProject = db.session.query(models.ParticipantToProject).filter_by(projectId=projectId)
+        participantsOfProject = db.session.query(ParticipantToProject).filter_by(projectId=projectId)
         participantIds.append(participantsOfProject)
 
     # Retrieve the information of the participants in all projects of the user
     for participantId in participantIds:
-        participantInfo = db.session.query(models.User).filter_by(id=participantId)
+        participantInfo = db.session.query(User).filter_by(id=participantId)
         participantInformation.append(participantInfo)
     
     # Return the information of the participants in all projects of the user
@@ -155,14 +161,14 @@ def getProjectsByResearcher(user):
     '''
         This function handles the query for retrieving a user's projects.
         Attributes:
-            projects: result of the query, containing the projects of the given user
+            projectIds: result of the query, containing the project ids of the given user
         Arguments:
             user: id of the user who's files need to be retrieved
         Return:
-            Returns list of projects of the given user
+            projectIds: List of project ids of the given user
     '''
     # Retrieve the projects of the user
-    projectIds = db.session.query(models.Projects).filter_by(userId=user)
+    projectIds = db.session.query(Projects).filter_by(userId=user)
 
     # does projectIds also include all the information per row? 
     # If so, then that's good for getParticipantsByResearcher

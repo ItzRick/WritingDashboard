@@ -8,16 +8,16 @@ def testRemoveFromDatabase(testClient, initDatabase):
     '''
         Test if we can remove a project from the database. We first add a project to the database and then delete it.
         After we have removed this instance, we check that we can indeed not query on this project anymore.
-        Attributes:
+        Arguments:
             testClient: The test client we test this for.
             initDatabase: The database instance we test this for.
-        Arguments:
+        Attributes:
             project: Project we create to add and remove in the database.
             response: The response of the deleteProject backend call
     '''
     del initDatabase
     # Create the project instance to be added:
-    project = Projects(userId=1, projectName='Project1')
+    project = Projects(userId=1, projectName='Project1') #TODO FIX
 
     # Add the project to the database:
     uploadToDatabase(project)
@@ -41,10 +41,10 @@ def testRemoveFromDatabaseMultiple(testClient, initDatabase):
     '''
         Test if we can remove multiple projects from the database. We first add the projects to the database and then
         delete it. After we have removed the instances, we check that we can indeed not query these projects anymore.
-        Attributes:
+        Arguments:
             testClient: The test client we test this for.
             initDatabase: The database instance we test this for.
-        Arguments:
+        Attributes:
             project1, project2: Projects we create to add and remove in the database.
             response: The response of the deleteProject backend call
     '''
@@ -81,10 +81,10 @@ def testRemoveFromDatabaseInvalidId(testClient, initDatabase):
     '''
         Test if we get a 404 status code response when we try to remove a project from the database with
         a project id that does not exist in the database.
-        Attributes:
+        Arguments:
             testClient: The test client we test this for.
             initDatabase: The database instance we test this for.
-        Arguments:
+        Attributes:
             response: The response of the deleteProject backend call
     '''
     del initDatabase
