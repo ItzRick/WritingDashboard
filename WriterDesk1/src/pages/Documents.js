@@ -5,7 +5,8 @@ import {
 } from "@mui/material";
 import {
   DeleteOutline,
-  Grading
+  Grading,
+  Refresh,
 } from "@mui/icons-material";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
@@ -18,6 +19,8 @@ import axios from 'axios';
 import React from 'react';
 import "../css/styles.css";
 import "../css/main.css";
+
+import { AuthenticationService } from "../services/authenticationService";
 
 
 /**
@@ -62,29 +65,29 @@ const Documents = () => {
       flex: 1
     },
     {
-      field: 'h1',
-      headerName: 'h1',
+      field: 'scoreStyle',
+      headerName: 'Language and Style score',
       type: "number",
       editable: false,
       flex: 1
     },
     {
-      field: 'h2',
-      headerName: 'h2',
+      field: 'scoreCohesion',
+      headerName: 'Cohesion score',
       type: "number",
       editable: false,
       flex: 1
     },
     {
-      field: 'h3',
-      headerName: 'h3',
+      field: 'scoreStructure',
+      headerName: 'Structure score',
       type: "number",
       editable: false,
       flex: 1
     },
     {
-      field: 'h4',
-      headerName: 'h4',
+      field: 'scoreIntegration',
+      headerName: 'Source Integration and Content score',
       type: "number",
       editable: false,
       flex: 1
@@ -156,9 +159,11 @@ const Documents = () => {
   const setData = () => {
     //   The backend url:
     const url = 'https://127.0.0.1:5000/fileapi/fileretrieve';
-    // The parameters, sortingAttribute and userId need to be changed later:
+    // id of current user
+    const userId = AuthenticationService.getCurrentUserId();
+    // The parameter, sortingAttribute need to be changed later:
     const params = {
-      userId: 123,
+      userId: userId,
       sortingAttribute: '',
     }
     // Make the backend call and set the table data from the response data:
@@ -191,6 +196,7 @@ const Documents = () => {
         Toolbar: () => (
           <GridToolbarContainer>
             <IconButton onClick={deleteAllFiles} ><DeleteOutline /></IconButton>
+            <IconButton onClick={setData} ><Refresh /></IconButton>
           </GridToolbarContainer>
         )
       }}

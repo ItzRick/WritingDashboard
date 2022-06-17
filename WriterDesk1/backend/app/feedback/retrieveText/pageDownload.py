@@ -81,7 +81,7 @@ def scrapePage(url):
     blacklist = [
         '[document]',
         'noscript',
-        'style'
+        'style',
         'header',
         'html',
         'meta',

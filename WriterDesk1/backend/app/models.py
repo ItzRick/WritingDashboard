@@ -10,23 +10,28 @@ class User(db.Model):
         Declare user model containing usernames and passwords (hashed), we use single table inheritance for different types of users.
         Cascade makes sure that if a User is removed, related files instances in the db are also removed
         Attributes:
-            type: used as discrimator, indicates type of object in row
+            role: Identifies role of user, role is one of: ['admin', 'participant', 'researcher', 'student']
             id: Unique primary key User ID 
             username: email address or username from user
             passwordHash: hashed password from user, hashed using werkzeug.security
     '''
     __tablename__ = "user"
-    type = db.Column(db.String(32))
+    role = db.Column(db.String(32))
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), index=True, unique=True)
     passwordHash = db.Column(db.String(128))
-    
-    def __init__(self, username: str, password_plaintext: str):
-        ''' Create new user, use set_password to create hashed password for plaintext password'''
-        self.type = "user"
+
+    def __init__(self, username: str, password_plaintext: str, role: str ='user'):
+        ''' 
+            Create new user, use set_password to create hashed password for plaintext password
+            Arguments:
+                username: Username of new user
+                password_plaintext: Password (to be hashed) for new user
+                role: Role of new user, standard is: 'user'        
+        '''
+        self.role = role
         self.username = username
         self.set_password(password_plaintext)
-        # self.id = 123 # Activate me together with initialSetup() in fileapi > uploadfile() # TODO remove before deploy
 
     def serializeUser(self):
         dict = {}
@@ -50,32 +55,6 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.passwordHash, password)
-
-    __mapper_args__ = {
-        'polymorphic_on': type,
-        'polymorphic_identity':"user",
-    }
-
-class Student(User):
-    '''
-        Subclass of User table, for students
-    '''
-
-    __tablename__ = None
-    
-    __mapper_args__ = {
-        'polymorphic_identity': "student",
-    }
-
-class Participant(User):
-    '''
-        Subclass of User table, for participantszz
-    '''
-    __tablename__ = None
-    
-    __mapper_args__ = {
-        'polymorphic_identity': "participant",
-    }
 
 class Files(db.Model):
     '''
@@ -102,6 +81,13 @@ class Files(db.Model):
         for c in inspect(self).attrs.keys():
             if not c == 'scores' and not c == 'explanations' and not c == 'owner':
                 dict[c] =  getattr(self, c)
+            elif c == 'scores':
+                for scores in self.scores.all():
+                    for d in inspect(scores).attrs.keys():
+                        if d != 'fileId' and d != 'scoredFile': 
+                            attr = getattr(scores, d)
+                            if attr >= 0:
+                                dict[d] = getattr(scores, d)
         return dict
 
     @staticmethod
@@ -156,8 +142,8 @@ class Explanations(db.Model):
             Y2: Y of the bottom left corner of the boxing rectangle
             replacement1..3: Three possible replacements for the mistakeText
     '''
-    fileId      = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
-    explId      = db.Column(db.Integer, primary_key=True)
+    fileId      = db.Column(db.Integer, db.ForeignKey('files.id'), index=True)
+    explId      = db.Column(db.Integer, primary_key=True, autoincrement=True)
     type        = db.Column(db.Integer, default=-1)
     explanation = db.Column(db.String, default='')
     mistakeText = db.Column(db.String, default='')

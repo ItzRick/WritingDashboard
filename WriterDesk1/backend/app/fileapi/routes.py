@@ -3,11 +3,11 @@ from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify, send_file
 from app.models import Files
 from app.fileapi import bp
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup
+from app.fileapi.convert import convertDocx, convertTxt
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from magic import from_buffer
 from datetime import date
 from mimetypes import guess_extension
-from fpdf import FPDF
 
 @bp.route('/upload', methods = ['POST'])
 def fileUpload():
@@ -31,7 +31,6 @@ def fileUpload():
             existing: current existing files with the same userId and fileName 
             associated in the database for the current file that is being handled.
     '''
-    # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
     # Retrieve the files as send by the react frontend and give this to the fileUpload function,
     # which does all the work:
     files = request.files.getlist('files')
@@ -214,21 +213,14 @@ def displayFile():
     '''
     filepath = request.args.get('filepath')
     filetype = request.args.get('filetype')
-    # if the document is a docx file, use the convert method from the docx2pdf module and return the converted document.
+    # if the document is a docx file, convert using the convertDocx module and return the converted document.
     if filetype == 'docx':
-        if not os.path.isfile(filepath.replace("docx", "pdf")):
-            convert(filepath)
-        return send_file(filepath.replace("docx", "pdf"))
+        newPath = convertDocx(filepath)
+        return send_file(newPath)
     # if the document is a txt file, convert it to a pdf by making a new pdf using the contents of the txt file,
     # then return the converted document.
-    if filetype == 'txt':
-        if not os.path.isfile(filepath.replace("txt", "pdf")):
-            pdf = FPDF()
-            pdf.add_page()
-            pdf.set_font("Arial", size=15)
-            f = open(filepath, "r")
-            for x in f:
-                pdf.multi_cell(w=0, h=10, txt = x, align = 'L')
-            pdf.output(filepath.replace("txt", "pdf"))
-        return send_file(filepath.replace("txt", "pdf"))
+    elif filetype == 'txt':
+        newPath = convertTxt(filepath)
+        return send_file(newPath)
+    # The file has not been converted, send the original file.
     return send_file(filepath)
