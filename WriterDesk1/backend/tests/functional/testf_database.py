@@ -1,8 +1,9 @@
-from app.models import Files, Scores, Explanations
-from app.database import uploadToDatabase, getFilesByUser
+from app.models import Files, Scores, Explanations, User
+from app.database import uploadToDatabase, getFilesByUser, recordsToCsv
 from app import db
 from datetime import datetime
-# import os
+import os
+from flask import current_app
 
 def testValidFile(testClient, initDatabase):
     '''
@@ -215,3 +216,45 @@ def testUploadToDBExplanation(testClient, initDatabase):
     assert explanation.replacement1== 'vier'
     assert explanation.replacement2== ''
     assert explanation.replacement3== ''
+
+def testRecordsToCsv(testClient, initDatabase):
+    '''
+        Test if the recordsToCsv function creates a csv file with the correct data. 
+        Attributes:
+            user1: User data to check in the created csv file
+            user2: more User data to check in the created csv file
+            users: username and role of users with a username starting with 'csv'
+            result: query result converted to dictionary form
+            path: path to the created csv file
+            BASEDIR: directory this file and the test csv file are in
+            testFilePath: path to the test csv file
+            fileOne: list of lines from newly created csv file
+            fileTwo: list of lines from test csv file
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+
+    del testClient, initDatabase
+    user1 = User(username="csv@tue.nl", password_plaintext="Password1", role="participant")
+    uploadToDatabase(user1)
+    user2 = User(username="csv2@tue.nl", password_plaintext="Password1", role="participant")
+    uploadToDatabase(user2)
+
+    users = User.query.with_entities(User.username, User.role).filter(User.username.startswith("csv")).all()
+    result = [{col: getattr(u, col) for col in u.keys()} for u in users]
+    assert len(result) == 2
+
+    path = os.path.join(current_app.config['UPLOAD_FOLDER'], "result.csv")
+    recordsToCsv(path, result)
+
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    testFilePath = os.path.join(BASEDIR, 'testcsv.csv')
+
+    with open(path, 'r', encoding="utf-8-sig") as csv1, open(testFilePath, 'r', encoding="utf-8-sig") as csv2:
+        fileOne = csv1.readlines()
+        fileTwo = csv2.readlines()
+
+    assert len(fileOne) == len(fileTwo)
+    for line in fileOne:
+        assert line in fileTwo

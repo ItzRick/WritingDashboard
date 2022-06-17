@@ -47,11 +47,21 @@ def getFilesByUser(user, sortingAttribute):
 
     return models.Files.serializeList(files.all())
 
-def recordsToCsv(path, records):
-    outfile = open(path, 'w', newline='')
+def recordsToCsv(path, records, columns=[]):
+    '''
+        Writes data from records into a csv at path.
+        Attributes:
+            outFile: file at path to write data to
+            outCsv: csv file to put the data in
+            fieldNames: list of names of the columns of the csv file
+        Arguments:
+            path: path of the created csv file
+            records: data in dictionary form that is put into the csv file
+    '''
+    with open(path, 'w', newline='') as outFile:
+        # Use specified column names or names from table 
+        fieldNames = [column[0] for column in records[0].items()]
 
-    outcsv = csv.DictWriter(outfile, fieldnames=[column[0] for column in records[0].items()])
-    outcsv.writeheader()
-    [outcsv.writerow(record) for record in records]
-
-    outfile.close()
+        outCsv = csv.DictWriter(outFile, fieldnames=fieldNames)
+        outCsv.writeheader()
+        [outCsv.writerow(record) for record in records]
