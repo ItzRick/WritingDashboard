@@ -73,8 +73,12 @@ def testRetrieveUsers(testClient, initDatabase):
                          ]
 
     # Check if the expected response is correct:
-    assert json.loads(response.data) == expected_response
-
+    data = json.loads(response.data)
+    assert expected_response[0] in data
+    assert expected_response[1] in data
+    assert expected_response[2] in data
+    assert expected_response[3] in data
+    assert expected_response[4] in data
 
 def testNotAdmin(testClient, initDatabase):
     '''
