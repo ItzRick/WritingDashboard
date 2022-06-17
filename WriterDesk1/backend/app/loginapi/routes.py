@@ -161,16 +161,12 @@ def setPassword():
         Return:
             Returns success if it succeeded, or an 
             error message:
-                404, if the current user's id does not exist in User table
+                403, if the current user's password is incorrect
     '''
     # retrieve data from call
     newPassword = request.json.get('newPassword')
     oldPassword = request.json.get('oldPassword')
-
-    # check if current_user is actually in Users
-    if User.query.filter_by(id=current_user.id).first() is None:
-        return 'user not found', 404
-    
+   
     # set password using user function if the password is correct, else return error message:
     if current_user.check_password(oldPassword):
         current_user.set_password(newPassword)
