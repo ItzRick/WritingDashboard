@@ -5,11 +5,16 @@ import BlueButton from "./../components/BlueButton";
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+// Import the AuthenticationService for the logout:
+import {AuthenticationService} from '../services/authenticationService';
+// Import the history to be able to go to the homepage after logout:
+import {history} from '../helpers/history';
 // Change password request setup
 import { authHeader } from '../helpers/auth-header';
 import axios from 'axios';
 const BASE_URL = "https://localhost:5000/loginapi";
 const PASSWORD_LENGTH = 8;
+
 
 /**
  * 
@@ -61,6 +66,16 @@ const Settings = () => {
         return "";
     }
 
+    /* 
+    * Logs out the user and redirects the user to the homepage.
+    */   
+    const logout = () => {
+        AuthenticationService.logout();
+        history.push('/');
+        window.location.reload();
+    }
+
+    
     
     /*
      * Do POST request containing new and old password variables, recieve status of response.
@@ -95,7 +110,8 @@ const Settings = () => {
     return (
         <>
             <div className='title'>
-                <BlueButton> Log out </BlueButton>
+                {/* The logout button: */}
+                <BlueButton onClick={logout}> Log out </BlueButton>
                 <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Data setting
