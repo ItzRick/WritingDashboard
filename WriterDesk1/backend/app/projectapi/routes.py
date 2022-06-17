@@ -16,7 +16,12 @@ from flask_jwt_extended import current_user
 
 @bp.route('/addparticipants', methods=["POST"])
 def addParticipantsToExistingProject():
-
+    '''
+    This function handles the creation of new participants and adding them to an existing project.
+    Attributes:
+        count: the number of participants that should be added
+        projectId: the id of the project the participants should be added to
+    '''
     # Retrieve data from request
     count = int(request.json.get("count", None))
     projectId = int(request.json.get("projectid", None))
