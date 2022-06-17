@@ -10,7 +10,7 @@ import json
 from test_set_role import loginHelper
 
 
-def testRetrieveUsers(testClient, initDatabaseEmpty):
+def testRetrieveUsers(testClient, initDatabase):
     '''
         This test checks the retrieval of of user data of all users except participants, in a json file.
         Attributes:
@@ -19,13 +19,13 @@ def testRetrieveUsers(testClient, initDatabaseEmpty):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
     '''
-    del initDatabaseEmpty
-
+    del initDatabase
     # We add five users to the database session
     try:
         db.session.commit()
     except:
         db.session.rollback()
+        assert False
     try:
         user = User(username='John', password_plaintext='blegh')
         db.session.add(user)
@@ -37,14 +37,32 @@ def testRetrieveUsers(testClient, initDatabaseEmpty):
         db.session.commit()
     except:
         db.session.rollback()
+        assert False
+
+    assert User.query.filter_by(username='ad').first() is not None
+
+    # get access token for ad
+    access_token = loginHelper(testClient, 'ad', 'min')
 
     # Retrieve the users except for those with the participant role
-    response = testClient.get('/usersapi/users')
+    response = testClient.get('/usersapi/users', headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
     # Create the expected response:
     expected_response = [dict(role='user',
+                              id=User.query.filter_by(username='Pietje').first().id,
+                              username='Pietje'
+                              ),
+                        dict(role='user',
+                              id=User.query.filter_by(username='Donald').first().id,
+                              username='Donald'
+                              ),
+                        dict(role='admin',
+                              id=User.query.filter_by(username='ad').first().id,
+                              username='ad'
+                              ),
+                        dict(role='user',
                               id=User.query.filter_by(username='John').first().id,
                               username='John'
                               ),
@@ -84,14 +102,7 @@ def testNotAdmin(testClient, initDatabase):
     # get access token for Pietje Bell
     access_token = loginHelper(testClient, 'Pietje', 'Bell')
 
-    newRole = 'student'
-    # set new role in data
-    data = {
-        'userId': userId,
-        'newRole': newRole
-    }
-
-    response = testClient.post('/usersapi/users', data=data, headers={"Authorization": "Bearer " + access_token})
+    response = testClient.get('/usersapi/users', headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 403
     assert response.data == b'Method only accessible for admin users'
 
@@ -121,12 +132,5 @@ def testAdmin(testClient, initDatabase):
     # get access token for Ad
     access_token = loginHelper(testClient, 'ad', 'min')
 
-    newRole = 'admin'
-    # set new role in data
-    data = {
-        'userId': userId,
-        'newRole': newRole
-    }
-
-    response = testClient.post('/usersapi/users', data=data, headers={"Authorization": "Bearer " + access_token})
+    response = testClient.get('/usersapi/users', headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
