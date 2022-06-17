@@ -5,6 +5,7 @@ import BlueButton from "./../components/BlueButton";
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+// Import the AuthenticationService for the logout:
 import {AuthenticationService} from '../services/authenticationService';
 // Import the history to be able to go to the homepage after logout:
 import {history} from '../helpers/history';
