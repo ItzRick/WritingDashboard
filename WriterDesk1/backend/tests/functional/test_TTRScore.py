@@ -11,15 +11,15 @@ from string import ascii_lowercase
     number of tokens.
 '''
 
-def testTTRZeroWords(testClient):
+def testTTRZeroWords(testClient, downloadNltk):
     '''
         Test if a text with zero words returns None.
     '''
-    del testClient
+    del testClient, downloadNltk
     score = getTTRScore('')
     assert score == None
 
-def testTTRSentenceWithMinScore(testClient):
+def testTTRSentenceWithMinScore(testClient, downloadNltk):
     '''
         Test if a sentence with only similar elements has the correct score and
         returns correct most used words.
@@ -28,12 +28,12 @@ def testTTRSentenceWithMinScore(testClient):
         Since the sentence only has one similar element, this should be the 
         most used word.
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ('Big bigger biggest.')
     score = getTTRScore(text)
     assert score == (3.33, ['big'])
 
-def testTTRTextWithMinScore(testClient):
+def testTTRTextWithMinScore(testClient, downloadNltk):
     '''
         Test if a text with only similar elements has the correct score and 
         returns correct most used words.
@@ -42,38 +42,38 @@ def testTTRTextWithMinScore(testClient):
         Since the sentence only has one similar element, this should be the 
         most used word.
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ('Big bigger biggest. Bigger. Biggest. Big bigger. Bigger biggest '
         'big!')
     score = getTTRScore(text)
     assert score == (1.0, ['big'])
 
-def testTTRSentenceWithMaxScore(testClient):
+def testTTRSentenceWithMaxScore(testClient, downloadNltk):
     '''
         Test if a sentence with only unique elements has the maximum score, 
         this is 10.0, and returns correct most used words.
         Since every word in the sentence is unique, this should be the first
         3 words (lematized).
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ('He is a very unique animal.')
     score = getTTRScore(text)
     assert score == (10.0, ['he', 'be', 'a'])
 
-def testTTRTextWithMaxScore(testClient):
+def testTTRTextWithMaxScore(testClient, downloadNltk):
     '''
         Test if a text with only unique elements has the maximum score,
         this is 10.0, and returns correct most used words.
         Since every word in the text is unique, this is should be the first
         3 words (lematized).
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ('He is a very unique animal. That shows amazing results. No wonder'
         ' they exist in here.')
     score = getTTRScore(text)
     assert score == (10.0, ['he', 'be', 'a'])
 
-def testTTRSingleSentence(testClient):
+def testTTRSingleSentence(testClient, downloadNltk):
     '''
         Test if a simple text of one sentence returns the correct score
         and returns the correct most used words.
@@ -88,12 +88,12 @@ def testTTRSingleSentence(testClient):
         ("be" and "big") and then the first token (which is not one of these
         two).
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ('They are very big and that person is also bigger.')
     score = getTTRScore(text)
     assert score == (8.0, ['be', 'big', 'they'])
 
-def testTTRThreeSentences(testClient):
+def testTTRThreeSentences(testClient, downloadNltk):
     '''
         Test if a simple text of three sentences returns the correct score
         and returns the correct most used words.
@@ -108,12 +108,12 @@ def testTTRThreeSentences(testClient):
         ("be" and "big") and then the first token (which is not one of these 
         two).
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ('They are very big. That person is bigger. He is the biggest.')
     score = getTTRScore(text)
     assert score == (round(8/12*10,2), ['be', 'big', 'they'])
 
-def testTTRWindowsizeMinScore(testClient): 
+def testTTRWindowsizeMinScore(testClient, downloadNltk): 
     '''
         Test if a text with a windowsize bigger than 50 still gets the 
         correct score despite the text after the 50 similar words containing
@@ -125,12 +125,12 @@ def testTTRWindowsizeMinScore(testClient):
         The correct most used words are then the oftenly repeated word and then
         the first two other tokens.
     '''
-    del testClient
+    del testClient, downloadNltk
     text = 'big '*51 + 'hello this is a different text'
     score = getTTRScore(text)
     assert score == (round((1+1+2+3+4+5+6+7)/8/5,2), ['big', 'hello', 'this'])
 
-def testTTRWindowsizeMaxScore(testClient): 
+def testTTRWindowsizeMaxScore(testClient, downloadNltk): 
     '''
         Test if a text with a windowsize bigger than 50 still gets the 
         correct score despite the text after the 50 different words containing
@@ -141,7 +141,7 @@ def testTTRWindowsizeMaxScore(testClient):
         Hence, the score should be 9.98 (same calculation as last test).
         And the correct most used words.
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ''
     for first_letter in ascii_lowercase:
         for second_letter in ascii_lowercase:

@@ -9,11 +9,11 @@ from string import ascii_lowercase
     This explanation is based on what the other two functions return.
 '''
 
-def testGenerateFeedbackZeroWords(testClient):
+def testGenerateFeedbackZeroWords(testClient, downloadNltk):
     '''
         Test if a text with zero words returns None.
     '''
-    del testClient
+    del testClient, downloadNltk
     score = generateExplanation('')
     assert score == None
 
@@ -36,7 +36,7 @@ def testOneWordText(testClient):
     assert score == (5.0, expected_feedback)
 
 
-def testOneWordText(testClient):
+def testOneWordText(testClient, downloadNltk):
     '''
         Test if a text consisting of only one word which is a connective
         returns the correct feedback and score.
@@ -45,7 +45,7 @@ def testOneWordText(testClient):
         The expected feedback is that of the highest score of TTR and 
         the lowest score of connectives. 
     '''
-    del testClient
+    del testClient, downloadNltk
     text = "But"
     score = generateExplanation(text)
     expected_feedback = ("Your score for cohesion is 5.0.\nThe amount of "
@@ -54,7 +54,7 @@ def testOneWordText(testClient):
         "link other linguistic units.")
     assert score == (5.0, expected_feedback)
 
-def testTTRHighest(testClient):
+def testTTRHighest(testClient, downloadNltk):
     '''
         Test if a text with a TTR score bigger or equal to 9 returns the
         correct feedback and score.
@@ -63,7 +63,7 @@ def testTTRHighest(testClient):
         Hence, the feedback on TTR score should be: "The amount of variation of
         words you use is very good."
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ''
     for first_letter in ascii_lowercase:
         for second_letter in ascii_lowercase:
@@ -75,7 +75,7 @@ def testTTRHighest(testClient):
     assert score[0] == 4.99
     assert score[1].splitlines()[1] == expected_feedback
 
-def testTTRSecondHighest(testClient):
+def testTTRSecondHighest(testClient, downloadNltk):
     '''
         Test if a text with a TTR score bigger or equal to 7 and lower than 9
         returns the correct feedback and score. 
@@ -86,7 +86,7 @@ def testTTRSecondHighest(testClient):
         of words, however you could improve this some more. These are your most
         used words: "be", "big" and "they"."
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ('They are very big and that person is also bigger.')
     score = generateExplanation(text)
     expected_feedback = ("You used enough variation of words, however you "
@@ -95,7 +95,7 @@ def testTTRSecondHighest(testClient):
     assert score[0] == 4.0
     assert score[1].splitlines()[1] == expected_feedback
 
-def testTTRSecondLowest(testClient):
+def testTTRSecondLowest(testClient, downloadNltk):
     '''
         Test if a text with a TTR score bigger or equal to 5 and lower than 7
         returns the correct feedback and score.
@@ -106,7 +106,7 @@ def testTTRSecondLowest(testClient):
         variation of words, you should improve on this. These are your most
         used words: "be", "big" and "they"."
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ('They are very big. That person is bigger. He is the biggest.')
     score = generateExplanation(text)
     expected_feedback = ("You barely have enough variation of words, you "
@@ -115,7 +115,7 @@ def testTTRSecondLowest(testClient):
     assert score[0] == 3.33
     assert score[1].splitlines()[1] == expected_feedback
 
-def testTTRLowest(testClient):
+def testTTRLowest(testClient, downloadNltk):
     '''
         Test if a text with a TTR score lower than 5 returns the correct 
         feedback and score.
@@ -126,7 +126,7 @@ def testTTRLowest(testClient):
         variation in terms of words, you are using the same words too much.
         These are your most used words: "big", "hello" and "this"."
     '''
-    del testClient
+    del testClient, downloadNltk
     text = 'big '*51 + 'hello this is a different text'
     score = generateExplanation(text)
     expected_feedback = ("You did not use enough variation in terms of words, "
@@ -136,7 +136,7 @@ def testTTRLowest(testClient):
     assert score[1].splitlines()[1] == expected_feedback
 
 
-def testConnectivesHighest(testClient):
+def testConnectivesHighest(testClient, downloadNltk):
     '''
         Test if a text with a connectives score bigger or equal to 9 returns
         the correct feedback and score.
@@ -146,7 +146,7 @@ def testConnectivesHighest(testClient):
         connectives you used is very good."
 
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ('They are very big, although he is the biggest.')
     score = generateExplanation(text)
     expected_feedback = "The amount of connectives you used is very good."
@@ -154,7 +154,7 @@ def testConnectivesHighest(testClient):
     assert score[1].splitlines()[2] == expected_feedback
 
 
-def testConnectivesSecondHighestFewConnectives(testClient):
+def testConnectivesSecondHighestFewConnectives(testClient, downloadNltk):
     '''
         Test if a text with a connectives score bigger or equal to 7 and lower
         than 9 and an index score lower than 0.09 returns the correct feedback
@@ -164,14 +164,14 @@ def testConnectivesSecondHighestFewConnectives(testClient):
         Hence, the feedback on connective score should be: "You could use some
         more connectives in your text."
     '''
-    del testClient
+    del testClient, downloadNltk
     text = 'However' + 16*' hey'
     score = generateExplanation(text)
     expected_feedback = "You could use some more connectives in your text."
     assert score[0] == 4.78
     assert score[1].splitlines()[2] == expected_feedback
 
-def testConnectivesSecondHighestManyConnectives(testClient):
+def testConnectivesSecondHighestManyConnectives(testClient, downloadNltk):
     '''
         Test if a text with a connectives score bigger or equal to 7 and lower
         than 9 and an index score higher than 0.09 returns the correct feedback
@@ -181,7 +181,7 @@ def testConnectivesSecondHighestManyConnectives(testClient):
         Hence, the feedback on connective score should be: "You could use a bit
         less connectives in your text."
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ('Despite the fact that they are very big, unfortunantely he is the'
         ' biggest all in all.')
     score = generateExplanation(text)
@@ -189,7 +189,7 @@ def testConnectivesSecondHighestManyConnectives(testClient):
     assert score[0] == 7.73
     assert score[1].splitlines()[2] == expected_feedback
 
-def testConnectivesSecondLowestFewConnectives(testClient):
+def testConnectivesSecondLowestFewConnectives(testClient, downloadNltk):
     '''
         Test if a text with a connectives score bigger or equal to 5 and lower
         than 7 and an index score lower than 0.09 returns the correct feedback
@@ -199,14 +199,14 @@ def testConnectivesSecondLowestFewConnectives(testClient):
         Hence, the feedback on connective score should be: "You should use mor
         connectives in your text."
     '''
-    del testClient
+    del testClient, downloadNltk
     text = 'However' + 25*' hey'
     score = generateExplanation(text)
     expected_feedback = "You should use more connectives in your text."
     assert score[0] == 3.17
     assert score[1].splitlines()[2] == expected_feedback
 
-def testConnectivesSecondLowestManyConnectives(testClient):
+def testConnectivesSecondLowestManyConnectives(testClient, downloadNltk):
     '''
         Test if a text with a connectives score bigger or equal to 5 and lower
         than 7 and an index score higher than 0.09 returns the correct feedback
@@ -216,14 +216,14 @@ def testConnectivesSecondLowestManyConnectives(testClient):
         Hence, the feedback on connective score should be: "You should use less
         connectives in your text."
     '''
-    del testClient
+    del testClient, downloadNltk
     text = 'However' + 6*' hey'
     score = generateExplanation(text)
     expected_feedback = "You should use less connectives in your text."
     assert score[0] == 4.1
     assert score[1].splitlines()[2] == expected_feedback
 
-def testConnectivesLowestFewConnectives(testClient):
+def testConnectivesLowestFewConnectives(testClient, downloadNltk):
     '''
         Test if a text with a connectives score lower than 5 and an index score
         lower than 0.09 returns the correct feedback and score.
@@ -232,14 +232,14 @@ def testConnectivesLowestFewConnectives(testClient):
         Hence, the feedback on connective score should be: "You don't have
         enough connectives in your text."     
     '''
-    del testClient
+    del testClient, downloadNltk
     text = ('They are very big.')
     score = generateExplanation(text)
     expected_feedback = "You don't have enough connectives in your text."
     assert score[0] == 5.0
     assert score[1].splitlines()[2] == expected_feedback
 
-def testConnectivesLowestManyConnectives(testClient):
+def testConnectivesLowestManyConnectives(testClient, downloadNltk):
     '''
         Test if a text with a connectives score lower than 5 and an index score
         higher than 0.09 returns the correct feedback and score.
@@ -248,7 +248,7 @@ def testConnectivesLowestManyConnectives(testClient):
         Hence, the feedback on connective score should be: "You have too many
         connectives in your text."
     '''
-    del testClient
+    del testClient, downloadNltk
     text = 'Although, although although.'
     score = generateExplanation(text)
     expected_feedback = "You have too many connectives in your text."

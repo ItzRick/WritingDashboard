@@ -141,3 +141,7 @@ def englishStopwords():
     nltk.download('punkt')
     english_stopwords = stopwords.words('english')
     return english_stopwords
+
+@pytest.fixture(scope='module')
+def downloadNltk():
+    nltk.download('averaged_perceptron_tagger')
