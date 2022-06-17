@@ -66,7 +66,11 @@ function Progress() {
                         // Scores can be between 0 and 10, so the y-axis range is set accordingly:
                         yaxis: {
                             range: [0, 10],
+                            fixedrange: true,
                             type: 'linear'
+                        },
+                        xaxis: {
+                            fixedrange: true,
                         }
                     }}
                     // Do not display the plotly modebar:
