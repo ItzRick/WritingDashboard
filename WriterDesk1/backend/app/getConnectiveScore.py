@@ -13,14 +13,7 @@ def getConnectiveScore(text):
             connectivesCheck: list filled with all connectives from the TAACO
                     user manual as strings.
             tokens: list containing the text split up into tokens as strings.
-            numberOfConnectives: integer, number of connectives in text.
-            indexScore: float, calculated by dividing numberOfConnectives by
-                    the size of tokens (the total number of tokens/words) in 
-                    the text.
-            connectivesScore: float, connectives score calculated as follows: 
-                    -3.5 + 300*indexScore - 1666.667*indexScore^2. We take the
-                    max of this result and 0, then we round the result to 2 
-                    decimals.
+            numberOfConnectives: integer, number of connectives in text.        
         Arguments:
             text: string, the text on which the connective score should be 
                     calculated.
@@ -107,13 +100,16 @@ def getConnectiveScore(text):
     # by the total number of tokens (words) in the text.
     indexScore = numberOfConnectives/len(tokens)
 
-    # Calculate the connectives score by putting the indexScore into the 
-    # following 2nd order polynomial: y = -3.5 + 300*x - 1666.667*x^2, where 
-    # y is the connectives score and x is the indexScore. 
-    # We take the max of this result and 0, since we grade in the range [0,10].
-    # Then we round the result to 2 decimals.
+    """
+        Calculate the connectives score by putting the indexScore into the
+        following 2nd order polynomial: y = -3.5 + 300*x - 1666.667*x^2, 
+        where y is the connectives score and x is the indexScore. 
+        We take the max of this result and 0, since we grade in the range [0,10].
+        Then we round the result to 2 decimals.
+    """
     connectivesScore = round(max(-3.5 + 300*indexScore - 1666.667*indexScore**\
         2, 0), 2)
     
     # Return the calculated connectives score and indexScore.
     return connectivesScore, indexScore
+    

@@ -11,9 +11,13 @@ from app.getConnectiveScore import getConnectiveScore
 def testConZeroWords(testClient):
     '''
         Test if a text with zero words returns None.
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes:             
+            score: The scores given for the connective and index score.
     '''
     del testClient
-    score = getConnectiveScore('')
+    score = getConnectiveScore("")
     assert score == None
 
 def testConOneSentencesNoConnectives(testClient):
@@ -23,12 +27,17 @@ def testConOneSentencesNoConnectives(testClient):
         The sentence does not contain any connective, so it should return 0.
         We then insert this index score into the 2nd order polynomial to get
         the expected score.
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes: 
+            text: Input text for the test.
+            index: Expected index score.
+            expected: Expected connective score.
+            score: The scores given for the connective and index score.
     '''
     del testClient
-    text = ('They are very big.')
-    nrOfConnectives = 0
-    nrOfTokens = 4
-    index = nrOfConnectives/nrOfTokens
+    text = "They are very big."    
+    index = 0/4
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
     score = getConnectiveScore(text)
     assert score == (expected, index)
@@ -41,10 +50,16 @@ def testConThreeSentencesNoConnective(testClient):
         be 0.
         We then insert this index score into the 2nd order polynomial to get
         the expected score.
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes: 
+            text: Input text for the test.
+            index: Expected index score.
+            expected: Expected connective score.
+            score: The scores given for the connective and index score.
     '''
     del testClient
-    text = ('They are very big. That person is bigger. He is the biggest.')
-    score = getConnectiveScore(text)
+    text = "They are very big. That person is bigger. He is the biggest."
     index = 0
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
     score = getConnectiveScore(text)
@@ -58,12 +73,17 @@ def testConOneSentenceSingleConnective(testClient):
         index score should be 1/9.
         We then insert this index score into the 2nd order polynomial to get
         the expected score.
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes: 
+            text: Input text for the test.
+            index: Expected index score.
+            expected: Expected connective score.
+            score: The scores given for the connective and index score.
     '''
     del testClient
-    text = ('They are very big, although he is the biggest.')
-    nrOfConnectives = 1
-    nrOfTokens = 9
-    index = nrOfConnectives/nrOfTokens
+    text = "They are very big, although he is the biggest."
+    index = 1/9
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
     score = getConnectiveScore(text)
     assert score == (expected, index)
@@ -76,13 +96,18 @@ def testConOneSentenceMultipleConnectives(testClient):
         the index score should be 2/16.
         We then insert this index score into the 2nd order polynomial to get
         the expected score.
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes: 
+            text: Input text for the test.
+            index: Expected index score.
+            expected: Expected connective score.
+            score: The scores given for the connective and index score.
     '''
     del testClient
-    text = ('Despite the fact that they are very big, unfortunantely he is the'
-        ' biggest all in all.')
-    nrOfConnectives = 2
-    nrOfTokens = 16
-    index = nrOfConnectives/nrOfTokens
+    text = ("Despite the fact that they are very big, unfortunantely he is the"
+        " biggest all in all.")    
+    index = 2/16
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
     score = getConnectiveScore(text)
     assert score == (expected, index)
@@ -95,12 +120,17 @@ def testConMoreSentencesSingleConnective(testClient):
         thus the index score should be 1/9.
         We then insert this index score into the 2nd order polynomial to get
         the expected score.
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes: 
+            text: Input text for the test.
+            index: Expected index score.
+            expected: Expected connective score.
+            score: The scores given for the connective and index score.
     '''
     del testClient
-    text = ('They are very big. Although he is the biggest.')
-    nrOfConnectives = 1
-    nrOfTokens = 9
-    index = nrOfConnectives/nrOfTokens
+    text = "They are very big. Although he is the biggest."
+    index = 1/9
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
     score = getConnectiveScore(text)
     assert score == (expected, index)
@@ -113,13 +143,18 @@ def testConMoreSentencesMultipleConnectives(testClient):
         thus the index score should be 2/16.
         We then insert this index score into the 2nd order polynomial to get
         the expected score.
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes: 
+            text: Input text for the test.
+            index: Expected index score.
+            expected: Expected connective score.
+            score: The scores given for the connective and index score.
     '''
     del testClient
-    text = ('Despite the fact that they are very big. Unfortunantely he is the'
-        ' biggest all in all.')
-    nrOfConnectives = 2
-    nrOfTokens = 16
-    index = nrOfConnectives/nrOfTokens
+    text = ("Despite the fact that they are very big. Unfortunantely he is the"
+        " biggest all in all.")
+    index = 2/16
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
     score = getConnectiveScore(text)
     assert score == (expected, index)
@@ -131,12 +166,17 @@ def testConOneSentencesAllConnectives(testClient):
         The index score should then be 1.
         We then insert this index score into the 2nd order polynomial to get
         the expected score. 
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes: 
+            text: Input text for the test.
+            index: Expected index score.
+            expected: Expected connective score.
+            score: The scores given for the connective and index score.
     '''
     del testClient
-    text = 'Although, although although.'
-    nrOfConnectives = 3
-    nrOfTokens = 3
-    index = nrOfConnectives/nrOfTokens
+    text = "Although, although although."
+    index = 3/3
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
     score = getConnectiveScore(text)
     assert score == (expected, index)
@@ -148,12 +188,17 @@ def testConMoreSentencesAllConnectives(testClient):
         The index score should then be 1.
         We then insert this index score into the 2nd order polynomial to get
         the expected score. 
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes: 
+            text: Input text for the test.
+            index: Expected index score.
+            expected: Expected connective score.
+            score: The scores given for the connective and index score.
     '''
     del testClient
-    text = 'Although, although although. '*4
-    nrOfConnectives = 12
-    nrOfTokens = 12
-    index = nrOfConnectives/nrOfTokens
+    text = "Although, although although. "*4
+    index = 12/12
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
     score = getConnectiveScore(text)
     assert score == (expected, index)
@@ -167,12 +212,17 @@ def testBigTextMinScore(testClient):
         thus the index score should be 50/54.
         We then insert this index score into the 2nd order polynomial to get
         the expected score.
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes: 
+            text: Input text for the test.
+            index: Expected index score.
+            expected: Expected connective score.
+            score: The scores given for the connective and index score.
     '''
     del testClient
-    text = 'Although '*50 + 'They are very big.'
-    nrOfConnectives = 50
-    nrOfTokens = 54
-    index = nrOfConnectives/nrOfTokens
+    text = "Although "*50 + "They are very big."
+    index = 50/54
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
     score = getConnectiveScore(text)
     assert score == (expected, index)
@@ -186,12 +236,17 @@ def test_con_windowsize_min_score(testClient):
         thus the index score should be 3/63.
         We then insert this index score into the 2nd order polynomial to get
         the expected score.
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes: 
+            text: Input text for the test.
+            index: Expected index score.
+            expected: Expected connective score.
+            score: The scores given for the connective and index score.
     '''
     del testClient
-    text = ('They are very big. ')*15 + 'although although although'
-    nrOfConnectives = 3
-    nrOfTokens = 63
-    index = nrOfConnectives/nrOfTokens
+    text = "They are very big. "*15 + "although although although"
+    index = 3/63
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
     score = getConnectiveScore(text)
     assert score == (expected, index)

@@ -14,9 +14,15 @@ from string import ascii_lowercase
 def testTTRZeroWords(testClient, downloadNltk):
     '''
         Test if a text with zero words returns None.
+        Arguments: 
+            testClient: The test client we test this for.
+            downloadNltk: Function needed to download corpora used in this
+                    method.
+        Attributes: 
+            score: The score given for the TTR score.
     '''
     del testClient, downloadNltk
-    score = getTTRScore('')
+    score = getTTRScore("")
     assert score == None
 
 def testTTRSentenceWithMinScore(testClient, downloadNltk):
@@ -27,11 +33,18 @@ def testTTRSentenceWithMinScore(testClient, downloadNltk):
         So in this case, for 3 words that is 1/3*10 = 3.33. 
         Since the sentence only has one similar element, this should be the 
         most used word.
+        Arguments: 
+            testClient: The test client we test this for.
+            downloadNltk: Function needed to download corpora used in this
+                    method.
+        Attributes: 
+            text: Input text for the test.
+            score: The score given for the TTR score.
     '''
     del testClient, downloadNltk
-    text = ('Big bigger biggest.')
+    text = "Big bigger biggest."
     score = getTTRScore(text)
-    assert score == (3.33, ['big'])
+    assert score == (3.33, ["big"])
 
 def testTTRTextWithMinScore(testClient, downloadNltk):
     '''
@@ -41,12 +54,19 @@ def testTTRTextWithMinScore(testClient, downloadNltk):
         So in this case, for 10 words that is 1/10*10 = 10.0. 
         Since the sentence only has one similar element, this should be the 
         most used word.
+        Arguments: 
+            testClient: The test client we test this for.
+            downloadNltk: Function needed to download corpora used in this
+                    method.
+        Attributes: 
+            text: Input text for the test.
+            score: The score given for the TTR score.
     '''
     del testClient, downloadNltk
-    text = ('Big bigger biggest. Bigger. Biggest. Big bigger. Bigger biggest '
-        'big!')
+    text = ("Big bigger biggest. Bigger. Biggest. Big bigger. Bigger biggest "
+        "big!")
     score = getTTRScore(text)
-    assert score == (1.0, ['big'])
+    assert score == (1.0, ["big"])
 
 def testTTRSentenceWithMaxScore(testClient, downloadNltk):
     '''
@@ -54,11 +74,18 @@ def testTTRSentenceWithMaxScore(testClient, downloadNltk):
         this is 10.0, and returns correct most used words.
         Since every word in the sentence is unique, this should be the first
         3 words (lematized).
+        Arguments: 
+            testClient: The test client we test this for.
+            downloadNltk: Function needed to download corpora used in this
+                    method.
+        Attributes: 
+            text: Input text for the test.
+            score: The score given for the TTR score.
     '''
     del testClient, downloadNltk
-    text = ('He is a very unique animal.')
+    text = "He is a very unique animal."
     score = getTTRScore(text)
-    assert score == (10.0, ['he', 'be', 'a'])
+    assert score == (10.0, ["he", "be", "a"])
 
 def testTTRTextWithMaxScore(testClient, downloadNltk):
     '''
@@ -66,12 +93,19 @@ def testTTRTextWithMaxScore(testClient, downloadNltk):
         this is 10.0, and returns correct most used words.
         Since every word in the text is unique, this is should be the first
         3 words (lematized).
+        Arguments: 
+            testClient: The test client we test this for.
+            downloadNltk: Function needed to download corpora used in this
+                    method.
+        Attributes: 
+            text: Input text for the test.
+            score: The score given for the TTR score.
     '''
     del testClient, downloadNltk
-    text = ('He is a very unique animal. That shows amazing results. No wonder'
-        ' they exist in here.')
+    text = ("He is a very unique animal. That shows amazing results. No wonder"
+        " they exist in here.")
     score = getTTRScore(text)
-    assert score == (10.0, ['he', 'be', 'a'])
+    assert score == (10.0, ["he", "be", "a"])
 
 def testTTRSingleSentence(testClient, downloadNltk):
     '''
@@ -87,11 +121,18 @@ def testTTRSingleSentence(testClient, downloadNltk):
         The correct most used words should thus be these two lematized tokens 
         ("be" and "big") and then the first token (which is not one of these
         two).
+        Arguments: 
+            testClient: The test client we test this for.
+            downloadNltk: Function needed to download corpora used in this
+                    method.
+        Attributes: 
+            text: Input text for the test.
+            score: The score given for the TTR score.
     '''
     del testClient, downloadNltk
-    text = ('They are very big and that person is also bigger.')
+    text = "They are very big and that person is also bigger."
     score = getTTRScore(text)
-    assert score == (8.0, ['be', 'big', 'they'])
+    assert score == (8.0, ["be", "big", "they"])
 
 def testTTRThreeSentences(testClient, downloadNltk):
     '''
@@ -107,11 +148,18 @@ def testTTRThreeSentences(testClient, downloadNltk):
         The correct most used words should thus be these two lematized tokens 
         ("be" and "big") and then the first token (which is not one of these 
         two).
+        Arguments: 
+            testClient: The test client we test this for.
+            downloadNltk: Function needed to download corpora used in this
+                    method.
+        Attributes: 
+            text: Input text for the test.
+            score: The score given for the TTR score.
     '''
     del testClient, downloadNltk
-    text = ('They are very big. That person is bigger. He is the biggest.')
+    text = "They are very big. That person is bigger. He is the biggest."
     score = getTTRScore(text)
-    assert score == (round(8/12*10,2), ['be', 'big', 'they'])
+    assert score == (round(8/12*10,2), ["be", "big", "they"])
 
 def testTTRWindowsizeMinScore(testClient, downloadNltk): 
     '''
@@ -124,11 +172,18 @@ def testTTRWindowsizeMinScore(testClient, downloadNltk):
         Hence, the score should be (1+1+2+3+4+5+6+7)/8/50*10.
         The correct most used words are then the oftenly repeated word and then
         the first two other tokens.
+        Arguments: 
+            testClient: The test client we test this for.
+            downloadNltk: Function needed to download corpora used in this
+                    method.
+        Attributes: 
+            text: Input text for the test.
+            score: The score given for the TTR score.
     '''
     del testClient, downloadNltk
-    text = 'big '*51 + 'hello this is a different text'
+    text = "big "*51 + "hello this is a different text"
     score = getTTRScore(text)
-    assert score == (round((1+1+2+3+4+5+6+7)/8/5,2), ['big', 'hello', 'this'])
+    assert score == (round((1+1+2+3+4+5+6+7)/8/5,2), ["big", "hello", "this"])
 
 def testTTRWindowsizeMaxScore(testClient, downloadNltk): 
     '''
@@ -142,10 +197,10 @@ def testTTRWindowsizeMaxScore(testClient, downloadNltk):
         And the correct most used words.
     '''
     del testClient, downloadNltk
-    text = ''
+    text = ""
     for first_letter in ascii_lowercase:
         for second_letter in ascii_lowercase:
             text += first_letter + second_letter + " "
-    text += 'big '*10
+    text += "big "*10
     score = getTTRScore(text)
-    assert score == (9.98, ['big', 'be', 'aa'])
+    assert score == (9.98, ["big", "be", "aa"])

@@ -16,17 +16,12 @@ def getTTRScore(text):
             lemmatizedTokens: list containing all the words from the text in
                     their lemmatized form as strings.
             uniqueTokensInWindow: list containing the number of unique 
-                    tokens in every window of windowSize as integers.
-            mostCommon: list containing the three most used words in the text
-                    as strings (if there are less than three then that many),
-                    to be used in generateFeedback.
+                    tokens in every window of windowSize as integers.            
             uniqueTokens: float that is the average number of unique tokens 
                     per windowSize.
             windowSize: integer that decides the size of the window mentioned
                     before; initially this is 50, if there are less than 50 
-                    tokens then that is the number of tokens.
-            TTRScore: float, (average of) unique tokens / window length * 10,
-                    rounded to 2 decimals.
+                    tokens then that is the number of tokens.            
         Arguments:
             text: string, the text on which the TTR score should be calculated.
         Return:
