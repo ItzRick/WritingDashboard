@@ -314,11 +314,18 @@ function Document() {
           }}
           // Show all explanations of the clicked type
           onClick={(data) => {
+            console.log(data);
             showAllExplanationsOfType(data.points[0].pointNumber);
           }}
           // So the chart can resize:
           useResizeHandler={true}
           style={{ width: '100%', height: '50%' }}
+          onHover={e => {
+            e.event.target.style.cursor = 'pointer' // Changes cursor on hover to pointer
+          }}
+          onUnhover={e => {
+            e.event.target.style.cursor = 'default' // Change cursor back on unhover
+          }}
         />
 
         <br />
