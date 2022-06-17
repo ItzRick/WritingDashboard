@@ -7,20 +7,17 @@ import os
 from werkzeug.utils import secure_filename
 import json
 
+from test_set_role import loginHelper
+
 
 def testRetrieveUsers(testClient, initDatabaseEmpty):
     '''
-        This test checks the retrieval of of files in a specified order, namely
-        date ascending, of a certain user, here with user id 200, in a json file.
+        This test checks the retrieval of of user data of all users except participants, in a json file.
         Attributes:
-            file, file2, file1, file3, file4: File to be added to the database.
+            user, user2, user3: Users to be added to the database.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
-            userId: the user for which the files are retrieved
-            sortingAttribute: the specified order of the retrieved files
-            response: the result fo retrieving the files in the specified order
-            expected_response: the response we expect when we run the function.
     '''
     del initDatabaseEmpty
 
@@ -59,3 +56,77 @@ def testRetrieveUsers(testClient, initDatabaseEmpty):
 
     # Check if the expected response is correct:
     assert json.loads(response.data) == expected_response
+
+
+def testNotAdmin(testClient, initDatabase):
+    '''
+    Test if we are refused access when not in admin mode
+    First we login as an Pietje, who is not an admin,
+    so should not be able to retrieve users
+    Arguments:
+        testClient:   The test client we test this for.
+        initDatabase: The database instance we test this for.
+    Attributes:
+        user: user 'Pietje'
+        userId: invalid user id
+        newRole: new proposed and valid role
+        access_token: admin's access token
+        data: data for request to server
+        response: response of setting the role
+    '''
+    del initDatabase
+    user = User.query.filter_by(username='Pietje').first()
+    # get his user id
+    userId = user.id
+
+    assert User.query.filter_by(id=userId).first() is not None
+
+    # get access token for Pietje Bell
+    access_token = loginHelper(testClient, 'Pietje', 'Bell')
+
+    newRole = 'student'
+    # set new role in data
+    data = {
+        'userId': userId,
+        'newRole': newRole
+    }
+
+    response = testClient.post('/usersapi/users', data=data, headers={"Authorization": "Bearer " + access_token})
+    assert response.status_code == 403
+    assert response.data == b'Method only accessible for admin users'
+
+def testAdmin(testClient, initDatabase):
+    '''
+    Test if we are allowed access when in admin mode
+    First we login as an Ad, who is an admin,
+    so should be able to retrieve users
+    Arguments:
+        testClient:   The test client we test this for.
+        initDatabase: The database instance we test this for.
+    Attributes:
+        user: user 'ad'
+        userId: invalid user id
+        newRole: new proposed and valid role
+        access_token: admin's access token
+        data: data for request to server
+        response: response of setting the role
+    '''
+    del initDatabase
+    user = User.query.filter_by(username='ad').first()
+    # get his user id
+    userId = user.id
+
+    assert User.query.filter_by(id=userId).first() is not None
+
+    # get access token for Ad
+    access_token = loginHelper(testClient, 'ad', 'min')
+
+    newRole = 'admin'
+    # set new role in data
+    data = {
+        'userId': userId,
+        'newRole': newRole
+    }
+
+    response = testClient.post('/usersapi/users', data=data, headers={"Authorization": "Bearer " + access_token})
+    assert response.status_code == 200

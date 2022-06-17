@@ -58,7 +58,7 @@ def getFilesByUser(user, sortingAttribute):
     return Files.serializeList(files.all())
 
 def getUsers() :
-    users = db.session.query(User).filter(User.role != 'participant').all()
+    users = User.query.filter_by(User.role != 'participant').all()
     return User.serializeList(users)
 
 # Registers new user with username and password
