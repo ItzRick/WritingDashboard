@@ -66,28 +66,28 @@ const Documents = () => {
     },
     {
       field: 'scoreStyle',
-      headerName: 'h1',
+      headerName: 'Language and Style score',
       type: "number",
       editable: false,
       flex: 1
     },
     {
       field: 'scoreCohesion',
-      headerName: 'h2',
+      headerName: 'Cohesion score',
       type: "number",
       editable: false,
       flex: 1
     },
     {
       field: 'scoreStructure',
-      headerName: 'h3',
+      headerName: 'Structure score',
       type: "number",
       editable: false,
       flex: 1
     },
     {
       field: 'scoreIntegration',
-      headerName: 'h4',
+      headerName: 'Source Integration and Content score',
       type: "number",
       editable: false,
       flex: 1
