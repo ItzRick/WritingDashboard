@@ -18,6 +18,7 @@ import axios from 'axios';
 import React from 'react';
 import "../css/styles.css";
 import "../css/main.css";
+import {authHeader} from "../helpers/auth-header";
 
 /**
  * 
@@ -28,12 +29,6 @@ const Users = () => {
 
   // State to keep track of the data inside the table:
   const [tableData, setTableData] = useState([])
-
-    //set title in parent 'base' 
-    const { setTitle } = useOutletContext();
-    useEffect(() => {
-        setTitle('Users');
-    });
 
     const columns = [
     {
@@ -65,14 +60,18 @@ const Users = () => {
     //   The backend url:
     const url = 'https://127.0.0.1:5000/usersapi/users';
     // Make the backend call and set the table data from the response data:
-    axios.get(url)
+    axios.get(url, {headers: authHeader()})
       .then((response) => {
         setTableData(response.data)
       })
   }
 
+  //TODO: this gets called four times
+  //set title in parent 'base' and set table data
+  const { setTitle } = useOutletContext();
   useEffect(() => {
-    setData();
+      setTitle('Users');
+      setData();
   }, []);
 
     return (

@@ -55,11 +55,11 @@ def getFilesByUser(user, sortingAttribute):
         files = files.order_by(Files.date)
     elif sortingAttribute == "date.desc":
         files = files.order_by(Files.date.desc())
-    return models.Files.serializeList(files.all())
+    return Files.serializeList(files.all())
 
 def getUsers() :
-    users = db.session.query(models.User).filter(models.User.role != 'participant').all()
-    return models.User.serializeList(users)
+    users = db.session.query(User).filter(User.role != 'participant').all()
+    return User.serializeList(users)
 
 # Registers new user with username and password
 def postUser(username, password):
