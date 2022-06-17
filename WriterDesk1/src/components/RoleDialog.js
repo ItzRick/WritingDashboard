@@ -3,17 +3,16 @@ import { useState } from 'react';
 import '../css/roledialog.css'
 
 import {
+    Avatar,
     Dialog,
     DialogActions,
     DialogTitle,
     Button,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
 } from '@mui/material';
-
-import Avatar from '@mui/material/Avatar';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
 
 import { AdminPanelSettingsOutlined, MoreHorizOutlined, BiotechOutlined, SchoolOutlined } from '@mui/icons-material';
 
