@@ -1,21 +1,20 @@
 from app import db
-from app import models
+from app.models import User, Scores, Files 
 
 # helper function, TODO remove before deploy
 def initialSetup():
     db.session.commit()
-    # db.drop_all()
-    # db.create_all()
-    # create initial user
-    u = models.User.query.filter_by(username='admin').first()
+    db.drop_all()
+    db.create_all()
+    # create admin user
+    u = User.query.filter_by(username='admin').first()
     if u is None:
-        # create new user
-        u = models.User(username='admin', password_plaintext='admin')
+        u = User(username='admin', password_plaintext='admin')
     u.role = 'admin'
     uploadToDatabase(u)
 
     # comment out:
-    #   - fileapi > fileUpload() > initialSetup()
+    #   - loginapi > create_token() > initialSetup()
 
 
 # Upload the given file to the database of this session
@@ -43,22 +42,22 @@ def getFilesByUser(user, sortingAttribute):
             Returns list of files of the given user, ordered on the given sorting attribute
     '''
 
-    files = db.session.query(models.Files).filter_by(userId=user)
+    files = db.session.query(Files).filter_by(userId=user)
 
     if sortingAttribute == "filename.asc":
-        files = files.order_by(models.Files.filename)
+        files = files.order_by(Files.filename)
     elif sortingAttribute == "filename.desc":
-        files = files.order_by(models.Files.filename.desc())
+        files = files.order_by(Files.filename.desc())
     elif sortingAttribute == "course.asc":
-        files = files.order_by(models.Files.courseCode)
+        files = files.order_by(Files.courseCode)
     elif sortingAttribute == "course.desc":
-        files = files.order_by(models.Files.courseCode.desc())
+        files = files.order_by(Files.courseCode.desc())
     elif sortingAttribute == "date.asc":
-        files = files.order_by(models.Files.date)
+        files = files.order_by(Files.date)
     elif sortingAttribute == "date.desc":
-        files = files.order_by(models.Files.date.desc())
+        files = files.order_by(Files.date.desc())
 
-    return models.Files.serializeList(files.all())
+    return Files.serializeList(files.all())
 
 # Registers new user with username and password
 def postUser(username, password):
@@ -75,10 +74,10 @@ def postUser(username, password):
     '''
 
     # Check if there is already a user with this username
-    if db.session.query(models.User).filter_by(username=username).count() > 0:
+    if db.session.query(User).filter_by(username=username).count() > 0:
         return False
 
     # Add user to the database with student role
-    user = models.User(username=username, password_plaintext=password, role="student")
+    user = User(username=username, password_plaintext=password, role="student")
     uploadToDatabase(user)
     return True
