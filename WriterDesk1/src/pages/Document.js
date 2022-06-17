@@ -314,7 +314,6 @@ function Document() {
           }}
           // Show all explanations of the clicked type
           onClick={(data) => {
-            console.log(data);
             showAllExplanationsOfType(data.points[0].pointNumber);
           }}
           // So the chart can resize:
