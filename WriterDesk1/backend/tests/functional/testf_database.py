@@ -191,26 +191,6 @@ def testUploadToDBScore(testClient, initDatabase):
     assert str(score.scoreStructure) == '3.00'
     assert str(score.scoreIntegration) == '10.00'
 
-def testPostUser(testClient, initDatabase):
-    '''
-        Test if postUser() correctly adds a user to the database
-        Attributes: 
-            users: all users with username 'test@tue.nl'
-        Arguments:
-            testClient: the test client we test this for
-            initDatabase: the database instance we test this for
-    '''
-
-    del testClient, initDatabase
-    try:
-        postUser("test@tue.nl", "TestPassword1")
-        db.session.commit()
-    except:
-        db.session.rollback()
-    users = User.query.filter_by(username="test@tue.nl").all()
-    assert len(users) == 1
-    assert users[0].check_password("TestPassword1")
-
 def testUploadToDBExplanation(testClient, initDatabase):
     '''
         Test if the uploadToDatabase function form the database module works for Explanations. 
@@ -293,6 +273,7 @@ def testRecordsToCsv(testClient, initDatabase):
     assert len(fileOne) == len(fileTwo)
     for line in fileOne:
         assert line in fileTwo
+
 def testPostUser(testClient, initDatabase):
     '''
         Test if postUser() correctly adds a user to the database

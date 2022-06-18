@@ -17,7 +17,7 @@ def generateParticipants(count, projectId):
     '''
 
     PASSWORD_LENGTH = 10
-
+    data = []
     for participant in range(count):
 
         # Generate password
@@ -29,11 +29,13 @@ def generateParticipants(count, projectId):
             user.username = generateParticipantUsername(user.id)
             db.session.flush()
             postParticipantToProject(user.id, projectId)
+            data.append({'username': user.username, 'password': password})
         except Exception as e:
             db.session.rollback()
             raise e
     # No exception raised so changes can be committed
     db.session.commit()
+    return data
 
 def generateParticipantUsername(id):
     '''

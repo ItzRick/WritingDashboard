@@ -4,7 +4,7 @@ from flask import current_app, request, session, jsonify, send_file
 from app.models import Files, User
 from app.fileapi import bp
 from app.fileapi.convert import convertDocx, convertTxt
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup, recordsToCsv
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup
 from magic import from_buffer
 from datetime import date
 from mimetypes import guess_extension
@@ -226,23 +226,3 @@ def displayFile():
         return send_file(newPath)
     # The file has not been converted, send the original file.
     return send_file(filepath)
-
-@bp.route('/csv', methods=['GET'])
-def getCsv():
-    # Create csv file
-    path = os.path.join(current_app.config['UPLOAD_FOLDER'], "result.csv")
-    records = User.serializeList(User.query.filter_by(role="participant").all())
-    recordsToCsv(path, records)
-
-    # Generator to delete file after sending
-    def generate():
-        with open(path) as f:
-            yield from f
-
-        os.remove(path)
-
-    # Create response
-    response = current_app.response_class(generate(), mimetype='text/csv')
-    response.headers.set('Content-Disposition', 'attachment')
-    response.headers.set('custom-filename', 'data.csv')
-    return response

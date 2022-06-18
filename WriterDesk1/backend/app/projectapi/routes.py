@@ -6,15 +6,14 @@ from app.projectapi import bp
 from flask import request, jsonify, current_app
 from app.models import Projects, User, ParticipantToProject
 
-from app.database import uploadToDatabase, removeFromDatabase, getParticipantsByResearcher, getProjectsByResearcher
+from app.database import uploadToDatabase, removeFromDatabase, getParticipantsByResearcher, getProjectsByResearcher, recordsToCsv
 from app import generateParticipants as gp
 from app import db
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import current_user
 
-
-
 @bp.route('/addparticipants', methods=["POST"])
+@jwt_required()
 def addParticipantsToExistingProject():
     '''
     This function handles the creation of new participants and adding them to an existing project.
@@ -26,10 +25,29 @@ def addParticipantsToExistingProject():
     count = int(request.json.get("count", None))
     projectId = int(request.json.get("projectid", None))
 
+    if User.query.filter_by(id=current_user.id).first() is None:
+        return 'user not found', 404
+
     # Try to register new user in database
     try:
-        gp.generateParticipants(count, projectId)
-        return "Participants were successfully added!", 200
+        data = gp.generateParticipants(count, projectId)
+
+        # Create csv file
+        path = os.path.join(current_app.config['UPLOAD_FOLDER'], str(current_user.id), "downloadParticipants.csv")
+        recordsToCsv(path, data)
+
+        # Generator to delete file after sending
+        def generate():
+            with open(path) as f:
+                yield from f
+
+            os.remove(path)
+
+        # Create response
+        response = current_app.response_class(generate(), mimetype='text/csv')
+        response.headers.set('Content-Disposition', 'attachment')
+        response.headers.set('custom-filename', 'participants.csv')
+        return response, 200
     except Exception as e:
         return str(e), 400
 

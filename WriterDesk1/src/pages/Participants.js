@@ -18,8 +18,9 @@ import BlueButton from './../components/BlueButton';
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios'
+import {authHeader} from "../helpers/auth-header";
 import fileDownload from 'js-file-download';
-const BASE_URL = "https://localhost:5000/fileapi";
+const BASE_URL = "https://localhost:5000/projectapi";
 
 /**
  *
@@ -104,16 +105,30 @@ function Participants() {
     setProjectDown(event.target.value);
   };
 
-  const download = () => {
-    axios.get(`${BASE_URL}/csv`).then(response => {
-      //File retrieval successful, start download
+  const [participantCount, setParticipantCount] = useState(0);
+
+  /*
+   * Do POST request containing participantCount and projectAdd variable, recieve status of response.
+   */
+  const handleAddToProject = () => {
+    // If input is valid, do post request
+    const data = {
+      "count": participantCount,
+      "projectid": projectAdd,
+    }
+    const headers = {
+        "Content-Type": "application/json"
+    }
+    axios.post(`${BASE_URL}/addparticipants`, data, {headers: authHeader()}).then(response =>{
+      // Post request is successful, participants are registered
+      // TODO: reload participant list 
       const fileName = response.headers["custom-filename"];
       fileDownload(response.data, fileName);
-      
-    }).catch(error => {        
-      console.log(error.data.data)  
+    }).catch(error =>{
+        // Post request failed, user is not created
+        console.error("Something went wrong:", error.response.data);
     });
-  }
+  };
 
   return (
     <>
@@ -123,6 +138,8 @@ function Participants() {
           id="noOfParticipants"
           label="Number of participants"
           type="number"
+          value={participantCount}
+          onChange={(e) => {setParticipantCount(e.target.value)}}
           InputLabelProps={{
             shrink: true,
           }}
@@ -142,25 +159,9 @@ function Participants() {
             {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)}
           </Select>
         </FormControl>
-        <BlueButton idStr='addParticipants' >Add participants</BlueButton>
+        <BlueButton idStr='addParticipants' onClick={handleAddToProject}>Add participants</BlueButton>
       </div>
       <div className='topBorder'>
-        <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
-          <InputLabel id="project-down-participants">Project</InputLabel>
-          <Select
-            labelId="project-down-participants"
-            id="project-down-participants"
-            value={projectDown}
-            label="Project"
-            onChange={handleProjectDownPart}
-          >
-            {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)}
-          </Select>
-        </FormControl>
-        <BlueButton idStr='downloadParticipants' onClick={download}>Download participants</BlueButton>
-      </div>
-      <div className='topBorder'>
-        <BlueButton idStr='downloadSelectedParticipants'>Download selected participants</BlueButton>
         <div style={{ paddingLeft: '2vw', display: 'inline' }} />
         <BlueButton idStr='downloadUserDataSelectedParticipants'>Download user data of selected participants</BlueButton>
       </div>

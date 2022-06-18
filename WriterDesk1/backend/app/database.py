@@ -1,6 +1,6 @@
 from app import db
-from app.models import User, Scores, Files 
-import csv
+from app.models import User, Scores, Files, Projects, ParticipantToProject 
+import csv, os
 
 # helper function, TODO remove before deploy
 def initialSetup():
@@ -94,7 +94,8 @@ def recordsToCsv(path, records, columns=[]):
             path: path of the created csv file
             records: data in dictionary form that is put into the csv file
     '''
-    with open(path, 'w', newline='') as outFile:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w+', newline='') as outFile:
         # Use specified column names or names from table 
         fieldNames = [column[0] for column in records[0].items()]
 
@@ -115,11 +116,11 @@ def postParticipant(username, password):
             Returns the user when a new user was added to the database
     '''
     # Check if there is already a user with this username
-    if db.session.query(models.User).filter_by(username=username).count() > 0:
+    if User.query.filter_by(username=username).count() > 0:
         raise Exception('User exists already')
 
     # Add user to the database with participant role
-    user = models.User(username=username, password_plaintext=password, role="participant")
+    user = User(username=username, password_plaintext=password, role="participant")
     db.session.add(user)
     db.session.flush()
     return user
@@ -134,11 +135,11 @@ def postParticipantToProject(userId, projectId):
             userId: id of the participant
             projectId: id of the research project
     '''
-    project = models.Projects.query.filter_by(id=projectId).all()
+    project = Projects.query.filter_by(id=projectId).all()
     if len(project) == 0:
         raise Exception('Project does not exist')
 
-    dataTuple = models.ParticipantToProject(userId=userId, projectId=projectId)
+    dataTuple = ParticipantToProject(userId=userId, projectId=projectId)
     db.session.add(dataTuple)
     db.session.flush()
 
