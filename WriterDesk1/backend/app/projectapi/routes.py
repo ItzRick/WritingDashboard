@@ -20,6 +20,9 @@ def addParticipantsToExistingProject():
     Attributes:
         count: the number of participants that should be added
         projectId: the id of the project the participants should be added to
+        data: dictionary with usernames and passwords of new participants
+        path: path to csv with usernames and passwords
+        response: http response with csv file
     '''
     # Retrieve data from request
     count = int(request.json.get("count", None))

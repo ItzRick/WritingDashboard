@@ -87,6 +87,7 @@ def initDatabase(testClient):
         a test case is run, so that one test case does not influence the database of another test case. 
     '''
     # Create the database:
+    db.drop_all()
     db.create_all()
 
     # Add the 2 files:

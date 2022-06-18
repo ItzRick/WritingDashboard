@@ -100,15 +100,13 @@ function Participants() {
   const handleProjAddPart = (event) => {
     setProjectAdd(event.target.value);
   };
-  // dropdown handler for project download
-  const handleProjectDownPart = (event) => {
-    setProjectDown(event.target.value);
-  };
 
+  // number of participants to add to a project
   const [participantCount, setParticipantCount] = useState(0);
 
   /*
    * Do POST request containing participantCount and projectAdd variable, recieve status of response.
+   * When successful, download response csv file.
    */
   const handleAddToProject = () => {
     // If input is valid, do post request

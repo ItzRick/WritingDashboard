@@ -127,8 +127,8 @@ def testFiles(testClient, initDatabase):
     '''
     del testClient, initDatabase
     files = Files.query.all()
-    assert str(files[0]) == '<File URD_Group3_vers03_Rc.pdf>'
-    assert str(files[1]) == '<File SEP.pdf>'
+    assert str(files[0]) == '<Files URD_Group3_vers03_Rc.pdf>'
+    assert str(files[1]) == '<Files SEP.pdf>'
 
 def testExplanation():
     '''
@@ -311,7 +311,7 @@ def testPostParticipant(testClient, initDatabase):
         db.session.commit()
     except:
         db.session.rollback()
-    users = User.query.filter_by(type="participant", username="test@tue.nl").all()
+    users = User.query.filter_by(role="participant", username="test@tue.nl").all()
     assert len(users) == 1
     assert users[0].check_password("TestPassword1")
     assert user.id == users[0].id
