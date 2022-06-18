@@ -14,7 +14,7 @@ def testGenerateFeedbackZeroWords(testClient, downloadNltk):
         Test if a text with zero words returns None.
         Arguments: 
             testClient: The test client we test this for.
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.
         Attributes: 
             score: The score given for the cohesion score.
@@ -33,7 +33,7 @@ def testOneWordText(testClient, downloadNltk):
         the lowest score of connectives. 
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -61,7 +61,7 @@ def testOneWordText(testClient, downloadNltk):
         the lowest score of connectives. 
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -88,7 +88,7 @@ def testTTRHighest(testClient, downloadNltk):
         Hence, the feedback on TTR score should be that of >= 9.
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -117,7 +117,7 @@ def testTTRSecondHighest(testClient, downloadNltk):
         Hence, the feedback on TTR score should be that of >= 7.
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -143,7 +143,7 @@ def testTTRSecondLowest(testClient, downloadNltk):
         Hence, the feedback on TTR score should be that of >= 5.
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -169,7 +169,7 @@ def testTTRLowest(testClient, downloadNltk):
         Hence, the feedback on TTR score should be that of < 5.
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -196,7 +196,7 @@ def testConnectivesHighest(testClient, downloadNltk):
         Hence, the feedback on connective score should be that of >= 9.
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -223,7 +223,7 @@ def testConnectivesSecondHighestFewConnectives(testClient, downloadNltk):
         index score < 0.09.
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -250,7 +250,7 @@ def testConnectivesSecondHighestManyConnectives(testClient, downloadNltk):
         index score > 0.09.
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -278,7 +278,7 @@ def testConnectivesSecondLowestFewConnectives(testClient, downloadNltk):
         index score < 0.09.
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -305,7 +305,7 @@ def testConnectivesSecondLowestManyConnectives(testClient, downloadNltk):
         index score > 0.09.
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -331,7 +331,7 @@ def testConnectivesLowestFewConnectives(testClient, downloadNltk):
         index score < 0.09.
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            
@@ -357,7 +357,7 @@ def testConnectivesLowestManyConnectives(testClient, downloadNltk):
         index score > 0.09.
         Arguments: 
             testClient: The test client we test this for.   
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.         
         Attributes: 
             text: Input text for the test.            

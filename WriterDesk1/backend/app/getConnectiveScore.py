@@ -104,6 +104,12 @@ def getConnectiveScore(text):
         Calculate the connectives score by putting the indexScore into the
         following 2nd order polynomial: y = -3.5 + 300*x - 1666.667*x^2, 
         where y is the connectives score and x is the indexScore. 
+        In this polynomial we took into account the borders of the client for 
+        a proper grade. The client told us that 0.03 is quite little and 0.15 
+        is quite a lot. Thus we took the center of these as a perfect 10; 0.09.
+        This polynomial has a y value of 10 for an index score (thus x value) 
+        of 0.09. An x value of 0.03 and 0.15 both result in a y-value of 3, 
+        which is how we interpeted "quite little" and "quite a lot".
         We take the max of this result and 0, since we grade in the range [0,10].
         Then we round the result to 2 decimals.
     """

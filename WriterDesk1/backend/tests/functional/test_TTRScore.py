@@ -16,7 +16,7 @@ def testTTRZeroWords(testClient, downloadNltk):
         Test if a text with zero words returns None.
         Arguments: 
             testClient: The test client we test this for.
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.
         Attributes: 
             score: The score given for the TTR score.
@@ -35,7 +35,7 @@ def testTTRSentenceWithMinScore(testClient, downloadNltk):
         most used word.
         Arguments: 
             testClient: The test client we test this for.
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.
         Attributes: 
             text: Input text for the test.
@@ -56,7 +56,7 @@ def testTTRTextWithMinScore(testClient, downloadNltk):
         most used word.
         Arguments: 
             testClient: The test client we test this for.
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.
         Attributes: 
             text: Input text for the test.
@@ -76,7 +76,7 @@ def testTTRSentenceWithMaxScore(testClient, downloadNltk):
         3 words (lematized).
         Arguments: 
             testClient: The test client we test this for.
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.
         Attributes: 
             text: Input text for the test.
@@ -95,7 +95,7 @@ def testTTRTextWithMaxScore(testClient, downloadNltk):
         3 words (lematized).
         Arguments: 
             testClient: The test client we test this for.
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.
         Attributes: 
             text: Input text for the test.
@@ -123,7 +123,7 @@ def testTTRSingleSentence(testClient, downloadNltk):
         two).
         Arguments: 
             testClient: The test client we test this for.
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.
         Attributes: 
             text: Input text for the test.
@@ -150,7 +150,7 @@ def testTTRThreeSentences(testClient, downloadNltk):
         two).
         Arguments: 
             testClient: The test client we test this for.
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.
         Attributes: 
             text: Input text for the test.
@@ -174,7 +174,7 @@ def testTTRWindowsizeMinScore(testClient, downloadNltk):
         the first two other tokens.
         Arguments: 
             testClient: The test client we test this for.
-            downloadNltk: Function needed to download corpora used in this
+            downloadNltk: Function needed to download nltk corpora used in this
                     method.
         Attributes: 
             text: Input text for the test.
