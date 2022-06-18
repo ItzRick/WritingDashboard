@@ -75,25 +75,44 @@ def deleteProject():
 
 @bp.route('/viewparticipantsofuser', methods=["GET"])
 def viewParticipantsOfUser():
+    '''
+    This function handles the showing the participants that
+    this specific user created to that user, using that user id.
+    Attributes:
+        userId: user id as given by the frontend
+    Arguments:
+        participants: the participants that this user has created
+    '''
     # Get the user id as sent by the react frontend
     userId = request.args.get('userId')
-
     # Retrieve the information from the participants corresponding to the projects of the user
     participants = getParticipantsByResearcher(userId)
-    if participants is None:
-        return 'researcher has no participants', 404
-
+    # Throw an error if the project variable is empty
+    # in other words, if the user has no projects
+    if participants == []:
+        return 'researcher has no participants', 4041
     return jsonify(participants)
 
 @bp.route('/viewprojectsofuser', methods=["GET"])
 def viewProjectsOfUser():
+    '''
+    This function handles the showing the projects that
+    this specific user created to that user, using that user id.
+    Attributes:
+        userId: user id as given by the frontend
+    Arguments:
+        projects: the projects that this user has created
+    '''
     # Get the user id as sent by the react frontend
     userId = request.args.get('userId')
 
     # Retrieve the information from the projects corresponding to the projects of the user
     projects = getProjectsByResearcher(userId)
-    if projects is None:
-        return 'researcher has no projects', 404
+
+    # Throw an error if the project variable is empty
+    # in other words, if the user has no projects
+    if projects == []:
+        return 'researcher has no projects', 4041
 
     return jsonify(projects)
     

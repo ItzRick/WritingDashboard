@@ -105,6 +105,8 @@ function Participants() {
 
   useEffect(() => {getParticipants()}, []); /* TODO */
 
+  useEffect(() => {getProjects()}, []); /* TODO */
+
       // // Call getFiles() on refresh page 
       // useEffect(() => {getFiles()}, []);
 
@@ -140,10 +142,10 @@ function Participants() {
         'Content-Type': 'application/json',
     }
     //Perform GET request
-    axios.get(url, data, headers).then((response) => { /* TODO */
-        setParticipants(response.data);
+    axios.get(url, participants, headers).then((response) => { /* TODO */
+        setParticipants(response.participants);
     }).catch(err => {
-        console.log(err.response.data);
+        console.log(err.response.participants);
     });
   }
 
@@ -160,12 +162,13 @@ function Participants() {
         'Content-Type': 'application/json',
     }
     //Perform GET request
-    axios.get(url, data, headers).then((response) => { /* TODO */
-        setProjects(response.data);
+    axios.get(url, projects, headers).then((response) => { /* TODO */
+        setProjects(response.projects);
     }).catch(err => {
-        console.log(err.response.data);
+        console.log(err.response.projects);
     });
   }
+
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);  // Show dialog when deleting single participant
   const [showDeleteDialogMultiple, setShowDeleteDialogMultiple] = useState(false);  // Show dialog when deleting multiple participants
   const [deleteId, setDeleteId] = useState();  // Id of user that is going to be deleted when pressing delete button
