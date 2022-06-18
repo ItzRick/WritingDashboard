@@ -49,7 +49,7 @@ def setProject():
 
     if User.query.filter_by(id=current_user.id).first().role == 'student' \
             or User.query.filter_by(id=current_user.id).first().role == 'participant':
-        return 'User is not participant or researcher', 400
+        return 'User is not admin or researcher', 400
 
     # create Projects object
     projectIndb = Projects(userId=current_user.id, projectName=projectName)
@@ -63,7 +63,7 @@ def setProject():
 
 
 @bp.route('/deleteProject', methods=['DELETE'])
-@jwt_required() #TODO fix function
+@jwt_required()
 def deleteProject():
     '''
     This function handles the deletion of research projects using the corresponding project id's.
@@ -75,17 +75,18 @@ def deleteProject():
     projectIds = request.form.getlist('projectId')
 
     for projectId in projectIds:
-        if User.query.filter_by(id=current_user.id).first().id != Projects.query.filter_by(id=projectId).id:
-            return 'Project is not related to current user', 400 #TODO check
+        if Projects.query.filter_by(id=projectId).first() is None:
+            return 'project does not exist in database', 404
+
+        # Check if the project that is going to be deleted is related to the current user
+        if current_user.id != Projects.query.filter_by(id=projectId).first().userId:
+            return 'Project is not related to current user', 400
 
     DeleteAllFilesFromProject(projectIds)  # Remove all files corresponding to the project ids from the server
 
     for projectId in projectIds:
         # Retrieve the row that needs to be removed
         projectToBeRemoved = Projects.query.filter_by(id=projectId).first()
-
-        if projectToBeRemoved is None:
-            return 'project does not exist in database', 404
 
         # Remove row from database
         removeFromDatabase(projectToBeRemoved)

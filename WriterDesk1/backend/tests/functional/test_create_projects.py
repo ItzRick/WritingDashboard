@@ -13,14 +13,15 @@ def testAddToDatabase(testClient, initDatabase):
         Attributes:
             response: The response of the setProject backend call
             project: Project that is added to the database.
-            access_token: Access token for user Pietje Bell
+            access_token: Access token for user ad min
     '''
     del initDatabase
     # Check if the project is not yet in the database:
     assert Projects.query.filter_by(projectName='Project1').first() is None
 
-    # get access token for Pietje Bell
-    access_token = loginHelper(testClient, 'Pietje', 'Bell')
+    # get access token for ad min
+    access_token = loginHelper(testClient, 'ad', 'min')
+
     # Add the project to the database
     response = testClient.post('/projectapi/setProject', data={'projectName': 'Project1'},
                                headers = {"Authorization": "Bearer " + access_token})
@@ -31,7 +32,7 @@ def testAddToDatabase(testClient, initDatabase):
     # Check if the project is added to the database:
     project = Projects.query.filter_by(projectName='Project1').first()
     assert project.projectName == 'Project1'
-    assert project.userId == User.query.filter_by(username='Pietje').first().id
+    assert project.userId == User.query.filter_by(username='ad').first().id
 
 
 def testAddToDatabaseMultiple(testClient, initDatabase):
@@ -44,15 +45,15 @@ def testAddToDatabaseMultiple(testClient, initDatabase):
         Attributes:
             response1, response2: The responses of the setProject backend call
             project1, project2: Projects that are added to the database.
-            access_token: Access token for user Pietje Bell
+            access_token: Access token for user ad min
     '''
     del initDatabase
     # Check if the projects are not yet in the database:
     assert Projects.query.filter_by(projectName='Project1').first() is None
     assert Projects.query.filter_by(projectName='Project2').first() is None
 
-    # get access token for Pietje Bell
-    access_token = loginHelper(testClient, 'Pietje', 'Bell')
+    # get access token for ad min
+    access_token = loginHelper(testClient, 'ad', 'min')
 
     # Add the projects to the database
     response1 = testClient.post('/projectapi/setProject', data={'projectName': 'Project1'},
@@ -67,11 +68,11 @@ def testAddToDatabaseMultiple(testClient, initDatabase):
     # Check if the projects are added to the database:
     project1 = Projects.query.filter_by(projectName='Project1').first()
     assert project1.projectName == 'Project1'
-    assert project1.userId == User.query.filter_by(username='Pietje').first().id
+    assert project1.userId == User.query.filter_by(username='ad').first().id
 
     project2 = Projects.query.filter_by(projectName='Project2').first()
     assert project2.projectName == 'Project2'
-    assert project2.userId == User.query.filter_by(username='Pietje').first().id
+    assert project2.userId == User.query.filter_by(username='ad').first().id
 
 
 def testAddToDatabaseEmptyProjectName(testClient, initDatabase):
@@ -84,14 +85,14 @@ def testAddToDatabaseEmptyProjectName(testClient, initDatabase):
         Attributes:
             response: The response of the setProject backend call
             project: Project that is added to the database.
-            access_token: Access token for user Pietje Bell
+            access_token: Access token for user ad min
     '''
     del initDatabase
     # Check if the project is not yet in the database:
     assert Projects.query.filter_by(projectName='').first() is None
 
-    # get access token for Pietje Bell
-    access_token = loginHelper(testClient, 'Pietje', 'Bell')
+    # get access token for ad min
+    access_token = loginHelper(testClient, 'ad', 'min')
 
     # Add the project to the database
     response = testClient.post('/projectapi/setProject', data={'userId': 1}, headers = {"Authorization": "Bearer " + access_token})
@@ -102,7 +103,7 @@ def testAddToDatabaseEmptyProjectName(testClient, initDatabase):
     # Check if the project is added to the database:
     project = Projects.query.filter_by(projectName='').first()
     assert project.projectName == ''
-    assert project.userId == User.query.filter_by(username='Pietje').first().id
+    assert project.userId == User.query.filter_by(username='ad').first().id
 
 
 def testAddToDatabaseEmptyUserId(testClient, initDatabase):

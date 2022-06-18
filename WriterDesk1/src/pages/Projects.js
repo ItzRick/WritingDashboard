@@ -156,8 +156,10 @@ const Projects = () => {
         const formData = new FormData();
         formData.append('projectId', projId);
 
+        const headers = authHeader() // Authentication header of current user
+
         // Delete project from all tables in database and delete files from the server:
-        axios.delete('https://127.0.0.1:5000/projectapi/deleteProject', { data: formData }).then(response => {
+        axios.delete('https://127.0.0.1:5000/projectapi/deleteProject',  {headers, data: formData} ).then(response => {
             //TODO: Set table data
         });
     }
