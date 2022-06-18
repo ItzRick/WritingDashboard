@@ -33,7 +33,6 @@ def fileUpload():
             existing: current existing files with the same userId and fileName 
             associated in the database for the current file that is being handled.
     '''
-    # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
     # Retrieve the files as send by the react frontend and give this to the fileUpload function,
     # which does all the work:
     files = request.files.getlist('files')

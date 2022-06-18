@@ -1,5 +1,6 @@
-from app.models import Files, Scores, Explanations, User
-from app.database import uploadToDatabase, getFilesByUser, recordsToCsv, postUser
+
+from app.models import Files, User, ParticipantToProject, Projects, Scores, Explanations
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, postUser, postParticipant, postParticipantToProject, recordsToCsv
 from app import db
 from datetime import datetime
 import os
@@ -115,6 +116,20 @@ def testCreateDatabase(testClient):
     del testClient
     db.create_all()
 
+def testFiles(testClient, initDatabase):
+    '''
+        Test if we get the correct display if we run Files.query.all(), so the representation of '<File <filename>>'. 
+        Attributes: 
+            files: all files of the type Files in the database.
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+    del testClient, initDatabase
+    files = Files.query.all()
+    assert str(files[0]) == '<File URD_Group3_vers03_Rc.pdf>'
+    assert str(files[1]) == '<File SEP.pdf>'
+
 def testExplanation():
     '''
         Test if the Explanations model in database works properly
@@ -160,11 +175,6 @@ def testUploadToDBScore(testClient, initDatabase):
             initDatabase: the database instance we test this for. 
     '''
     del testClient, initDatabase
-    files = Files.query.all()
-    assert str(files[0]) == '<Files URD_Group3_vers03_Rc.pdf>'
-    assert str(files[1]) == '<Files SEP.pdf>'
-
-
     preScore = Scores(
         fileId = 12,
         scoreStyle = 0.01,
@@ -283,3 +293,68 @@ def testRecordsToCsv(testClient, initDatabase):
     assert len(fileOne) == len(fileTwo)
     for line in fileOne:
         assert line in fileTwo
+def testPostUser(testClient, initDatabase):
+    '''
+        Test if postUser() correctly adds a user to the database
+        Attributes: 
+            users: all users with username 'test@tue.nl'
+        Arguments:
+            testClient: the test client we test this for
+            initDatabase: the database instance we test this for
+    '''
+
+    del testClient, initDatabase
+    try:
+        postUser("test@tue.nl", "TestPassword1")
+        db.session.commit()
+    except:
+        db.session.rollback()
+    users = User.query.filter_by(username="test@tue.nl").all()
+    assert len(users) == 1
+    assert users[0].check_password("TestPassword1")
+
+def testPostParticipant(testClient, initDatabase):
+    '''
+        Test if postParticipant() correctly adds a user to the database and returns user object.
+        Attributes:
+            user: returned user from postParticipant() 
+            users: all participants with username 'test@tue.nl'
+        Arguments:
+            testClient: the test client we test this for
+            initDatabase: the database instance we test this for
+    '''
+
+    del testClient, initDatabase
+    try:
+        user = postParticipant("test@tue.nl", "TestPassword1")
+        db.session.commit()
+    except:
+        db.session.rollback()
+    users = User.query.filter_by(type="participant", username="test@tue.nl").all()
+    assert len(users) == 1
+    assert users[0].check_password("TestPassword1")
+    assert user.id == users[0].id
+
+def testPostParticipantToProject(testClient, initDatabase):
+    '''
+        Test if postParticipantToProject() correctly adds an entry to the database.
+        Attributes:
+            project: project entry that will be linked with a participant
+            entries: all entries in ParticipantToProject 
+        Arguments:
+            testClient: the test client we test this for
+            initDatabase: the database instance we test this for
+    '''
+    del testClient, initDatabase
+    project = Projects(userId=0, projectName="Project")
+    db.session.add(project)
+    db.session.commit()
+    try:
+        postParticipantToProject(1, project.id)
+        db.session.commit()
+    except:
+        db.session.rollback()
+    entries = ParticipantToProject.query.all()
+    assert len(entries) == 1
+    assert entries[0].userId == 1
+    assert entries[0].projectId == project.id

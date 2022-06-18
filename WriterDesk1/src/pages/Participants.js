@@ -22,7 +22,7 @@ import fileDownload from 'js-file-download';
 const BASE_URL = "https://localhost:5000/fileapi";
 
 /**
- * 
+ *
  * @returns Participants Page
  */
 
@@ -84,7 +84,7 @@ const projects = [
 ]
 
 function Participants() {
-  //set title in parent 'base' 
+  //set title in parent 'base'
   const { setTitle } = useOutletContext();
   useEffect(() => {
     setTitle('Participants');

@@ -8,10 +8,9 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 
-from app.database import postUser
 from app.extensions import jwt
 from app.models import User
-from app.database import initialSetup
+from app.database import initialSetup, postUser
 
 @bp.route('/login', methods=['POST'])
 def create_token():
@@ -117,7 +116,7 @@ def setRole():
             newRole: intended role of the user
             targetUser: user with id == userId
         Return:
-            Returns success if it succeeded, or an 
+            Returns success if it succeeded, or an
             error message:
                 403, if the current user is not an admin
                 404, if there exists no user with userId
@@ -126,7 +125,7 @@ def setRole():
     # check if current_user is Admin
     if current_user.role != 'admin':
         return "Method only accessible for admin users", 403 # return Unauthorized response status code
-    
+
 
     # retrieve data from call
     userId = request.form.get('userId')
@@ -140,8 +139,8 @@ def setRole():
     # check if role is valid
     if newRole not in ['admin', 'participant', 'researcher', 'student']:
         return 'Invalid role', 404
-    
-    
+
+
     # update role
     targetUser.role = newRole
     # update the database
@@ -159,7 +158,7 @@ def setPassword():
             oldPassword: Current password for the user.
             current_user: the user currently logged in
         Return:
-            Returns success if it succeeded, or an 
+            Returns success if it succeeded, or an
             error message:
                 403, if the current user's password is incorrect
     '''
