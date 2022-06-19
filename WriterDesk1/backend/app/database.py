@@ -163,3 +163,29 @@ def getParticipantsByResearcher(user):
     # Return the information of the participants in all projects of the user
     return participants
 
+def getParticipantsWithProjectsByResearcher(user):
+    '''
+        This function handles the query for retrieving a user's participants, including the projects they correspond to.
+        Attributes:
+            projectParticipantConnection: the connection between the participant and the project
+            projectid: the id of the project that the participant is in
+            project: the project that the participant is in
+            projectname: the name of the project that the participant is in
+            participants: result of the query, containing the participants of the given user
+        Arguments:
+            user: id of the user whose participants need to be retrieved
+        Return:
+            Returns list of participants of the given user including the projects they correspond to
+    '''
+    participants = getParticipantsByResearcher(user)
+    
+    for participant in participants:
+        projectParticipantConnection = models.ParticipantToProject.query.filter_by(userId=participant['id']).all()
+        projectid = projectParticipantConnection[0].projectId
+        project = models.Projects.query.filter_by(id=projectid).all()
+        projectname = project[0].projectName
+        participant['projectid'] = projectid
+        participant['projectname'] = projectname
+
+    # Return the information of the participants in all projects of the user
+    return participants

@@ -3,7 +3,7 @@ from app.projectapi import bp
 from flask import request, jsonify
 from app.models import Projects
 
-from app.database import uploadToDatabase, removeFromDatabase, getParticipantsByResearcher, getProjectsByResearcher
+from app.database import uploadToDatabase, removeFromDatabase, getParticipantsByResearcher, getProjectsByResearcher, getParticipantsWithProjectsByResearcher
 from app import generateParticipants as gp
 from app import db
 
@@ -86,7 +86,7 @@ def viewParticipantsOfUser():
     # Get the user id as sent by the react frontend
     userId = request.args.get('userId')
     # Retrieve the information from the participants corresponding to the projects of the user
-    participants = getParticipantsByResearcher(userId)
+    participants = getParticipantsWithProjectsByResearcher(userId)
     # Throw an error if the project variable is empty
     # in other words, if the user has no projects
     if participants == []:
