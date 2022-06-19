@@ -3,6 +3,7 @@ from app.scoreapi.scores import setScoreDB, setExplanationDB
 from flask import request, jsonify
 from app.models import Files, Scores, Explanations
 from app.database import uploadToDatabase, removeFromDatabase
+from flask_jwt_extended import jwt_required, current_user
 from sqlalchemy import func
 
 @bp.route('/setScore', methods = ['POST'])
@@ -152,6 +153,41 @@ def getAverageScores():
         'scoreStructure'   :round(avgscoreStructure,2),
         'scoreIntegration' :round(avgscoreIntegration,2)
     }, 200
+
+
+@bp.route('/getFilesAndScoresByUser', methods=['GET'])
+@jwt_required()
+def getScoresByUser():
+    '''
+        This function handles returning the files and corresponding scores of the current user.
+        Attributes:
+            fileList: List of rows containing file and score attributes for the current user.
+            fileDict: Dictionary containing file and score attributes for the current user.
+            file: Row in fileList.
+        returns:
+            fileDict: Dictionary containing file and score attributes for the current user.
+    '''
+
+    # Query all files and scores of current user
+    fileList = Files.query.filter_by(userId=current_user.id).join(Scores, Files.id == Scores.fileId)\
+        .with_entities(Files.id, Files.filename, Files.date, Scores.scoreStyle, Scores.scoreCohesion,
+                       Scores.scoreStructure, Scores.scoreIntegration).order_by(Files.date.asc())
+
+    # Create empty dictionary
+    fileDict = {'id': [], 'filename': [], 'date': [], 'scoreStyle': [], 'scoreCohesion': [], 'scoreStructure': [], 'scoreIntegration': []}
+
+    # Copy fileList to fileDict
+    for file in fileList:
+        fileDict['id'].append(file.id)
+        fileDict['filename'].append(file.filename)
+        fileDict['date'].append(file.date.strftime('%m/%d/%y'))
+        fileDict['scoreStyle'].append(str(file.scoreStyle))
+        fileDict['scoreCohesion'].append(str(file.scoreCohesion))
+        fileDict['scoreStructure'].append(str(file.scoreStructure))
+        fileDict['scoreIntegration'].append(str(file.scoreIntegration))
+
+    return fileDict, 200
+
 
 
 @bp.route('/getExplanationForFile', methods = ['GET'])
