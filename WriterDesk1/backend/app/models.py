@@ -101,7 +101,7 @@ class Files(db.Model):
     def __repr__(self):
         return '<Files {}>'.format(self.filename)
 
-class ParticipantToProject(db.Model, Serializer):
+class ParticipantToProject(db.Model):
     '''
         Model containing user id's and project id's, linking a participant to a research project.
         Attributes:
@@ -122,6 +122,13 @@ class ParticipantToProject(db.Model, Serializer):
         ''' Create new tuple'''
         self.userId = userId
         self.projectId = projectId
+
+    def serializeParticipantToProject(self):
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            if not c == 'participant' and not c == 'project':
+                dict[c] =  getattr(self, c)
+        return dict
 
     def __repr__(self):
         return '<ParticipantToProject {}>'.format(self.userId)
