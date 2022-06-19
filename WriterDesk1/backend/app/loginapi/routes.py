@@ -5,9 +5,7 @@ from flask import request
 from app.loginapi import bp
 
 from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt
 from flask_jwt_extended import current_user
-from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
 from app.database import postUser
@@ -154,10 +152,11 @@ def setRole():
 @jwt_required()
 def setPassword():
     '''
-        This function handles setting the password for the user
+        This function handles setting the password for the user, by first checking if the supplied current password is correct.
         Function requires a user to be logged in, use helpers > auth-header.js
         Attributes:
             newPassword: intended password for the user
+            oldPassword: Current password for the user.
             current_user: the user currently logged in
         Return:
             Returns success if it succeeded, or an 
@@ -165,14 +164,18 @@ def setPassword():
                 404, if the current user's id does not exist in User table
     '''
     # retrieve data from call
-    newPassword = request.form.get('newPassword')
+    newPassword = request.json.get('newPassword')
+    oldPassword = request.json.get('oldPassword')
 
     # check if current_user is actually in Users
     if User.query.filter_by(id=current_user.id).first() is None:
         return 'user not found', 404
     
-    # set password using user function
-    current_user.set_password(newPassword)
+    # set password using user function if the password is correct, else return error message:
+    if current_user.check_password(oldPassword):
+        current_user.set_password(newPassword)
+    else:
+        return 'Current password is incorrect!', 403
     # update the database
     db.session.commit()
-    return 'success'
+    return 'Successfully changed password!'

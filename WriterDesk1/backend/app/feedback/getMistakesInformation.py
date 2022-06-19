@@ -35,7 +35,6 @@ def getMistakesInformationStructure(mistakes, filePath):
             # add the height of the page to the coordinates for returning
             if page.number != 0:
                 pageHeight += page.rect.y1
-
             # go over all occurences of the mistake
             for inst in textInstances:
                 # list contains coordinates, type number, explanation and 
@@ -43,7 +42,6 @@ def getMistakesInformationStructure(mistakes, filePath):
                 values = [inst.x0, inst.y0 + pageHeight, inst.x1, 
                 inst.y1 + pageHeight, 2, mistakes[mistake], mistake]
                 listForDatabase.append(values)
-
     return listForDatabase
 
 def getMistakesInformationStyle(mistakes, filePath):
@@ -80,7 +78,7 @@ def getMistakesInformationStyle(mistakes, filePath):
     doc = fitz.open(filePath)
 
     # go over all mistakes in the input
-    for mistake in mistakes[0]:
+    for mistake in mistakes:
         word = mistake[0]
         sentence = mistake[1]
 

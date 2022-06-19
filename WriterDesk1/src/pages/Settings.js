@@ -1,11 +1,15 @@
 // materials
 import {Button, FormControlLabel, Radio, RadioGroup, TextField, Typography} from "@mui/material";
+import BlueButton from "./../components/BlueButton";
 
 // routing
 import { useOutletContext } from 'react-router-dom';
-import { useEffect } from 'react';
-
-
+import { useEffect, useState } from 'react';
+// Change password request setup
+import { authHeader } from '../helpers/auth-header';
+import axios from 'axios';
+const BASE_URL = "https://localhost:5000/loginapi";
+const PASSWORD_LENGTH = 8;
 
 /**
  * 
@@ -17,9 +21,82 @@ const Settings = () => {
     useEffect(() => {
         setTitle('Settings');
     });
+
+    // Create states for the old password, new Password (including conformation) and states for success or error messages.
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const [formError, setFormError] = useState("");
+
+    /* 
+     * Check if password input is valid.
+     * According to URC 1.2-1.5, a valid password has at least 8 characters,
+     * with at least 1 lowercase character, uppercase character and number.
+     * @returns helper text for password textfield
+     */
+    const checkPassword = () => {
+        if(newPassword === "") {
+            return "";
+        } else if(newPassword.length < PASSWORD_LENGTH) {
+            return "Must contain at least 8 characters";
+        } else if((newPassword.match(/[a-z]/g) || []).length < 1) {
+            return "Must contain at least 1 lowercase letter";
+        } else if((newPassword.match(/[A-Z]/g) || []).length < 1) {
+            return "Must contain at least 1 uppercase letter";
+        } else if((newPassword.match(/[0-9]/g) || []).length < 1) {
+            return "Must contain at least 1 number";
+        }
+        return "";
+    }
+
+    /* 
+     * Check if repeated password input is valid.
+     * @returns helper text for second password textfield
+     */
+    const confirmPassword = () => {
+        if(newPassword !== "" && newPassword !== newPasswordConfirm) {
+            return "Must match Password";
+        }
+        return "";
+    }
+
+    
+    /*
+     * Do POST request containing new and old password variables, recieve status of response.
+     */
+    const changePassword = () => {
+        // Check if input is valid
+        if (oldPassword === "" || newPassword === "" || newPasswordConfirm === "") {
+            setFormError("One or more fields are empty!");
+            return;
+        }
+        if (checkPassword() !== "" || confirmPassword() !== "") {
+            setFormError("One or more fields are not complete!");
+            return;
+        }
+        // If input is valid, do post request
+        const data = {
+            "oldPassword": oldPassword,
+            "newPassword": newPassword,
+        }
+        axios.post(`${BASE_URL}/setPassword`, data, {headers: authHeader()}).then(response =>{
+            // Set a success message, reset the field.
+            setSuccessMessage(response.data);
+            // Reset all the fields:
+            setOldPassword("");
+            setNewPassword("");
+            setNewPasswordConfirm("");
+        }).catch(error =>{
+            // Post request failed, user is not created
+            setFormError(error.response.data);
+        });
+    }
     return (
         <>
             <div className='title'>
+                <BlueButton> Log out </BlueButton>
+                <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Data setting
                 </Typography>
@@ -43,16 +120,27 @@ const Settings = () => {
                     Change password
                 </Typography>
                 <br />
-                <TextField id='currPass' label='Insert current password.' variant='outlined'
-                style={{marginBottom: '1vw'}} />
+                <TextField value = {oldPassword} onChange={(e) => {setOldPassword(e.target.value); 
+                setFormError(""); setSuccessMessage("")}} id='currPass' label='Insert current password.' 
+                variant='outlined' type = 'password' style={{marginBottom: '1vw'}} />
                 <br />
-                <TextField id='newPass' label='Insert new password.' variant='outlined' type='password'
-                style={{marginBottom: '1vw'}} />
+                <TextField value = {newPassword} onChange={(e) => {setNewPassword(e.target.value); 
+                setFormError(""); setSuccessMessage("")}} id='newPass' label='Insert new password.' variant='outlined' type='password'
+                style={{marginBottom: '1vw'}} 
+                error={checkPassword() !== ""} helperText={checkPassword() !== "" ? checkPassword() : " "}
+                />
                 <br />
-                <TextField id='newPass2' label='Insert new password again.' variant='outlined' type='password'
-                style={{marginBottom: '1vw'}} />
+                <TextField value = {newPasswordConfirm} onChange={(e) => {setNewPasswordConfirm(e.target.value); 
+                setFormError(""); setSuccessMessage("")}} id='newPass2' label='Insert new password again.' 
+                variant='outlined' type='password' style={{marginBottom: '1vw'}}
+                error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : " "}
+                />
                 <br />
-                <Button variant='contained'>Update password</Button>
+                <Button variant='contained' onClick={changePassword}>Update password</Button>
+                <br />
+                {/* If the password change has failed, or we have a successful change, relay this message: */}
+                    {formError !== "" && <Typography color="red">{formError}</Typography>}
+                    {successMessage !== "" && <Typography>{successMessage}</Typography>}
                 <br /><br /><br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Delete account
