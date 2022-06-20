@@ -157,3 +157,9 @@ def getExplanationFileType(fileId, explType):
     explanations = Explanations.query.filter_by(
             fileId=fileId, type=explType).all()
     return [explanation.explId for explanation in explanations]
+
+def removeExplanationFileType(fileId, explType):
+    explanations = Explanations.query.filter_by(
+            fileId=fileId, type=explType).all()
+    for explanation in explanations:
+        removeFromDatabase(explanation)

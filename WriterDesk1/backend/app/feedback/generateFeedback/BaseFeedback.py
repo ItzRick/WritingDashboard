@@ -1,4 +1,4 @@
-from app.scoreapi.scores import setScoreDB, setExplanationDB, getExplanationFileType
+from app.scoreapi.scores import setScoreDB, setExplanationDB, getExplanationFileType, removeExplanationFileType
 
 class BaseFeedback:
     scoreStyle = -1
@@ -18,14 +18,19 @@ class BaseFeedback:
         pass
 
     def uploadToDatabase(self):
-        explanationIds = getExplanationFileType(self.fileId, self.explanationType)
-        if len(explanationIds) == len(self.explanations):
-            for idexp, (X1, Y1, X2, Y2, type, expl, mistake, replacements) in enumerate(self.explanations):
-                self.uploadExplanation(X1, Y1, X2, Y2, self.fileId, explanationIds[idexp], type, expl, mistake, replacements)
-        else:
-            pass
+        setScoreDB(self.fileId, self.scoreStyle, self.scoreCohesion, self.scoreStructure, self.scoreIntegration)
+        if len(self.explanations > 0):
+            explanationIds = getExplanationFileType(self.fileId, self.explanationType)
+            if len(explanationIds) == len(self.explanations):
+                for idexp, (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in enumerate(self.explanations):
+                    self.uploadExplanation(X1, Y1, X2, Y2, self.fileId, explanationIds[idexp], explType, expl, mistake, replacements)
+            else:
+                if len(explanationIds) > 0:
+                    removeExplanationFileType(self.fileId, self.explanationType)
+                for (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in self.explanations:
+                    self.uploadExplanation(X1, Y1, X2, Y2, self.fileId, -1, explType, expl, mistake, replacements)
     
-    def uploadExplanation(X1, Y1, X2, Y2, fileId, explId, type, explanation, mistake, replacements):
+    def uploadExplanation(self, X1, Y1, X2, Y2, fileId, explId, explanationType, explanation, mistake, replacements):
         replacement1 = replacement2 = replacement3 = ''
         # Add as much replacements as required, at most 3 and at least 0:
         if len(replacements) > 0:
@@ -35,5 +40,5 @@ class BaseFeedback:
         if len(replacements) > 2:
             replacement3 = replacements[2]
         setExplanationDB(X1 = X1, Y1 = Y1, X2 = X2, Y2 = Y2, fileId = fileId, explId = explId, 
-        type = type, explanation = explanation, mistakeText = mistake, replacement1 = replacement1, replacement2 = replacement2, 
+        type = explanationType, explanation = explanation, mistakeText = mistake, replacement1 = replacement1, replacement2 = replacement2, 
         replacement3 = replacement3)
