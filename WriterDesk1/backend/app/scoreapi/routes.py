@@ -162,7 +162,6 @@ def getFilesAndScoresByUser():
         This function handles returning the files and corresponding scores of the current user.
         Attributes:
             fileList: List of rows containing file and score attributes for the current user.
-            fileDict: Dictionary containing file and score attributes for the current user.
             file: Row in fileList.
         returns:
             fileDict: Dictionary containing file and score attributes for the current user.
