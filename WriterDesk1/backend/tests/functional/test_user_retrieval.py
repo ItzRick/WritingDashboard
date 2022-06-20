@@ -1,10 +1,5 @@
-from distutils.command.upload import upload
 from app.models import User
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from app import db
-from datetime import datetime, date
-import os
-from werkzeug.utils import secure_filename
 import json
 
 from test_set_role import loginHelper
