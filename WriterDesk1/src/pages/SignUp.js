@@ -127,6 +127,7 @@ const SignUp = () => {
         });
     }
 
+    /** Navigates to the login page */
     const navig = () => {
         setLoginAllowed(false)
         history.push(NAVIGATE_TO_URL);
