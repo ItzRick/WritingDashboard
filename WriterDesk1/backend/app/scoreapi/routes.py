@@ -157,7 +157,7 @@ def getAverageScores():
 
 @bp.route('/getFilesAndScoresByUser', methods=['GET'])
 @jwt_required()
-def getScoresByUser():
+def getFilesAndScoresByUser():
     '''
         This function handles returning the files and corresponding scores of the current user.
         Attributes:
