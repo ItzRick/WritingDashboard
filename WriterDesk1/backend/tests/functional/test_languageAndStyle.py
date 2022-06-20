@@ -1,4 +1,4 @@
-from app.languageAndStyle import feedbackLanguageStyle
+from app.feedback.languageAndStyle import feedbackLanguageStyle
 
 
 def testFeedbackLanguageAn(testClient):
@@ -97,6 +97,23 @@ def testFeedbackLanguagePerfectSentence(testClient):
     assert score == 10  # Perfect score for correct sentence
 
     assert len(mistakes) == 0  # No mistakes in sentence
+
+
+def testFeedbackLanguageParenthesis(testClient):
+    """
+    Function to test language and style feedback with single sentence with '(' mistake.
+    Arguments:
+        testClient: The test client we test this for.
+    Attributes:
+        mistakes: List of mistakes in text including matched text, context,
+                  occurrence of text in context, explanation, and possible replacements.
+        score: Score given to the text based on the feedback.
+    """
+    del testClient
+    mistakes, score = feedbackLanguageStyle("(This is a sentence with a missing parenthesis.")
+    assert 0 <= score <= 10  # Score is between 0 and 10
+    assert mistakes[0][0] == "("  # Word of mistake
+    assert len(mistakes) == 1  # There is only one language and style mistake in the sentence
 
 
 def testFeedbackLanguageParenthesis(testClient):

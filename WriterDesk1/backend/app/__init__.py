@@ -3,11 +3,18 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
+from flask_caching import Cache
 from app.extensions import jwt
+from language_tool_python import LanguageTool
+
+
 
 # Database instance:
 db = SQLAlchemy()
 migrate = Migrate()
+cache = Cache()
+languageToolEn = LanguageTool('en-US')
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -19,6 +26,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    cache.init_app(app)
     
     jwt.init_app(app)
 
@@ -27,6 +35,9 @@ def create_app(config_class=Config):
 
     from app.feedback import bp as feedback_bp
     app.register_blueprint(feedback_bp, url_prefix='/feedback')
+
+    from app.projectapi import bp as projectapi_db
+    app.register_blueprint(projectapi_db, url_prefix='/projectapi')
 
     from app.loginapi import bp as loginapi_db
     app.register_blueprint(loginapi_db, url_prefix='/loginapi')
@@ -39,3 +50,6 @@ def create_app(config_class=Config):
 
     # Return the app:
     return app
+
+
+from app import models

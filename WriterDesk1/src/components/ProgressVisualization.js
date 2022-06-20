@@ -4,6 +4,9 @@ import './../css/main.css';
 
 // routing
 import { useNavigate } from 'react-router-dom';
+import {useEffect, useState} from "react";
+import axios from "axios";
+import {authHeader} from "../helpers/auth-header";
 
 /**
  * Line chart of progress
@@ -12,14 +15,44 @@ import { useNavigate } from 'react-router-dom';
 const ProgressVisualization = () => {
   const navigate = useNavigate();
 
-  const documents = [
-    {id: 21, date: new Date('6/7/22'), Title: 'Title1', scoreLanguage: 6.5, scoreStructure: 5, scoreCohesion: 7, scoreSourceIntegration: 5.5},
-    {id: 22, date: new Date('6/8/22'), Title: 'Title2', scoreLanguage: 7, scoreStructure: 5, scoreCohesion: 7.5, scoreSourceIntegration: 8},
-    {id: 23, date: new Date('6/8/22'), Title: 'Title3', scoreLanguage: 7.5, scoreStructure: 6, scoreCohesion: 6, scoreSourceIntegration: 9},
-    {id: 24, date: new Date('6/10/22'), Title: 'Title4', scoreLanguage: 8, scoreStructure: 5.5, scoreCohesion: 5.5, scoreSourceIntegration: 8},
-    {id: 25, date: new Date('6/11/22'), Title: 'Title5', scoreLanguage: 9, scoreStructure: 6, scoreCohesion: 5, scoreSourceIntegration: 8.5},
-    {id: 26, date: new Date('6/12/22'), Title: 'Title6', scoreLanguage: 9.5, scoreStructure: 7.4, scoreCohesion: 5.5, scoreSourceIntegration: 8}
-  ]; //TODO: Retrieve document data. Has to be in order of date.
+  const [dateCorrectFormat, setDateCorrectFormat] = useState();  // List of dates in correct format
+  const [mergedTitles, setMergedTitles] = useState();  // Titles of documents for the hover text
+
+  // Dictionary of all documents and scores that are shown in the line chart
+  const [documents, setDocuments] = useState({'id': [], 'filename': [], 'date': [], 'scoreStyle': [],
+                                              'scoreCohesion': [], 'scoreStructure': [], 'scoreIntegration': []});
+
+
+  /**
+   * Function to retrieve all documents and corresponding scores for the current user from the database.
+   */
+  const fetchFilesAndScores = () => {
+    // Url of the server:
+    const url = 'https://127.0.0.1:5000/scoreapi/getFilesAndScoresByUser';
+
+    // Make the backend call and set the documents variable:
+    axios.get(url, {headers: authHeader()}).then((response) => {
+      setDocuments(response.data)
+    })
+
+  }
+
+  useEffect(() => {
+    fetchFilesAndScores()  // Retrieve documents and scores
+  }, []);
+
+  useEffect(() => {
+    const newDateList = []  // Create new array for dates in correct format
+    documents['date'].forEach((date, i) => {
+      newDateList[i] = new Date(date)  // Set array in date format
+    })
+    setDateCorrectFormat(newDateList)  // Set dates as date object instead of string
+  }, [documents]);
+
+  useEffect(() => {
+    // Run concatTitlesSameDate function to show correct information on hover
+    setMergedTitles(concatTitlesSameDate(dateCorrectFormat, documents['filename']))
+  }, [dateCorrectFormat, documents]);
 
 
   /**
@@ -27,7 +60,7 @@ const ProgressVisualization = () => {
    * @param {Object} data - Object of data of the point that is clicked.
    */
   const handlePointClick = (data) => {
-    navigate('/Document', {state: {fileId: documents[data.pointNumber].id}});
+    navigate('/Document', {state: {fileId: documents['id'][data.pointNumber]}});
   }
 
 
@@ -37,50 +70,53 @@ const ProgressVisualization = () => {
    * point in the graph that corresponds with multiple documents.
    * @param {Array} dates - Array of sorted dates.
    * @param {Array} titles - Array of titles that corresponds to the dates. Must be of same length as array of dates
-   * @returns {Array} Modified array of titles where title of the first document in a row of documents with the same date
+   * @returns {Array} Array of titles where title of the first document in a row of documents with the same date
    * contains all titles of those documents. Example: ['Title1', 'Title2, Title3', 'Title3']
    */
   const concatTitlesSameDate = (dates, titles) => {
-    for (let i = 0; i < dates.length-1; i++) { // Loop over all documents
-      if (dates[i] === dates[i+1]) {
+    // Check if titles or dates variable is undefined.
+    if (titles === undefined || dates === undefined) {
+      return titles;
+    }
 
-        // If there are 2 documents with the same date, check if there are more with that date
-        for (let n = i+1; n < dates.length-1; n++) {
-          if (dates[n] === dates[i]) {
-            titles[i] = titles[i] + ', ' + titles[n]; // For all the documents with the same date, concat titles
-          } else {
-            break;
+    let newTitles = [...titles]
+      for (let i = 0; i < dates.length-1; i++) { // Loop over all documents
+        if (dates[i].getTime() === dates[i+1].getTime()) {
+          // If there are 2 documents with the same date, check if there are more with that date
+          for (let n = i+1; n <= dates.length-1; n++) {
+            if (dates[i].getTime() === dates[n].getTime()) {
+              newTitles[i] = titles[i] + ', ' + titles[n]; // For all the documents with the same date, concat titles
+            } else {
+              break;
+            }
           }
         }
-      }
-    }
-    return(titles);
+     }
+    return(newTitles);
   }
 
-  // Titles of documents for the hover text
-  const mergedTitles = (concatTitlesSameDate(documents.map(row => row.date), documents.map(row => row.Title)));
 
   return (
     <Plot style={{ height: '100%', width: '80%', marginLeft: '14vw', minWidth: '500px' }}
     data={[
       {
-        x: documents.map(row => row.date),
-        y: documents.map(row => row.scoreLanguage),
+        x: dateCorrectFormat,
+        y: documents['scoreStyle'],
         mode: 'lines+markers',
-        line: {color: '#648FFF'},
-        marker: {color: '#B3C8FF', symbol: 'circle', size: 10, line:{color:'#648FFF', width: 2}},
+        line: {color: '#785EF0'},
+        marker: {color: '#B1A2F6', symbol: 'circle', size: 10, line:{color:'#785EF0', width: 2}},
         name: 'Language and Style',
         hovertemplate: '<b>%{text}</b><br>Score: %{y}<br>%{x}',
         text: mergedTitles,
         transforms: [{
           type: 'aggregate',
-          groups: documents.map(row => row.date),
+          groups: dateCorrectFormat,
           aggregations: [{target: 'y', func: 'avg', enabled: true}]
         }]
       },
       {
-        x: documents.map(row => row.date),
-        y: documents.map(row => row.scoreCohesion),
+        x: dateCorrectFormat,
+        y: documents['scoreCohesion'],
         mode: 'lines+markers',
         line: {color: '#FE6100'},
         marker: {color: '#FFA166', symbol: 'circle', size: 10, line:{color:'#FE6100', width: 2}},
@@ -89,13 +125,13 @@ const ProgressVisualization = () => {
         text: mergedTitles,
         transforms: [{
           type: 'aggregate',
-          groups: documents.map(row => row.date),
+          groups: dateCorrectFormat,
           aggregations: [{target: 'y', func: 'avg', enabled: true}]
         }]
       },
       {
-        x: documents.map(row => row.date),
-        y: documents.map(row => row.scoreSourceIntegration),
+        x: dateCorrectFormat,
+        y: documents['scoreIntegration'],
         mode: 'lines+markers',
         line: {color: '#DC267F'},
         marker: {color: '#ED91BE', symbol: 'circle', size: 10, line: {color:'#DC267F', width: 2}},
@@ -104,13 +140,13 @@ const ProgressVisualization = () => {
         text: mergedTitles,
         transforms: [{
           type: 'aggregate',
-          groups: documents.map(row => row.date),
+          groups: dateCorrectFormat,
           aggregations: [{target: 'y', func: 'avg', enabled: true}]
         }]
       },
       {
-        x: documents.map(row => row.date),
-        y: documents.map(row => row.scoreStructure),
+        x: dateCorrectFormat,
+        y: documents['scoreStructure'],
         mode: 'lines+markers',
         line: {color: '#FFB000'},
         marker: {color: '#FFD780', symbol: 'circle', size: 10, line:{color:'#FFB000', width: 2}},
@@ -119,7 +155,7 @@ const ProgressVisualization = () => {
         text: mergedTitles,
         transforms: [{
           type: 'aggregate',
-          groups: documents.map(row => row.date),
+          groups: dateCorrectFormat,
           aggregations: [{target: 'y', func: 'avg', enabled: true}]
         }]
       }
@@ -144,7 +180,7 @@ const ProgressVisualization = () => {
         type: 'date',
         showgrid: true,
         hoverformat: '%d-%m-%Y',
-        showspikes: false, //true
+        showspikes: false,
         spikecolor: 'black',
         spikemode: 'toaxis+across',
         spikethickness: 1
