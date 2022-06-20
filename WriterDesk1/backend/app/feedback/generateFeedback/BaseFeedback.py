@@ -42,3 +42,6 @@ class BaseFeedback:
         setExplanationDB(X1 = X1, Y1 = Y1, X2 = X2, Y2 = Y2, fileId = fileId, explId = explId, 
         type = explanationType, explanation = explanation, mistakeText = mistake, replacement1 = replacement1, replacement2 = replacement2, 
         replacement3 = replacement3)
+
+    def addSingleExplanation(self, X1, Y1, X2, Y2, fileId, explId, explanationType, explanation, mistake, replacements):
+        self.explanations.append([X1, Y1, X2, Y2, fileId, explId, explanationType, explanation, mistake, replacements])

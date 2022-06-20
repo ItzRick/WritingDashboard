@@ -154,12 +154,24 @@ def setExplanationDB(fileId, type, explanation, explId = -1, mistakeText = '', X
     return True, 'successfully uploaded Explanations'
 
 def getExplanationFileType(fileId, explType):
-    explanations = Explanations.query.filter_by(
-            fileId=fileId, type=explType).all()
+    '''
+        Returns list for all explanationIds for explanations for a certain explanation type and fileId.
+        Attributes:
+            explanations: Explanation database instances for all explanations for a certain fileId and explanation type.
+        Arguments:
+            fileId: File id, together with the explanation type, we need to find all the explanations for.
+            explType: Explanation type, together with the file id, we need to find all explanations for.
+        Returns:
+            List with all explanation ids for the explanations with this explanation type and fileId.
+    '''
+    explanations = Explanations.query.filter_by(fileId=fileId, type=explType).all()
     return [explanation.explId for explanation in explanations]
 
 def removeExplanationFileType(fileId, explType):
-    explanations = Explanations.query.filter_by(
-            fileId=fileId, type=explType).all()
+    '''
+        Removes the explanations belonging to a certain fileId and explType from the database.
+        
+    '''
+    explanations = Explanations.query.filter_by(fileId=fileId, type=explType).all()
     for explanation in explanations:
         removeFromDatabase(explanation)
