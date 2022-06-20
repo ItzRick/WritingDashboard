@@ -10,12 +10,19 @@ from flask_jwt_extended import current_user
 @bp.route('/users', methods=['GET'])
 @jwt_required()
 def usersRetrieve():
+    '''
+        This function handles the retrieval of users except for users
+        with the participant role in the form of a json file.
+        Attributes:
+            users: list containing all users (each entry has the username, id and role of a user)
+            except for participants
+        Return:
+            Returns json file containing users
+    '''
+
     if current_user.role != 'admin':
         return 'Method only accessible for admin users', 403
-    '''
-    This function handles the retrieval of users except for users
-    with the participant role in the form of a json file.
-    '''
+
     # Retrieve list of files that were uploaded by the current user,
     # ordered by the sorting attribute in the request
     users = getUsers()

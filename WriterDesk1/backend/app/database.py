@@ -57,7 +57,8 @@ def getFilesByUser(user, sortingAttribute):
         files = files.order_by(Files.date.desc())
     return Files.serializeList(files.all())
 
-def getUsers() :
+# Retrieves and returns a list of all users that are not assigned the participant role
+def getUsers():
     users = db.session.query(User).filter(User.role != 'participant').all()
     return User.serializeList(users)
 
