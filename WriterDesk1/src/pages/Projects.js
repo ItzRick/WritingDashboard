@@ -199,13 +199,13 @@ const Projects = () => {
         <>
             {showDeleteDialog &&
               <AlertDialog title = "Delete project" text = "Are you sure you want to delete this project?"
-                           buttonAgree={<Button onClick={(e) => {deleteProject(e, deleteId)}}>Yes</Button>}
-                           buttonCancel={<Button style={{color: "red"}} onClick={(e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
+                           buttonAgree={<Button style={{color: "red"}} onClick={(e) => {deleteProject(e, deleteId)}}>Yes</Button>}
+                           buttonCancel={<Button onClick={(e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
               />}
             {showDeleteDialogMultiple &&
               <AlertDialog title = "Delete projects" text = "Are you sure you want to delete the selected projects?"
-                           buttonAgree={<Button onClick={(e) => {deleteSelectedProjects(e)}}>Yes</Button>}
-                           buttonCancel={<Button style={{color: "red"}} onClick={(e) => {setShowDeleteDialogMultiple(false)}}>Cancel</Button>}
+                           buttonAgree={<Button style={{color: "red"}} onClick={(e) => {deleteSelectedProjects(e)}}>Yes</Button>}
+                           buttonCancel={<Button onClick={(e) => {setShowDeleteDialogMultiple(false)}}>Cancel</Button>}
               />}
             {showNrOfParticipantsDialog &&
               <AlertDialog title = "Number of participants" text = "Make sure the number of participants is a valid number between 0 and 10000!"
