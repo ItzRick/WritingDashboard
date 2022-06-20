@@ -33,8 +33,7 @@ const BlueButton = ({ children, idStr = '', pathName = '', onClick = () => { }, 
             } else {
                 tc.trigger({
                     eventType: 'click.link',
-                    buttonId: idStr, 
-                    linkPath: pathName,
+                    buttonId: pathName,
                 })
             }
         }

@@ -32,6 +32,10 @@ import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 // routing
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 
+// tracking
+import { useContext } from 'react';
+import { TrackingContext } from '@vrbo/react-event-tracking';
+
 //Width of the opened drawer
 const drawerWidth = 240;
 
@@ -137,6 +141,9 @@ const Base = ({
   enableNav = true,
 }) => {
 
+  // context as given by the Tracking Provider
+  const tc = useContext(TrackingContext);
+
   const [admin, setAdmin] = useState(false); // true when user has admin rights
   const [researcher, setResearcher] = useState(false); // true when user has researcher rights
 
@@ -144,6 +151,13 @@ const Base = ({
   const [open, setOpen] = useState(false);
   const handleDrawer = () => {
     setOpen(!open);
+    // handle tracking when the drawer is used
+    if (tc.hasProvider) {
+      tc.trigger({
+        eventType: 'click.button',
+        buttonId: 'drawerHandle',
+      })
+    }
   };
 
   // provides title to the base page using the context of the outlet
@@ -199,7 +213,17 @@ const Base = ({
               justifySelf: "flex-end",
               color: "appBar.icon",
             }}
-            component={Link} to='settings'
+            onClick={() => {
+              // handle tracking when the link is activated
+              if (tc.hasProvider) {
+                tc.trigger({
+                  eventType: 'click.link',
+                  buttonId: 'Settings',
+                  linkPath: '/Settings'
+                })
+              }
+            }}
+            component={Link} to='/Settings'
           >
             <Person />
           </IconButton>
