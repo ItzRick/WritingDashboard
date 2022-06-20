@@ -8,10 +8,9 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 
-from app.database import postUser
+from app.database import postUser, initialSetup
 from app.extensions import jwt
 from app.models import User
-from app.database import initialSetup
 
 @bp.route('/login', methods=['POST'])
 def create_token():
