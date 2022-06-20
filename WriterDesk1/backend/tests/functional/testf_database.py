@@ -1,4 +1,3 @@
-
 from app.models import Files, User, ParticipantToProject, Projects, Scores, Explanations
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, postUser, postParticipant, postParticipantToProject, recordsToCsv
 from app import db
@@ -118,12 +117,12 @@ def testCreateDatabase(testClient):
 
 def testFiles(testClient, initDatabase):
     '''
-        Test if we get the correct display if we run Files.query.all(), so the representation of '<File <filename>>'. 
-        Attributes: 
+        Test if we get the correct display if we run Files.query.all(), so the representation of '<File <filename>>'.
+        Attributes:
             files: all files of the type Files in the database.
         Arguments:
             testClient:  The test client we test this for.
-            initDatabase: the database instance we test this for. 
+            initDatabase: the database instance we test this for.
     '''
     del testClient, initDatabase
     files = Files.query.all()
@@ -285,7 +284,7 @@ def testRecordsToCsv(testClient, initDatabase):
 def testPostUser(testClient, initDatabase):
     '''
         Test if postUser() correctly adds a user to the database
-        Attributes: 
+        Attributes:
             users: all users with username 'test@tue.nl'
         Arguments:
             testClient: the test client we test this for
@@ -296,7 +295,7 @@ def testPostUser(testClient, initDatabase):
 
     # Try to add a new user to the database
     try:
-        postUser("test@tue.nl", "TestPassword1")
+        postUser("test@tue.nl", "TestPassword1", False)
         db.session.commit()
     except:
         db.session.rollback()
@@ -305,12 +304,13 @@ def testPostUser(testClient, initDatabase):
     users = User.query.filter_by(username="test@tue.nl").all()
     assert len(users) == 1
     assert users[0].check_password("TestPassword1")
+    assert not users[0].trackable
 
 def testPostParticipant(testClient, initDatabase):
     '''
         Test if postParticipant() correctly adds a user to the database and returns user object.
         Attributes:
-            user: returned user from postParticipant() 
+            user: returned user from postParticipant()
             users: all participants with username 'test@tue.nl'
         Arguments:
             testClient: the test client we test this for

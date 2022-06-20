@@ -2,11 +2,13 @@ from app import db
 from app.models import User
 from app.database import postParticipant, postParticipantToProject
 import random, string
+from flask import current_app
 
 def generateParticipants(nrOfParticipants, projectId):
     '''
         Creates participants for a research project, adding them to the User table
-        and creating the corresponding entries in the ParticipantToProject table. 
+        and creating the corresponding entries in the ParticipantToProject table.
+        Function raises error when a user can not be added to database.
         Attributes:
             PASSWORD_LENGTH: length of generated passwords
             password: generated password for a participant
@@ -18,7 +20,7 @@ def generateParticipants(nrOfParticipants, projectId):
             Returns a dictionary with usernames and passwords of new participants.
     '''
 
-    PASSWORD_LENGTH = 10
+    PASSWORD_LENGTH = current_app.config['PASSWORD_LENGTH']
     data = []
     for participant in range(nrOfParticipants):
 
@@ -59,12 +61,13 @@ def generateParticipantPassword(length):
         Arguments:
             length: the length of the generated password
         Return:
-            Returns the password string
+            Returns the password string. Function raises an error when password length is smaller than 8.
     '''
 
     if length < 8:
         raise Exception('Password should be at least 8 characters long')
 
+    # Generate password with random strings
     characters = [random.choice(string.ascii_lowercase),
                     random.choice(string.ascii_uppercase),
                     random.choice(string.digits)] + [random.choice(string.ascii_letters + string.digits) for letter in range(length-3)]

@@ -14,24 +14,28 @@ class User(db.Model):
             id: Unique primary key User ID 
             username: email address or username from user
             passwordHash: hashed password from user, hashed using werkzeug.security
+            trackable: whether or not the user wants to be tracked. 
     '''
     __tablename__ = "user"
     role = db.Column(db.String(32))
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), index=True, unique=True)
     passwordHash = db.Column(db.String(128))
+    trackable = db.Column(db.Boolean, default=True)
 
-    def __init__(self, username: str, password_plaintext: str, role: str ='user'):
-        '''
+    def __init__(self, username: str, password_plaintext: str, role: str ='user', trackable: bool = True):
+        ''' 
             Create new user, use set_password to create hashed password for plaintext password
             Arguments:
                 username: Username of new user
                 password_plaintext: Password (to be hashed) for new user
-                role: Role of new user, standard is: 'user'
+                role: Role of new user, standard is: 'user'        
+                trackable: whether the user wants to be tracked or not  
         '''
         self.role = role
         self.username = username
         self.set_password(password_plaintext)
+        self.trackable = trackable
 
     def serializeUser(self):
         dict = {}
@@ -201,6 +205,7 @@ class Projects(db.Model):
             id: Id of this database instance, of this project that has been added in the database.
             userId: Id of the researcher corresponding to the research project.
             projectName: Name of the research project.
+            participants: participants object linked by projectId
     '''
     __tablename__ = "projects"
     id = db.Column(db.Integer, primary_key=True)

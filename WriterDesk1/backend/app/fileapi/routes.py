@@ -4,12 +4,10 @@ from flask import current_app, request, session, jsonify, send_file
 from app.models import Files, User
 from app.fileapi import bp
 from app.fileapi.convert import convertDocx, convertTxt
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, initialSetup
+from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from magic import from_buffer
 from datetime import date
 from mimetypes import guess_extension
-from fpdf import FPDF
-from docx2pdf import convert
 
 @bp.route('/upload', methods = ['POST'])
 def fileUpload():
