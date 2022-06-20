@@ -18,23 +18,23 @@ def initialSetup():
 
 def uploadToDatabase(toUpload):
     '''
-        This functions uploads a file to the database.
+        This functions adds data to the database.
         Arguments:
-            toUpload: the file to upload to the database.
+            toUpload: the data to upload to the database.
     '''
-    # add the file to the database
+    # add the data to the database
     db.session.add(toUpload)
     # commit the changes in the database
     db.session.commit()
 
-def removeFromDatabase(document):
+def removeFromDatabase(toRemove):
     '''
-        This functions removes a file from the database.
+        This functions removes data from the database.
         Arguments:
-            document: the file to be removed from the database.
+            toRemove: the data to be removed from the database.
     '''
-    # remove the document from the database
-    db.session.delete(document)
+    # remove the data from the database
+    db.session.delete(toRemove)
     # commit the changes in the database
     db.session.commit()
 
