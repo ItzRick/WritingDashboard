@@ -120,7 +120,6 @@ def testRemoveFromDatabaseInvalidId(testClient, initDatabase):
     # Try to delete the project from the database
     response = testClient.delete('/projectapi/deleteProject', data={'projectId': project.id},
                                  headers={"Authorization": "Bearer " + access_token})
-
     # Check if we get the correct status_code:
     assert response.status_code == 400
 

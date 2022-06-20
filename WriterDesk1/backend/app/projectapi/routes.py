@@ -1,11 +1,18 @@
+import os
+import shutil
+
 from app.projectapi import bp
 
-from flask import request, jsonify
-from app.models import Projects
+from flask import request, jsonify, current_app
+from app.models import Projects, User, ParticipantToProject
 
 from app.database import uploadToDatabase, removeFromDatabase, getProjectsByResearcher, getParticipantsWithProjectsByResearcher
 from app import generateParticipants as gp
 from app import db
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import current_user
+
+
 
 import os
 import shutil

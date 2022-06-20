@@ -1,5 +1,4 @@
-from app.models import Files, Scores, Explanations, Scores
-from app.models import Files, User, ParticipantToProject, Projects
+from app.models import Files, User, Scores, Explanations, Scores, ParticipantToProject, Projects
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase, postUser, postParticipant, postParticipantToProject
 from app import db
 from datetime import datetime
@@ -117,12 +116,12 @@ def testCreateDatabase(testClient):
 
 def testFiles(testClient, initDatabase):
     '''
-        Test if we get the correct display if we run Files.query.all(), so the representation of '<File <filename>>'. 
-        Attributes: 
+        Test if we get the correct display if we run Files.query.all(), so the representation of '<File <filename>>'.
+        Attributes:
             files: all files of the type Files in the database.
         Arguments:
             testClient:  The test client we test this for.
-            initDatabase: the database instance we test this for. 
+            initDatabase: the database instance we test this for.
     '''
     del testClient, initDatabase
     files = Files.query.all()
@@ -198,7 +197,7 @@ def testUploadToDBScore(testClient, initDatabase):
 def testPostUser(testClient, initDatabase):
     '''
         Test if postUser() correctly adds a user to the database
-        Attributes: 
+        Attributes:
             users: all users with username 'test@tue.nl'
         Arguments:
             testClient: the test client we test this for
@@ -260,7 +259,7 @@ def testUploadToDBExplanation(testClient, initDatabase):
 def testPostUser(testClient, initDatabase):
     '''
         Test if postUser() correctly adds a user to the database
-        Attributes: 
+        Attributes:
             users: all users with username 'test@tue.nl'
         Arguments:
             testClient: the test client we test this for
@@ -281,7 +280,7 @@ def testPostParticipant(testClient, initDatabase):
     '''
         Test if postParticipant() correctly adds a user to the database and returns user object.
         Attributes:
-            user: returned user from postParticipant() 
+            user: returned user from postParticipant()
             users: all participants with username 'test@tue.nl'
         Arguments:
             testClient: the test client we test this for
@@ -304,7 +303,7 @@ def testPostParticipantToProject(testClient, initDatabase):
         Test if postParticipantToProject() correctly adds an entry to the database.
         Attributes:
             project: project entry that will be linked with a participant
-            entries: all entries in ParticipantToProject 
+            entries: all entries in ParticipantToProject
         Arguments:
             testClient: the test client we test this for
             initDatabase: the database instance we test this for

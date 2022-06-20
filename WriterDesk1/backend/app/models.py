@@ -22,12 +22,12 @@ class User(db.Model):
     passwordHash = db.Column(db.String(128))
 
     def __init__(self, username: str, password_plaintext: str, role: str ='user'):
-        ''' 
+        '''
             Create new user, use set_password to create hashed password for plaintext password
             Arguments:
                 username: Username of new user
                 password_plaintext: Password (to be hashed) for new user
-                role: Role of new user, standard is: 'user'        
+                role: Role of new user, standard is: 'user'
         '''
         self.role = role
         self.username = username
@@ -146,7 +146,7 @@ class Scores(db.Model):
             scoreIntegration: Score for Source Integration and Content
     '''
     fileId = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
-    # Scores are numeric values with 2 decimals before and 2 decimals after the point.
+    # Scores are numeric values with 2 decimals before and 2 decimals after the point. 
     # Thus, allowing us at least values between 10.00 and 0.00
     scoreStyle       = db.Column(db.Numeric(4,2), unique=False, default=None)
     scoreCohesion    = db.Column(db.Numeric(4,2), unique=False, default=None)
@@ -158,7 +158,7 @@ class Scores(db.Model):
 
 class Explanations(db.Model):
     '''
-        Class to enter explanations related to a file.
+        Class to enter explanations related to a file. 
         Attributes:
             fileId: Id of this database instance, of this file that has been added in the database.
             explId: Id of the file corresponding to a file in the Files
@@ -205,6 +205,7 @@ class Projects(db.Model):
             id: Id of this database instance, of this project that has been added in the database.
             userId: Id of the researcher corresponding to the research project.
             projectName: Name of the research project.
+            participants: participants object linked by projectId
     '''
     __tablename__ = "projects"
     id = db.Column(db.Integer, primary_key=True)

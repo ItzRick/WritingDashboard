@@ -5,7 +5,9 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  Select, Button, Stack,
+  Select,
+  Button,
+  Stack
 } from "@mui/material";
 import {
   DeleteOutline,
@@ -28,13 +30,10 @@ const BASE_URL = "https://localhost:5000/projectapi";
 
 
 /**
- * 
+ *
  * @returns Participants Page
  */
-
-
-
-function Participants() {
+const Participants = () => {
   const columns: GridColDef[] = [
     {
       field: 'username',
@@ -77,9 +76,8 @@ function Participants() {
     }
   ];
 
-  // replace with list of real projects, needed for project dropdowns
 
-  //set title in parent 'base' 
+  //set title in parent 'base'
   const { setTitle } = useOutletContext();
 
   // initialize participants and projects variables
@@ -234,6 +232,9 @@ function Participants() {
           InputLabelProps={{
             shrink: true,
           }}
+          inputProps= {{
+              min: 0,
+          }}
         />
         <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
           <InputLabel id="project-add-participants">Project</InputLabel>
@@ -272,12 +273,11 @@ function Participants() {
       <div style={{ justifyContent: 'center', display: 'flex' }}>
         <div style={{ height: '80vh', maxHeight: '400px', width: '50vw' }} >
           <DataGrid
-            rows={participants} /* TODO, changed from rows to participants */
-            columns={columns} /* TODO */
+            rows={projects}
+            columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
             checkboxSelection
-            onSelectionModelChange={e => setSelectedInstances(e)}
             disableSelectionOnClick
             components={{
               NoRowsOverlay: () => (

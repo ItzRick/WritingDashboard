@@ -7,7 +7,7 @@ def testGenerateParticipants(testClient, initDatabase):
         Test if generateParticipants() correctly creates participants the database.
         Attributes:
             project: project entry that will be linked with a participant
-            ptp: all entries in ParticipantToProject 
+            ptp: all entries in ParticipantToProject with the project id of the project
         Arguments:
             testClient: the test client we test this for
             initDatabase: the database instance we test this for
