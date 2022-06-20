@@ -133,11 +133,12 @@ const SignUp = () => {
         });
     }
 
+    let navigate = useNavigate();
+
     /** Navigates to the login page */
     const navig = () => {
         setLoginAllowed(false)
-        history.push(NAVIGATE_TO_URL);
-        window.location.reload();
+        navigate(NAVIGATE_TO_URL, { replace: true });
     }
 
     // Set username from textfield

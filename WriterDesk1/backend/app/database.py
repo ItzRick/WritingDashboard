@@ -3,7 +3,7 @@ from app.models import User, Scores, Files, Projects, ParticipantToProject
 
 # helper function, TODO remove before deploy
 def initialSetup():
-    db.session.commit()
+    db.session.close()
     db.drop_all()
     db.create_all()
     # create admin user
