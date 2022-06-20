@@ -1,3 +1,4 @@
+from this import d
 from app.models import Files, Scores, Explanations
 from app.database import uploadToDatabase, removeFromDatabase
 
@@ -151,3 +152,8 @@ def setExplanationDB(fileId, type, explanation, explId = -1, mistakeText = '', X
     uploadToDatabase(explanationIndb)
 
     return True, 'successfully uploaded Explanations'
+
+def getExplanationFileType(fileId, explType):
+    explanations = Explanations.query.filter_by(
+            fileId=fileId, type=explType).all()
+    return [explanation.explId for explanation in explanations]
