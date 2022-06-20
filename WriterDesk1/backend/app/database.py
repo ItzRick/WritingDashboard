@@ -1,5 +1,5 @@
 from app import db
-from app.models import User, Scores Files, Projects, ParticipantToProject
+from app.models import User, Scores, Files, Projects, ParticipantToProject
 
 # helper function, TODO remove before deploy
 def initialSetup():
