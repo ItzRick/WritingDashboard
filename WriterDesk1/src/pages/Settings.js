@@ -3,7 +3,7 @@ import {Button, FormControlLabel, Radio, RadioGroup, TextField, Typography} from
 import BlueButton from "./../components/BlueButton";
 
 // routing
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // Import the AuthenticationService for the logout:
 import {AuthenticationService} from '../services/authenticationService';
@@ -71,13 +71,14 @@ const Settings = () => {
         return "";
     }
 
+    let navigate = useNavigate();
+
     /* 
     * Logs out the user and redirects the user to the homepage.
     */   
     const logout = () => {
         AuthenticationService.logout();
-        history.push('/');
-        window.location.reload();
+        navigate("/", { replace: true });
     }
 
     
