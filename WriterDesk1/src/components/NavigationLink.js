@@ -34,7 +34,7 @@ const NavigationLink = ({ text, Icon, open, allowed = false, pageLink }) => {
     const handleClick = () => {
         if (tc.hasProvider) {
             tc.trigger({
-                eventType: 'link',
+                eventType: 'click.link',
                 buttonId: pageLink, 
             })
         }
