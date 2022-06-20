@@ -65,20 +65,23 @@ def addParticipantsToExistingProject():
 @jwt_required()
 def setProject():
     '''
-    This function handles the creation of research projects using a user id and a project name.
-    Attributes:
-        projectName: project name as given by the frontend
-        current_user: the user currently logged in
-        projectIndb: project object that is uploaded to the database
+        This function handles the creation of research projects using a user id and a project name.
+        Attributes:
+            projectName: project name as given by the frontend
+            current_user: the user currently logged in
+            projectIndb: project object that is uploaded to the database
+        Return:
+            Returns string with project id if project creation was successful and an error message otherwise.
     '''
     # Get the data as sent by the react frontend:
     projectName = request.form.get('projectName')
 
+    # Check if current user has rights to create a project
     if User.query.filter_by(id=current_user.id).first().role == 'student' \
             or User.query.filter_by(id=current_user.id).first().role == 'participant':
         return 'User is not admin or researcher', 400
 
-    # create Projects object
+    # Create Projects object
     projectIndb = Projects(userId=current_user.id, projectName=projectName)
 
     # Upload row to database
@@ -93,12 +96,14 @@ def setProject():
 @jwt_required()
 def deleteProject():
     '''
-    This function handles the deletion of research projects using the corresponding project id's. If the project
-    does not exist in the database, the function raises a 404 error. If the project has a different user than the current
-    user, the function raises a 400 error.
-    Attributes:
-        projectIds: List of project id's as given by the frontend
-        projectToBeRemoved: project object that is going to be removed
+        This function handles the deletion of research projects using the corresponding project id's. If the project
+        does not exist in the database, the function raises a 404 error. If the project has a different user than the current
+        user, the function raises a 400 error.
+        Attributes:
+            projectIds: List of project id's as given by the frontend
+            projectToBeRemoved: project object that is going to be removed
+        Return:
+            Returns a string with 'success' if project deletion was successful and an error message otherwise.
     '''
     # Get the data as sent by the react frontend:
     projectIds = request.form.getlist('projectId')
@@ -125,12 +130,14 @@ def deleteProject():
 
 def DeleteAllFilesFromProject(projectIds):
     '''
-    This function handles the deletion of files corresponding to all users from a project.
-    Attributes:
-        users: Users corresponding to project removed
-        folderToRemove: path of folder that needs to be removed
-    Arguments:
-        projectIds: List of project id's as given by the frontend
+        This function handles the deletion of files corresponding to all users from a project.
+        Attributes:
+            users: Users corresponding to project removed
+            folderToRemove: path of folder that needs to be removed
+        Arguments:
+            projectIds: List of project id's as given by the frontend
+        Return:
+            Returns a string with a success message.
     '''
 
     for projectId in projectIds:
