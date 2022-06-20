@@ -1,13 +1,17 @@
 import './../css/main.css';
+import './../css/SignUp.css';
 
 // materials
 import {
     Typography,
     IconButton,
-    TextField
+    TextField,
+    Checkbox,
+    Button
 } from "@mui/material";
 import logo from '../images/logo.png';
 import BlueButton from "./../components/BlueButton";
+import AlertDialog from '../components/AlertDialog';
 
 // routing
 import { Link, useOutletContext, useNavigate } from 'react-router-dom';
@@ -33,6 +37,9 @@ const SignUp = () => {
     });
 
     const navigate = useNavigate();
+
+    // whether or not the information about the user data is shown.
+    const [showUserDataPopup, setShowUserDataPopup] = useState(false)
 
     /* 
      * Check if username input is valid.
@@ -94,6 +101,7 @@ const SignUp = () => {
      * Do POST request containing username and password variable, recieve status of response.
      */
     const handleClick = () => {
+        console.log(acceptUserData)
         // Check if input is valid
         if (username === "" || password === "") {
             setFormError("One or more fields are empty!");
@@ -108,6 +116,7 @@ const SignUp = () => {
         const data = {
             "username": username,
             "password": password,
+            "trackable": acceptUserData,
         }
         const headers = {
             "Content-Type": "application/json"
@@ -137,6 +146,8 @@ const SignUp = () => {
 
     // Change page using formError when we find an error
     const [formError, setFormError] = useState("");
+
+    const [acceptUserData, setAcceptUserData] = useState(true);
 
     return (
         <>
@@ -172,6 +183,16 @@ const SignUp = () => {
                             error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : " "}
                             fullWidth
                         />
+                        <div style={{display: 'flex', alignSelf: 'flex-end', verticalAlign: 'middle'}}>
+                            <Checkbox sx={{alignSelf: 'center'}} onChange={(e) => {setAcceptUserData(!e.target.checked)}} />
+                            <Typography sx={{alignSelf: 'center', alignContent:'inline'}}>
+                                I do not allow the collection of my <a className='userDataLinkPopup' onClick={() => {setShowUserDataPopup(true)}} >user data</a>.
+                            </Typography>
+                            {showUserDataPopup && <AlertDialog title = "User data" 
+                                text = "The user data is the clicks of the user within the application and their time and location. This data is only used to improve the automatic feedback generated within the application. The application is still fully available when refusing the data conditions."
+                                buttonAgree={<Button onClick={() => {setShowUserDataPopup(false)}}>I understand</Button>}
+                            />}
+                        </div>
                     </div>
                     <br />
                     {formError !== "" && <Typography color="red">{formError}</Typography>}
