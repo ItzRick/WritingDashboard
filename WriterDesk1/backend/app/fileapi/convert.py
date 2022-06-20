@@ -7,6 +7,7 @@ def convertDocx(filePath):
         This function converts a docx file to a pdf file using libreoffice and calling it using the subprocess
         module. It then placed the newly made pdf file in the same location as 
         the docx file.
+        Requires libreoficce to run, needs to be added to PATH
         Attributes:
             newPath: The path to the new pdf file.
         Arguments:
