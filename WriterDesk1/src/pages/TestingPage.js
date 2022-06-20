@@ -13,7 +13,7 @@ const TestingPage = () => {
 
     return (
         <>
-            <BlueButton onClick={() => {console.log("I'm Blue")}}> blueee </BlueButton>
+            <BlueButton idStr={'testButton'} onClick={() => {console.log("I'm Blue")}}> blueee </BlueButton>
         </>
     );
 }

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 // tracking
 import { useContext } from 'react';
-import { TrackingContext } from '@vrbo/react-event-tracking';
+import { TrackingContext, TrackingTrigger } from '@vrbo/react-event-tracking';
 
 /**
  * Default blue action button
@@ -19,35 +19,39 @@ import { TrackingContext } from '@vrbo/react-event-tracking';
  * 
  * @returns default blue action button
  */
-const BlueButton = ({children, idStr='', pathName='', onClick= ()=>{}, addStyle}) => {
+const BlueButton = ({ children, idStr = '', pathName = '', onClick = () => { }, addStyle }) => {
     // context as given by the Tracking Provider
     const tc = useContext(TrackingContext);
 
     const handleClick = () => {
         if (tc.hasProvider) {
             if (pathName == '') {
-                tc.trigger(`BlueButton.click`)
+                tc.trigger({
+                    eventType: 'button',
+                    buttonId: idStr, 
+                })
             } else {
-                tc.trigger(`BlueButton.link`)
+                tc.trigger({
+                    eventType: 'link',
+                    buttonId: idStr, 
+                    linkPath: pathName,
+                })
             }
-            
-        } else {
-            // no provider available
         }
-
-        // usual button action
+        // usual button action given in the arguments
         onClick()
     }
-    
-    return (
-        <Button 
+
+    return (<>
+        <Button
             id={idStr}
-            size='large' variant='contained' sx={[{ bgcolor: 'button.main', color: 'button.text' }, addStyle]} 
-            component={Link} to={{pathname: pathName}}
+            size='large' variant='contained' sx={[{ bgcolor: 'button.main', color: 'button.text' }, addStyle]}
+            component={Link} to={{ pathname: pathName }}
             onClick={handleClick}
         >
             {children}
         </Button>
+    </>
     );
 }
 
