@@ -1,9 +1,15 @@
-from app.feedback.generateFeedback.AbstractFeedback import AbstractFeedback
+from this import d
+from app.feedback.generateFeedback.BaseFeedback import BaseFeedback
 from decimal import ROUND_HALF_UP, Decimal
+import fitz
 
-class StructuredFeedback(AbstractFeedback):
+class StructuredFeedback(BaseFeedback):
+    
+    def __init__(self, text, referencesText, fileId, userId, filePath):
+        super().__init__(text, referencesText, fileId, userId, filePath)
+        self.explanationType = 2
 
-    def genFeedback(self, text, references = ''):
+    def genFeedback(self):
         '''
             Calculates the score for the structure writing skill currently based
             on the paragraph score only. At the end, the average score for all
@@ -19,28 +25,28 @@ class StructuredFeedback(AbstractFeedback):
                 scoreRouned: the score for the structure writing skill (in this 
                 case based on paragraph size only).
         '''
-        del references
         # If the input text is empty
-        if len(text) == 0:
+        if len(self.text) == 0:
             return None
         
         scores = []
+        explanationsDict = dict()
         # Multiple different ways of getting scores for the structure writing 
         # skill can be added here.
-        scores.append(self.getParagraphScoreAndExplanations(text)[0])
-
-        explanations = dict()
+        score, explanation = self.getParagraphScoreAndExplanations(self.text)
+        scores.append(score)
         # Multiple different ways of getting explanations for the structure writing
         # skill can be added here.
-        explanations.update(self.getParagraphScoreAndExplanations(text)[1])
+        explanationsDict.update(explanation)
 
         # Take the average score of each submethod of getting scores for the 
         # structure writing skill and round it to one decimal behind the comma.
         score = sum(scores) / len(scores)
-        score = Decimal(score).quantize(
+        self.scoreStructure = Decimal(score).quantize(
             Decimal('0.1'), rounding=ROUND_HALF_UP)
+        self.getMistakesInformationStructure(explanationsDict, self.filePath)
 
-        return score, explanations
+        return self.scoreStructure, self.explanations
 
 
     def getParagraphScoreAndExplanations(self, text):
@@ -122,3 +128,44 @@ class StructuredFeedback(AbstractFeedback):
             Decimal('0.1'), rounding=ROUND_HALF_UP)
 
         return scoreRounded, explanations
+    
+    def getMistakesInformationStructure(self, mistakes, filePath):
+        '''
+            This function makes a list of lists that contains the coordinates, 
+            writing skill number (2), explanation and mistake text of each occurence
+            of each structure mistake in a specified document.
+            Attributes:
+                listForDatabase: used for returning all database entries.
+                doc: The document to get information from.
+                pageHeight: The total height starting at the first page of the 
+                document.
+                textInstances: all the Rect objects that contain the mistake text
+                for every page of the document.
+                values: list containing all the information needed for highlighting
+                that is to be put in the database.
+            Arguments:
+                mistakes: a format of mistakes in a document for the structure
+                writing skill.
+                filePath: the path to the document to get information from.
+            Return:
+                listForDatabase: a list contain all values objects that can be put
+                in the database.
+        '''
+        doc = fitz.open(filePath)
+
+        # go over all mistakes in the input
+        for mistake in mistakes:
+            pageHeight = 0
+            # go over all pages in the input document
+            for page in doc:
+                # search for all occurences of the mistake
+                textInstances = page.search_for(mistake)
+                # add the height of the page to the coordinates for returning
+                if page.number != 0:
+                    pageHeight += page.rect.y1
+                # go over all occurences of the mistake
+                for inst in textInstances:
+                    # list contains coordinates, type number, explanation and 
+                    # mistake text
+                    self.addSingleExplanation(inst.x0, inst.y0 + pageHeight, inst.x1, 
+                    inst.y1 + pageHeight, self.fileId, 2,  mistakes[mistake], mistake)

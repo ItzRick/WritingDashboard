@@ -1,4 +1,4 @@
-from app.scoreapi.scores import setScoreDB, setExplanationDB, getExplanationFileType, removeExplanationFileType
+from app.scoreapi.scores import setScoreDB, setExplanationDB, getExplanationsFileType, removeExplanationsFileType
 
 class BaseFeedback:
     scoreStyle = -1
@@ -8,11 +8,12 @@ class BaseFeedback:
     explanations = []
     explanationType = 0
 
-    def __init__(self, text, referencesText, fileId, userId):
+    def __init__(self, text, referencesText, fileId, userId, filePath):
         self.text = text
         self.referencesText = referencesText
         self.fileId = fileId
         self.userId = userId
+        self.filePath = filePath
 
     def genFeedback(self):
         pass
@@ -20,13 +21,13 @@ class BaseFeedback:
     def uploadToDatabase(self):
         setScoreDB(self.fileId, self.scoreStyle, self.scoreCohesion, self.scoreStructure, self.scoreIntegration)
         if len(self.explanations > 0):
-            explanationIds = getExplanationFileType(self.fileId, self.explanationType)
+            explanationIds = getExplanationsFileType(self.fileId, self.explanationType)
             if len(explanationIds) == len(self.explanations):
                 for idexp, (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in enumerate(self.explanations):
                     self.uploadExplanation(X1, Y1, X2, Y2, self.fileId, explanationIds[idexp], explType, expl, mistake, replacements)
             else:
                 if len(explanationIds) > 0:
-                    removeExplanationFileType(self.fileId, self.explanationType)
+                    removeExplanationsFileType(self.fileId, self.explanationType)
                 for (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in self.explanations:
                     self.uploadExplanation(X1, Y1, X2, Y2, self.fileId, -1, explType, expl, mistake, replacements)
     
@@ -43,5 +44,5 @@ class BaseFeedback:
         type = explanationType, explanation = explanation, mistakeText = mistake, replacement1 = replacement1, replacement2 = replacement2, 
         replacement3 = replacement3)
 
-    def addSingleExplanation(self, X1, Y1, X2, Y2, fileId, explId, explanationType, explanation, mistake, replacements):
-        self.explanations.append([X1, Y1, X2, Y2, fileId, explId, explanationType, explanation, mistake, replacements])
+    def addSingleExplanation(self, X1, Y1, X2, Y2, fileId, explanationType, explanation, mistake, replacements):
+        self.explanations.append([X1, Y1, X2, Y2, fileId, explanationType, explanation, mistake, replacements])

@@ -153,7 +153,7 @@ def setExplanationDB(fileId, type, explanation, explId = -1, mistakeText = '', X
 
     return True, 'successfully uploaded Explanations'
 
-def getExplanationFileType(fileId, explType):
+def getExplanationsFileType(fileId, explType):
     '''
         Returns list for all explanationIds for explanations for a certain explanation type and fileId.
         Attributes:
@@ -167,10 +167,14 @@ def getExplanationFileType(fileId, explType):
     explanations = Explanations.query.filter_by(fileId=fileId, type=explType).all()
     return [explanation.explId for explanation in explanations]
 
-def removeExplanationFileType(fileId, explType):
+def removeExplanationsFileType(fileId, explType):
     '''
         Removes the explanations belonging to a certain fileId and explType from the database.
-        
+        Arguments:
+            fileId: File id, together with the explanation type, we need to remove all the explanations for.
+            explType: Explanation type, together with the file id, we need to remove all explanations for.
+        Attributes:
+            explanations: Explanation database instances for all explanations for a certain fileId and explanation type.
     '''
     explanations = Explanations.query.filter_by(fileId=fileId, type=explType).all()
     for explanation in explanations:
