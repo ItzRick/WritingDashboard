@@ -1,8 +1,9 @@
 from app.scoreapi import bp
-
+from app.scoreapi.scores import setScoreDB, setExplanationDB
 from flask import request, jsonify
 from app.models import Files, Scores, Explanations
 from app.database import uploadToDatabase, removeFromDatabase
+from flask_jwt_extended import jwt_required, current_user
 from sqlalchemy import func
 
 @bp.route('/setScore', methods = ['POST'])
@@ -28,82 +29,7 @@ def setScore():
     
     return setScoreDB(fid, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
 
-def isValid(score):
-    '''
-        This function returns whether or not a score is valid: bool
-        The score should be in [0..10]. Scores are acurate to 2 decimal points
-        Arguments:
-            score: score to best test for validness
-    '''
-    return (score >= 0.0) and (score <= 10.0)
-    
-def compareScores(current, new, NULL_VALUE):
-    '''
-        If the new is in [0..10], it returns new
-        If the new is -1, it returns current
-        If the new is something else, we set -2 to indicate a null value
-        arguments:
-            current: score that is currently in the database
-            new: score that is destined for the database
-        returns:
-            If the new is in [0..10], it returns new
-            If the new is -1, it returns current
-            If the new is something else, we set -2 to indicate a null value
-    '''
-    #first check if is none, or if 'something else'
-    if new is None or (not isValid(float(new)) and float(new) != -1):
-        return NULL_VALUE
-    elif float(new) == -1:
-        return float(current)
-    else:
-        return float(new)
 
-def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
-    '''
-        This functions handles setting the score and explanations for a file.
-        If score is -1, the previous score is used
-        If score is not in [0..10], and not -1. The score is set to -2 to indicate a null value
-        Scores are acurate to 2 decimal points
-        Arguments:
-            fileId: Id of the file for which the score and explanation has to be set
-            scoreStyle: Score for Language and Style
-            scoreCohesion: Score for Cohesion
-            scoreStructure: Score for Structure
-            scoreIntegration: Score for Source Integration and Content
-        returns:
-            return code
-    '''
-    # value for when a variable is not defined
-    NULL_VALUE = -2
-
-    # Check if the fileId exists in Files
-    if (Files.query.filter_by(id=fileId).first() is None):
-        return 'No file found with fileId', 400
-    
-    # Check fileId exists in scores
-    if Scores.query.filter_by(fileId=fileId).first() is not None:
-        # already in score
-        # retreive current Scores
-        currentScores = Scores.query.filter_by(fileId=fileId).first()
-        # remove from database, current scores
-        removeFromDatabase(currentScores)
-        # choose the new score if it is valid
-        scoreStyle = compareScores(currentScores.scoreStyle, scoreStyle, NULL_VALUE)
-        scoreCohesion = compareScores(currentScores.scoreCohesion, scoreCohesion, NULL_VALUE)
-        scoreStructure = compareScores(currentScores.scoreStructure, scoreStructure, NULL_VALUE)
-        scoreIntegration = compareScores(currentScores.scoreIntegration, scoreIntegration, NULL_VALUE)
-    else:
-        # check if score is valid or -1, when nothing was set before
-        scoreStyle = compareScores(NULL_VALUE, scoreStyle, NULL_VALUE)
-        scoreCohesion = compareScores(NULL_VALUE, scoreCohesion, NULL_VALUE)
-        scoreStructure = compareScores(NULL_VALUE, scoreStructure, NULL_VALUE)
-        scoreIntegration = compareScores(NULL_VALUE, scoreIntegration, NULL_VALUE)
-    
-    # create Scores object
-    scoreIndb = Scores(fileId=fileId, scoreStyle=scoreStyle, scoreStructure=scoreStructure, scoreCohesion=scoreCohesion, scoreIntegration=scoreIntegration)
-    # upload
-    uploadToDatabase(scoreIndb)
-    return 'successfully uploaded Scores'
 
 
 @bp.route('/getScores', methods = ['GET'])
@@ -229,6 +155,40 @@ def getAverageScores():
     }, 200
 
 
+@bp.route('/getFilesAndScoresByUser', methods=['GET'])
+@jwt_required()
+def getFilesAndScoresByUser():
+    '''
+        This function handles returning the files and corresponding scores of the current user.
+        Attributes:
+            fileList: List of rows containing file and score attributes for the current user.
+            file: Row in fileList.
+        returns:
+            fileDict: Dictionary containing file and score attributes for the current user.
+    '''
+
+    # Query all files and scores of current user
+    fileList = Files.query.filter_by(userId=current_user.id).join(Scores, Files.id == Scores.fileId)\
+        .with_entities(Files.id, Files.filename, Files.date, Scores.scoreStyle, Scores.scoreCohesion,
+                       Scores.scoreStructure, Scores.scoreIntegration).order_by(Files.date.asc())
+
+    # Create empty dictionary
+    fileDict = {'id': [], 'filename': [], 'date': [], 'scoreStyle': [], 'scoreCohesion': [], 'scoreStructure': [], 'scoreIntegration': []}
+
+    # Copy fileList to fileDict
+    for file in fileList:
+        fileDict['id'].append(file.id)
+        fileDict['filename'].append(file.filename)
+        fileDict['date'].append(file.date.strftime('%m/%d/%y'))
+        fileDict['scoreStyle'].append(str(file.scoreStyle))
+        fileDict['scoreCohesion'].append(str(file.scoreCohesion))
+        fileDict['scoreStructure'].append(str(file.scoreStructure))
+        fileDict['scoreIntegration'].append(str(file.scoreIntegration))
+
+    return fileDict, 200
+
+
+
 @bp.route('/getExplanationForFile', methods = ['GET'])
 def getExplanationForFile(): 
     '''
@@ -298,53 +258,11 @@ def setExplanation():
     replacement2= request.form.get('replacement2')
     replacement3= request.form.get('replacement3')
 
-    # check if file exists
-    if (Files.query.filter_by(id=fileId).first() is None):
-        return 'No file found with fileId', 400
+    # Make the call to the backend function and retrieve if this is successful or not and the message:
+    isSuccessful, message = setExplanationDB(fileId, explId, type, explanation, mistakeText, X1, X2, Y1, Y2, replacement1, replacement2, replacement3)
 
-    # if explId = -1, create new record, else override one
-    if explId == -1:
-        # create new record
-        # create Explanations object
-        explanationIndb = Explanations(
-            fileId = fileId,
-            type        = type,
-            explanation = explanation,
-            mistakeText = mistakeText,
-            X1          = X1,
-            X2          = X2,
-            Y1          = Y1,
-            Y2          = Y2,
-            replacement1= replacement1,
-            replacement2= replacement2,
-            replacement3= replacement3,
-        )
-    else:
-        # already in Explanations
-        # retreive current Explanation
-        current = Explanations.query.filter_by(
-            fileId=fileId, explId=explId).first()
-        if current is not None:
-            # remove from database, current scores
-            removeFromDatabase(current)
-
-        # create Explanations object
-        explanationIndb = Explanations(
-            fileId = fileId,
-            explId = explId,
-            type = type,
-            explanation = explanation,
-            mistakeText = mistakeText,
-            X1          = X1,
-            X2          = X2,
-            Y1          = Y1,
-            Y2          = Y2,
-            replacement1= replacement1,
-            replacement2= replacement2,
-            replacement3= replacement3,
-        )
-    
-    # upload
-    uploadToDatabase(explanationIndb)
-
-    return 'successfully uploaded Explanations'
+    # Return message and the correct status code:
+    if isSuccessful:
+        return message, 200
+    else: 
+        return message, 400

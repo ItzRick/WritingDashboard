@@ -114,6 +114,9 @@ function Participants() {
           InputLabelProps={{
             shrink: true,
           }}
+          inputProps= {{
+              min: 0,
+          }}
         />
         <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
           <InputLabel id="project-add-participants">Project</InputLabel>

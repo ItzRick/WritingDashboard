@@ -1,13 +1,15 @@
 from app import db
-from app.models import User, Files, Projects, ParticipantToProject
+from app.models import User, Scores Files, Projects, ParticipantToProject
 
 # helper function, TODO remove before deploy
 def initialSetup():
     db.session.commit()
     db.drop_all()
     db.create_all()
-    # create initial user
-    u = User(username='admin', password_plaintext='admin')
+    # create admin user
+    u = User.query.filter_by(username='admin').first()
+    if u is None:
+        u = User(username='admin', password_plaintext='admin')
     u.role = 'admin'
     uploadToDatabase(u)
 
@@ -57,6 +59,7 @@ def getFilesByUser(user, sortingAttribute):
 
     return Files.serializeList(files.all())
 
+# Registers new user with username and password
 def postUser(username, password):
     '''
         This function handles the signup query. When there is no user present in the database with the given username,
@@ -139,8 +142,8 @@ def getParticipantsByResearcher(user):
     projectIds = getProjectsByResearcher(user)
 
     # Define the array for the participants ids and the participant information
-    participantIds = [] 
-    participantInformation = [] 
+    participantIds = []
+    participantInformation = []
 
     # Retrieve the ids of the participants in all projects of the user
     for projectId in projectIds:
@@ -151,7 +154,7 @@ def getParticipantsByResearcher(user):
     for participantId in participantIds:
         participantInfo = db.session.query(User).filter_by(id=participantId)
         participantInformation.append(participantInfo)
-    
+
     # Return the information of the participants in all projects of the user
     return projectIds, participantInformation
 
@@ -166,11 +169,11 @@ def getProjectsByResearcher(user):
     # Retrieve the projects of the user
     projectIds = db.session.query(Projects).filter_by(userId=user)
 
-    # does projectIds also include all the information per row? 
+    # does projectIds also include all the information per row?
     # If so, then that's good for getParticipantsByResearcher
     # However, for viewProjectsOfUser in routes.py we also need the information for each project
-    # Maybe return two things? So first is list of project ids, 
+    # Maybe return two things? So first is list of project ids,
     # Second is list of projects with their info
 
-    return projectIds 
+    return projectIds
 

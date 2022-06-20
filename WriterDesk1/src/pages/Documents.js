@@ -5,7 +5,8 @@ import {
 } from "@mui/material";
 import {
   DeleteOutline,
-  Grading
+  Grading,
+  Refresh,
 } from "@mui/icons-material";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
@@ -64,29 +65,29 @@ const Documents = () => {
       flex: 1
     },
     {
-      field: 'h1',
-      headerName: 'h1',
+      field: 'scoreStyle',
+      headerName: 'Language and Style score',
       type: "number",
       editable: false,
       flex: 1
     },
     {
-      field: 'h2',
-      headerName: 'h2',
+      field: 'scoreCohesion',
+      headerName: 'Cohesion score',
       type: "number",
       editable: false,
       flex: 1
     },
     {
-      field: 'h3',
-      headerName: 'h3',
+      field: 'scoreStructure',
+      headerName: 'Structure score',
       type: "number",
       editable: false,
       flex: 1
     },
     {
-      field: 'h4',
-      headerName: 'h4',
+      field: 'scoreIntegration',
+      headerName: 'Source Integration and Content score',
       type: "number",
       editable: false,
       flex: 1
@@ -195,6 +196,7 @@ const Documents = () => {
         Toolbar: () => (
           <GridToolbarContainer>
             <IconButton onClick={deleteAllFiles} ><DeleteOutline /></IconButton>
+            <IconButton onClick={setData} ><Refresh /></IconButton>
           </GridToolbarContainer>
         )
       }}

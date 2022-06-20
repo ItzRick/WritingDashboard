@@ -32,7 +32,6 @@ class User(db.Model):
         self.role = role
         self.username = username
         self.set_password(password_plaintext)
-        # self.id = 123 # Activate me together with initialSetup() in fileapi > uploadfile() # TODO remove before deploy
 
     def serializeUser(self):
         dict = {}
@@ -82,6 +81,13 @@ class Files(db.Model):
         for c in inspect(self).attrs.keys():
             if not c == 'scores' and not c == 'explanations' and not c == 'owner':
                 dict[c] =  getattr(self, c)
+            elif c == 'scores':
+                for scores in self.scores.all():
+                    for d in inspect(scores).attrs.keys():
+                        if d != 'fileId' and d != 'scoredFile': 
+                            attr = getattr(scores, d)
+                            if attr >= 0:
+                                dict[d] = getattr(scores, d)
         return dict
 
     @staticmethod
@@ -157,8 +163,8 @@ class Explanations(db.Model):
             Y2: Y of the bottom left corner of the boxing rectangle
             replacement1..3: Three possible replacements for the mistakeText
     '''
-    fileId      = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
-    explId      = db.Column(db.Integer, primary_key=True)
+    fileId      = db.Column(db.Integer, db.ForeignKey('files.id'), index=True)
+    explId      = db.Column(db.Integer, primary_key=True, autoincrement=True)
     type        = db.Column(db.Integer, default=-1)
     explanation = db.Column(db.String, default='')
     mistakeText = db.Column(db.String, default='')
