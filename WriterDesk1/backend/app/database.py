@@ -60,7 +60,7 @@ def getFilesByUser(user, sortingAttribute):
     return Files.serializeList(files.all())
 
 # Registers new user with username and password
-def postUser(username, password):
+def postUser(username, password, trackable=True):
     '''
         This function handles the signup query. When there is no user present in the database with the given username,
         a new user is posted in the database with a unique id, the given username, the student role and a hash of the given password.
@@ -69,6 +69,7 @@ def postUser(username, password):
         Arguments:
             username: username as given in frontend
             password: password as given in frontend
+            trackable: whether the user wants to be tracked or not
         Return:
             Returns True when a new user was added to the database and False when there already was a user with the given username
     '''
@@ -78,7 +79,7 @@ def postUser(username, password):
         return False
 
     # Add user to the database with student role
-    user = User(username=username, password_plaintext=password, role="student")
+    user = User(username=username, password_plaintext=password, role="student", trackable=trackable)
     uploadToDatabase(user)
     return True
 
