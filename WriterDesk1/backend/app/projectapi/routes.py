@@ -66,7 +66,9 @@ def setProject():
 @jwt_required()
 def deleteProject():
     '''
-    This function handles the deletion of research projects using the corresponding project id's.
+    This function handles the deletion of research projects using the corresponding project id's. If the project
+    does not exist in the database, the function raises a 404 error. If the project has a different user than the current
+    user, the function raises a 400 error.
     Attributes:
         projectIds: List of project id's as given by the frontend
         projectToBeRemoved: project object that is going to be removed

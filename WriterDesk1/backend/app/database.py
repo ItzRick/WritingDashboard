@@ -105,7 +105,7 @@ def postParticipant(username, password):
 def postParticipantToProject(userId, projectId):
     '''
         This function handles the query that creates an entry in ParticipantToProject, to link a participant to a research project.
-        When the project with projectId does not exist in the database, the function raises an erro.
+        When the project with projectId does not exist in the database, the function raises an error.
         Attributes:
             project: query result to check if there exists a project with the given id
             dataTuple: object that is to be added to the database
@@ -126,9 +126,7 @@ def getParticipantsByResearcher(user):
     '''
         This function handles the query for retrieving a user's participants.
         Attributes:
-            projectIds: Project ids of projects created by the user
             participantIds: Ids for participants in the projects created by the user
-            participantInformation: userId and ProjectId of participant
             participantsOfProject: Participants in the project
             participantInfo: userId and ProjectId of participants in the projects created by the user
         Arguments:
@@ -160,8 +158,6 @@ def getParticipantsByResearcher(user):
 def getProjectsByResearcher(user):
     '''
         This function handles the query for retrieving a user's projects.
-        Attributes:
-            projectIds: result of the query, containing the project ids of the given user
         Arguments:
             user: id of the user who's files need to be retrieved
         Return:
