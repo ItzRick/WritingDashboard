@@ -27,12 +27,12 @@ const BlueButton = ({ children, idStr = '', pathName = '', onClick = () => { }, 
         if (tc.hasProvider) {
             if (pathName == '') {
                 tc.trigger({
-                    eventType: 'button',
+                    eventType: 'click.button',
                     buttonId: idStr, 
                 })
             } else {
                 tc.trigger({
-                    eventType: 'link',
+                    eventType: 'click.link',
                     buttonId: idStr, 
                     linkPath: pathName,
                 })
