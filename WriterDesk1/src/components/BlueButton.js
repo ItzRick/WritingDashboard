@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 // tracking
 import { useContext } from 'react';
-import { TrackingContext, TrackingTrigger } from '@vrbo/react-event-tracking';
+import { TrackingContext } from '@vrbo/react-event-tracking';
 
 /**
  * Default blue action button

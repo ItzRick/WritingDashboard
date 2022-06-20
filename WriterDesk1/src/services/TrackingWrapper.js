@@ -32,40 +32,21 @@ const TrackingWrapper = ({children}) => {
         });
     }
 
-
-    const defaultFields = {location: 'top-right'};
-    const defaultOptions = {asynchronous: true};
-    const customTrigger = (event, fields, options) => {
+    const customTrigger = (event) => {
         // When an event is triggered, it can be handled here
-        console.log('TRIGGERED')
         console.log('ev',event)
-        console.log('f',fields)
-        console.log('op',options)
         sendClick({
-            url:window.location.href,
-            
+            url: window.location.href,
+            eventType: event.eventType,
+            buttonId: event.buttonId,
+            linkPath: event.linkPath,
         })
-    }
-    
-    const eventPayload = {
-        'generic.click': {
-            eventaction: 'toggle'
-        },
-        'button.click': {
-            eventaction: 'button clicked'
-        },
-        'generic.event': {
-            eventaction: 'hit test'
-        }
     }
 
     return (
         <>
             <TrackingProvider
-                fields={defaultFields}
-                options={defaultOptions}
                 trigger={customTrigger}
-                eventPayload={eventPayload}
             >
                 {children}
             </TrackingProvider>
