@@ -4,7 +4,8 @@ import {
     Radio, 
     RadioGroup, 
     TextField, 
-    Typography
+    Typography,
+    Button
 } from "@mui/material";
 
 // routing
@@ -123,7 +124,7 @@ const Settings = () => {
         <>
             <div className='title'>
                 {/* The logout button: */}
-                <BlueButton onClick={logout}> Log out </BlueButton>
+                <BlueButton idStr='logOut' onClick={logout}> Log out </BlueButton>
                 <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Data setting
