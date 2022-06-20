@@ -147,6 +147,7 @@ const SignUp = () => {
     // Change page using formError when we find an error
     const [formError, setFormError] = useState("");
 
+    // Set the acceptance of collecting user data from checkbox
     const [acceptUserData, setAcceptUserData] = useState(true);
 
     return (
