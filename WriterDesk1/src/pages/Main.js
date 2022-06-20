@@ -32,7 +32,7 @@ const Main = () => {
       </div>
       <div className='home2'>
         <div className='vertCenter'>
-          <BlueButton className='uploadButton' pathName='/Upload' addStyle={{width: '20vw', height: '7vw', fontSize: '2vw', textTransform: 'none'}}>Upload a document</BlueButton>
+          <BlueButton idStr='UploadDocument' className='uploadButton' pathName='/Upload' addStyle={{width: '20vw', height: '7vw', fontSize: '2vw', textTransform: 'none'}}>Upload a document</BlueButton>
         </div>
       </div>
       <div className='home3'>

@@ -1,11 +1,16 @@
 // materials
-import {Button, FormControlLabel, Radio, RadioGroup, TextField, Typography} from "@mui/material";
+import {
+    FormControlLabel, 
+    Radio, RadioGroup, 
+    TextField, 
+    Typography
+} from "@mui/material";
 
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect } from 'react';
 
-
+import BlueButton from "../components/BlueButton";
 
 /**
  * 
@@ -52,13 +57,13 @@ const Settings = () => {
                 <TextField id='newPass2' label='Insert new password again.' variant='outlined' type='password'
                 style={{marginBottom: '1vw'}} />
                 <br />
-                <Button variant='contained'>Update password</Button>
+                <BlueButton idStr='updatePassword' variant='contained'>Update password</BlueButton>
                 <br /><br /><br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Delete account
                 </Typography>
                 <br />
-                <Button variant='contained'>I want to delete my account.</Button>
+                <BlueButton idStr='DeleteMyAccount' variant='contained'>I want to delete my account.</BlueButton>
             </div>
         </>
     );
