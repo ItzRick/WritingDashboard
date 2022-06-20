@@ -12,6 +12,9 @@ import {history} from '../helpers/history';
 // Change password request setup
 import { authHeader } from '../helpers/auth-header';
 import axios from 'axios';
+
+import AlertDialog from "../components/AlertDialog";
+
 const BASE_URL = "https://localhost:5000/loginapi";
 const PASSWORD_LENGTH = 8;
 
@@ -33,6 +36,8 @@ const Settings = () => {
     const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const [formError, setFormError] = useState("");
+
+    const [accountDeletionPopup, setAccountDeletionPopup] = useState(false)
 
     /* 
      * Check if password input is valid.
@@ -162,7 +167,13 @@ const Settings = () => {
                     Delete account
                 </Typography>
                 <br />
-                <Button variant='contained'>I want to delete my account.</Button>
+                <Button variant='contained' onClick={(e) => {setAccountDeletionPopup(true)}}>I want to delete my account.</Button>
+                {accountDeletionPopup && <AlertDialog title = "Account deletion" 
+                    text = "Are you sure you want to delete your account?"
+                    // TODO
+                    buttonAgree={<Button>Yes</Button>}
+                    buttonCancel={<Button style={{color: "red"}} onClick={(e) => {setAccountDeletionPopup(false)}}>No</Button>}
+                />}
             </div>
         </>
     );
