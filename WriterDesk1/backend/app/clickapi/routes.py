@@ -1,9 +1,8 @@
 from app.clickapi import bp
 
-from flask import request, jsonify
+from flask import request
 from app.models import Clicks, User
-from app.database import uploadToDatabase, removeFromDatabase
-from sqlalchemy import func
+from app.database import uploadToDatabase
 from flask_jwt_extended import jwt_required, current_user
 
 @bp.route('/setClick', methods = ['POST'])
@@ -21,8 +20,6 @@ def setClick():
                 451, if the current user does not want to get tracked
 
 
-        TODO: only collect when logged in
-        TODO: only collect when user has agreed
     '''
     # get user id from current user
     userId = current_user.id 

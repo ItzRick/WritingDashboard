@@ -12,7 +12,11 @@ import {authHeader} from "./../helpers/auth-header";
  */
 const TrackingWrapper = ({children}) => {
     
-    const sendClick = (url) => {
+    const sendClick = ({
+        url,
+        
+    }) => {
+        console.log(url)
         //url for request
         const requestUrl = 'https://localhost:5000/clickapi/setClick';
 
@@ -37,7 +41,10 @@ const TrackingWrapper = ({children}) => {
         console.log('ev',event)
         console.log('f',fields)
         console.log('op',options)
-        sendClick('coolUrl')
+        sendClick({
+            url:window.location.href,
+            
+        })
     }
     
     const eventPayload = {

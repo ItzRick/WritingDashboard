@@ -178,6 +178,7 @@ class Clicks(db.Model):
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
     timestamp = db.Column(db.DateTime, unique=False, default=datetime.utcnow())
     url = db.Column(db.String(256), unique=False)
+    fileId = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, userId, url):
         self.userId = userId
