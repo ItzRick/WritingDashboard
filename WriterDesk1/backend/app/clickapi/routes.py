@@ -12,7 +12,11 @@ def setClick():
         set score for the current user
         Attributes:
             userId: user id of the currently logged in user
-            url: url of current page as given by the front end
+            url: url of the page where the click happened
+            eventType: type of event, can be one of [click.button, click.link, view.document]
+            buttonId: id of the button, usually similair to the text displayed on the button, not available for view.document events
+            documentId: id of the document being viewed, only availabel for view.document events
+            documentName: name of the document being viewed, only availabel for view.document events
         Return:
             Returns 'successfully uploaded click' if it succeeded, or an 
             error message:
@@ -25,25 +29,23 @@ def setClick():
     userId = current_user.id 
     # get the data as sent by the react frontend:
     url = request.form.get('url')
+    eventType = request.form.get('url')
+    buttonId = request.form.get('url')
+    documentId = request.form.get('url')
+    documentName = request.form.get('url')
 
-    # TODO: more data?
-
-    # check if userId is exists
-    if User.query.filter_by(id=userId).first() is None:
-        return 'User not Found', 404
     # check if user wants to be tracked (ignoring trackability for participants)
     if not current_user.trackable and current_user.role != 'participant':
         return 'User clicks not trackable', 451
 
-    # TODO: valid url?
-
-
-    # TODO: more checks?
-
     # create Clicks object
     clickInDB = Clicks(
         userId=userId,
-        url=url
+        url=url,
+        eventType=eventType,
+        buttonId=buttonId,
+        documentId=documentId,
+        documentName=documentName,
     )
     # upload
     uploadToDatabase(clickInDB)
