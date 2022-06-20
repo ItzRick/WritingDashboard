@@ -44,7 +44,7 @@ class StructuredFeedback(BaseFeedback):
         score = sum(scores) / len(scores)
         self.scoreStructure = Decimal(score).quantize(
             Decimal('0.1'), rounding=ROUND_HALF_UP)
-        self.getMistakesInformationStructure(explanationsDict, self.filePath)
+        self.getMistakesInformationStructure(explanationsDict)
 
         return self.scoreStructure, self.explanations
 
@@ -129,7 +129,7 @@ class StructuredFeedback(BaseFeedback):
 
         return scoreRounded, explanations
     
-    def getMistakesInformationStructure(self, mistakes, filePath):
+    def getMistakesInformationStructure(self, mistakes):
         '''
             This function makes a list of lists that contains the coordinates, 
             writing skill number (2), explanation and mistake text of each occurence
@@ -151,7 +151,7 @@ class StructuredFeedback(BaseFeedback):
                 listForDatabase: a list contain all values objects that can be put
                 in the database.
         '''
-        doc = fitz.open(filePath)
+        doc = fitz.open(self.filePath)
 
         # go over all mistakes in the input
         for mistake in mistakes:
@@ -168,4 +168,4 @@ class StructuredFeedback(BaseFeedback):
                     # list contains coordinates, type number, explanation and 
                     # mistake text
                     self.addSingleExplanation(inst.x0, inst.y0 + pageHeight, inst.x1, 
-                    inst.y1 + pageHeight, self.fileId, 2,  mistakes[mistake], mistake)
+                    inst.y1 + pageHeight, 2,  mistakes[mistake], mistake, [])

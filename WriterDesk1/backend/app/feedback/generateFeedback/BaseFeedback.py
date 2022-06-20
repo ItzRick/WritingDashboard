@@ -31,7 +31,7 @@ class BaseFeedback:
                 for (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in self.explanations:
                     self.uploadExplanation(X1, Y1, X2, Y2, self.fileId, -1, explType, expl, mistake, replacements)
     
-    def uploadExplanation(self, X1, Y1, X2, Y2, fileId, explId, explanationType, explanation, mistake, replacements):
+    def uploadExplanation(self, X1, Y1, X2, Y2, explId, explanationType, explanation, mistake, replacements):
         replacement1 = replacement2 = replacement3 = ''
         # Add as much replacements as required, at most 3 and at least 0:
         if len(replacements) > 0:
@@ -40,9 +40,9 @@ class BaseFeedback:
             replacement2 = replacements[1]
         if len(replacements) > 2:
             replacement3 = replacements[2]
-        setExplanationDB(X1 = X1, Y1 = Y1, X2 = X2, Y2 = Y2, fileId = fileId, explId = explId, 
+        setExplanationDB(X1 = X1, Y1 = Y1, X2 = X2, Y2 = Y2, fileId = self.fileId, explId = explId, 
         type = explanationType, explanation = explanation, mistakeText = mistake, replacement1 = replacement1, replacement2 = replacement2, 
         replacement3 = replacement3)
 
-    def addSingleExplanation(self, X1, Y1, X2, Y2, fileId, explanationType, explanation, mistake, replacements):
-        self.explanations.append([X1, Y1, X2, Y2, fileId, explanationType, explanation, mistake, replacements])
+    def addSingleExplanation(self, X1, Y1, X2, Y2, explanationType, explanation, mistake, replacements):
+        self.explanations.append([X1, Y1, X2, Y2, explanationType, explanation, mistake, replacements])
