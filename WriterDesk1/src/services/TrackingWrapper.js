@@ -37,8 +37,8 @@ const TrackingWrapper = ({children}) => {
         formData.append('url', url);
         formData.append('eventType', eventType);
         formData.append('buttonId', buttonId);
-        formData.append('buttonId', documentId);
-        formData.append('buttonId', documentName);
+        formData.append('documentId', documentId);
+        formData.append('documentName', documentName);
 
         //post the file
         axios.post(requestUrl, formData, {
