@@ -1,5 +1,4 @@
 from app.feedback.content import calcPercentageWordsUsed, calcScoreAndExplanationSourcesDownloaded, getWordsSources, sourceIntegration
-import os
 
 def testCalcPercentageWordsUsed(testClient):
     '''
@@ -37,6 +36,27 @@ def testCalcScoreAndExplanationSourcesDownloadedZero(testClient):
     numSources = 2
     numParagraphs = 11
     explanationText = ('Your score for source integration and content is 0. You only used 2 sources ' + 
+    'in 11 paragraphs of text. Try adding more sources.' )
+    score, explanation = calcScoreAndExplanationSourcesDownloaded(dict(), set(), 0, numSources, numParagraphs)
+    assert score == 0
+    assert explanation == explanationText
+
+def testCalcScoreAndExplanationSourcesDownloadedNoSources(testClient):
+    '''
+        Test the calcScoreAndExplanationSourcesDownloaded method passing no sources.
+        Attributes:
+            numSources: The number of sources we test this method for. 
+            numParagraphs: The number of paragraphs we test this method for.
+            score: The score as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
+            explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
+            explanationText: The text manually set, we should retrieve from the method, to check against.
+        Arguments:
+            testClient:  The test client we test this for.
+    '''
+    del testClient
+    numSources = 0
+    numParagraphs = 11
+    explanationText = ('Your score for source integration and content is 0. You only used 0 sources ' + 
     'in 11 paragraphs of text. Try adding more sources.' )
     score, explanation = calcScoreAndExplanationSourcesDownloaded(dict(), set(), 0, numSources, numParagraphs)
     assert score == 0

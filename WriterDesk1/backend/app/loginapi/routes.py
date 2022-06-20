@@ -5,13 +5,13 @@ from flask import request
 from app.loginapi import bp
 
 from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt
 from flask_jwt_extended import current_user
-from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
+from app.database import postUser
 from app.extensions import jwt
 from app.models import User
+from app.database import initialSetup
 
 @bp.route('/login', methods=['POST'])
 def create_token():
@@ -28,6 +28,7 @@ def create_token():
             Returns access_token used for authentication and user_id from user attribute when username and password corresponds to database
             Otherwise returns Unauthorized response status code
     '''
+    # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
     username = request.json.get("username", None) 
     password = request.json.get("password", None)
     user = User.query.filter_by(username=username).first() # Get user from database corresponding to username
@@ -60,6 +61,36 @@ def user_lookup_callback(_jwt_header, jwt_data):
     '''
     identity = jwt_data["sub"] # get user id from token
     return User.query.filter_by(id=identity).one_or_none()
+    
+@bp.route('/signup', methods=["POST"])
+def registerUser():
+    '''
+        This function handles the signup request. When there is no user present in the database with the given username,
+        a new user is registered with the given username.
+        Attributes:
+            username: username as given in frontend
+            password: password as given in frontend
+            isCreated: whether a new user has been registered
+        Return:
+            Returns request success status code with a message when a new user has been registered
+            Otherwise returns bad request status code with an error message
+    '''
+
+    # Retrieve data from request
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+
+    # Try to register new user in database
+    isCreated = postUser(username, password)
+
+    # Send response based on outcome
+    if isCreated:
+        # User successfully created
+        return "User was successfully created!", 200
+    else:
+        # User exists already
+        return "Account with this email already exists!", 400
+    
 
 @bp.route("/protected", methods=["GET"])
 @jwt_required()
@@ -121,25 +152,26 @@ def setRole():
 @jwt_required()
 def setPassword():
     '''
-        This function handles setting the password for the user
+        This function handles setting the password for the user, by first checking if the supplied current password is correct.
         Function requires a user to be logged in, use helpers > auth-header.js
         Attributes:
             newPassword: intended password for the user
+            oldPassword: Current password for the user.
             current_user: the user currently logged in
         Return:
             Returns success if it succeeded, or an 
             error message:
-                404, if the current user's id does not exist in User table
+                403, if the current user's password is incorrect
     '''
     # retrieve data from call
-    newPassword = request.form.get('newPassword')
-
-    # check if current_user is actually in Users
-    if User.query.filter_by(id=current_user.id).first() is None:
-        return 'user not found', 404
-    
-    # set password using user function
-    current_user.set_password(newPassword)
+    newPassword = request.json.get('newPassword')
+    oldPassword = request.json.get('oldPassword')
+   
+    # set password using user function if the password is correct, else return error message:
+    if current_user.check_password(oldPassword):
+        current_user.set_password(newPassword)
+    else:
+        return 'Current password is incorrect!', 403
     # update the database
     db.session.commit()
-    return 'success'
+    return 'Successfully changed password!'

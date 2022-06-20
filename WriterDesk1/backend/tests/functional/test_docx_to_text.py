@@ -1,4 +1,4 @@
-from app.feedback.convertDocxTxtToText import getDOCXText, subtractTextFromParagraph
+from app.feedback.retrieveText.convertDocxTxtToText import getDOCXText, subtractTextFromParagraph
 import os
 import docx
 

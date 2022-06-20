@@ -4,14 +4,25 @@ import './../css/main.css';
 import {
     Typography,
     IconButton,
-    TextField
+    TextField,
+    Button
 } from "@mui/material";
 import logo from '../images/logo.png';
 import BlueButton from "./../components/BlueButton";
+import AlertDialog from "../components/AlertDialog";
 
 // routing
-import { Link, useOutletContext } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Link, useOutletContext, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { history } from '../helpers/history';
+
+// Signup request setup
+import axios from 'axios';
+const BASE_URL = "https://localhost:5000/loginapi";
+const NAVIGATE_TO_URL = "../../Login"
+
+const USERNAME_END = "tue.nl";
+const PASSWORD_LENGTH = 8;
 
 /**
  * 
@@ -24,6 +35,120 @@ const SignUp = () => {
         setTitle('Sign Up');
     });
 
+    // whether or not signup was succesful.
+    const [loginAllowed, setLoginAllowed] = useState(false)
+
+    /**
+     * Check if username input is valid.
+     * @returns helper text for username textfield
+     */
+    const checkUsername = () => {
+        if(username === "") {
+            return "";
+        } else if(!username.endsWith(USERNAME_END)) {
+            return "Must be a TU/e email-address";
+        }
+        return "";
+    }
+
+    /**
+     * Check if repeated username input is valid.
+     * @returns helper text for second username textfield
+     */
+    const confirmUsername = () => {
+        if(username !== "" && username !== usernameConfirm) {
+            return "Must match Email";
+        }
+        return "";
+    }
+
+    /** 
+     * Check if password input is valid.
+     * According to URC 1.2-1.5, a valid password has at least 8 characters,
+     * with at least 1 lowercase character, uppercase character and number.
+     * @returns helper text for password textfield
+     */
+    const checkPassword = () => {
+        if(password === "") {
+            return "";
+        } else if(password.length < PASSWORD_LENGTH) {
+            return "Must contain at least 8 characters";
+        } else if((password.match(/[a-z]/g) || []).length < 1) {
+            return "Must contain at least 1 lowercase letter";
+        } else if((password.match(/[A-Z]/g) || []).length < 1) {
+            return "Must contain at least 1 uppercase letter";
+        } else if((password.match(/[0-9]/g) || []).length < 1) {
+            return "Must contain at least 1 number";
+        }
+        return "";
+    }
+
+    /** 
+     * Check if repeated password input is valid.
+     * @returns helper text for second password textfield
+     */
+    const confirmPassword = () => {
+        if(password !== "" && password !== passwordConfirm) {
+            return "Must match Password";
+        }
+        return "";
+    }
+
+    /**
+     * Do POST request containing username and password variable, recieve status of response.
+     */
+    const handleClick = () => {
+        // Check if input is valid
+        if (username === "" || password === "") {
+            setFormError("One or more fields are empty!");
+            return;
+        }
+        if (checkUsername() !== "" || confirmUsername() !== "" || checkPassword() !== "" || confirmPassword() !== "") {
+            setFormError("One or more fields are not complete!");
+            return;
+        }
+
+        // If input is valid, do post request
+        const data = {
+            "username": username,
+            "password": password,
+        }
+        const headers = {
+            "Content-Type": "application/json"
+        }
+        axios.post(`${BASE_URL}/signup`, data, headers).then(response =>{
+            // Post request is successful, user is registered
+            // Loads login page
+            setLoginAllowed(true);           
+        }).catch(error =>{
+            // Post request failed, user is not created
+            console.error("Something went wrong:", error.response.data);
+            setFormError(error.response.data);
+        });
+    }
+
+    /** Navigates to the login page */
+    const navig = () => {
+        setLoginAllowed(false)
+        history.push(NAVIGATE_TO_URL);
+        window.location.reload();
+    }
+
+    // Set username from textfield
+    const [username, setUsername] = useState("");
+
+    // Set repeated username from textfield
+    const [usernameConfirm, setUsernameConfirm] = useState("");
+
+    // Set password from textfield
+    const [password, setPassword] = useState("");
+
+    // Set repeated password from textfield
+    const [passwordConfirm, setPasswordConfirm] = useState("");
+
+    // Change page using formError when we find an error
+    const [formError, setFormError] = useState("");
+
     return (
         <>
             <div className='parent'>
@@ -35,20 +160,39 @@ const SignUp = () => {
                 <div className='div2'>
                     <div className='text_boxes'>
                         <Typography>Email:</Typography>
-                        <TextField id='email' label='example@mail.com' variant='outlined' />
-                        <br /><br />
+                        <TextField id='email' label='example@tue.nl' variant='outlined' 
+                            value={username} onChange={(e) => {setUsername(e.target.value); setFormError("")}}
+                            error={checkUsername() !== ""} helperText={checkUsername() !== "" ? checkUsername() : " "}
+                            fullWidth
+                        />
                         <Typography>Repeat email:</Typography>
-                        <TextField id='email2' label='example@mail.com' variant='outlined' />
-                        <br /><br />
+                        <TextField id='email2' label='example@tue.nl' variant='outlined' 
+                            value={usernameConfirm} onChange={(e) => {setUsernameConfirm(e.target.value); setFormError("")}} 
+                            error={confirmUsername() !== ""} helperText={confirmUsername() !== "" ? confirmUsername() : " "}
+                            fullWidth
+                        />
                         <Typography>Password:</Typography>
-                        <TextField id='password' label='Password' variant='outlined' type='password' />
-                        <br /><br />
+                        <TextField id='password' label='Password' variant='outlined' type='password' 
+                            value={password} onChange={(e) => {setPassword(e.target.value); setFormError("")}} 
+                            error={checkPassword() !== ""} helperText={checkPassword() !== "" ? checkPassword() : " "}
+                            fullWidth
+                        />
                         <Typography>Repeat password:</Typography>
-                        <TextField id='password2' label='Password' variant='outlined' type='password' />
+                        <TextField id='password2' label='Password' variant='outlined' type='password' 
+                            value={passwordConfirm} onChange={(e) => {setPasswordConfirm(e.target.value); setFormError("")}} 
+                            error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : " "}
+                            fullWidth
+                        />
                     </div>
                     <br />
-                    {/* TODO: do we want to go to main or to login */}
-                    <BlueButton pathName='/Login'>Sign Up</BlueButton>
+                    {formError !== "" && <Typography color="red">{formError}</Typography>}
+                    {formError !== "" && <br />}
+
+                    <BlueButton idStr='signButton' onClick={handleClick}>Sign Up</BlueButton>
+                    {loginAllowed && <AlertDialog title = "Account created" 
+                        text = "You have successfully created an account. Press 'OK' to be directed to the login page."
+                        buttonAgree={<Button onClick={navig}>OK</Button>}
+                    />}
                 </div>
                 <div className='div3'>
                     <br />
