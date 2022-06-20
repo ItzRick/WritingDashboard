@@ -10,6 +10,25 @@ import json
 from test_set_role import loginHelper
 
 
+def checkUserRet(uid, uName, uRole, data):
+    '''
+    Checks userId, userName and userRole is in the data
+    Argunments:
+        uid: user Id
+        uName: user name
+        uRole: user role
+        data: array of dictionaries containing user data
+    Returns:
+        Whether data contains an instance with uid, uName an uRole
+    '''
+    return (
+        (any(
+            (d['id'] == uid and
+            d['username'] == uName and
+            d['role'] == uRole)
+        in d) for d in data)
+    )
+
 def testRetrieveUsers(testClient, initDatabase):
     '''
         This test checks the retrieval of of user data of all users except participants, in a json file.
@@ -49,36 +68,33 @@ def testRetrieveUsers(testClient, initDatabase):
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
-    # Create the expected response:
-    expected_response = [dict(role='user',
-                              id=User.query.filter_by(username='Pietje').first().id,
-                              username='Pietje'
-                              ),
-                        dict(role='user',
-                              id=User.query.filter_by(username='Donald').first().id,
-                              username='Donald'
-                              ),
-                        dict(role='admin',
-                              id=User.query.filter_by(username='ad').first().id,
-                              username='ad'
-                              ),
-                        dict(role='user',
-                              id=User.query.filter_by(username='John').first().id,
-                              username='John'
-                              ),
-                         dict(role='user',
-                              id=User.query.filter_by(username='Kevin').first().id,
-                              username='Kevin'
-                              ),
-                         ]
 
     # Check if the expected response is correct:
     data = json.loads(response.data)
-    assert expected_response[0] in data
-    assert expected_response[1] in data
-    assert expected_response[2] in data
-    assert expected_response[3] in data
-    assert expected_response[4] in data
+    assert checkUserRet(
+        uid=User.query.filter_by(username='Pietje').first().id,
+        uName='Pietje',
+        uRole='user',
+        data=data
+    )
+    assert checkUserRet(
+        uid=User.query.filter_by(username='Donald').first().id,
+        uName='Donald',
+        uRole='user',
+        data=data
+    )
+    assert checkUserRet(
+        uid=User.query.filter_by(username='ad').first().id,
+        uName='ad',
+        uRole='admin',
+        data=data
+    )
+    assert checkUserRet(
+        uid=User.query.filter_by(username='Kevin').first().id,
+        uName='Kevin',
+        uRole='user',
+        data=data
+    )
 
 def testNotAdmin(testClient, initDatabase):
     '''
