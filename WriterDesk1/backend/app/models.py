@@ -46,6 +46,8 @@ class User(db.Model):
 
     # relationships
     file = db.relationship('Files', backref='owner', lazy='dynamic', cascade='all,delete')
+    researcher = db.relationship('Projects', backref='projectOwner', lazy='dynamic', cascade='all,delete')
+    participant = db.relationship('ParticipantToProject', backref='participanttoproject', lazy=True, cascade='all,delete')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -113,10 +115,6 @@ class ParticipantToProject(db.Model):
     __tablename__ = "participanttoproject"
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, autoincrement=False)
     projectId = db.Column(db.Integer, db.ForeignKey('projects.id'))
-    
-    # relationships
-    participant = db.relationship('User', backref='participanttoproject', lazy=True, cascade='all,delete')
-    project = db.relationship('Projects', backref='participanttoproject', lazy=True, cascade='all,delete')
 
     def __init__(self, userId: int, projectId: int):
         ''' Create new tuple'''
