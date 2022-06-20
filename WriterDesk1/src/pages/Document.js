@@ -14,7 +14,8 @@ import "../css/Document.css";
 import Plot from 'react-plotly.js';
 
 // tracking
-import { TrackingContext, TrackingTrigger } from '@vrbo/react-event-tracking';
+import { useContext } from 'react';
+import { TrackingContext } from '@vrbo/react-event-tracking';
 
 /**
  *
@@ -39,6 +40,8 @@ function Document() {
 
   const [explanations, setExplanations] = useState([]);
 
+  // context as given by the Tracking Provider
+  const tc = useContext(TrackingContext);
 
   useEffect(() => {
     setTitle('Document');
@@ -111,6 +114,7 @@ function Document() {
 
   /**
    * Function to show all the explanation boxes that are being clicked.
+   * In addition, notify the tracker of a click event
    * @param {Object} e - Click event
    * @param {Object} coords - Array of the coordinates of the mistake being clicked
    */
@@ -129,7 +133,16 @@ function Document() {
       let bottom = explanations[i].Y2; // y2 of mistake[i] coordinates
 
       //Set showTextbox true for every mistake that is clicked
-      newArrShowTextbox[i] = (left <= x) && (x <= right) && (top <= y) && (y <= bottom);
+      const hasBeenClicked = (left <= x) && (x <= right) && (top <= y) && (y <= bottom);
+      newArrShowTextbox[i] = hasBeenClicked;
+      //handle tracking
+      if (tc.hasProvider && hasBeenClicked) {
+        // set trigger with explanations type
+        tc.trigger({
+            eventType: 'click.highlight',
+            highlightType: explanations[i].type, 
+        })
+      }
     }
     setShowTextbox(newArrShowTextbox); // Overwrite showTextbox
   }
@@ -178,11 +191,6 @@ function Document() {
    */
   const TextBoxExplanation = (props) => {
     return (<>
-      <TrackingTrigger
-        event={'visible'}
-        fields={eventFields}
-        options={eventOptions}
-      />
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div className={showTextbox[props.number] ? 'textBoxExpl' : 'hidden'} id={'textBoxExpl' + props.number}
           style={{ backgroundColor: typeToColor(props.type), borderColor: typeToColor(props.type) }}>
