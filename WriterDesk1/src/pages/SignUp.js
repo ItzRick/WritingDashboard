@@ -101,7 +101,6 @@ const SignUp = () => {
      * Do POST request containing username and password variable, recieve status of response.
      */
     const handleClick = () => {
-        console.log(acceptUserData)
         // Check if input is valid
         if (username === "" || password === "") {
             setFormError("One or more fields are empty!");
