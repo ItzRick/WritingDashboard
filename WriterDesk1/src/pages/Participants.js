@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react';
 
 
 /**
- * 
+ *
  * @returns Participants Page
  */
 
@@ -83,7 +83,7 @@ const projects = [
 ]
 
 function Participants() {
-  //set title in parent 'base' 
+  //set title in parent 'base'
   const { setTitle } = useOutletContext();
   useEffect(() => {
     setTitle('Participants');
@@ -113,6 +113,9 @@ function Participants() {
           type="number"
           InputLabelProps={{
             shrink: true,
+          }}
+          inputProps= {{
+              min: 0,
           }}
         />
         <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
