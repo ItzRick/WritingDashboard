@@ -171,8 +171,8 @@ const Settings = () => {
                 {accountDeletionPopup && <AlertDialog title = "Account deletion" 
                     text = "Are you sure you want to delete your account?"
                     // TODO
-                    buttonAgree={<Button>Yes</Button>}
-                    buttonCancel={<Button style={{color: "red"}} onClick={(e) => {setAccountDeletionPopup(false)}}>No</Button>}
+                    buttonAgree={<Button style={{color: "red"}}>Yes, I want to delete my account!</Button>}
+                    buttonCancel={<Button onClick={(e) => {setAccountDeletionPopup(false)}}>Cancel</Button>}
                 />}
             </div>
         </>
