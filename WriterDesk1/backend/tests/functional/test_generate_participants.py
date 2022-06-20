@@ -5,10 +5,10 @@ from test_set_role import loginHelper
 
 def testGenerateParticipants(testClient, initDatabase):
     '''
-        Test if generateParticipants() correctly creates participants the database.
+        Test if generateParticipants() correctly creates participants in the database.
         Attributes:
             project: project entry that will be linked with a participant
-            ptp: all entries in ParticipantToProject 
+            ptps: all entries in ParticipantToProject for the project
             data: dict with usernames and passwords returned by generateParticipants()
         Arguments:
             testClient: the test client we test this for
@@ -16,21 +16,26 @@ def testGenerateParticipants(testClient, initDatabase):
     '''
 
     del testClient, initDatabase
+    
+    # Create a new project
     project = Projects(userId=0, projectName="Project")
     db.session.add(project)
     db.session.commit()
+
+    # Try to add participants to the project
     try:
         data = gp.generateParticipants(3,project.id)
         db.session.commit()
     except Exception as e:
-        print(e)
         db.session.rollback()
-    ptp = ParticipantToProject.query.filter_by(projectId=project.id).all()
-    
-    assert len(ptp) == 3
-    assert ptp[0].participant.username == "par_" + str(ptp[0].participant.id)
-    assert ptp[1].participant.username == "par_" + str(ptp[1].participant.id)
-    assert ptp[2].participant.username == "par_" + str(ptp[2].participant.id)
+
+    # Check if particpants are created: check for ParticipantToProject entries,
+    # and the username and role of corresponsing User entries
+    ptps = ParticipantToProject.query.filter_by(projectId=project.id).all()
+    assert len(ptps) == 3
+    for ptp in ptps:
+        assert ptp.participant.username == "par_" + str(ptp.participant.id)
+        assert ptp.participant.role == "participant"
 
 def testGenerateParticipantsData(testClient, initDatabase):
     '''
@@ -44,19 +49,26 @@ def testGenerateParticipantsData(testClient, initDatabase):
     '''
 
     del testClient, initDatabase
+
+    # Create a new project
     project = Projects(userId=0, projectName="Project")
     db.session.add(project)
     db.session.commit()
+
+    # Try to add participants to the project
     try:
         data = gp.generateParticipants(3,project.id)
         db.session.commit()
     except Exception as e:
-        print(e)
         db.session.rollback()
     
+    # Check if dictionary with correct data is returned
+    # every row should have a valid username and a password of at least 
+    # 8 characters with a lowercase and uppercase character and number
     assert len(data) == 3
     for row in data:
         assert row["username"].startswith("par_")
+        assert len(row["password"]) >= 8
         assert any(x.isupper() for x in row["password"]) 
         assert any(x.islower() for x in row["password"]) 
         assert any(x.isdigit() for x in row["password"])
@@ -83,7 +95,11 @@ def testGenerateParticipantPassword(testClient, initDatabase):
     '''
 
     del testClient, initDatabase
+
+    # Generate a password
     password = gp.generateParticipantPassword(10)
+
+    # Check if password has length 10 and contains at least 1 lowercase and uppercase character and a number
     assert len(password) == 10
     assert any(x.isupper() for x in password) 
     assert any(x.islower() for x in password) 
@@ -93,7 +109,7 @@ def testAddParticipantsValid(testClient, initDatabase):
     '''
         Test if adding participants works correctly with an existing project.
         Attributes:
-            userid: id of user to create project and participants for
+            user: user to create project and participants for
             project: project entry that will be linked with a participant
             data: count and projectId input for the post request
             access_token: login token to allow the request to be done
@@ -105,16 +121,22 @@ def testAddParticipantsValid(testClient, initDatabase):
     '''
 
     del initDatabase
-    userid = User.query.filter_by(username="Pietje").first()
-    project = Projects(userId=userid.id, projectName="Project")
+
+    # Retrieve user and create project for them
+    user = User.query.filter_by(username="Pietje").first()
+    project = Projects(userId=user.id, projectName="Project")
     db.session.add(project)
     db.session.commit()
+
+    # Post http request as user to add participants to the project
     data = {
-        'count': 2,
+        'nrOfParticipants': 2,
         'projectid': project.id,
     }
     access_token = loginHelper(testClient, 'Pietje', 'Bell')
     response = testClient.post('/projectapi/addparticipants', json=data, headers={"Content-Type": "application/json", "Authorization": "Bearer " + access_token})
+
+    # Check if particpants were added
     assert response.status_code == 200
     ptp = ParticipantToProject.query.filter_by(projectId=project.id).all()
     assert len(ptp) == 2
@@ -123,7 +145,7 @@ def testAddParticipantsInvalid(testClient, initDatabase):
     '''
         Test if adding participants fails correctly with a non-existing project.
         Attributes:
-            userid: id of user to create project and participants for
+            user: id of user to create project and participants for
             project: project entry that will be linked with a participant
             projectId: id of the project
             data: count and projectId input for the post request
@@ -136,20 +158,27 @@ def testAddParticipantsInvalid(testClient, initDatabase):
     '''
 
     del initDatabase
-    userid = User.query.filter_by(username="Pietje").first()
-    project = Projects(userId=userid.id, projectName="Project")
+    
+    # Retrieve user and create project for them
+    user = User.query.filter_by(username="Pietje").first()
+    project = Projects(userId=user.id, projectName="Project")
     db.session.add(project)
     db.session.commit()
 
+    # Delete the project; no participants should be able te be added
     projectId = project.id
     db.session.delete(project)
     db.session.commit()
+
+    # Post http request as user to add participants to the project
     data = {
-        'count': 5,
+        'nrOfParticipants': 5,
         'projectid': projectId,
     }
     access_token = loginHelper(testClient, 'Pietje', 'Bell')
     response = testClient.post('/projectapi/addparticipants', json=data, headers={"Content-Type": "application/json", "Authorization": "Bearer " + access_token})
+
+    # Check if particpants were not added
     assert response.status_code == 400
     ptp = ParticipantToProject.query.filter_by(projectId=projectId).all()
     assert len(ptp) == 0

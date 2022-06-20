@@ -128,7 +128,7 @@ const Projects = () => {
         // Create project request
         axios.post(`https://localhost:5000/projectapi/setProject`, formData, {headers: authHeader()}).then(response => {
             const data = {
-                "count": numberOfParticipants,  // Add input of numberOfParticipants
+                "nrOfParticipants": numberOfParticipants,  // Add input of numberOfParticipants
                 "projectid": response.data,  // Get project id from response
             }
             // Add participants request

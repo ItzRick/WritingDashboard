@@ -251,25 +251,33 @@ def testRecordsToCsv(testClient, initDatabase):
     '''
 
     del testClient, initDatabase
+
+    # Add two users with username starting with 'csv'
     user1 = User(username="csv@tue.nl", password_plaintext="Password1", role="participant")
     uploadToDatabase(user1)
     user2 = User(username="csv2@tue.nl", password_plaintext="Password1", role="participant")
     uploadToDatabase(user2)
 
+    # Get username and role of users with username starting with 'csv', put data in dictionary
     users = User.query.with_entities(User.username, User.role).filter(User.username.startswith("csv")).all()
     result = [{col: getattr(u, col) for col in u.keys()} for u in users]
+    # Check if data is correctly added to dictionary
     assert len(result) == 2
 
+    # Create csv file from dictionary at path
     path = os.path.join(current_app.config['UPLOAD_FOLDER'], "result.csv")
     recordsToCsv(path, result)
 
+    # Get location of test csv file
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     testFilePath = os.path.join(BASEDIR, 'testcsv.csv')
 
+    # Get content from new csv file and test csv file
     with open(path, 'r', encoding="utf-8-sig") as csv1, open(testFilePath, 'r', encoding="utf-8-sig") as csv2:
         fileOne = csv1.readlines()
         fileTwo = csv2.readlines()
 
+    # Check if contents of the csv files is the same
     assert len(fileOne) == len(fileTwo)
     for line in fileOne:
         assert line in fileTwo
@@ -285,11 +293,15 @@ def testPostUser(testClient, initDatabase):
     '''
 
     del testClient, initDatabase
+
+    # Try to add a new user to the database
     try:
         postUser("test@tue.nl", "TestPassword1")
         db.session.commit()
     except:
         db.session.rollback()
+
+    # Check if user is added correctly
     users = User.query.filter_by(username="test@tue.nl").all()
     assert len(users) == 1
     assert users[0].check_password("TestPassword1")
@@ -306,11 +318,15 @@ def testPostParticipant(testClient, initDatabase):
     '''
 
     del testClient, initDatabase
+
+    # Try to add a new participant to the database 
     try:
         user = postParticipant("test@tue.nl", "TestPassword1")
         db.session.commit()
     except:
         db.session.rollback()
+
+    # Check if the particpant is added correctly
     users = User.query.filter_by(role="participant", username="test@tue.nl").all()
     assert len(users) == 1
     assert users[0].check_password("TestPassword1")
@@ -321,21 +337,27 @@ def testPostParticipantToProject(testClient, initDatabase):
         Test if postParticipantToProject() correctly adds an entry to the database.
         Attributes:
             project: project entry that will be linked with a participant
-            entries: all entries in ParticipantToProject 
+            entries: all entries in ParticipantToProject for the project
         Arguments:
             testClient: the test client we test this for
             initDatabase: the database instance we test this for
     '''
     del testClient, initDatabase
+
+    # Create a new project
     project = Projects(userId=0, projectName="Project")
     db.session.add(project)
     db.session.commit()
+
+    # Try to add a participant to the project
     try:
         postParticipantToProject(1, project.id)
         db.session.commit()
     except:
         db.session.rollback()
-    entries = ParticipantToProject.query.all()
+
+    # Check if entry was correctly in ParticipantToProject
+    entries = ParticipantToProject.query.filter_by(projectId=project.id).all()
     assert len(entries) == 1
     assert entries[0].userId == 1
     assert entries[0].projectId == project.id

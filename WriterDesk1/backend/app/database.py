@@ -83,7 +83,7 @@ def postUser(username, password):
     uploadToDatabase(user)
     return True
     
-def recordsToCsv(path, records, columns=[]):
+def recordsToCsv(path, records):
     '''
         Writes data from records into a csv at path.
         Attributes:
@@ -96,12 +96,15 @@ def recordsToCsv(path, records, columns=[]):
     '''
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, 'w+', newline='') as outFile:
-        # Use specified column names or names from table 
+        # Get column names from data
         fieldNames = [column[0] for column in records[0].items()]
 
+        # Give csv file the same header names as the columns of the records
         outCsv = csv.DictWriter(outFile, fieldnames=fieldNames)
         outCsv.writeheader()
-        [outCsv.writerow(record) for record in records]
+        # Write every record in records to outCsv as a new row
+        for record in records:
+            outCsv.writerow(record)
 
 def postParticipant(username, password):
     '''

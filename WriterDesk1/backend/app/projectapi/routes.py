@@ -16,24 +16,29 @@ from flask_jwt_extended import current_user
 @jwt_required()
 def addParticipantsToExistingProject():
     '''
-    This function handles the creation of new participants and adding them to an existing project.
-    Attributes:
-        count: the number of participants that should be added
-        projectId: the id of the project the participants should be added to
-        data: dictionary with usernames and passwords of new participants
-        path: path to csv with usernames and passwords
-        response: http response with csv file
+        This function handles the creation of new participants and adding them to an existing project.
+        Attributes:
+            nrOfParticipants: the number of participants that should be added
+            projectId: the id of the project the participants should be added to
+            data: dictionary with usernames and passwords of new participants
+            path: path to csv with usernames and passwords
+            response: http response with csv file
+        Return:
+            Returns an http response with a csv file, a 'Content-Disposition: attachment' header 
+            and 'custom-filename' header with a name for the file when participant creation was successful
+            and the error if it was not.
     '''
     # Retrieve data from request
-    count = int(request.json.get("count", None))
+    nrOfParticipants = int(request.json.get("nrOfParticipants", None))
     projectId = int(request.json.get("projectid", None))
 
+    # Check if current user exists
     if User.query.filter_by(id=current_user.id).first() is None:
         return 'user not found', 404
 
     # Try to register new user in database
     try:
-        data = gp.generateParticipants(count, projectId)
+        data = gp.generateParticipants(nrOfParticipants, projectId)
 
         # Create csv file
         path = os.path.join(current_app.config['UPLOAD_FOLDER'], str(current_user.id), "downloadParticipants.csv")
@@ -48,6 +53,7 @@ def addParticipantsToExistingProject():
 
         # Create response
         response = current_app.response_class(generate(), mimetype='text/csv')
+        # Set headers to show that the response contains a file and what the name of the file should be
         response.headers.set('Content-Disposition', 'attachment')
         response.headers.set('custom-filename', 'participants.csv')
         return response, 200

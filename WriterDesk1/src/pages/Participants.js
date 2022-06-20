@@ -111,7 +111,7 @@ function Participants() {
   const handleAddToProject = () => {
     // If input is valid, do post request
     const data = {
-      "count": participantCount,
+      "nrOfParticipants": participantCount,
       "projectid": projectAdd,
     }
     const headers = {

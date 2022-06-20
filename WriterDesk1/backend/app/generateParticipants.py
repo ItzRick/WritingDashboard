@@ -3,7 +3,7 @@ from app.models import User
 from app.database import postParticipant, postParticipantToProject
 import random, string
 
-def generateParticipants(count, projectId):
+def generateParticipants(nrOfParticipants, projectId):
     '''
         Creates participants for a research project, adding them to the User table
         and creating the corresponding entries in the ParticipantToProject table. 
@@ -12,13 +12,15 @@ def generateParticipants(count, projectId):
             password: generated password for a participant
             user: User object for a new participant
         Arguments:
-            count: the number of participants to be generated
+            nrOfParticipants: the number of participants to be generated
             projectId: id of the project the participants belong to
+        Return:
+            Returns a dictionary with usernames and passwords of new participants.
     '''
 
     PASSWORD_LENGTH = 10
     data = []
-    for participant in range(count):
+    for participant in range(nrOfParticipants):
 
         # Generate password
         password = generateParticipantPassword(PASSWORD_LENGTH)
