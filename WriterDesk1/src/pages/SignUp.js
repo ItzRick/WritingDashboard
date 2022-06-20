@@ -11,11 +11,12 @@ import {
 } from "@mui/material";
 import logo from '../images/logo.png';
 import BlueButton from "./../components/BlueButton";
-import AlertDialog from '../components/AlertDialog';
+import AlertDialog from "../components/AlertDialog";
 
 // routing
 import { Link, useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { history } from '../helpers/history';
 
 // Signup request setup
 import axios from 'axios';
@@ -36,12 +37,13 @@ const SignUp = () => {
         setTitle('Sign Up');
     });
 
-    const navigate = useNavigate();
+    // whether or not signup was succesful.
+    const [loginAllowed, setLoginAllowed] = useState(false)
 
     // whether or not the information about the user data is shown.
     const [showUserDataPopup, setShowUserDataPopup] = useState(false)
 
-    /* 
+    /** 
      * Check if username input is valid.
      * @returns helper text for username textfield
      */
@@ -54,7 +56,7 @@ const SignUp = () => {
         return "";
     }
 
-    /*
+    /**
      * Check if repeated username input is valid.
      * @returns helper text for second username textfield
      */
@@ -65,7 +67,7 @@ const SignUp = () => {
         return "";
     }
 
-    /* 
+    /** 
      * Check if password input is valid.
      * According to URC 1.2-1.5, a valid password has at least 8 characters,
      * with at least 1 lowercase character, uppercase character and number.
@@ -86,7 +88,7 @@ const SignUp = () => {
         return "";
     }
 
-    /* 
+    /** 
      * Check if repeated password input is valid.
      * @returns helper text for second password textfield
      */
@@ -97,7 +99,7 @@ const SignUp = () => {
         return "";
     }
 
-    /*
+    /**
      * Do POST request containing username and password variable, recieve status of response.
      */
     const handleClick = () => {
@@ -123,12 +125,19 @@ const SignUp = () => {
         axios.post(`${BASE_URL}/signup`, data, headers).then(response =>{
             // Post request is successful, user is registered
             // Loads login page
-            navigate(NAVIGATE_TO_URL, {replace: true});
+            setLoginAllowed(true);           
         }).catch(error =>{
             // Post request failed, user is not created
             console.error("Something went wrong:", error.response.data);
             setFormError(error.response.data);
         });
+    }
+
+    /** Navigates to the login page */
+    const navig = () => {
+        setLoginAllowed(false)
+        history.push(NAVIGATE_TO_URL);
+        window.location.reload();
     }
 
     // Set username from textfield
@@ -199,6 +208,10 @@ const SignUp = () => {
                     {formError !== "" && <br />}
 
                     <BlueButton idStr='signButton' onClick={handleClick}>Sign Up</BlueButton>
+                    {loginAllowed && <AlertDialog title = "Account created" 
+                        text = "You have successfully created an account. Press 'OK' to be directed to the login page."
+                        buttonAgree={<Button onClick={navig}>OK</Button>}
+                    />}
                 </div>
                 <div className='div3'>
                     <br />

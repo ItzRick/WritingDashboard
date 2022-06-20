@@ -29,7 +29,7 @@ def create_token():
             Otherwise returns Unauthorized response status code
     '''
     # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
-    username = request.json.get("username", None) 
+    username = request.json.get("username", None)
     password = request.json.get("password", None)
     user = User.query.filter_by(username=username).first() # Get user from database corresponding to username
     if user is None or not user.check_password(password): # When there doesn't exists a user corresponding to username or password doesnt match
@@ -119,7 +119,7 @@ def setRole():
             newRole: intended role of the user
             targetUser: user with id == userId
         Return:
-            Returns success if it succeeded, or an 
+            Returns success if it succeeded, or an
             error message:
                 403, if the current user is not an admin
                 404, if there exists no user with userId
@@ -128,7 +128,7 @@ def setRole():
     # check if current_user is Admin
     if current_user.role != 'admin':
         return "Method only accessible for admin users", 403 # return Unauthorized response status code
-    
+
 
     # retrieve data from call
     userId = request.form.get('userId')
@@ -142,8 +142,8 @@ def setRole():
     # check if role is valid
     if newRole not in ['admin', 'participant', 'researcher', 'student']:
         return 'Invalid role', 404
-    
-    
+
+
     # update role
     targetUser.role = newRole
     # update the database
@@ -161,14 +161,14 @@ def setPassword():
             oldPassword: Current password for the user.
             current_user: the user currently logged in
         Return:
-            Returns success if it succeeded, or an 
+            Returns success if it succeeded, or an
             error message:
                 403, if the current user's password is incorrect
     '''
     # retrieve data from call
     newPassword = request.json.get('newPassword')
     oldPassword = request.json.get('oldPassword')
-   
+
     # set password using user function if the password is correct, else return error message:
     if current_user.check_password(oldPassword):
         current_user.set_password(newPassword)

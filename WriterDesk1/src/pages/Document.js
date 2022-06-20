@@ -242,7 +242,7 @@ function Document() {
    */
   const typeToColor = (type) => {
     if (type === 0) { // Language and Style
-      return '#648FFF80'
+      return '#785EF080'
     } else if (type === 1) { // Cohesion
       return '#FE610080'
     } else if (type === 2) { // Structure
