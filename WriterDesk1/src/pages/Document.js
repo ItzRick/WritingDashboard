@@ -13,6 +13,8 @@ import "../css/styles.css";
 import "../css/Document.css";
 import Plot from 'react-plotly.js';
 
+// tracking
+import { TrackingContext, TrackingTrigger } from '@vrbo/react-event-tracking';
 
 /**
  *
@@ -60,7 +62,7 @@ function Document() {
     const url = 'https://127.0.0.1:5000/fileapi/getFileById';
 
     // Make the call to the backend:
-    axios.get(url, {params: {fileId: fileId}})
+    axios.get(url, { params: { fileId: fileId } })
       .then((response) => {
         setPath(response.data.path); // Set path of file given by file id
         setType(response.data.filetype.substring(1)); // Set file type without '.'
@@ -77,7 +79,7 @@ function Document() {
     const url = 'https://127.0.0.1:5000/scoreapi/getScores';
 
     // Make the call to the backend:
-    axios.get(url, {params: {fileId: fileId}})
+    axios.get(url, { params: { fileId: fileId } })
       .then((response) => {
         setScoreStyle(response.data.scoreStyle);
         setScoreStructure(response.data.scoreStructure);
@@ -95,7 +97,7 @@ function Document() {
     const url = 'https://127.0.0.1:5000/scoreapi/getExplanationForFile';
 
     // Make the call to the backend:
-    axios.get(url, {params: {fileId: fileId}})
+    axios.get(url, { params: { fileId: fileId } })
       .then((response) => {
         let explanationsArray = []  // Array of all explanations in the response from the backend call
         for (let i = 0; i < response.data.length; i++) {  // Loop over all explanations
@@ -158,6 +160,12 @@ function Document() {
     setShowTextbox(newArrShowTextbox); // Overwrite showTextbox
   }
 
+  // tracking
+  const eventFields = {
+    location: 'searchbar',
+    name: 'SomeComponent'
+  };
+  const eventOptions = { asynchronous: 'true' };
 
 
   /**
@@ -169,8 +177,13 @@ function Document() {
    * @returns TextBoxExplanation component
    */
   const TextBoxExplanation = (props) => {
-    return (
-      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+    return (<>
+      <TrackingTrigger
+        event={'visible'}
+        fields={eventFields}
+        options={eventOptions}
+      />
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div className={showTextbox[props.number] ? 'textBoxExpl' : 'hidden'} id={'textBoxExpl' + props.number}
           style={{ backgroundColor: typeToColor(props.type), borderColor: typeToColor(props.type) }}>
           <Typography className='textBoxType' style={{ color: typeToColor(props.type), fontSize: 'calc(8px + 0.5vw)' }}>
@@ -212,6 +225,7 @@ function Document() {
           </Typography>
         </div>
       </div>
+    </>
     );
   };
 
@@ -273,9 +287,13 @@ function Document() {
 
   return (
     <>
-      <div className="all-page-container" id="all-page-container" style={{width: '50%'}}>
+      <div className="all-page-container" id="all-page-container" style={{ width: '50%' }}>
         {/** potentially convert document to pdf and show document on page */}
-        <AllPagesPDFViewer pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`} />
+        <AllPagesPDFViewer 
+          pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`} 
+          docId={location.state.fileId}
+          docName={location.state.fileName}
+        />
         {explanations.map((explanation, i) =>
           <ClickableTextDiv
             key={explanation.explId} number={i}
@@ -283,7 +301,7 @@ function Document() {
           />
         )}
       </div>
-      <div className='rightFloat' style={{width: '50%'}}>
+      <div className='rightFloat' style={{ width: '50%' }}>
         {/* The barchart for the scores of this tool: */}
         <Plot
           data={[
