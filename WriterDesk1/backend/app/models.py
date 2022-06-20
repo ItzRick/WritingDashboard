@@ -22,12 +22,12 @@ class User(db.Model):
     passwordHash = db.Column(db.String(128))
 
     def __init__(self, username: str, password_plaintext: str, role: str ='user'):
-        ''' 
+        '''
             Create new user, use set_password to create hashed password for plaintext password
             Arguments:
                 username: Username of new user
                 password_plaintext: Password (to be hashed) for new user
-                role: Role of new user, standard is: 'user'        
+                role: Role of new user, standard is: 'user'
         '''
         self.role = role
         self.username = username
@@ -43,7 +43,7 @@ class User(db.Model):
     @staticmethod
     def serializeList(l):
         return [m.serializeUser() for m in l]
-    
+
     # relationships
     file = db.relationship('Files', backref='owner', lazy='dynamic', cascade='all,delete')
 
@@ -101,11 +101,32 @@ class Files(db.Model):
     def __repr__(self):
         return '<Files {}>'.format(self.filename)
 
-        
+class ParticipantToProject(db.Model):
+    '''
+        Model containing user id's and project id's, linking a participant to a research project.
+        Attributes:
+            userId: id of the participant
+            projectId: id of the research project
+            participant: User object linked by userId
+            project: Projects object linked by projectId
+    '''
+    __tablename__ = "participanttoproject"
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, autoincrement=False)
+    projectId = db.Column(db.Integer, db.ForeignKey('projects.id'))
+    participant = db.relationship('User', backref='participanttoproject', lazy=True, cascade='all,delete')
+    project = db.relationship('Projects', backref='participanttoproject', lazy=True, cascade='all,delete')
+
+    def __init__(self, userId: int, projectId: int):
+        ''' Create new tuple'''
+        self.userId = userId
+        self.projectId = projectId
+
+    def __repr__(self):
+        return '<ParticipantToProject {}>'.format(self.userId)
 
 class Scores(db.Model):
     '''
-        Class to enter scores and explanations related to a file. 
+        Class to enter scores and explanations related to a file.
         Each instance here is one-to-one related to an instance in Files
         Scores should be between 0 and 10. Additionally, values are rounded to 2 decimals
         Attributes:
@@ -166,3 +187,28 @@ class Explanations(db.Model):
             if not c == 'explainedFile':
                 dict[c] = getattr(self, c)
         return dict
+
+
+class Projects(db.Model):
+    '''
+        Class to enter research projects in the database.
+        Attributes:
+            id: Id of this database instance, of this project that has been added in the database.
+            userId: Id of the researcher corresponding to the research project.
+            projectName: Name of the research project.
+            participants: participants object linked by projectId
+    '''
+    __tablename__ = "projects"
+    id = db.Column(db.Integer, primary_key=True)
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'))
+    projectName = db.Column(db.String(256), index=True, unique=False, default='')
+
+    participants = db.relationship('ParticipantToProject', backref='projects', lazy='dynamic', cascade='all,delete')
+
+    def __init__(self, userId: int, projectName: str):
+        ''' Create new tuple'''
+        self.userId = userId
+        self.projectName = projectName
+
+    def __repr__(self):
+        return '<Project {}>'.format(self.projectName)

@@ -36,6 +36,9 @@ def create_app(config_class=Config):
     from app.feedback import bp as feedback_bp
     app.register_blueprint(feedback_bp, url_prefix='/feedback')
 
+    from app.projectapi import bp as projectapi_db
+    app.register_blueprint(projectapi_db, url_prefix='/projectapi')
+
     from app.loginapi import bp as loginapi_db
     app.register_blueprint(loginapi_db, url_prefix='/loginapi')
 
@@ -44,3 +47,6 @@ def create_app(config_class=Config):
 
     # Return the app:
     return app
+
+
+from app import models
