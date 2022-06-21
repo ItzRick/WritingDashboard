@@ -5,7 +5,8 @@ import {
     RadioGroup, 
     TextField, 
     Typography,
-    Button
+    Button,
+    Checkbox
 } from "@mui/material";
 
 // routing
@@ -167,10 +168,16 @@ const Settings = () => {
                     <br /><br />
                     <FormControlLabel value="no" control={<Radio />} label="I refuse the data conditions." />
                 </RadioGroup>
-                <br />
-                <Typography sx={{maxWidth: '90%', margin:'auto'}}>
-                The data conditions allow the application to record user data. The user data includes the URL of the page, the location on the screen, and the timestamp of each click from the user.  The user data is only used to improve the automatic feedback generated within the application. If the purpose of the data changes, the application will ask the user again for permission to save their user data. This data does not include necessary sign-up information, such as the university email address and the password, since that is saved to ensure the functionalities of the application. The sign-up information is not used for any other purposes than logging into the application. The application is still fully available when refusing the data conditions. If the user refuses permission, no user data will be recorded of this user until the moment that they accept the data settings in the future. If the user accepts the permission at first but later revokes the permission, their recorded user data is deleted and no user data will be recorded of this user, until the moment that they accept the data settings in the future. Users can retrieve the recorded user data so far at any time. Users can ask questions regarding their data by sending a mail to i.l.h.rutten@student.tue.nl; a response will be provided within a month.
-                </Typography>
+                <br /> <br />
+                <div>
+                    <Typography sx={{alignSelf: 'center', alignContent:'inline'}}>
+                        View the <a className='userDataLinkPopup' onClick={() => {setShowUserDataPopup(true)}} >user data agreement</a>.
+                    </Typography>
+                    {showUserDataPopup && <AlertDialog title = "User data agreement" 
+                        text = "The data conditions allow the application to record user data. The user data includes the URL of the page, the location on the screen, and the timestamp of each click from the user.  The user data is only used to improve the automatic feedback generated within the application. If the purpose of the data changes, the application will ask the user again for permission to save their user data. This data does not include necessary sign-up information, such as the university email address and the password, since that is saved to ensure the functionalities of the application. The sign-up information is not used for any other purposes than logging into the application. The application is still fully available when refusing the data conditions. If the user refuses permission, no user data will be recorded of this user until the moment that they accept the data settings in the future. If the user accepts the permission at first but later revokes the permission, their recorded user data is deleted and no user data will be recorded of this user, until the moment that they accept the data settings in the future. Users can retrieve the recorded user data so far at any time. Users can ask questions regarding their data by sending a mail to i.l.h.rutten@student.tue.nl; a response will be provided within a month."
+                        buttonAgree={<Button onClick={() => {setShowUserDataPopup(false)}}>I understand</Button>}
+                    />}
+                </div>
                 <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Change password
