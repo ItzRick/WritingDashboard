@@ -27,7 +27,7 @@ import { authHeader } from "../helpers/auth-header";
 
 const BASE_URL = "https://localhost:5000/projectapi";
 
-
+import fileDownload from 'js-file-download';
 
 /**
  *
@@ -105,9 +105,29 @@ const Participants = () => {
   const handleProjAddPart = (event) => {
     setProjectAdd(event.target.value);
   };
-  // dropdown handler for project download
-  const handleProjectDownPart = (event) => {
-    setProjectDown(event.target.value);
+
+  /*
+   * Do POST request containing participantCount and projectAdd variable, recieve status of response.
+   * When successful, download response csv file.
+   */
+  const handleAddToProject = () => {
+    // If input is valid, do post request
+    const data = {
+      "nrOfParticipants": participantCount,
+      "projectid": projectAdd,
+    }
+    const headers = {
+        "Content-Type": "application/json"
+    }
+    axios.post(`${BASE_URL}/addparticipants`, data, {headers: authHeader()}).then(response =>{
+      // Post request is successful, participants are registered
+      // TODO: reload participant list 
+      const fileName = response.headers["custom-filename"];
+      fileDownload(response.data, fileName);
+    }).catch(error =>{
+        // Post request failed, user is not created
+        console.error("Something went wrong:", error.response.data);
+    });
   };
 
   const [participantCount, setParticipantCount] = useState(0);
@@ -138,27 +158,6 @@ const Participants = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);  // Show dialog when deleting single participant
   const [showDeleteDialogMultiple, setShowDeleteDialogMultiple] = useState(false);  // Show dialog when deleting multiple participants
   const [deleteId, setDeleteId] = useState();  // Id of user that is going to be deleted when pressing delete button
-
-  /*
-   * Do POST request containing participantCount and projectAdd variable, receive status of response.
-   */
-  const handleAddToProject = () => {
-    // If input is valid, do post request
-    const data = {
-      "count": participantCount,
-      "projectid": projectAdd,
-    }
-    const headers = {
-      "Content-Type": "application/json"
-    }
-    axios.post(`${BASE_URL}/addparticipants`, data).then(response => {
-      // Post request is successful, participants are registered
-      // TODO: reload participant list 
-    }).catch(error => {
-      // Post request failed, user is not created
-      console.error("Something went wrong:", error.response.data);
-    });
-  };
 
 
   /**

@@ -1,4 +1,3 @@
-from distutils.command.upload import upload
 from app.models import Projects
 from app.database import uploadToDatabase, removeFromDatabase
 from app import db
