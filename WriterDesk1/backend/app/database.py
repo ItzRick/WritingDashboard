@@ -2,11 +2,14 @@ from app import db
 from app.models import User, Scores, Files, Projects, ParticipantToProject
 import csv, os
 
+
 # helper function, TODO remove before deploy
+
 def initialSetup():
     db.session.close()
     db.drop_all()
     db.create_all()
+
     # create admin user
     u = User.query.filter_by(username='admin').first()
     if u is None:
@@ -16,6 +19,7 @@ def initialSetup():
 
     # comment out:
     #   - loginapi > create_token() > initialSetup()
+
 
 def uploadToDatabase(toUpload):
     '''
@@ -28,6 +32,7 @@ def uploadToDatabase(toUpload):
     # commit the changes in the database
     db.session.commit()
 
+
 def removeFromDatabase(toRemove):
     '''
         This functions removes data from the database.
@@ -38,6 +43,7 @@ def removeFromDatabase(toRemove):
     db.session.delete(toRemove)
     # commit the changes in the database
     db.session.commit()
+
 
 def getFilesByUser(user, sortingAttribute):
     '''
@@ -73,8 +79,21 @@ def getFilesByUser(user, sortingAttribute):
     # sort files by descending date
     elif sortingAttribute == "date.desc":
         files = files.order_by(Files.date.desc())
-
     return Files.serializeList(files.all())
+
+
+def getUsers():
+    '''
+        Retrieves and returns a list of all users that are not assigned the participant role
+        Attributes:
+            users: list containing entries from user table without the users that are assigned the
+            participant role.
+        Return:
+            Returns a list containing dictionary entries of users
+    '''
+    users = db.session.query(User).filter(User.role != 'participant').all()
+    return User.serializeList(users)
+
 
 def postUser(username, password, trackable=True):
     '''
@@ -98,10 +117,11 @@ def postUser(username, password, trackable=True):
         return False
 
     # Add user to the database with student role
-    user = User(username=username, password_plaintext=password, role="student", 
-        trackable=trackable)
+    user = User(username=username, password_plaintext=password, role="student",
+                trackable=trackable)
     uploadToDatabase(user)
     return True
+
 
 def recordsToCsv(path, records):
     '''
@@ -126,6 +146,7 @@ def recordsToCsv(path, records):
         for record in records:
             outCsv.writerow(record)
 
+
 def postParticipant(username, password):
     '''
         This function handles the query that generates a partipant account. When
@@ -147,10 +168,11 @@ def postParticipant(username, password):
 
     # Add user to the database with participant role
     user = User(username=username, password_plaintext=password,
-        role="participant")
+                role="participant")
     db.session.add(user)
     db.session.flush()
     return user
+
 
 def postParticipantToProject(userId, projectId):
     '''
@@ -174,6 +196,7 @@ def postParticipantToProject(userId, projectId):
     dataTuple = ParticipantToProject(userId=userId, projectId=projectId)
     db.session.add(dataTuple)
     db.session.flush()
+
 
 def getParticipantsByResearcher(user):
     '''
@@ -211,6 +234,7 @@ def getParticipantsByResearcher(user):
 
     # Return the information of the participants in all projects of the user
     return projectIds, participantInformation
+
 
 def getProjectsByResearcher(user):
     '''
