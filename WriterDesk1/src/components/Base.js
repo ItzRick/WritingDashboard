@@ -30,7 +30,7 @@ import {
 import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 
 // routing
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { history } from '../helpers/history';
 import { AuthenticationService } from '../services/authenticationService';
 
@@ -154,12 +154,14 @@ const Base = ({
   // general theme, defined in index.js
   const theme = useTheme();
 
+  let navigate = useNavigate();
+
+  // give rights depending on the role of the user that is logged in
   // manage admin and researcher sidebar visibility
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     if (user === null) {
-      history.push("/Login");
-      window.location.reload();
+      navigate("../Login", { replace: true });
     } else {
       if (user.role === 'admin') {
         setAdmin(true);

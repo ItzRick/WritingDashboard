@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import '../css/roledialog.css'
 
@@ -79,6 +80,8 @@ const RoleDialog = ({userRole, userId, userName}) => {
         setSelected(value);
     }
 
+    let navigate = useNavigate();
+
     // handle conformation of selection
     const handleOk = () => {
         if (AuthenticationService.getCurrentUserId() === userId) {
@@ -97,8 +100,7 @@ const RoleDialog = ({userRole, userId, userName}) => {
 
         if (AuthenticationService.getCurrentUserId() === userId && selectedValue !== 'Admin'){
             AuthenticationService.logout();
-            history.push("/Login");
-            window.location.reload();
+            navigate("../Login", { replace: true });
         }
      };
     
