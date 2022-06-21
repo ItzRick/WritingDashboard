@@ -28,11 +28,9 @@ def setClick():
     # get user id from current user
     userId = current_user.id 
     # get the data as sent by the react frontend:
-    url = request.form.get('url')
-    eventType = request.form.get('url')
-    buttonId = request.form.get('url')
-    documentId = request.form.get('url')
-    documentName = request.form.get('url')
+    url = request.form.get('url', None)
+    eventType = request.form.get('eventType', None)
+    actionId = request.form.get('actionId', None)
 
     # check if user wants to be tracked (ignoring trackability for participants)
     if not current_user.trackable and current_user.role != 'participant':
@@ -43,9 +41,7 @@ def setClick():
         userId=userId,
         url=url,
         eventType=eventType,
-        buttonId=buttonId,
-        documentId=documentId,
-        documentName=documentName,
+        actionId=actionId,
     )
     # upload
     uploadToDatabase(clickInDB)

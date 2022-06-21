@@ -231,23 +231,20 @@ class Clicks(db.Model):
             documentId: id of the document being viewed, only availabel for view.document events
             documentName: name of the document being viewed, only availabel for view.document events
     '''
-    clickId = db.Column(db.Integer, primary_key=True) #TODO: auto increment?
+    clickId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
     timestamp = db.Column(db.DateTime, unique=False, default=datetime.utcnow())
     url = db.Column(db.String(256), unique=False)
     eventType = db.Column(db.String(256), unique=False)
-    buttonId = db.Column(db.Integer, unique=False)
+    actionId = db.Column(db.String(256), unique=False)
     documentId = db.Column(db.Integer, unique=False)
-    documentName = db.Column(db.String(256), unique=False)
 
-    def __init__(self, userId, url, eventType, buttonId=None, documentId=None, documentName=None):
+    def __init__(self, userId, url, eventType, actionId=None):
         '''create new instance'''
         self.userId = userId
         self.url = url
         self.eventType = eventType
-        self.buttonId = buttonId
-        self.documentId = documentId
-        self.documentName = documentName
+        self.actionId = actionId
 
     def __repr__(self):
         return '<Clicks {}>'.format(self.userId, self.clickId)

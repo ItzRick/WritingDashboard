@@ -36,10 +36,13 @@ const TrackingWrapper = ({children}) => {
         const formData = new FormData();
         formData.append('url', url);
         formData.append('eventType', eventType);
-        formData.append('buttonId', buttonId);
-        formData.append('documentId', documentId);
-        formData.append('documentName', documentName);
-
+        // add only data that is not null
+        if (buttonId != null) {
+            formData.append('actionId', buttonId)
+        } else {
+            formData.append('actionId', documentName);
+        }
+        
         //post the file
         axios.post(requestUrl, formData, {
             headers: authHeader(), // Autheader needed for request
@@ -50,7 +53,6 @@ const TrackingWrapper = ({children}) => {
 
     const customTrigger = (event) => {
         // When an event is triggered, it can be handled here
-        console.log('ev',event)
         sendClick({
             url: window.location.href,
             eventType: event.eventType,
