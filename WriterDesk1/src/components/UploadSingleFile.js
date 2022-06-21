@@ -14,6 +14,10 @@ import BlueButton from "./BlueButton";
 
 import { AuthenticationService } from "../services/authenticationService";
 
+// tracking
+import { useContext } from 'react';
+import { TrackingContext } from '@vrbo/react-event-tracking';
+
 /**
  * 
  * @param {*} ref reference to the parent Upload.js
@@ -23,11 +27,21 @@ import { AuthenticationService } from "../services/authenticationService";
  */
 const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) => {
 
+    // context as given by the Tracking Provider
+    const tc = useContext(TrackingContext);
+
     /**
      * Update uploadSingleFiles in parent Upload.js by removing self
      */
     const removeInstance = () => {
         setUploadSingleFiles((list) => list.filter(item => item.props.thisIndex !== thisIndex));
+        // use Tracking when remove file row has been clicked
+        if (tc.hasProvider) {
+            tc.trigger({
+                eventType: 'click.button', //send eventType
+                buttonId: 'removeFileRow', //send buttonId
+            })
+        }
     }
 
     /**
@@ -165,7 +179,7 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
                     onDragEnter={(event) => event.preventDefault()}
                     onDragOver={(event) => event.preventDefault()}
                     onDrop={onFileDrop}>
-                    <BlueButton onClick={() => fileInput.current.click()} addStyle={{ mr: '8px'}}>Choose a file</BlueButton>
+                    <BlueButton idStr='ChooseAFile' onClick={() => fileInput.current.click()} addStyle={{ mr: '8px'}}>Choose a file</BlueButton>
                     <input
                         ref={fileInput}
                         type="file"

@@ -11,9 +11,12 @@ import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
 // routing
 import { useOutletContext } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
+import {DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
 
+import RoleDialog from "./../components/RoleDialog";
 
 import React from 'react';
 import "../css/styles.css";
@@ -25,12 +28,10 @@ import {authHeader} from "../helpers/auth-header";
  * @returns Users Page
  */
 
-const Users = () => {
-
   // State to keep track of the data inside the table:
   const [tableData, setTableData] = useState([])
 
-    const columns = [
+    const columns: GridColDef[] = [
     {
       field: 'username',
       headerName: 'Username',
@@ -66,13 +67,12 @@ const Users = () => {
       })
   }
 
-  //TODO: this gets called four times
-  //set title in parent 'base' and set table data
-  const { setTitle } = useOutletContext();
-  useEffect(() => {
-      setTitle('Users');
-      setData();
-  }, []);
+const Users = () => {
+    //set title in parent 'base' 
+    const { setTitle } = useOutletContext();
+    useEffect(() => {
+        setTitle('Users');
+    });
 
     return (
         <>

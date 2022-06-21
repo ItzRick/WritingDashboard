@@ -1,8 +1,4 @@
 // materials
-import {
-    Typography
-} from "@mui/material";
-import graphPlaceholder from '../images/chartImage.png';
 import Plot from 'react-plotly.js';
 import './../css/main.css';
 
@@ -109,7 +105,7 @@ const ProgressVisualization = () => {
         mode: 'lines+markers',
         line: {color: '#785EF0'},
         marker: {color: '#B1A2F6', symbol: 'circle', size: 10, line:{color:'#785EF0', width: 2}},
-        name: 'Language and Style',
+        name: 'Language & Style',
         hovertemplate: '<b>%{text}</b><br>Score: %{y}<br>%{x}',
         text: mergedTitles,
         transforms: [{
@@ -139,7 +135,7 @@ const ProgressVisualization = () => {
         mode: 'lines+markers',
         line: {color: '#DC267F'},
         marker: {color: '#ED91BE', symbol: 'circle', size: 10, line: {color:'#DC267F', width: 2}},
-        name: 'Source integration<br>and Content',
+        name: 'Source Integration<br>& Content',
         hovertemplate: '<b>%{text}</b><br>Score: %{y}<br>%{x}',
         text: mergedTitles,
         transforms: [{

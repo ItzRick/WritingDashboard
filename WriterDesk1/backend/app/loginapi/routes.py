@@ -8,10 +8,10 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 
-from app.database import postUser
+from app.database import postUser, initialSetup
 from app.extensions import jwt
 from app.models import User
-from app.database import initialSetup
+from app.database import initialSetup, postUser
 
 @bp.route('/login', methods=['POST'])
 def create_token():
@@ -71,6 +71,7 @@ def registerUser():
         Attributes:
             username: username as given in frontend
             password: password as given in frontend
+            trackable: whether the user wants to be tracked or not
             isCreated: whether a new user has been registered
         Return:
             Returns request success status code with a message when a new user has been registered
@@ -80,9 +81,10 @@ def registerUser():
     # Retrieve data from request
     username = request.json.get("username", None)
     password = request.json.get("password", None)
+    trackable = request.json.get("trackable", None)
 
     # Try to register new user in database
-    isCreated = postUser(username, password)
+    isCreated = postUser(username, password, trackable)
 
     # Send response based on outcome
     if isCreated:

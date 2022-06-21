@@ -30,9 +30,11 @@ import {
 import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 
 // routing
-import { Link, Outlet } from 'react-router-dom';
-import { history } from '../helpers/history';
-import { AuthenticationService } from '../services/authenticationService';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+
+// tracking
+import { useContext } from 'react';
+import { TrackingContext } from '@vrbo/react-event-tracking';
 
 //Width of the opened drawer
 const drawerWidth = 240;
@@ -139,6 +141,9 @@ const Base = ({
   enableNav = true,
 }) => {
 
+  // context as given by the Tracking Provider
+  const tc = useContext(TrackingContext);
+
   const [admin, setAdmin] = useState(false); // true when user has admin rights
   const [researcher, setResearcher] = useState(false); // true when user has researcher rights
 
@@ -146,6 +151,13 @@ const Base = ({
   const [open, setOpen] = useState(false);
   const handleDrawer = () => {
     setOpen(!open);
+    // handle tracking when the drawer is used
+    if (tc.hasProvider) {
+      tc.trigger({
+        eventType: 'click.button', //send eventType
+        buttonId: 'drawerHandle', //send buttonId
+      })
+    }
   };
 
   // provides title to the base page using the context of the outlet
@@ -154,22 +166,23 @@ const Base = ({
   // general theme, defined in index.js
   const theme = useTheme();
 
+  let navigate = useNavigate();
+
   // give rights depending on the role of the user that is logged in
   // manage admin and researcher sidebar visibility
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     if (user === null) {
-      history.push("/Login");
-      window.location.reload();
+      navigate("../Login", { replace: true });
     } else {
       if (user.role === 'admin') {
         setAdmin(true);
       }
       if (user.role === 'researcher' || user.role === 'admin') {
-        setResearcher(true); 
+        setResearcher(true);
       }
     }
-  },[]);
+  }, []);
 
   return (
     <Box sx={{ display: 'flex' }} color="textPrimary" className='baseRoot'>
@@ -194,13 +207,23 @@ const Base = ({
           justifyContent: 'space-between',
         }}>
           <Settings style={{ opacity: '0', margin: '8' }} />
-          <Typography variant="h6" component="div" sx={{color: "appBar.text",}}> {title} </Typography>
+          <Typography variant="h6" component="div" sx={{ color: "appBar.text", }}> {title} </Typography>
           <IconButton
             sx={{
               justifySelf: "flex-end",
               color: "appBar.icon",
             }}
-            component={Link} to='settings'
+            onClick={() => {
+              // handle tracking when the link is activated
+              if (tc.hasProvider) {
+                tc.trigger({
+                  eventType: 'click.link', //send eventType
+                  buttonId: 'Settings', //send buttonId
+                  linkPath: '/Settings' //send linkPath
+                })
+              }
+            }}
+            component={Link} to='/Settings'
           >
             <Person />
           </IconButton>
@@ -236,7 +259,7 @@ const Base = ({
             </IconButton>
           </Tooltip>
         </CustomDrawerHeader>
-        <Divider sx={{bgcolor:'drawer.divider',}} />
+        <Divider sx={{ bgcolor: 'drawer.divider', }} />
         <List
           sx={{
             bgcolor: 'drawer.background',
@@ -247,23 +270,23 @@ const Base = ({
           <NavigationLink open={open} text="Progress" Icon={Timeline} allowed={enableNav} pageLink='Progress' />
           <NavigationLink open={open} text="Documents" Icon={Article} allowed={enableNav} pageLink='Documents' />
           <Divider sx={{
-            bgcolor:'drawer.divider',
+            bgcolor: 'drawer.divider',
             display: admin || researcher ? 'block' : 'none'
           }} />
           <NavigationLink open={open} text="Participants" Icon={Group} allowed={researcher | admin} pageLink='Participants' />
           <NavigationLink open={open} text="Projects" Icon={ListAlt} allowed={researcher | admin} pageLink='Projects' />
           <NavigationLink open={open} text="Feedback Models" Icon={Build} allowed={researcher | admin} pageLink='FeedbackModels' />
           <Divider sx={{
-            bgcolor:'drawer.divider',
+            bgcolor: 'drawer.divider',
             display: admin ? 'block' : 'none'
           }} />
           <NavigationLink open={open} text="Users" Icon={Settings} allowed={admin} pageLink='Users' />
         </List>
       </CustomDrawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p:3}} >
-        <CustomDrawerHeader/>
-        <Box className='content'sx={{ height:'93.5%'}}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }} >
+        <CustomDrawerHeader />
+        <Box className='content' sx={{ height: '93.5%' }}>
           <Outlet context={{ setTitle }} />
         </Box>
       </Box>
