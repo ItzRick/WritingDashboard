@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import {
   DeleteOutline,
-  Timeline,
 } from "@mui/icons-material";
 import { DataGrid, GridApi, GridCellValue, GridColDef, GridToolbarContainer } from "@mui/x-data-grid";
 import BlueButton from './../components/BlueButton';
@@ -40,12 +39,12 @@ const Participants = () => {
       editable: false,
     },
     {
-      field: 'password',
-      headerName: 'Password',
+      field: 'projectid',
+      headerName: 'Project ID',
       editable: false,
     },
     {
-      field: 'project',
+      field: 'projectname',
       headerName: 'Project',
       editable: false,
     },
@@ -70,7 +69,7 @@ const Participants = () => {
           return alert(JSON.stringify(thisRow, null, 4));
         };
 
-        return <div><IconButton><Timeline /></IconButton><IconButton onClick={(e) => { showDeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton></div>;
+        return <div><IconButton onClick={(e) => { showDeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton></div>;
       }
     }
   ];
@@ -83,16 +82,11 @@ const Participants = () => {
   const [participants, setParticipants] = useState([]);
   const [projects, setProjects] = useState([]);
 
-  
+
 
   useEffect(() => {
     setTitle('Participants');
     getParticpantsAndProjects();
-    setProjects([
-      { id: 1, projectName: 'test project 1'},
-      { id: 2, projectName: 'test project 2'},
-      { id: 3, projectName: 'test project 3'},
-    ])
   }, []);
 
   // project in project add
@@ -119,16 +113,16 @@ const Participants = () => {
       "projectid": projectAdd,
     }
     const headers = {
-        "Content-Type": "application/json"
+      "Content-Type": "application/json"
     }
-    axios.post(`${BASE_URL}/addparticipants`, data, {headers: authHeader()}).then(response =>{
+    axios.post(`${BASE_URL}/addparticipants`, data, { headers: authHeader() }).then(response => {
       // Post request is successful, participants are registered
       // TODO: reload participant list 
       const fileName = response.headers["custom-filename"];
       fileDownload(response.data, fileName);
-    }).catch(error =>{
-        // Post request failed, user is not created
-        console.error("Something went wrong:", error.response.data);
+    }).catch(error => {
+      // Post request failed, user is not created
+      console.error("Something went wrong:", error.response.data);
     });
   };
 
@@ -144,10 +138,25 @@ const Participants = () => {
     //Perform GET request
     axios.get(url, { headers: authHeader() })
       .then((response) => {
-        const projects = response.data
-        
-        if (projects != null) {
-          setProjects(projects);
+        const resp = response.data
+        if (resp != null) {
+          setParticipants(resp);
+
+          // get all unique project ids
+          const result = []; //result
+          const map = new Map(); //store all ids here
+          for (const item of resp) {
+            if (!map.has(item.projectid)) {
+              map.set(item.projectid, true);    // set any value to Map
+              // add to result
+              result.push({
+                projectid: item.projectid,
+                projectname: item.projectname
+              });
+            }
+          }
+          // put unique id and name into state projects
+          setProjects(result);
         }
       })
       .catch(err => {
@@ -198,16 +207,16 @@ const Participants = () => {
     */
   const deleteSelectedParticipants = (e) => {
     setShowDeleteDialogMultiple(false);  // Don't show dialog anymore
-    // // Url of the server:
-    // const url = 'https://127.0.0.1:5000/...'
-    // // Create a new formdata:
-    // const formData = new FormData();
-    // // For each of the selected instances, add this id to the formdata:
-    // selectedInstances.forEach(id => formData.append('id', id));
-    // // Make the backend call:
-    // axios.delete(url, { data: formData }).then(response => {
-    //     //TODO: Set table data
-    // });
+    // Url of the server:
+    const url = 'https://127.0.0.1:5000/...'
+    // Create a new formdata:
+    const formData = new FormData();
+    // For each of the selected instances, add this id to the formdata:
+    selectedInstances.forEach(id => formData.append('id', id));
+    // Make the backend call:
+    axios.delete(url, { data: formData }).then(response => {
+      //TODO: Set table data
+    });
   }
 
   return (
@@ -233,8 +242,8 @@ const Participants = () => {
           InputLabelProps={{
             shrink: true,
           }}
-          inputProps= {{
-              min: 0,
+          inputProps={{
+            min: 0,
           }}
         />
         <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
@@ -246,7 +255,7 @@ const Participants = () => {
             label="Project"
             onChange={handleProjAddPart}
           >
-            {projects.map((inst) => <MenuItem key={inst.id} value={inst.id}>{inst.projectName}</MenuItem>)}
+            {projects.map((inst) => <MenuItem key={inst.projectid} value={inst.projectid}>{inst.projectname}, {inst.projectid}</MenuItem>)}
           </Select>
         </FormControl>
         <BlueButton idStr='addParticipants' onClick={handleAddToProject}>Add participants</BlueButton>
@@ -261,7 +270,7 @@ const Participants = () => {
             label="Project"
             onChange={handleProjectDownPart}
           >
-            {projects.map((inst) => <MenuItem key={inst.id} value={inst.id}>{inst.projectName}</MenuItem>)}
+            {projects.map((inst) => <MenuItem key={inst.projectid} value={inst.projectid}>{inst.projectname}, {inst.projectid}</MenuItem>)}
           </Select>
         </FormControl>
         <BlueButton idStr='downloadParticipants' >Download participants</BlueButton>
@@ -274,7 +283,7 @@ const Participants = () => {
       <div style={{ justifyContent: 'center', display: 'flex' }}>
         <div style={{ height: '80vh', maxHeight: '400px', width: '50vw' }} >
           <DataGrid
-            rows={projects}
+            rows={participants}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
