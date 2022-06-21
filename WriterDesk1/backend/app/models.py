@@ -250,7 +250,11 @@ class Clicks(db.Model):
         self.actionId = actionId
 
     def createEmptyUser(self):
-        '''create new instance'''
+        '''
+            Create a user that has all attributes set to no which is used in
+            the retrieval of user data when the user id is not found in the 
+            database.
+        '''
         self.timestamp = None
         self.url = None
         self.eventType = None
