@@ -39,7 +39,7 @@ def test_set_click(testClient, initDatabase):
     }
 
     # test response data
-    response = testClient.post('/clickapi/setClick', data=data, headers = {"Authorization": "Bearer " + access_token})
+    response = testClient.post('/clickapi/addClick', data=data, headers = {"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
     # test if data gets set
     click = Clicks.query.filter_by(userId = user.id).all()
@@ -85,7 +85,7 @@ def testClickNoTrackingPlz(testClient, initDatabase):
     }
 
     # test response data
-    response = testClient.post('/clickapi/setClick', data=data, headers = {"Authorization": "Bearer " + access_token})
+    response = testClient.post('/clickapi/addClick', data=data, headers = {"Authorization": "Bearer " + access_token})
     assert response.status_code == 451
     assert response.data == b'User clicks not trackable'
 
@@ -117,6 +117,6 @@ def testClickInvalidEventType(testClient, initDatabase):
     }
 
     # test response data
-    response = testClient.post('/clickapi/setClick', data=data, headers = {"Authorization": "Bearer " + access_token})
+    response = testClient.post('/clickapi/addClick', data=data, headers = {"Authorization": "Bearer " + access_token})
     assert response.status_code == 400
     assert response.data == b'Invalid eventType'

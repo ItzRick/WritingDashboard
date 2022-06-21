@@ -35,7 +35,7 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
      */
     const removeInstance = () => {
         setUploadSingleFiles((list) => list.filter(item => item.props.thisIndex !== thisIndex));
-        // use Tracking
+        // use Tracking when remove file row has been clicked
         if (tc.hasProvider) {
             tc.trigger({
                 eventType: 'click.button',
