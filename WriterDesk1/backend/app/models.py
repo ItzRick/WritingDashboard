@@ -226,10 +226,9 @@ class Clicks(db.Model):
             userId: id of the user sending the click
             timestamp: time the click happened
             url: url of the page where the click happened
-            eventType: type of event, can be one of [click.button, click.link, view.document]
-            buttonId: id of the button, usually similair to the text displayed on the button, not available for view.document events
-            documentId: id of the document being viewed, only availabel for view.document events
-            documentName: name of the document being viewed, only availabel for view.document events
+            eventType: type of event, can be one of [click.button, click.link, view.document, click.highlight]
+            actionId: in case of a click: name of the button
+                      in case of a view: name of the document
     '''
     clickId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
@@ -237,7 +236,6 @@ class Clicks(db.Model):
     url = db.Column(db.String(256), unique=False)
     eventType = db.Column(db.String(256), unique=False)
     actionId = db.Column(db.String(256), unique=False)
-    documentId = db.Column(db.Integer, unique=False)
 
     def __init__(self, userId, url, eventType, actionId=None):
         '''create new instance'''
