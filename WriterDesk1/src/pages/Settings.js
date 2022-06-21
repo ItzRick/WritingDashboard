@@ -90,11 +90,9 @@ const Settings = () => {
 
     const deleteUser = () => {
         //   The backend url:
-        const url = 'https://127.0.0.1:5000/usersapi/deleteUser';
+        const url = 'https://127.0.0.1:5000/usersapi/deleteUserSelf';
         // Make the backend call and set the table data from the response data:
-        axios.post(url,{
-            "userID": '',
-        }, {headers: authHeader()}).then((response) => {
+        axios.post(url,{},{headers: authHeader()}).then((response) => {
         })
     }
     
