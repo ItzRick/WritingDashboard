@@ -25,10 +25,9 @@ import axios from 'axios';
 import AlertDialog from "../components/AlertDialog";
 import { authHeader } from "../helpers/auth-header";
 
-const BASE_URL = "https://localhost:5000/projectapi";
-
 import fileDownload from 'js-file-download';
 
+const BASE_URL = "https://localhost:5000/projectapi";
 /**
  *
  * @returns Participants Page
@@ -105,7 +104,10 @@ const Participants = () => {
   const handleProjAddPart = (event) => {
     setProjectAdd(event.target.value);
   };
-
+  // dropdown handler for project download
+  const handleProjectDownPart = (event) => {
+    setProjectDown(event.target.value);
+  }
   /*
    * Do POST request containing participantCount and projectAdd variable, recieve status of response.
    * When successful, download response csv file.
