@@ -70,7 +70,7 @@ const Users = () => {
     useEffect(() => {
         setTitle('Users');
         setData();
-    });
+    }, []);
 
     return (
         <>
