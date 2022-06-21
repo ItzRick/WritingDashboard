@@ -12,14 +12,14 @@ from test_set_role import loginHelper
 
 def checkUserRet(uid, uName, uRole, data):
     '''
-    Checks userId, userName and userRole is in the data
-    Argunments:
-    uid: user Id
-    uName: user name
-    uRole: user role
-    data: array of dictionaries containing user data
-    Returns:
-    Whether data contains an instance with uid, uName an uRole
+        Checks userId, userName and userRole is in the data
+        Arguments:
+            uid: user Id
+            uName: user name
+            uRole: user role
+            data: array of dictionaries containing user data
+        Returns:
+            Whether data contains an instance with uid, uName an uRole
     '''
     return (
         (any(

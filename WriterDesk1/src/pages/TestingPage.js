@@ -1,9 +1,8 @@
 import {
-    Button
 } from "@mui/material";
+import BlueButton from "./../components/BlueButton";
 import TestingComponent from "./../components/TestingComponent";
-import { AuthenticationService } from "../services/authenticationService";
-import { useEffect, useState } from "react";
+
 
 /**
  * page used for testing, to be removed later
@@ -14,12 +13,10 @@ const TestingPage = () => {
 
     return (
         <>
-            TestingPage
+            <BlueButton idStr={'testButton'} onClick={() => {console.log("I'm Blue")}}> blueee </BlueButton>
         </>
     );
 }
-
-
 
 
 export default TestingPage;

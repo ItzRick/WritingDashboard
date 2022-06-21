@@ -1,0 +1,8 @@
+.roleColumn {
+    width: 130px;
+    display: flex;
+    align-items: center; 
+    flex-wrap: wrap; 
+    justify-content: space-between;
+    cursor: pointer;
+}

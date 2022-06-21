@@ -67,3 +67,121 @@
     width: 30vw;
 
 }
+
+
+hr.horizontalline {
+    border: 0;
+    height: 1px;
+    background: #44749D linear-gradient(to right, #6F93B0, #44749D, #6F93B0);
+    margin-bottom: 20px;
+    position: relative;
+    margin-left: 20px;
+}
+
+.buttonShowExplanationsStyle {
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    color: black;
+    display: inline-block;
+    font-size: 0.8vw;
+    font-weight: 500;
+    height: 45px;
+    line-height: 1vw;
+    position: relative;
+    text-align: center;
+    transition: ease 100ms;
+    vertical-align: baseline;
+    margin-left: 1%;
+    margin-right: 1%;
+    width: 18%;
+    background-color: #785EF080;
+    border-color: #785EF080;
+}
+
+.buttonShowExplanationsStyle:hover,
+.buttonShowExplanationsStyle:focus {
+  background-color: #785EF0BB;
+}
+
+.buttonShowExplanationsCohesion {
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    color: black;
+    display: inline-block;
+    font-size: 0.8vw;
+    font-weight: 500;
+    height: 45px;
+    line-height: 1vw;
+    position: relative;
+    text-align: center;
+    transition: ease 100ms;
+    vertical-align: baseline;
+    margin-left: 1%;
+    margin-right: 1%;
+    width: 18%;
+    background-color: #FE610080;
+    border-color: #FE610080;
+}
+
+.buttonShowExplanationsCohesion:hover,
+.buttonShowExplanationsCohesion:focus {
+  background-color: #FE6100BB;
+}
+
+.buttonShowExplanationsStructure {
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    color: black;
+    display: inline-block;
+    font-size: 0.8vw;
+    font-weight: 500;
+    height: 45px;
+    line-height: 1vw;
+    position: relative;
+    text-align: center;
+    transition: ease 100ms;
+    vertical-align: baseline;
+    margin-left: 1%;
+    margin-right: 1%;
+    width: 18%;
+    background-color: #FFB00080;
+    border-color: #FFB00080;
+}
+
+.buttonShowExplanationsStructure:hover,
+.buttonShowExplanationsStructure:focus {
+  background-color: #FFB000BB;
+}
+
+.buttonShowExplanationsIntegration {
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    color: black;
+    display: inline-block;
+    font-size: 0.8vw;
+    font-weight: 500;
+    height: 45px;
+    line-height: 1vw;
+    position: relative;
+    text-align: center;
+    transition: ease 100ms;
+    vertical-align: baseline;
+    margin-left: 1%;
+    margin-right: 1%;
+    width: 18%;
+    background-color: #DC267F80;
+    border-color: #DC267F80;
+}
+
+.buttonShowExplanationsIntegration:hover,
+.buttonShowExplanationsIntegration:focus {
+  background-color: #DC267FBB;
+}

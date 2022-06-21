@@ -25,6 +25,8 @@ def usersRetrieve():
             except for participants
         Return:
             Returns json file containing users
+            error message:
+                403, if the current user is not an admin
     '''
 
     if current_user.role != 'admin':
@@ -33,12 +35,8 @@ def usersRetrieve():
     # Retrieve list of files that were uploaded by the current user,
     # ordered by the sorting attribute in the request
     users = getUsers()
-
-    if len(users) != 0:
-        # Return http response with list as json in response body
-        return jsonify(users)
-    else:
-        return 'No user available', 400
+    # Return http response with list as json in response body
+    return jsonify(users)
 
 
 # Removes the given user and the associated files, explanations and scores from the database
