@@ -216,9 +216,7 @@ def getTrackable():
         Attributes:
             newTrackable: id of the user of whom we want to change the role
         Return:
-            Returns success if it succeeded, or an
-            error message:
-                400, Trackable value sent by front end is not 'yes' or 'no'
+            Returns success if it succeeded
     '''
 
     query = User.query.filter_by(id=current_user.id).first()
@@ -226,5 +224,3 @@ def getTrackable():
         return 'yes', 200
     elif not query.trackable:
         return 'no', 200
-
-    return 'Trackable value is not a boolean value', 400
