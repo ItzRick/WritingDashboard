@@ -2,7 +2,7 @@ from app.feedback.generateFeedback.BaseFeedback import BaseFeedback
 import nltk
 from nltk.stem import WordNetLemmatizer
 from collections import Counter
-class LanguageStyleFeedback(BaseFeedback):
+class CohesionFeedback(BaseFeedback):
 
     def __init__(self, text, referencesText, fileId, userId, filePath):
         super().__init__(text, referencesText, fileId, userId, filePath)
@@ -146,7 +146,7 @@ class LanguageStyleFeedback(BaseFeedback):
             connectivesScoreExplanation + "\n" + connectivesExplanation
 
         self.addSingleExplanation(-1, -1, -1, -1, 1, feedback, '', [])
-        
+
         return self.scoreCohesion, self.explanations
 
     def getConnectiveScore(self, text):

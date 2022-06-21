@@ -1,14 +1,10 @@
 from app.feedback.retrieveText.convertDocxTxtToText import getTXTText, getDOCXText
 from app.feedback.retrieveText.convertPdfToText import getPDFText
-from app.feedback.content import sourceIntegration
-from app.feedback.languageAndStyle import feedbackLanguageStyle
-from app.feedback.getMistakesInformation import getMistakesInformationStructure, getMistakesInformationStyle
-from app.feedback.structureCheck import getStructureScore
+from app.feedback.generateFeedback.CohesionFeedback import CohesionFeedback
+from app.feedback.generateFeedback.IntegrationContentFeedback import IntegrationContentFeedback
+from app.feedback.generateFeedback.LanguageStyleFeedback import LanguageStyleFeedback
+from app.feedback.generateFeedback.StructureFeedback import StructureFeedback
 from app.fileapi.convert import convertDocx, convertTxt
-from app.scoreapi.scores import setScoreDB, setExplanationDB
-from app import cache
-import nltk
-from nltk.corpus import stopwords
 
 def genFeedback(file):
     '''
@@ -53,18 +49,19 @@ def genFeedback(file):
             text = getTXTText(path)
             path = convertTxt(path)
             textStructure = text
-        englishStopwords = getEnglishStopwords()
-        # Generate the score for the sourceIntegration, language and style and structure:
-        mistakesStyle, scoreStyle = feedbackLanguageStyle(text)
-        scoreStructure, explanationsStructure = getStructureScore(textStructure)
-        scoreContent, explanationContent = sourceIntegration(text, references, englishStopwords, userId)
-        # Set the score correctly in the database:
-        setScoreDB(fileId, scoreStyle, -2, scoreStructure, scoreContent)
-        # Set the feedback for all categories by either using a separate method or by simply using setExplanationDB:
-        setFeedbackStyle(mistakesStyle, path, fileId)
-        setFeedbackStructure(explanationsStructure, path, fileId)
-        setExplanationDB(fileId = fileId, explId = -1, type = 3, explanation = explanationContent)
+        feedbackEngines = [
+            CohesionFeedback(text, references, userId, path),
+            IntegrationContentFeedback(text, references, userId, path),
+            LanguageStyleFeedback(text, references, userId, path),
+            StructureFeedback(textStructure, references, userId, path)
+        ]
+
+        for feedbackEngine in feedbackEngines:
+            feedbackEngine.genFeedback()
+        for feedbackEngine in feedbackEngines:
+            feedbackEngine.uploadToDatabase()
+        for feedbackEngine in feedbackEngines:
+            del feedbackEngine
     except Exception as e:
         return False, str(e)
     return True, 'Feedback has been generated!'
-    

@@ -3,7 +3,7 @@ from app.feedback.generateFeedback.BaseFeedback import BaseFeedback
 from decimal import ROUND_HALF_UP, Decimal
 import fitz
 
-class StructuredFeedback(BaseFeedback):
+class StructureFeedback(BaseFeedback):
     
     def __init__(self, text, referencesText, fileId, userId, filePath):
         super().__init__(text, referencesText, fileId, userId, filePath)
