@@ -88,6 +88,8 @@ def getUsers():
         Attributes:
             users: list containing entries from user table without the users that are assigned the
             participant role.
+        Return:
+            Returns a list containing dictionary entries of users
     '''
     users = db.session.query(User).filter(User.role != 'participant').all()
     return User.serializeList(users)
