@@ -3,7 +3,7 @@ import {Button, FormControlLabel, Radio, RadioGroup, TextField, Typography} from
 import BlueButton from "./../components/BlueButton";
 
 // routing
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // Import the AuthenticationService for the logout:
 import {AuthenticationService} from '../services/authenticationService';
@@ -12,6 +12,9 @@ import {history} from '../helpers/history';
 // Change password request setup
 import { authHeader } from '../helpers/auth-header';
 import axios from 'axios';
+
+import AlertDialog from "../components/AlertDialog";
+
 const BASE_URL = "https://localhost:5000/loginapi";
 const PASSWORD_LENGTH = 8;
 
@@ -33,6 +36,8 @@ const Settings = () => {
     const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const [formError, setFormError] = useState("");
+
+    const [accountDeletionPopup, setAccountDeletionPopup] = useState(false)
 
     /* 
      * Check if password input is valid.
@@ -66,13 +71,14 @@ const Settings = () => {
         return "";
     }
 
+    let navigate = useNavigate();
+
     /* 
     * Logs out the user and redirects the user to the homepage.
     */   
     const logout = () => {
         AuthenticationService.logout();
-        history.push('/');
-        window.location.reload();
+        navigate("/", { replace: true });
     }
 
     
@@ -162,7 +168,13 @@ const Settings = () => {
                     Delete account
                 </Typography>
                 <br />
-                <Button variant='contained'>I want to delete my account.</Button>
+                <Button variant='contained' onClick={(e) => {setAccountDeletionPopup(true)}}>I want to delete my account.</Button>
+                {accountDeletionPopup && <AlertDialog title = "Account deletion" 
+                    text = "Are you sure you want to delete your account?"
+                    // TODO
+                    buttonAgree={<Button style={{color: "red"}}>Yes, I want to delete my account!</Button>}
+                    buttonCancel={<Button onClick={(e) => {setAccountDeletionPopup(false)}}>Cancel</Button>}
+                />}
             </div>
         </>
     );

@@ -242,7 +242,7 @@ function Document() {
    */
   const typeToColor = (type) => {
     if (type === 0) { // Language and Style
-      return '#648FFF80'
+      return '#785EF080'
     } else if (type === 1) { // Cohesion
       return '#FE610080'
     } else if (type === 2) { // Structure
@@ -260,13 +260,13 @@ function Document() {
    */
   const typeToName = (type) => {
     if (type === 0) {
-      return 'Language and Style'
+      return 'Language & Style'
     } else if (type === 1) {
       return 'Cohesion'
     } else if (type === 2) {
       return 'Structure'
     } else {
-      return 'Source Integration and Content'
+      return 'Source Integration & Content'
     }
   };
 
@@ -289,7 +289,7 @@ function Document() {
           data={[
             {
               // Order of the bars is as follows: first source integration, then cohesion, then structure, then language & style:
-              x: ['Language & style', 'Cohesion', 'Structure', 'Source integration & <br> content'],
+              x: ['Language & Style', 'Cohesion', 'Structure', 'Source Integration & <br> Content'],
               y: [scoreStyle, scoreCohesion, scoreStructure, scoreIntegration],
               marker: { color: ['#785EF0', '#FE6100', '#FFB000', '#DC267F'] },
               type: 'bar',
@@ -297,7 +297,8 @@ function Document() {
           ]}
           // The title of the char is 'scores':
           layout={{
-            title: 'Scores',
+            // title: 'Scores',
+            margin: {l: 50, r: 50, b: 40, t: 30, pad: 4},
             // Scores can be between 0 and 10, so the y-axis range is set accordingly:
             yaxis: {
               range: [0, 10],
@@ -318,7 +319,7 @@ function Document() {
           }}
           // So the chart can resize:
           useResizeHandler={true}
-          style={{ width: '100%', height: '50%' }}
+          style={{ width: '100%', height: '300px' }}
           onHover={e => {
             e.event.target.style.cursor = 'pointer' // Changes cursor on hover to pointer
           }}
@@ -326,6 +327,15 @@ function Document() {
             e.event.target.style.cursor = 'default' // Change cursor back on unhover
           }}
         />
+
+        <hr className="horizontalline"/>
+
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+         <button className="buttonShowExplanationsStyle" onClick={e => showAllExplanationsOfType(0)}>Language & Style</button>
+        <button className="buttonShowExplanationsCohesion" onClick={e => showAllExplanationsOfType(1)}>Cohesion</button>
+        <button className="buttonShowExplanationsStructure" onClick={e => showAllExplanationsOfType(2)}>Structure</button>
+        <button className="buttonShowExplanationsIntegration" onClick={e => showAllExplanationsOfType(3)}>Source Integration & Content</button>
+        </div>
 
         <br />
 

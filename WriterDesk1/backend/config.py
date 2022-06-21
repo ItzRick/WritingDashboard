@@ -15,3 +15,4 @@ class Config(object):
     #authentication
     JWT_SECRET_KEY = "super-secret"  # TODO CHANGE SECRET KEY
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=4)
+    PASSWORD_LENGTH = 10  # Length of generated passwords for participants

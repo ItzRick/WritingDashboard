@@ -1,10 +1,10 @@
 import { useOutletContext } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
+import RoleDialog from "./../components/RoleDialog";
 
 
 /**
@@ -21,7 +21,17 @@ const columns: GridColDef[] = [
   {
     field: 'role',
     headerName: 'Role',
+    width: 150,
     editable: false,
+    renderCell: (params) => {
+      // set arguments
+      const userRole = params.row.role;
+      const userId = params.id;
+      const userName = params.row.username;
+
+      // display role, and show dialog when clicked
+      return <div><RoleDialog userRole={userRole} userId={userId} userName={userName}></RoleDialog></div> 
+    }
   },
   {
     field: "actions",
@@ -44,7 +54,7 @@ const columns: GridColDef[] = [
         return alert(JSON.stringify(thisRow, null, 4));
       };
 
-      return <div><IconButton><PersonOutlineIcon /></IconButton><IconButton><DeleteOutlineIcon /></IconButton></div>;
+      return <div><IconButton><DeleteOutlineIcon /></IconButton></div>;
     }
   }
 ];
@@ -63,6 +73,7 @@ const Users = () => {
     useEffect(() => {
         setTitle('Users');
     });
+
     return (
         <>
             <div style={{height: '80vh', maxHeight: '400px'}} >
