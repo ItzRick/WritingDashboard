@@ -35,11 +35,11 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
      */
     const removeInstance = () => {
         setUploadSingleFiles((list) => list.filter(item => item.props.thisIndex !== thisIndex));
-        // use Tracking
+        // use Tracking when remove file row has been clicked
         if (tc.hasProvider) {
             tc.trigger({
-                eventType: 'click.button',
-                buttonId: 'removeFileRow', 
+                eventType: 'click.button', //send eventType
+                buttonId: 'removeFileRow', //send buttonId
             })
         }
     }
@@ -203,7 +203,7 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
                         renderInput={(params) => <TextField {...params} />}
                     />
                 </LocalizationProvider>
-                <TextField label='Course ID' variant='outlined' value={course} onChange={event => setCourse(event.target.value)} />
+                <TextField label='Course ID' inputProps={{ maxLength: 16 }} variant='outlined' value={course} onChange={event => setCourse(event.target.value)} />
                 <Button variant='contained' sx={{ bgcolor: 'buttonWarning.main', color: 'buttonWarning.text', ml: '5px',}} value={thisIndex} onClick={removeInstance}>Remove</Button>
             </div>
             {displayAlertType ? <Alert severity="error">Upload a file with a .txt, .pdf or .docx filetype!</Alert> : null}

@@ -8,24 +8,22 @@ from flask_jwt_extended import jwt_required, current_user
 
 from app.database import recordsToCsv
 
-@bp.route('/setClick', methods = ['POST'])
+@bp.route('/addClick', methods = ['POST'])
 @jwt_required()
-def setClick():
+def addClick():
     '''
-        set score for the current user
+        set click for the current user, triggered when a user views a document, or clicks an event
         Attributes:
             userId: user id of the currently logged in user
             url: url of the page where the click happened
-            eventType: type of event, can be one of [click.button, click.link, view.document]
-            buttonId: id of the button, usually similair to the text displayed on the button, not available for view.document events
-            documentId: id of the document being viewed, only availabel for view.document events
-            documentName: name of the document being viewed, only availabel for view.document events
+            eventType: type of event, can be one of [click.button, click.link, view.document, click.highlight]
+            actionId: in case of a click: name of the button
+                      in case of a view: name of the document
         Return:
             Returns 'successfully uploaded click' if it succeeded, or an 
             error message:
-                404, if there exists no user with userId
                 451, if the current user does not want to get tracked
-
+                400, if the eventType is not one of [click.button, click.link, view.document, click.highlight]
 
     '''
     # get user id from current user
@@ -38,6 +36,9 @@ def setClick():
     # check if user wants to be tracked (ignoring trackability for participants)
     if not current_user.trackable and current_user.role != 'participant':
         return 'User clicks not trackable', 451
+    # check if eventType is one of [click.button, click.link, view.document]
+    if eventType not in ["click.button", "click.link", "view.document", "click.highlight"]:
+        return 'Invalid eventType', 400
 
     # create Clicks object
     clickInDB = Clicks(

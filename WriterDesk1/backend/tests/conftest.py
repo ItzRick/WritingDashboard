@@ -87,6 +87,7 @@ def initDatabase(testClient):
         a test case is run, so that one test case does not influence the database of another test case. 
     '''
     # Create the database:
+    db.drop_all()
     db.create_all()
 
     # Add the 2 files:
@@ -109,12 +110,12 @@ def initDatabase(testClient):
 
     db.session.commit()
 
-
     yield   # This is where the testing happens!
     
     # Empties the database after the application has finished testing:
-    db.session.commit()
+    db.session.close()
     db.drop_all()
+    
 
 @pytest.fixture(scope='function')
 def initDatabaseEmpty(testClient):

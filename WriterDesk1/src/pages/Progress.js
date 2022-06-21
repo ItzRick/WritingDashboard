@@ -54,7 +54,7 @@ function Progress() {
                     data={[
                         {
                             // Order of the bars is as follows: first source integration, then cohesion, then structure, then language & style:
-                            x: ['Language & style', 'Cohesion', 'Structure', 'Source integration & <br> content'],
+                            x: ['Language & Style', 'Cohesion', 'Structure', 'Source Integration & <br> Content'],
                             y: [scoreStyle, scoreCohesion, scoreStructure, scoreIntegration],
                             marker: {color: ['#785EF0', '#FE6100', '#FFB000', '#DC267F']},
                             type: 'bar',

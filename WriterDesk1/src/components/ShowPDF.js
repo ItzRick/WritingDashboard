@@ -24,16 +24,17 @@ const AllPages = ({ pdf, docId=null, docName=null }) => {
    * 
    */
   const handleTracker = () => {
+    // handle tracking when the document is viewed
     if (tc.hasProvider) {
       tc.trigger({
-        eventType: 'view.document',
-        documentId: docId,
-        documentName: docName,
+        eventType: 'view.document', //send eventType
+        documentId: docId, //send documentId
+        documentName: docName, //send documentName
       })
     }
   }
 
-  // execute handleTracker once
+  // execute handleTracker once upon load
   useEffect( () => {
     handleTracker()
   }, []);

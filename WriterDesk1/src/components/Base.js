@@ -154,8 +154,8 @@ const Base = ({
     // handle tracking when the drawer is used
     if (tc.hasProvider) {
       tc.trigger({
-        eventType: 'click.button',
-        buttonId: 'drawerHandle',
+        eventType: 'click.button', //send eventType
+        buttonId: 'drawerHandle', //send buttonId
       })
     }
   };
@@ -217,9 +217,9 @@ const Base = ({
               // handle tracking when the link is activated
               if (tc.hasProvider) {
                 tc.trigger({
-                  eventType: 'click.link',
-                  buttonId: 'Settings',
-                  linkPath: '/Settings'
+                  eventType: 'click.link', //send eventType
+                  buttonId: 'Settings', //send buttonId
+                  linkPath: '/Settings' //send linkPath
                 })
               }
             }}
