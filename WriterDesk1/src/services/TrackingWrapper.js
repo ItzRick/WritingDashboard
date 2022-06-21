@@ -25,10 +25,8 @@ const TrackingWrapper = ({children}) => {
         url,
         eventType,
         buttonId,
-        documentId,
         documentName,
     }) => {
-        console.log(url)
         //url for request
         const requestUrl = 'https://localhost:5000/clickapi/setClick';
 
@@ -57,7 +55,6 @@ const TrackingWrapper = ({children}) => {
             url: window.location.href,
             eventType: event.eventType,
             buttonId: event.buttonId,
-            documentId: event.documentId,
             documentName: event.documentName,
         })
     }
