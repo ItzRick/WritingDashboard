@@ -261,23 +261,6 @@ const Participants = () => {
         <BlueButton idStr='addParticipants' onClick={handleAddToProject}>Add participants</BlueButton>
       </div>
       <div className='topBorder'>
-        <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
-          <InputLabel id="project-down-participants">Project</InputLabel>
-          <Select
-            labelId="project-down-participants"
-            id="project-down-participants"
-            value={projectDown}
-            label="Project"
-            onChange={handleProjectDownPart}
-          >
-            {projects.map((inst) => <MenuItem key={inst.projectid} value={inst.projectid}>{inst.projectname}, {inst.projectid}</MenuItem>)}
-          </Select>
-        </FormControl>
-        <BlueButton idStr='downloadParticipants' >Download participants</BlueButton>
-      </div>
-      <div className='topBorder'>
-        <BlueButton idStr='downloadSelectedParticipants'>Download selected participants</BlueButton>
-        <div style={{ paddingLeft: '2vw', display: 'inline' }} />
         <BlueButton idStr='downloadUserDataSelectedParticipants'>Download user data of selected participants</BlueButton>
       </div>
       <div style={{ justifyContent: 'center', display: 'flex' }}>
