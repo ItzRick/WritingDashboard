@@ -140,7 +140,7 @@ function Document() {
         // set trigger with explanations type
         tc.trigger({
             eventType: 'click.highlight',
-            highlightType: explanations[i].type, 
+            buttonId: explanations[i].type, 
         })
       }
     }
