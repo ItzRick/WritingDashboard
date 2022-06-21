@@ -1,7 +1,7 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify, send_file
-from app.models import Files
+from app.models import Files, User
 from app.fileapi import bp
 from app.fileapi.convert import convertDocx, convertTxt
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase

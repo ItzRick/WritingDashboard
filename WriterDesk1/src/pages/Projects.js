@@ -17,7 +17,7 @@ import BlueButton from './../components/BlueButton';
 import AlertDialog from "../components/AlertDialog";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import fileDownload from 'js-file-download';
 
 // routing
 import { useOutletContext } from 'react-router-dom';
@@ -132,11 +132,13 @@ const Projects = () => {
         // Create project request
         axios.post(`https://localhost:5000/projectapi/setProject`, formData, {headers: authHeader()}).then(response => {
             const data = {
-                "count": numberOfParticipants,  // Add input of numberOfParticipants
+                "nrOfParticipants": numberOfParticipants,  // Add input of numberOfParticipants
                 "projectid": response.data,  // Get project id from response
             }
             // Add participants request
-            axios.post(`https://localhost:5000/projectapi/addparticipants`, data).then(response => {
+            axios.post(`https://localhost:5000/projectapi/addparticipants`, data, {headers: authHeader()}).then(response => {
+                const fileName = response.headers["custom-filename"];
+                fileDownload(response.data, fileName);
                 //TODO: Set table data
             });
         });
@@ -278,7 +280,7 @@ const Projects = () => {
                 <BlueButton idStr='downloadUserData' style={{ margin: '1vh', verticalAlign: 'middle' }}>Download user data</BlueButton>
             </div>
             <div className="topBorder">
-                {/* downloading participants and user data */}<BlueButton idStr='downloadParticipants' >Download participants of selected projects</BlueButton>
+                {/* downloading participants and user data */}
                 <div style={{ paddingLeft: '2vw', display: 'inline' }} />
                 <BlueButton idStr='downloadUserDataForSelectedProject' >Download user data of participants of selected project</BlueButton>
             </div>

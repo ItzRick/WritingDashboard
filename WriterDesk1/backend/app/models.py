@@ -122,7 +122,12 @@ class ParticipantToProject(db.Model):
     project = db.relationship('Projects', backref='participanttoproject', lazy=True, cascade='all,delete')
 
     def __init__(self, userId: int, projectId: int):
-        ''' Create new tuple'''
+        '''
+            Create new tuple, linking a participant to a project
+            Arguments:
+                userId: id of the participant
+                projectId: id of the research project
+        '''
         self.userId = userId
         self.projectId = projectId
 
