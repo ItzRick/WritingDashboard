@@ -74,7 +74,7 @@ const Upload = () => {
                 {uploadSingleFiles}
             </Box>
             <Box className='center' >
-                <BlueButton onClick={addRow}>Add</BlueButton>
+                <BlueButton idStr='AddUploadRow' onClick={addRow}>Add</BlueButton>
             </Box>
             <br />
             <Box className='title'>

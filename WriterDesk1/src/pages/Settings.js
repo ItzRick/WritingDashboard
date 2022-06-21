@@ -1,6 +1,12 @@
 // materials
-import {Button, FormControlLabel, Radio, RadioGroup, TextField, Typography} from "@mui/material";
-import BlueButton from "./../components/BlueButton";
+import {
+    FormControlLabel, 
+    Radio, 
+    RadioGroup, 
+    TextField, 
+    Typography,
+    Button
+} from "@mui/material";
 
 // routing
 import { useOutletContext, useNavigate } from 'react-router-dom';
@@ -13,6 +19,7 @@ import {history} from '../helpers/history';
 import { authHeader } from '../helpers/auth-header';
 import axios from 'axios';
 
+import BlueButton from "../components/BlueButton";
 import AlertDialog from "../components/AlertDialog";
 
 const BASE_URL = "https://localhost:5000/loginapi";
@@ -117,7 +124,7 @@ const Settings = () => {
         <>
             <div className='title'>
                 {/* The logout button: */}
-                <BlueButton onClick={logout}> Log out </BlueButton>
+                <BlueButton idStr='logOut' onClick={logout}> Log out </BlueButton>
                 <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Data setting
@@ -158,7 +165,7 @@ const Settings = () => {
                 error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : " "}
                 />
                 <br />
-                <Button variant='contained' onClick={changePassword}>Update password</Button>
+                <BlueButton idStr='updatePassword' variant='contained' onClick={changePassword}>Update password</BlueButton>
                 <br />
                 {/* If the password change has failed, or we have a successful change, relay this message: */}
                     {formError !== "" && <Typography color="red">{formError}</Typography>}
@@ -168,7 +175,7 @@ const Settings = () => {
                     Delete account
                 </Typography>
                 <br />
-                <Button variant='contained' onClick={(e) => {setAccountDeletionPopup(true)}}>I want to delete my account.</Button>
+                <BlueButton idStr='DeleteMyAccount' variant='contained' onClick={(e) => {setAccountDeletionPopup(true)}}>I want to delete my account.</BlueButton>
                 {accountDeletionPopup && <AlertDialog title = "Account deletion" 
                     text = "Are you sure you want to delete your account?"
                     // TODO
