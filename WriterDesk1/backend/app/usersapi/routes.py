@@ -45,6 +45,8 @@ def deleteUserAdmin():
     if current_user.role != 'admin':
         return 'Method only accessible for admin users', 403
     userID = request.json.get("userID", None)
+    if User.query.filter_by(userId='userID').first() is None:
+        return 'User does not exist', 404
     deleteUser(userID)
     return 'Account deleted!', 200
 
@@ -54,6 +56,8 @@ def deleteUserResearcher():
     if current_user.role != 'researcher':
         return 'Method only accessible for researcher users', 403
     userID = request.json.get("userID", None)
+    if User.query.filter_by(userId='userID') is None:
+        return 'User does not exist', 404
     user = User.query.filter_by(id=userID)
     if user.role != 'participant':
         return 'Target user is not an participant', 403
