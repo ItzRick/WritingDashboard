@@ -24,8 +24,8 @@ def uploadToDatabase(toUpload):
     db.session.commit()
 
 # Remove the given file from the database of this session
-def removeFromDatabase(document):
-    db.session.delete(document)
+def removeFromDatabase(entry):
+    db.session.delete(entry)
     db.session.commit()
 
 # Retrieves all files of user,

@@ -80,7 +80,15 @@ const Settings = () => {
         window.location.reload();
     }
 
-    
+    const deleteUser = () => {
+        //   The backend url:
+        const url = 'https://127.0.0.1:5000/usersapi/deleteUser';
+        // Make the backend call and set the table data from the response data:
+        axios.post(url,{
+            "userID": '',
+        }, {headers: authHeader()}).then((response) => {
+        })
+    }
     
     /*
      * Do POST request containing new and old password variables, recieve status of response.
@@ -171,7 +179,8 @@ const Settings = () => {
                 {accountDeletionPopup && <AlertDialog title = "Account deletion" 
                     text = "Are you sure you want to delete your account?"
                     // TODO
-                    buttonAgree={<Button style={{color: "red"}}>Yes, I want to delete my account!</Button>}
+
+                    buttonAgree={<Button onClick={deleteUser()} style={{color: "red"}}>Yes, I want to delete my account!</Button>}
                     buttonCancel={<Button onClick={(e) => {setAccountDeletionPopup(false)}}>Cancel</Button>}
                 />}
             </div>
