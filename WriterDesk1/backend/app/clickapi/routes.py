@@ -5,9 +5,9 @@ from app.models import Clicks, User
 from app.database import uploadToDatabase
 from flask_jwt_extended import jwt_required, current_user
 
-@bp.route('/setClick', methods = ['POST'])
+@bp.route('/addClick', methods = ['POST'])
 @jwt_required()
-def setClick():
+def addClick():
     '''
         set click for the current user, triggered when a user views a document, or clicks an event
         Attributes:

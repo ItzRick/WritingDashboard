@@ -28,7 +28,7 @@ def test_set_click(testClient, initDatabase):
     # get access token for Pietje Bell
     access_token = loginHelper(testClient, 'Pietje', 'Bell')
 
-    url = 'test'
+    url = 'Progress'
     eventType = 'click.button'
     actionId = 'actionId'
     # set new password in data

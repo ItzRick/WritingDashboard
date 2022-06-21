@@ -24,6 +24,7 @@ const AllPages = ({ pdf, docId=null, docName=null }) => {
    * 
    */
   const handleTracker = () => {
+    // handle tracking when the document is viewed
     if (tc.hasProvider) {
       tc.trigger({
         eventType: 'view.document',
@@ -33,7 +34,7 @@ const AllPages = ({ pdf, docId=null, docName=null }) => {
     }
   }
 
-  // execute handleTracker once
+  // execute handleTracker once upon load
   useEffect( () => {
     handleTracker()
   }, []);

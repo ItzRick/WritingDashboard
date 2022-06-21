@@ -230,7 +230,7 @@ class Clicks(db.Model):
             clickId: id of the click
             userId: id of the user sending the click
             timestamp: time the click happened
-            url: url of the page where the click happened
+            url: end of the url of the page where the click happened
             eventType: type of event, can be one of [click.button, click.link, view.document, click.highlight]
             actionId: in case of a click: name of the button
                       in case of a view: name of the document
@@ -238,9 +238,9 @@ class Clicks(db.Model):
     clickId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
     timestamp = db.Column(db.DateTime, unique=False, default=datetime.utcnow())
-    url = db.Column(db.String(256), unique=False)
-    eventType = db.Column(db.String(256), unique=False)
-    actionId = db.Column(db.String(256), unique=False)
+    url = db.Column(db.String(64), unique=False)
+    eventType = db.Column(db.String(32), unique=False)
+    actionId = db.Column(db.String(64), unique=False)
 
     def __init__(self, userId, url, eventType, actionId=None):
         '''create new instance'''

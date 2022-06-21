@@ -24,13 +24,17 @@ const BlueButton = ({ children, idStr = '', pathName = '', onClick = () => { }, 
     const tc = useContext(TrackingContext);
 
     const handleClick = () => {
+        // check if tc provider is available
         if (tc.hasProvider) {
             if (pathName == '') {
+                // if pathname is '', it is not a link
+                // send button data
                 tc.trigger({
                     eventType: 'click.button',
                     buttonId: idStr, 
                 })
             } else {
+                // it is a link, send link data
                 tc.trigger({
                     eventType: 'click.link',
                     buttonId: pathName,
