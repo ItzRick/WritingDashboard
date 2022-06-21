@@ -246,5 +246,24 @@ class Clicks(db.Model):
         self.eventType = eventType
         self.actionId = actionId
 
+    def createEmptyUser(self):
+        '''create new instance'''
+        self.timestamp = None
+        self.url = None
+        self.eventType = None
+        self.actionId = None
+        self.documentId = None
+
     def __repr__(self):
         return '<Clicks {}>'.format(self.userId, self.clickId)
+
+    def serializeClick(self):
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            if not c == 'file' and not c == 'clicker':
+                dict[c] =  getattr(self, c)
+        return dict
+
+    @staticmethod
+    def serializeList(l):
+        return [m.serializeClick() for m in l]

@@ -17,6 +17,9 @@ import BlueButton from './../components/BlueButton';
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { authHeader } from "../helpers/auth-header";
+import axios from 'axios';
+import fileDownload from 'js-file-download';
 
 
 
@@ -103,6 +106,33 @@ function Participants() {
     setProjectDown(event.target.value);
   };
 
+
+  const [selectedInstances, setSelectedInstances] = useState([]) //list of selected items
+
+  /**
+   * Perform GET request to retrieve csv file containing user data of selected
+   * participants.
+   */
+  const handleUserDataParticipants = () => {
+    const url = 'https://127.0.0.1:5000/clickapi/getParticipantsUserData';
+    const params = new URLSearchParams();
+    for (let userId in selectedInstances) {
+      params.append("userId", userId);
+    }
+    const request = {
+      params: params,
+      headers: authHeader()
+    };
+    axios.get(url, request)
+      .then((response) => {
+        const fileName = response.headers["custom-filename"];
+        fileDownload(response.data, fileName);
+      })
+      .catch(err => {
+        console.log(err.response.data)
+      })
+  }
+
   return (
     <>
       <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
@@ -150,7 +180,7 @@ function Participants() {
       <div className='topBorder'>
         <BlueButton idStr='downloadSelectedParticipants'>Download selected participants</BlueButton>
         <div style={{ paddingLeft: '2vw', display: 'inline' }} />
-        <BlueButton idStr='downloadUserDataSelectedParticipants'>Download user data of selected participants</BlueButton>
+        <BlueButton idStr='downloadUserDataSelectedParticipants' onClick={handleUserDataParticipants}>Download user data of selected participants</BlueButton>
       </div>
       <div style={{ justifyContent: 'center', display: 'flex' }}>
         <div style={{ height: '80vh', maxHeight: '400px', width: '50vw' }} >
@@ -160,6 +190,7 @@ function Participants() {
             pageSize={5}
             rowsPerPageOptions={[5]}
             checkboxSelection
+            onSelectionModelChange={e => setSelectedInstances(e)}
             disableSelectionOnClick
           />
         </div>
