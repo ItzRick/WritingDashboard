@@ -38,8 +38,8 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
         // use Tracking when remove file row has been clicked
         if (tc.hasProvider) {
             tc.trigger({
-                eventType: 'click.button',
-                buttonId: 'removeFileRow', 
+                eventType: 'click.button', //send eventType
+                buttonId: 'removeFileRow', //send buttonId
             })
         }
     }

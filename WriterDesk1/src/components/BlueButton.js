@@ -30,14 +30,14 @@ const BlueButton = ({ children, idStr = '', pathName = '', onClick = () => { }, 
                 // if pathname is '', it is not a link
                 // send button data
                 tc.trigger({
-                    eventType: 'click.button',
-                    buttonId: idStr, 
+                    eventType: 'click.button', //send eventType
+                    buttonId: idStr, //send buttonId
                 })
             } else {
                 // it is a link, send link data
                 tc.trigger({
-                    eventType: 'click.link',
-                    buttonId: pathName,
+                    eventType: 'click.link', //send eventType
+                    buttonId: pathName, //send buttonId
                 })
             }
         }
