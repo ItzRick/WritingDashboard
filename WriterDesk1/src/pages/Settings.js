@@ -178,9 +178,7 @@ const Settings = () => {
                 <Button variant='contained' onClick={(e) => {setAccountDeletionPopup(true)}}>I want to delete my account.</Button>
                 {accountDeletionPopup && <AlertDialog title = "Account deletion" 
                     text = "Are you sure you want to delete your account?"
-                    // TODO
-
-                    buttonAgree={<Button onClick={deleteUser()} style={{color: "red"}}>Yes, I want to delete my account!</Button>}
+                    buttonAgree={<Button onClick={(e) => {deleteUser()}} style={{color: "red"}}>Yes, I want to delete my account!</Button>}
                     buttonCancel={<Button onClick={(e) => {setAccountDeletionPopup(false)}}>Cancel</Button>}
                 />}
             </div>
