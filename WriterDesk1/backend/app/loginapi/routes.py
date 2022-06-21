@@ -29,7 +29,7 @@ def create_token():
             Otherwise returns Unauthorized response status code
     '''
 
-    # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
+    initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
     username = request.json.get("username", None)
     password = request.json.get("password", None)
     user = User.query.filter_by(username=username).first() # Get user from database corresponding to username
