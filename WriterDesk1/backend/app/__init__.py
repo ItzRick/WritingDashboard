@@ -48,6 +48,9 @@ def create_app(config_class=Config):
     from app.clickapi import bp as clickapi_bp
     app.register_blueprint(clickapi_bp, url_prefix='/clickapi')
 
+    from app.usersapi import bp as usersapi_bp
+    app.register_blueprint(usersapi_bp, url_prefix='/usersapi')
+
     # Return the app:
     return app
 
