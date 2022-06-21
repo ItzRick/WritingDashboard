@@ -19,7 +19,7 @@ languageToolEn = LanguageTool('en-US')
 def create_app(config_class=Config):
     app = Flask(__name__)
     # Prevent CORS errors, make sure we can retrieve things from the react front-end without errors:
-    CORS(app, origins=['https://localhost:3000'])
+    CORS(app, origins=['https://localhost:3000'], expose_headers=["custom-filename"])
     # Retrieve stuff from the config file:
     app.config.from_object(config_class)
     # Start the database:
@@ -44,6 +44,12 @@ def create_app(config_class=Config):
 
     from app.scoreapi import bp as scoreapi_bp
     app.register_blueprint(scoreapi_bp, url_prefix='/scoreapi')
+
+    from app.clickapi import bp as clickapi_bp
+    app.register_blueprint(clickapi_bp, url_prefix='/clickapi')
+
+    from app.usersapi import bp as usersapi_bp
+    app.register_blueprint(usersapi_bp, url_prefix='/usersapi')
 
     # Return the app:
     return app

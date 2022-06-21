@@ -8,10 +8,10 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 
-from app.database import postUser
+from app.database import postUser, initialSetup
 from app.extensions import jwt
 from app.models import User
-from app.database import initialSetup
+from app.database import initialSetup, postUser
 
 @bp.route('/login', methods=['POST'])
 def create_token():
@@ -28,6 +28,7 @@ def create_token():
             Returns access_token used for authentication and user_id from user attribute when username and password corresponds to database
             Otherwise returns Unauthorized response status code
     '''
+
     # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
     username = request.json.get("username", None)
     password = request.json.get("password", None)
@@ -70,6 +71,7 @@ def registerUser():
         Attributes:
             username: username as given in frontend
             password: password as given in frontend
+            trackable: whether the user wants to be tracked or not
             isCreated: whether a new user has been registered
         Return:
             Returns request success status code with a message when a new user has been registered
@@ -79,9 +81,10 @@ def registerUser():
     # Retrieve data from request
     username = request.json.get("username", None)
     password = request.json.get("password", None)
+    trackable = request.json.get("trackable", None)
 
     # Try to register new user in database
-    isCreated = postUser(username, password)
+    isCreated = postUser(username, password, trackable)
 
     # Send response based on outcome
     if isCreated:
@@ -175,3 +178,50 @@ def setPassword():
     # update the database
     db.session.commit()
     return 'Successfully changed password!'
+
+
+@bp.route("/setTrackable", methods=["POST"])
+@jwt_required()
+def setTrackable():
+    '''
+        This function handles setting the trackable value of the current user.
+        Attributes:
+            newTrackable: id of the user of whom we want to change the role
+        Return:
+            Returns success if it succeeded, or an
+            error message:
+                400, Trackable value sent by front end is not 'yes' or 'no'
+    '''
+    # Retrieve data from front end
+    newTrackable = request.form.get('newTrackable')
+    if newTrackable == 'yes':
+        # Set trackable true
+        current_user.trackable = True
+    elif newTrackable == 'no':
+        # Set trackable false
+        current_user.trackable = False
+    else:
+        return 'newTrackable is not yes or no', 400
+
+    # Update the database
+    db.session.commit()
+
+    return 'success', 200
+
+
+@bp.route("/getTrackable", methods=["GET"])
+@jwt_required()
+def getTrackable():
+    '''
+        This function handles setting the trackable value of the current user.
+        Attributes:
+            newTrackable: id of the user of whom we want to change the role
+        Return:
+            Returns success if it succeeded
+    '''
+
+    query = User.query.filter_by(id=current_user.id).first()
+    if query.trackable:
+        return 'yes', 200
+    elif not query.trackable:
+        return 'no', 200

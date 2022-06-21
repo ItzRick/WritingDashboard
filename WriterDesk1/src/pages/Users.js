@@ -1,82 +1,96 @@
+// materials
+import {
+  IconButton,
+  Stack,
+} from "@mui/material";
+import {
+  DeleteOutline,
+  PersonOutline,
+} from "@mui/icons-material";
+
+// routing
 import { useOutletContext } from 'react-router-dom';
-import { useEffect } from 'react';
-import {DataGrid, GridApi, GridCellValue, GridColDef} from "@mui/x-data-grid";
-import IconButton from "@mui/material/IconButton";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { DataGrid, GridApi, GridCellValue, GridColDef } from "@mui/x-data-grid";
 
+import RoleDialog from "./../components/RoleDialog";
 
+import React from 'react';
+import "../css/styles.css";
+import "../css/main.css";
+import { authHeader } from "../helpers/auth-header";
 
 /**
  * 
  * @returns Users Page
  */
-
-const columns: GridColDef[] = [
-  {
-    field: 'username',
-    headerName: 'Username',
-    editable: false,
-  },
-  {
-    field: 'role',
-    headerName: 'Role',
-    editable: false,
-  },
-  {
-    field: "actions",
-    headerName: "Actions",
-    sortable: false,
-    renderCell: (params) => {
-      const onClick = (e) => {
-        e.stopPropagation(); // don't select this row after clicking
-
-        const api: GridApi = params.api;
-        const thisRow: Record<string, GridCellValue> = {};
-
-        api
-          .getAllColumns()
-          .filter((c) => c.field !== "__check__" && !!c)
-          .forEach(
-            (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-          );
-
-        return alert(JSON.stringify(thisRow, null, 4));
-      };
-
-      return <div><IconButton><PersonOutlineIcon /></IconButton><IconButton><DeleteOutlineIcon /></IconButton></div>;
-    }
-  }
-];
-
-const rows = [
-  {id: 1, username: 'Bob', role: 'Researcher'},
-  {id: 2, username: 'Alice', role: 'Researcher'},
-  {id: 3, username: 'Felix', role: 'Student'},
-  {id: 4, username: 'Patrick', role: 'Student'},
-  {id: 5, username: 'Carla', role: 'Researcher'},
-];
-
 const Users = () => {
-    //set title in parent 'base' 
-    const { setTitle } = useOutletContext();
-    useEffect(() => {
-        setTitle('Users');
-    });
-    return (
-        <>
-            <div style={{height: '80vh', maxHeight: '400px'}} >
-                <DataGrid
-                  rows={rows}
-                  columns={columns}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                  checkboxSelection
-                  disableSelectionOnClick
-                />
-            </div>
-        </>
-    );
+  // State to keep track of the data inside the table:
+  const [tableData, setTableData] = useState([])
+
+  const columns: GridColDef[] = [
+    {
+      field: 'username',
+      headerName: 'Username',
+      editable: false,
+    },
+    {
+      field: 'role',
+      headerName: 'Role',
+      width: 150,
+      editable: false,
+      renderCell: (params) => {
+        // set arguments
+        const userRole = params.row.role;
+        const userId = params.id;
+        const userName = params.row.username;
+  
+        // display role, and show dialog when clicked
+        return <div><RoleDialog userRole={userRole} userId={userId} userName={userName}></RoleDialog></div> 
+      }
+    }
+  ];
+
+  const setData = () => {
+    //   The backend url:
+    const url = 'https://127.0.0.1:5000/usersapi/users';
+    // Make the backend call and set the table data from the response data:
+    axios.get(url, { headers: authHeader() })
+      .then((response) => {
+        setTableData(response.data)
+      })
+  }
+
+  //set title in parent 'base' 
+  const { setTitle } = useOutletContext();
+  useEffect(() => {
+    setTitle('Users');
+    setData();
+  }, []);
+
+  return (
+    <>
+      <div style={{ height: '80vh', maxHeight: '400px' }} >
+        <DataGrid
+          style={{ maxHeight: '100%' }}
+          rows={tableData}
+          columns={columns}
+          pageSize={15}
+          rowsPerPageOptions={[15]}
+          checkboxSelection
+          disableSelectionOnClick
+          components={{
+            NoRowsOverlay: () => (
+              <Stack height="100%" alignItems="center" justifyContent="center">
+                No users found!
+              </Stack>
+            ),
+          }}
+        />
+      </div>
+    </>
+  );
 }
 
 export default Users;

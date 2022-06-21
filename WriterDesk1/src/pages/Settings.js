@@ -1,9 +1,15 @@
 // materials
-import {Button, FormControlLabel, Radio, RadioGroup, TextField, Typography} from "@mui/material";
-import BlueButton from "./../components/BlueButton";
+import {
+    FormControlLabel, 
+    Radio, 
+    RadioGroup, 
+    TextField, 
+    Typography,
+    Button
+} from "@mui/material";
 
 // routing
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // Import the AuthenticationService for the logout:
 import {AuthenticationService} from '../services/authenticationService';
@@ -13,6 +19,7 @@ import {history} from '../helpers/history';
 import { authHeader } from '../helpers/auth-header';
 import axios from 'axios';
 
+import BlueButton from "../components/BlueButton";
 import AlertDialog from "../components/AlertDialog";
 
 const BASE_URL = "https://localhost:5000/loginapi";
@@ -30,12 +37,19 @@ const Settings = () => {
         setTitle('Settings');
     });
 
+    useEffect(() => {
+        // Call getTrackable function to show radio button correctly
+        getTrackable();
+    }, []);
+
     // Create states for the old password, new Password (including conformation) and states for success or error messages.
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const [formError, setFormError] = useState("");
+
+    const [trackableValue, setTrackableValue] = useState('');  // Value for radio buttons to accept or refuse data, can be 'yes' or 'no'.
 
     const [accountDeletionPopup, setAccountDeletionPopup] = useState(false)
 
@@ -71,16 +85,35 @@ const Settings = () => {
         return "";
     }
 
+    let navigate = useNavigate();
+
     /* 
     * Logs out the user and redirects the user to the homepage.
     */   
     const logout = () => {
         AuthenticationService.logout();
-        history.push('/');
-        window.location.reload();
+        navigate("/", { replace: true });
     }
 
-    
+    /**
+     * Function to make the backend call to change the trackable value for the current user in the database.
+     * @param {string} newTrackable: String value with 'yes' or 'no' to set new trackable value.
+     */
+    const changeTrackable = (newTrackable) => {
+        const formData = new FormData();
+        formData.append('newTrackable', newTrackable);
+        axios.post('https://localhost:5000/loginapi/setTrackable', formData, {headers: authHeader()})
+    }
+
+    /**
+     * Function to make the backend call to get the trackable value for the current user.
+     */
+    const getTrackable = () => {
+        axios.get('https://localhost:5000/loginapi/getTrackable', {headers: authHeader()}).then(
+          response => {
+              setTrackableValue(response.data)
+          })
+    }
     
     /*
      * Do POST request containing new and old password variables, recieve status of response.
@@ -116,7 +149,7 @@ const Settings = () => {
         <>
             <div className='title'>
                 {/* The logout button: */}
-                <BlueButton onClick={logout}> Log out </BlueButton>
+                <BlueButton idStr='logOut' onClick={logout}> Log out </BlueButton>
                 <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Data setting
@@ -127,6 +160,8 @@ const Settings = () => {
                     defaultValue='yes'
                     name='terms group'
                     style={{display: 'inline'}}
+                    onChange={(e) => {setTrackableValue(e.target.value); changeTrackable(e.target.value);}}
+                    value={trackableValue}
                 >
                     <FormControlLabel value="yes" control={<Radio />} label="I accept the data conditions." />
                     <br /><br />
@@ -157,7 +192,7 @@ const Settings = () => {
                 error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : " "}
                 />
                 <br />
-                <Button variant='contained' onClick={changePassword}>Update password</Button>
+                <BlueButton idStr='updatePassword' variant='contained' onClick={changePassword}>Update password</BlueButton>
                 <br />
                 {/* If the password change has failed, or we have a successful change, relay this message: */}
                     {formError !== "" && <Typography color="red">{formError}</Typography>}
@@ -167,7 +202,7 @@ const Settings = () => {
                     Delete account
                 </Typography>
                 <br />
-                <Button variant='contained' onClick={(e) => {setAccountDeletionPopup(true)}}>I want to delete my account.</Button>
+                <BlueButton idStr='DeleteMyAccount' variant='contained' onClick={(e) => {setAccountDeletionPopup(true)}}>I want to delete my account.</BlueButton>
                 {accountDeletionPopup && <AlertDialog title = "Account deletion" 
                     text = "Are you sure you want to delete your account?"
                     // TODO
