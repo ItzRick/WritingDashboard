@@ -225,3 +225,37 @@ def getTrackable():
         return 'yes', 200
     elif not query.trackable:
         return 'no', 200
+
+@bp.route("/setUsername", methods=["POST"])
+@jwt_required()
+def setUsername():
+    '''
+        This function handles setting the username for the user, by first checking if the supplied current password is correct.
+        Function requires a user to be logged in, use helpers > auth-header.js
+        Also check if username isn't already being used
+        Attributes:
+            currentPassword: Current password for the user.
+            newUsername: intended new username
+            current_user: the user currently logged in
+        Return:
+            Returns success if it succeeded, or an
+            error message:
+                403, if the current user's password is incorrect
+                403, username is already being used
+    '''
+    # retrieve data from call
+    currentPassword = request.json.get('currentPassword')
+    newUsername = request.json.get('newUsername')
+
+    # check if userpassword is correct
+    if not current_user.check_password(currentPassword):
+        return 'Current password is incorrect!', 403
+    # check if username is free
+    if len(User.query.filter_by(username=newUsername).all()) > 0:
+        return 'Username is already being used', 403
+
+    # set username 
+    current_user.username = newUsername
+    # update the database
+    db.session.commit()
+    return 'Successfully changed username!'

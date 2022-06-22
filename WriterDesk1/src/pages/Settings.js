@@ -5,8 +5,7 @@ import {
     RadioGroup, 
     TextField, 
     Typography,
-    Button,
-    Checkbox
+    Button
 } from "@mui/material";
 
 // routing
@@ -14,8 +13,6 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // Import the AuthenticationService for the logout:
 import {AuthenticationService} from '../services/authenticationService';
-// Import the history to be able to go to the homepage after logout:
-import {history} from '../helpers/history';
 // Change password request setup
 import { authHeader } from '../helpers/auth-header';
 import axios from 'axios';
@@ -23,9 +20,9 @@ import axios from 'axios';
 import BlueButton from "../components/BlueButton";
 import AlertDialog from "../components/AlertDialog";
 
-const BASE_URL = "https://localhost:5000/loginapi";
+const BASE_URL = "https://localhost:5000/";
 const PASSWORD_LENGTH = 8;
-
+const USERNAME_END = "tue.nl";
 
 /**
  * 
@@ -134,7 +131,7 @@ const Settings = () => {
             "oldPassword": oldPassword,
             "newPassword": newPassword,
         }
-        axios.post(`${BASE_URL}/setPassword`, data, {headers: authHeader()}).then(response =>{
+        axios.post(`${BASE_URL}loginapi/setPassword`, data, {headers: authHeader()}).then(response =>{
             // Set a success message, reset the field.
             setSuccessMessage(response.data);
             // Reset all the fields:
@@ -146,12 +143,78 @@ const Settings = () => {
             setFormError(error.response.data);
         });
     }
+
+    // whether or not the information about the user data is shown.
+    const [showUserDataPopup, setShowUserDataPopup] = useState(false)
+
+    
+    // Set password from textfield for email change
+    const [passwordForEmail, setPasswordForEmail] = useState("");
+    // Set username from textfield
+    const [username, setUsername] = useState("");
+    // Set repeated username from textfield
+    const [usernameConfirm, setUsernameConfirm] = useState("");
+    // error bellow mail button
+    const [formMailError, setFormMailError] = useState("");
+    const [successMailMessage, setSuccessMailMessage] = useState("");
+    /**
+     * Check if repeated username input is valid.
+     * @returns helper text for second username textfield
+     */
+     const confirmUsername = () => {
+        if(username !== "" && username !== usernameConfirm) {
+            return "Must match Email";
+        }
+        return "";
+    }
+
+    /** 
+     * Check if username input is valid.
+     * @returns helper text for username textfield
+     */
+    const checkUsername = () => {
+        if(username === "") {
+            return "";
+        } else if(!username.endsWith(USERNAME_END)) {
+            return "Must be a TU/e email-address";
+        }
+        return "";
+    }
+
+    const changeEmail = () => {
+        // Check if input is valid
+        if (passwordForEmail === "" || username === "" || usernameConfirm === "") {
+            setFormError("One or more fields are empty!");
+            return;
+        }
+        if (checkUsername() !== "" || confirmUsername() !== "") {
+            setFormError("One or more fields are not complete!");
+            return;
+        }
+        // If input is valid, do post request
+        const data = {
+            "currentPassword": passwordForEmail,
+            "newUsername": username,
+        }
+        axios.post(`${BASE_URL}loginapi/setUsername`, data, {headers: authHeader()})
+        .then(response =>{
+            // Set a success message, reset the field.
+            setSuccessMailMessage(response.data);
+            // Reset all the fields:
+            setPasswordForEmail("");
+            setUsername("");
+            setUsernameConfirm("");
+        }).catch(error =>{
+            // Post request failed, user is not created
+            setFormMailError(error.response.data);
+        });
+    }
     return (
         <>
             <div className='title'>
                 {/* The logout button: */}
                 <BlueButton idStr='logOut' onClick={logout}> Log out </BlueButton>
-                <br />
+                <br /><br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Data setting
                 </Typography>
@@ -204,7 +267,32 @@ const Settings = () => {
                 {/* If the password change has failed, or we have a successful change, relay this message: */}
                     {formError !== "" && <Typography color="red">{formError}</Typography>}
                     {successMessage !== "" && <Typography>{successMessage}</Typography>}
-                <br /><br /><br />
+                <br />
+
+                <Typography variant='h5' style={{color: '#44749D'}}>
+                    Change email
+                </Typography>
+                <br />
+                <TextField value = {passwordForEmail} onChange={(e) => {setPasswordForEmail(e.target.value); 
+                setFormError(""); setSuccessMessage("")}} id='currPass' label='Insert password.' 
+                variant='outlined' type = 'password' style={{marginBottom: '1vw'}} />
+                <br />
+                <TextField id='changeEmail' label='Insert new email.' variant='outlined'
+                    value={username} onChange={(e) => {setUsername(e.target.value); setFormError("")}}
+                    error={checkUsername() !== ""} helperText={checkUsername() !== "" ? checkUsername() : " "}
+                />
+                <br />
+                <TextField id='changeEmail2' label='Repeat new email.' variant='outlined' style={{marginBottom: '1vw'}}
+                    value={usernameConfirm} onChange={(e) => {setUsernameConfirm(e.target.value); setFormError("")}} 
+                    error={confirmUsername() !== ""} helperText={confirmUsername() !== "" ? confirmUsername() : " "}
+                />
+                <br />
+                <BlueButton idStr='updateEmail' variant='contained' onClick={changeEmail}>Update email</BlueButton>
+                <br />
+                {/* If the password change has failed, or we have a successful change, relay this message: */}
+                    {formMailError !== "" && <Typography color="red">{formMailError}</Typography>}
+                    {successMailMessage !== "" && <Typography>{successMailMessage}</Typography>}
+                <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Delete account
                 </Typography>
