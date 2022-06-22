@@ -251,7 +251,7 @@ class Clicks(db.Model):
 
     def createEmptyUser(self):
         '''
-            Create a user that has all attributes set to no which is used in
+            Edit a user that by setting all attributes to None which is used in
             the retrieval of user data when the user id is not found in the 
             database.
         '''

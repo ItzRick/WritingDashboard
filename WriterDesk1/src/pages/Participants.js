@@ -129,7 +129,7 @@ function Participants() {
   };
 
 
-  const [selectedInstances, setSelectedInstances] = useState([]) //list of selected items
+  const [selectedInstances, setSelectedInstances] = useState([]) // list of user ids of selected participants
 
   /**
    * Perform GET request to retrieve csv file containing user data of selected
@@ -138,6 +138,7 @@ function Participants() {
   const handleUserDataParticipants = () => {
     const url = 'https://127.0.0.1:5000/clickapi/getParticipantsUserData';
     const params = new URLSearchParams();
+    // add all selected participant user ids to the params list
     for (let index in selectedInstances) {
       params.append("userId", selectedInstances[index]);
     }

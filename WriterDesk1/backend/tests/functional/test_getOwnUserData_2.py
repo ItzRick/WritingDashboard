@@ -49,11 +49,7 @@ def testAdminOneClick(testClient, initDatabase):
     assert adminClick.eventType == eventType
 
     # retrieve and check the user data
-    userId = admin.id
-    params = {
-        'userId': userId,
-    }
-    response = testClient.get('/clickapi/getOwnUserData', query_string=params, 
+    response = testClient.get('/clickapi/getOwnUserData', 
         headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
 
@@ -120,11 +116,7 @@ def testAdminTwoClicks(testClient, initDatabase):
     assert adminClick1.eventType == eventType1
 
     # retrieve and check the user data
-    userId = admin.id
-    params = {
-        'userId': userId,
-    }
-    response = testClient.get('/clickapi/getOwnUserData', query_string=params, 
+    response = testClient.get('/clickapi/getOwnUserData', 
         headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
 
@@ -167,17 +159,13 @@ def testNoClicks(testClient, initDatabase):
     access_token = loginHelper(testClient, 'u1', 'p1')
 
     # retrieve and check the user data
-    userId = user.id
-    params = {
-        'userId': userId,
-    }
-    response = testClient.get('/clickapi/getOwnUserData', query_string=params, 
+    response = testClient.get('/clickapi/getOwnUserData', 
         headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
 
     # make the csv file as String
     firstRow = 'clickId,userId,timestamp,url,eventType,actionId'
     # all columns except for userId are None, so it will just have comma's
-    secondRow = ',' + str(userId) + ',' + ',' + ',' + ','
+    secondRow = ',' + str(user.id) + ',' + ',' + ',' + ','
     clickData = firstRow + '\n' + secondRow + '\n'
     assert response.data == clickData.encode('utf-8')

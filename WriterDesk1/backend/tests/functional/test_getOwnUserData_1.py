@@ -49,11 +49,7 @@ def testStudentOneClick(testClient, initDatabase):
     assert studentClick.eventType == eventType
 
     # retrieve and check the user data
-    userId = student.id
-    params = {
-        'userId': userId,
-    }
-    response = testClient.get('/clickapi/getOwnUserData', query_string=params, 
+    response = testClient.get('/clickapi/getOwnUserData',
         headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
 
@@ -120,11 +116,7 @@ def testStudentTwoClicks(testClient, initDatabase):
     assert studentClick1.eventType == eventType1
 
     # retrieve and check the user data
-    userId = student.id
-    params = {
-        'userId': userId,
-    }
-    response = testClient.get('/clickapi/getOwnUserData', query_string=params, 
+    response = testClient.get('/clickapi/getOwnUserData', 
         headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
 
@@ -181,11 +173,7 @@ def testParticipantOneClick(testClient, initDatabase):
     assert participantClick.eventType == eventType
 
     # retrieve and check the user data
-    userId = participant.id
-    params = {
-        'userId': userId,
-    }
-    response = testClient.get('/clickapi/getOwnUserData', query_string=params, 
+    response = testClient.get('/clickapi/getOwnUserData', 
         headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
 
@@ -252,11 +240,7 @@ def testParticipantTwoClicks(testClient, initDatabase):
     assert participantClick1.eventType == eventType1
 
     # retrieve and check the user data
-    userId = participant.id
-    params = {
-        'userId': userId,
-    }
-    response = testClient.get('/clickapi/getOwnUserData', query_string=params, 
+    response = testClient.get('/clickapi/getOwnUserData',
         headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
 
@@ -313,11 +297,7 @@ def testResearcherOneClick(testClient, initDatabase):
     assert researcherClick.eventType == eventType
 
     # retrieve and check the user data
-    userId = researcher.id
-    params = {
-        'userId': userId,
-    }
-    response = testClient.get('/clickapi/getOwnUserData', query_string=params, 
+    response = testClient.get('/clickapi/getOwnUserData', 
         headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
 
@@ -384,11 +364,7 @@ def testResearcherTwoClicks(testClient, initDatabase):
     assert researcherClick1.eventType == eventType1
 
     # retrieve and check the user data
-    userId = researcher.id
-    params = {
-        'userId': userId,
-    }
-    response = testClient.get('/clickapi/getOwnUserData', query_string=params, 
+    response = testClient.get('/clickapi/getOwnUserData',
         headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
 

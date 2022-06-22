@@ -71,11 +71,12 @@ const Users = () => {
     setData();
   }, []);
 
-  const [selectedInstances, setSelectedInstances] = useState([]) //list of selected items
+  const [selectedInstances, setSelectedInstances] = useState([]) // list of user ids of selected users
 
   const handleUserData = () => {
     const url = 'https://127.0.0.1:5000/clickapi/getUserData';
     const params = new URLSearchParams();
+    // add all selected users user ids to the params list
     for (let index in selectedInstances) {
       params.append("userId", selectedInstances[index]);
     }

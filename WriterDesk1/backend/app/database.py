@@ -251,26 +251,3 @@ def getProjectsByResearcher(user):
     projectIds = db.session.query(Projects).filter_by(userId=user)
 
     return projectIds
-
-def recordsToCsv(path, records):
-    '''
-        Writes data from records into a csv at path.
-        Attributes:
-            outFile: file at path to write data to
-            outCsv: csv file to put the data in
-            fieldNames: list of names of the columns of the csv file
-        Arguments:
-            path: path of the created csv file
-            records: data in dictionary form that is put into the csv file
-    '''
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, 'w+', newline='') as outFile:
-        # Get column names from data
-        fieldNames = [column[0] for column in records[0].items()]
-
-        # Give csv file the same header names as the columns of the records
-        outCsv = csv.DictWriter(outFile, fieldnames=fieldNames)
-        outCsv.writeheader()
-        # Write every record in records to outCsv as a new row
-        for record in records:
-            outCsv.writerow(record)

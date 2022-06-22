@@ -152,11 +152,7 @@ const Settings = () => {
 
     const handleOwnUserData = () => {
         const url = 'https://127.0.0.1:5000/clickapi/getOwnUserData';
-        const userId = AuthenticationService.getCurrentUserId();
-        const params = {
-          userId: userId,
-        };
-        axios.get(url, {params, headers: authHeader()})
+        axios.get(url, { headers: authHeader()})
           .then((response) => {
             const fileName = response.headers["custom-filename"];
             fileDownload(response.data, fileName);

@@ -99,6 +99,7 @@ def getParticipantsUserData():
             created succesfully.
             error 403: if the user accessing this method does not have the
             rights to call it.
+            error 400: if zero participants have been selected.
     '''
     # check if user is admin OR researcher (i.e. reject if user is neither)
     if current_user.role != 'admin' and current_user.role != 'researcher':
@@ -143,7 +144,7 @@ def getOwnUserData():
             created succesfully.
     '''
     # get the id from the user
-    id = request.args.get('userId')
+    id = current_user.id
 
     # if the user id does not exist in the database
     if Clicks.query.filter_by(userId=id).first() is None:
@@ -175,6 +176,7 @@ def getUserData():
             created succesfully.
             error 403: if the user accessing this method does not have the
             rights to call it.
+            error 400: if zero users have been selected.
     '''
     # check if user is admin (i.e. reject if user is not)
     if current_user.role != 'admin':
