@@ -14,7 +14,7 @@ class CohesionFeedback(BaseFeedback):
         '''
             A method to initialize this class, which sets the text, referencesText, fileId, userId, filePath variables, 
             sets the explanationType variable to 1, to indicate a cohesion feedback and does all functionality of the 
-            BaseFeedback.
+            init method of BaseFeedback.
             Arguments: 
                 self: The current class object.
                 text: Text for which the feedback will be generated.

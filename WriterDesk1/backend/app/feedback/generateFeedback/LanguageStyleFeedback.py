@@ -4,8 +4,25 @@ import re
 import fitz
 
 class LanguageStyleFeedback(BaseFeedback):
+    '''
+        Class, which inherits BaseFeedback, to generate the feedback for the Language and Style writing category.
+    '''
 
     def __init__(self, text, referencesText, fileId, userId, filePath):
+        '''
+            A method to initialize this class, which sets the text, referencesText, fileId, userId, filePath variables, 
+            sets the explanationType variable to 0, to indicate a language and style feedback and does all functionality of the 
+            init function of BaseFeedback.
+            Arguments: 
+                self: The current class object.
+                text: Text for which the feedback will be generated.
+                referencesText: The text containing the references for which the feedback will be generated.
+                fileId: File id of the file for which feedback will be generated.
+                userId: userId of the file for which the feedback will be generated.
+                filePath: The filePath of which the file for which we generate feedback is located.
+            Attributes: 
+                explanationType: explanationType of the current class, 2, to indicate Cohesion.
+        '''
         super().__init__(text, referencesText, fileId, userId, filePath)
         self.explanationType = 0
 
@@ -22,12 +39,15 @@ class LanguageStyleFeedback(BaseFeedback):
                 occurrenceInContext: The number of the correct occurrence of the mistake in the context.
                 wordMatch: Match of word in context.
                 context: context of mistake text.
-            Arguments:
                 text: Input string that will be given feedback on.
-            Returns:
                 mistakes: List of mistakes in text including matched text, context,
-                        occurrence of text in context, explanation, and possible replacements.
-                score: Score between 0 and 10 given to the text based on the feedback.
+                    occurrence of text in context, explanation, and possible replacements.
+            Arguments:
+                self: The current class object.
+            Returns:
+                explanations: List of explanations as they will be added to the database, created from 
+                the mistake of this execution of the Language and Style score.
+                scoreStyle: Score between 0 and 10 given to the text based on the feedback.
         """
         # Check for mistakes
         matches = languageToolEn.check(self.text)
@@ -72,6 +92,7 @@ class LanguageStyleFeedback(BaseFeedback):
         """
             Calculates a score for a text given the number of mistakes and number of words.
             Arguments:
+                self: The current class object.
                 nrOfMistakes: Number of mistakes in a text.
                 nrOfWords: Number of total words of a text.
             Returns:
@@ -93,10 +114,10 @@ class LanguageStyleFeedback(BaseFeedback):
 
     def getMistakesInformationStyle(self, mistakes):
         '''
-            This function makes a list of lists that contains the coordinates, 
-            writing skill number (0), explanation, mistake text and replacements of 
-            each occurence of each language and style mistake in a specified 
-            document.
+            This function makes a add to the explanations list of the current class, 
+            the coordinates, writing skill number (0), explanation, mistake text 
+            and replacements of each occurence of each language and style mistake 
+            in a specified document.
             Attributes:
                 listForDatabase: used for returning all database entries.
                 doc: The document to get information from.
@@ -113,13 +134,10 @@ class LanguageStyleFeedback(BaseFeedback):
                 corWord: The word that is at the correct location in the sentence.
                 values: list containing all the information needed for highlighting
                 that is to be put in the database.
+                filePath: the path to the document to get information from.
             Arguments:
                 mistakes: a format of mistakes in a document for the language and
-                style writing skill.
-                filePath: the path to the document to get information from.
-            Return:
-                listForDatabase: a list contain all values objects that can be put
-                in the database.
+                self: The current class object.
         '''
         doc = fitz.open(self.filePath)
 
