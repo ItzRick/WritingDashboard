@@ -26,6 +26,15 @@ import { authHeader } from "../helpers/auth-header";
  * @returns Users Page
  */
 const Users = () => {
+
+  function deleteUser(userID) {
+        //   The backend url:
+        const url = 'https://127.0.0.1:5000/usersapi/deleteUserAdmin';
+        // Make the backend call and set the table data from the response data:
+        axios.post(url,{userID: userID},{headers: authHeader()}).then((response) => {
+        })
+    }
+
   // State to keep track of the data inside the table:
   const [tableData, setTableData] = useState([])
 
@@ -43,11 +52,19 @@ const Users = () => {
       renderCell: (params) => {
         // set arguments
         const userRole = params.row.role;
-        const userId = params.id;
+        const userId = params.row.id;
         const userName = params.row.username;
   
         // display role, and show dialog when clicked
         return <div><RoleDialog userRole={userRole} userId={userId} userName={userName}></RoleDialog></div> 
+      }
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      sortable: false,
+      renderCell: (params) => {
+        return <div><IconButton onClick={(e) => { deleteUser(params.row.id) }}><DeleteOutline /></IconButton><IconButton><PersonOutline /></IconButton></div>;
       }
     }
   ];
@@ -56,7 +73,7 @@ const Users = () => {
     //   The backend url:
     const url = 'https://127.0.0.1:5000/usersapi/users';
     // Make the backend call and set the table data from the response data:
-    axios.get(url, { headers: authHeader() })
+    axios.get(url,{headers: authHeader() })
       .then((response) => {
         setTableData(response.data)
       })
