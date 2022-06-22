@@ -1,4 +1,4 @@
-from app.feedback.content import countParagraphs, wordsSource, wordsText, getUrlsSources, calcScoreAndExplanationSourcesNotDownloaded
+from app.feedback.generateFeedback.IntegrationContentFeedback import IntegrationContentFeedback
 from math import ceil
 
 def testCountParagraphsOne(testClient):
@@ -7,12 +7,14 @@ def testCountParagraphsOne(testClient):
     2 newline characters. Test this for a text with 1 paragraph.
     Attributes:  
         text: The text we run the method on, containing 1 paragraph.
+        feedbackObject: Object to create feedback for the source integration and content writing category.
     Arguments:
         testClient:  The test client we test this for.
     '''
     del testClient
     text = "this is a very nice text with 1 paragraph."
-    assert countParagraphs(text) == 1
+    feedbackObject = IntegrationContentFeedback(text, '', 1, 1, '')
+    assert feedbackObject.countParagraphs(text) == 1
 
 def testCountParagraphsTwo(testClient):
     '''
@@ -20,13 +22,15 @@ def testCountParagraphsTwo(testClient):
     2 newline characters. Test this for a text with 2 paragraphs.
     Attributes:  
         text: The text we run the method on, containing 2 paragraphs.
+        feedbackObject: Object to create feedback for the source integration and content writing category.
     Arguments:
         testClient:  The test client we test this for.
     '''
     del testClient
     text = ('this is a very nice text with 2 paragraphs. \n\n' + 
     'This is the second paragraph.')
-    assert countParagraphs(text) == 2
+    feedbackObject = IntegrationContentFeedback(text, '', 1, 1, '')
+    assert feedbackObject.countParagraphs(text) == 2
 
 def testCountParagraphsThree(testClient):
     '''
@@ -40,7 +44,8 @@ def testCountParagraphsThree(testClient):
     del testClient
     text = ('this is a very nice text with 3 paragraphs. \n\n' + 
     'This is the second paragraph. \n\n This is the third paragraph.' )
-    assert countParagraphs(text) == 3
+    feedbackObject = IntegrationContentFeedback(text, '', 1, 1, '')
+    assert feedbackObject.countParagraphs(text) == 3
 
 def testWordsSources(testClient, englishStopwords):
     '''
@@ -49,6 +54,7 @@ def testWordsSources(testClient, englishStopwords):
             text: The text we want to run the wordsSource method on. 
             wordsWoStopwordsExpected: The words set we expect to find. 
             wordsWoStopwords: The words set as we get from the wordsSource method.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
             englishStopwords: English stopwords downloaded from nltk from conftest.py.
@@ -58,7 +64,8 @@ def testWordsSources(testClient, englishStopwords):
     ' We need to add some more useful information to this text.')
     wordsWoStopwordsExpected = {'take', 'words', 'need', 'information', 'without', 
     'add', 'useful', 'punctuation', 'text'}
-    wordsWoStopwords = wordsSource(text, set(), englishStopwords)
+    feedbackObject = IntegrationContentFeedback(text, '', 1, 1, '')
+    wordsWoStopwords = feedbackObject.wordsSource(text, set())
     assert wordsWoStopwords == wordsWoStopwordsExpected
 
 def testWordsSourcesMultiple(testClient, englishStopwords):
@@ -71,6 +78,7 @@ def testWordsSourcesMultiple(testClient, englishStopwords):
             wordsWoStopwords: The words set as we get from the wordsSource method.
             wordsWoStopwordsInitial: Initial empty set of words, we put into the wordsSource method.
             wordsWoStopWordsExpectedSecond: The words set as we get from the wordsSource method, after the two texts.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
             englishStopwords: English stopwords downloaded from nltk from conftest.py.
@@ -81,13 +89,14 @@ def testWordsSourcesMultiple(testClient, englishStopwords):
     ' We need to add some more useful information to this text.')
     wordsWoStopwordsExpected = {'take', 'words', 'need', 'information', 'without', 
     'add', 'useful', 'punctuation', 'text'}
-    wordsWoStopwords = wordsSource(textFirst, wordsWoStopwordsInitial, englishStopwords)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    wordsWoStopwords = feedbackObject.wordsSource(textFirst, wordsWoStopwordsInitial)
     assert wordsWoStopwords == wordsWoStopwordsExpected
     textSecond = ('This is the second text, we need to get some more words from this second text.' + 
     ' This text contains lots of interesting words, which are not in the stopwords set.')
     wordsWoStopWordsExpectedSecond = {'take', 'words', 'need', 'lots', 'second', 'contains', 
     'information', 'without', 'set', 'add', 'useful', 'punctuation', 'get', 'interesting', 'text', 'stopwords'}
-    wordsWoStopwords = wordsSource(textSecond, wordsWoStopwords, englishStopwords)
+    wordsWoStopwords = feedbackObject.wordsSource(textSecond, wordsWoStopwordsInitial)
     assert wordsWoStopWordsExpectedSecond == wordsWoStopwords
 
 def testWordsText(testClient, englishStopwords):
@@ -98,6 +107,7 @@ def testWordsText(testClient, englishStopwords):
             expectedDictWords: the Dictionary we expect to get from this function. 
             wordsDict: The dictionary with words we get from this function. 
             count: Count of the number of words we get from the wordsText function.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
             englishStopwords: English stopwords downloaded from nltk from conftest.py.
@@ -107,7 +117,8 @@ def testWordsText(testClient, englishStopwords):
     ' We need to add some more useful information to this text. We add some more words to this text.')
     expectedDictWords = {'text': 3, 'take': 1, 'words': 2, 'without': 1, 'punctuation': 1, 'need': 1, 
     'add': 2, 'useful': 1, 'information': 1}
-    wordsDict, count = wordsText(text, englishStopwords)
+    feedbackObject = IntegrationContentFeedback(text, '', 1, 1, '')
+    wordsDict, count = feedbackObject.wordsText(text)
     assert count == 13
     assert wordsDict == expectedDictWords
 
@@ -119,6 +130,7 @@ def testWordsTextSecond(testClient, englishStopwords):
             expectedDictWords: the Dictionary we expect to get from this function. 
             wordsDict: The dictionary with words we get from this function. 
             count: Count of the number of words we get from the wordsText function.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
             englishStopwords: English stopwords downloaded from nltk from conftest.py.
@@ -138,7 +150,8 @@ def testWordsTextSecond(testClient, englishStopwords):
     'information': 1, 'hardcore': 1, 'qsusers': 1, '2013': 1, 'fox': 1, 'duggan': 1, 'estimated': 1, '69': 1, 'americans': 1, 
     'keeps': 1, 'least': 1, 'one': 2, 'healthrelated': 1, 'parameter': 1, 'loved': 1, 'recent': 1, 'found': 1, 'imagine': 1, 
     'rise': 1, 'selftracking': 1, 'increased': 1, 'percentage': 1}
-    wordsDict, count = wordsText(text, englishStopwords)
+    feedbackObject = IntegrationContentFeedback(text, '', 1, 1, '')
+    wordsDict, count = feedbackObject.wordsText(text)
     assert count == 60
     assert wordsDict == expectedDictWords
 
@@ -150,6 +163,7 @@ def testGetUrlSources(testClient):
             links: The links as retrieved from the getUrlsSources method.
             links_doi: The links containing doi.org as retrieved from the getUrlsSources method.
             numSources: The number of sources inside the sources string, as retrieved from the getUrlsSources method.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -159,7 +173,8 @@ def testGetUrlSources(testClient):
     ' https://dictionary.cambridge.org/dictionary/english/multitasking \n\n  Uncapher, M. R., & Wagner, A. D. (2018).' +
     ' Minds and brains of media multitaskers: Current findings - and future directions. Proceedings of the National Academy' +
     ' of Sciences, 115(40), 9889–9896. https://doi.org/10.1073/pnas.1611612115')
-    links, links_doi, numSources = getUrlsSources(sources)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    links, links_doi, numSources = feedbackObject.getUrlsSources(sources)
     assert links == ['https://dictionary.cambridge.org/dictionary/english/multitasking']
     assert links_doi == ['https://doi.org/10.1073/pnas.1611612115']
     assert numSources == 2
@@ -174,6 +189,8 @@ def testCalcScoreAndExplanationSourcesNotDownloadedZero(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -182,7 +199,8 @@ def testCalcScoreAndExplanationSourcesNotDownloadedZero(testClient):
     numParagraphs = 11
     # Assert that we should indeed get a score of 0:
     assert ceil(numParagraphs / numSources) > 5
-    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
     assert score == 0
     explanationText = ('Your score for source integration and content is 0. You only used 2 sources ' + 
     'in 11 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
@@ -199,13 +217,16 @@ def testCalcScoreAndExplanationSourcesNotDownloadedNoSources(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
     del testClient
     numSources = 0
     numParagraphs = 11
-    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
     assert score == 0
     explanationText = ('Your score for source integration and content is 0. You only used 0 sources ' + 
     'in 11 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
@@ -222,6 +243,8 @@ def testCalcScoreAndExplanationSourcesNotDownloadedTwo(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -230,7 +253,8 @@ def testCalcScoreAndExplanationSourcesNotDownloadedTwo(testClient):
     numParagraphs = 13
     # Assert that we should indeed get a score of 2:
     assert ceil(numParagraphs / numSources) > 4
-    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
     assert score == 2
     explanationText = ('Your score for source integration and content is 2. You only used 3 sources ' + 
     'in 13 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
@@ -247,6 +271,7 @@ def testCalcScoreAndExplanationSourcesNotDownloadedFour(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -255,7 +280,8 @@ def testCalcScoreAndExplanationSourcesNotDownloadedFour(testClient):
     numParagraphs = 13
     # Assert that we should indeed get a score of 4:
     assert ceil(numParagraphs / numSources) > 3
-    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
     assert score == 4
     explanationText = ('Your score for source integration and content is 4. You only used 4 sources ' + 
     'in 13 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
@@ -272,6 +298,7 @@ def testCalcScoreAndExplanationSourcesNotDownloadedSix(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -280,7 +307,8 @@ def testCalcScoreAndExplanationSourcesNotDownloadedSix(testClient):
     numParagraphs = 13
     # Assert that we should indeed get a score of 6:
     assert ceil(numParagraphs / numSources) > 2
-    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
     assert score == 6
     explanationText = ('Your score for source integration and content is 6. You only used 6 sources ' + 
     'in 13 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
@@ -297,6 +325,7 @@ def testCalcScoreAndExplanationSourcesNotDownloadedEight(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -305,7 +334,8 @@ def testCalcScoreAndExplanationSourcesNotDownloadedEight(testClient):
     numParagraphs = 11
     # Assert that we should indeed get a score of 8:
     assert ceil(numParagraphs / numSources) > 1
-    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
     assert score == 8
     explanationText = ('Your score for source integration and content is 8. You only used 10 sources ' + 
     'in 11 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
@@ -322,6 +352,7 @@ def testCalcScoreAndExplanationSourcesNotDownloadedTen(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -330,7 +361,8 @@ def testCalcScoreAndExplanationSourcesNotDownloadedTen(testClient):
     numParagraphs = 11
     # Assert that we should indeed get a score of 10:
     assert ceil(numParagraphs / numSources) > 0
-    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
     assert score == 10
     explanationText = ('Your score for source integration and content is 10. You only used 12 sources ' + 
     'in 11 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 

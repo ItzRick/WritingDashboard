@@ -1,6 +1,7 @@
 import os
 from datetime import date
 import io
+from app.models import Files
 
 def testDirsCreated(testClient, initDatabase):
     '''
@@ -36,7 +37,8 @@ def testDirsCreated(testClient, initDatabase):
     # Upload this data:
     response = testClient.post('/fileapi/upload', data=data)
     # Check if this data is indeed correctly uploaded:
-    assert response.data == b'success'
+    file = Files.query.filter_by(filename=fileName).first()
+    assert response.data == f'Uploaded file with ids: [{file.id}]'.encode('utf-8')
     assert response.status_code == 200
     # Check if this subdirectory with the name of the userId does indeed exist now: 
     assert os.path.isdir(testClient.application.config['UPLOAD_FOLDER'])

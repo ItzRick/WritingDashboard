@@ -1,4 +1,4 @@
-from app.cohesionCheck import generateExplanation
+from app.feedback.generateFeedback.CohesionFeedback import CohesionFeedback
 from string import ascii_lowercase
 
 '''
@@ -18,12 +18,14 @@ def testGenerateFeedbackZeroWords(testClient, downloadNltk):
                     method.
         Attributes: 
             score: The score given for the cohesion score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
-    score = generateExplanation("")
+    feedbackObject = CohesionFeedback('', '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     assert score == None
 
-def testOneWordText(testClient, downloadNltk):
+def testOneWordTextFirst(testClient, downloadNltk):
     '''
         Test if a text consisting of only one word which is not a connective
         returns the correct feedback and score.
@@ -39,19 +41,22 @@ def testOneWordText(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = "Hello"
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("Your score for cohesion is 5.0.\nThe amount of "
         "variation of words you use is good. You have more than 90 percent "
         "variation in your text.\nYou don't have enough connectives in your "
         "text. You have a percentage of 0 in your text, ideally this would be "
         "9 percent.\nConnectives are words or phrases that link other "
         "linguistic units.")
-    assert score == (5.0, expected_feedback)
+    assert score == (5.0, [[-1, -1, -1, -1, 1, expected_feedback, '', []]])
+    assert feedbackObject.feedback == expected_feedback
 
-def testOneWordText(testClient, downloadNltk):
+def testOneWordTextSecond(testClient, downloadNltk):
     '''
         Test if a text consisting of only one word which is a connective
         returns the correct feedback and score.
@@ -67,17 +72,20 @@ def testOneWordText(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = "But"
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("Your score for cohesion is 5.0.\nThe amount of "
         "variation of words you use is good. You have more than 90 percent "
         "variation in your text.\nYou have too many connectives in your text. "
         "You have a percentage of 100 in your text, ideally this would be 9 "
         "percent.\nConnectives are words or phrases that link other linguistic"
         " units.")
-    assert score == (5.0, expected_feedback)
+    assert score == (5.0, [[-1, -1, -1, -1, 1, expected_feedback, '', []]])
+    assert feedbackObject.feedback == expected_feedback
 
 def testTTRHighest(testClient, downloadNltk):
     '''
@@ -94,6 +102,7 @@ def testTTRHighest(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = ""
@@ -101,11 +110,12 @@ def testTTRHighest(testClient, downloadNltk):
         for second_letter in ascii_lowercase:
             text += first_letter + second_letter + " "
     text += "big "*10
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("The amount of variation of words you use is good. "
         "You have more than 90 percent variation in your text.")
     assert score[0] == 4.99
-    assert score[1].splitlines()[1] == expected_feedback
+    assert feedbackObject.feedback.splitlines()[1] == expected_feedback
 
 def testTTRSecondHighest(testClient, downloadNltk):
     '''
@@ -123,15 +133,17 @@ def testTTRSecondHighest(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = "They are very big and that person is also bigger."
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("You used enough variation of words. You have in "
         "between 70 and 90 percent variation in your text. These are your most"
         " used words: \"be\", \"big\" and \"they\".")
     assert score[0] == 4.0
-    assert score[1].splitlines()[1] == expected_feedback
+    assert feedbackObject.feedback.splitlines()[1] == expected_feedback
 
 def testTTRSecondLowest(testClient, downloadNltk):
     '''
@@ -149,15 +161,17 @@ def testTTRSecondLowest(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = "They are very big. That person is bigger. He is the biggest."
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("You barely have enough variation of words. You have "
         "in between 50 and 70 percent variation in your text. These are your "
         "most used words: \"be\", \"big\" and \"they\".")
     assert score[0] == 3.33
-    assert score[1].splitlines()[1] == expected_feedback
+    assert feedbackObject.feedback.splitlines()[1] == expected_feedback
 
 def testTTRLowest(testClient, downloadNltk):
     '''
@@ -175,15 +189,17 @@ def testTTRLowest(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = "big "*51 + "hello this is a different text"
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("You did not use enough variation in terms of "
             "words. You have less than 50 percent variation in your text. "
             "These are your most used words: \"big\", \"hello\" and \"this\".")
     assert score[0] == 0.36
-    assert score[1].splitlines()[1] == expected_feedback
+    assert feedbackObject.feedback.splitlines()[1] == expected_feedback
 
 
 def testConnectivesHighest(testClient, downloadNltk):
@@ -202,14 +218,16 @@ def testConnectivesHighest(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = "They are very big, although he is the biggest."
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("The amount of connectives you used is good. You have"
         " a percentage of 11 in your text, ideally this would be 9 percent.")
     assert score[0] == 8.52
-    assert score[1].splitlines()[2] == expected_feedback
+    assert feedbackObject.feedback.splitlines()[2] == expected_feedback
 
 
 def testConnectivesSecondHighestFewConnectives(testClient, downloadNltk):
@@ -229,15 +247,17 @@ def testConnectivesSecondHighestFewConnectives(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = "However" + 16*" hey"
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("You could use more connectives in your text. "
         "You have a percentage of 6 in your text, ideally this would be 9 "
         "percent.")
     assert score[0] == 4.78
-    assert score[1].splitlines()[2] == expected_feedback
+    assert feedbackObject.feedback.splitlines()[2] == expected_feedback
 
 def testConnectivesSecondHighestManyConnectives(testClient, downloadNltk):
     '''
@@ -256,16 +276,18 @@ def testConnectivesSecondHighestManyConnectives(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = ("Despite the fact that they are very big, unfortunantely he is the"
         " biggest all in all.")
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("You could use less connectives in your text. You "
         "have a percentage of 12 in your text, ideally this would be 9 "
         "percent.")
     assert score[0] == 7.73
-    assert score[1].splitlines()[2] == expected_feedback
+    assert feedbackObject.feedback.splitlines()[2] == expected_feedback
 
 def testConnectivesSecondLowestFewConnectives(testClient, downloadNltk):
     '''
@@ -284,15 +306,17 @@ def testConnectivesSecondLowestFewConnectives(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = "However" + 25*" hey"
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("You should use more connectives in your text. You "
         "have a percentage of 4 in your text, ideally this would be 9 "
         "percent.")
     assert score[0] == 3.17
-    assert score[1].splitlines()[2] == expected_feedback
+    assert feedbackObject.feedback.splitlines()[2] == expected_feedback
 
 def testConnectivesSecondLowestManyConnectives(testClient, downloadNltk):
     '''
@@ -311,15 +335,17 @@ def testConnectivesSecondLowestManyConnectives(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = "However" + 6*" hey"
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("You should use less connectives in your text. You "
         "have a percentage of 14 in your text, ideally this would be 9 "
         "percent.")
     assert score[0] == 4.1
-    assert score[1].splitlines()[2] == expected_feedback
+    assert feedbackObject.feedback.splitlines()[2] == expected_feedback
 
 def testConnectivesLowestFewConnectives(testClient, downloadNltk):
     '''
@@ -337,37 +363,15 @@ def testConnectivesLowestFewConnectives(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.    
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = "They are very big."
-    score = generateExplanation(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.genFeedback()
     expected_feedback = ("You don't have enough connectives in your text. You "
         "have a percentage of 0 in your text, ideally this would be 9 "
         "percent.")
     assert score[0] == 5.0
-    assert score[1].splitlines()[2] == expected_feedback
+    assert feedbackObject.feedback.splitlines()[2] == expected_feedback
 
-def testConnectivesLowestManyConnectives(testClient, downloadNltk):
-    '''
-        Test if a text with a connectives score lower than 5 and an index score
-        higher than 0.09 returns the correct feedback and score.
-        This specific text has an index score of 1.0, a connective score of
-        0.0 and a TTR score of 3.33, thus resulting in a score of 1.67.
-        Hence, the feedback on connective score should be that of < 5 and
-        index score > 0.09.
-        Arguments: 
-            testClient: The test client we test this for.   
-            downloadNltk: Function needed to download nltk corpora used in this
-                    method.         
-        Attributes: 
-            text: Input text for the test.            
-            score: The scores given for the cohesion score.
-            expected_feedback: The expected feedback string.
-    '''
-    del testClient, downloadNltk
-    text = "Although, although although."
-    score = generateExplanation(text)
-    expected_feedback = ("You have too many connectives in your text. You have"
-        " a percentage of 100 in your text, ideally this would be 9 percent.")
-    assert score[0] == 1.67
-    assert score[1].splitlines()[2] == expected_feedback
