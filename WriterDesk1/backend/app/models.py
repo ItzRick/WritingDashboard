@@ -249,18 +249,6 @@ class Clicks(db.Model):
         self.eventType = eventType
         self.actionId = actionId
 
-    def createEmptyUser(self):
-        '''
-            Edit a user that by setting all attributes to None which is used in
-            the retrieval of user data when the user id is not found in the 
-            database.
-        '''
-        self.timestamp = None
-        self.url = None
-        self.eventType = None
-        self.actionId = None
-        self.documentId = None
-
     def __repr__(self):
         return '<Clicks {}>'.format(self.userId, self.clickId)
 
