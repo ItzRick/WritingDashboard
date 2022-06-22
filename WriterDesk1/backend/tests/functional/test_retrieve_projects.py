@@ -27,7 +27,7 @@ def testRetrieveNoProjects(testClient, initDatabaseEmpty):
     # We do not add any projects to the database
 
     # We try to retrieve the projects of the user
-    response = testClient.get('/projectapi/viewprojectsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewProjectsOfUser', query_string=data)
     
     # Check if the expected response has the correct status code    
     assert response.status_code == 4041
@@ -63,7 +63,7 @@ def testRetrieveNoProjectsOfUser(testClient, initDatabaseEmpty):
     db.session.commit()
 
     # We try to retrieve the projects of the user
-    response = testClient.get('/projectapi/viewprojectsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewProjectsOfUser', query_string=data)
 
     # Check if the expected response has the correct status code
     assert response.status_code == 4041
@@ -99,7 +99,7 @@ def testRetrieveSingleProjectOfUser(testClient, initDatabaseEmpty):
     db.session.commit()
 
     # We try to retrieve the projects of the user
-    response = testClient.get('/projectapi/viewprojectsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewProjectsOfUser', query_string=data)
 
     # Check if the expected response has the correct status code
     assert response.status_code == 200
@@ -145,7 +145,7 @@ def testRetrieveMultipleProjectsOfUser(testClient, initDatabaseEmpty):
     db.session.commit()
 
     # We try to retrieve the projects of the user
-    response = testClient.get('/projectapi/viewprojectsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewProjectsOfUser', query_string=data)
 
     # Check if the expected response has the correct status code
     assert response.status_code == 200
@@ -199,7 +199,7 @@ def testRetrieveOnlyProjectsOfUser(testClient, initDatabaseEmpty):
     db.session.commit()
 
     # We try to retrieve the projects of the user
-    response = testClient.get('/projectapi/viewprojectsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewProjectsOfUser', query_string=data)
 
     # Check if the expected response has the correct status code    
     assert response.status_code == 200

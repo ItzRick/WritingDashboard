@@ -33,7 +33,7 @@ def testRetrieveNoParticipants(testClient, initDatabaseEmpty):
     db.session.commit()
 
     # We try to retrieve the participants of the user
-    response = testClient.get('/projectapi/viewparticipantsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
     
     # Check if the expected response has the correct status code    
     assert response.status_code == 4041
@@ -73,7 +73,7 @@ def testRetrieveNoParticipantsOneProject(testClient, initDatabaseEmpty):
     db.session.commit()
 
     # We try to retrieve the participants of the user
-    response = testClient.get('/projectapi/viewparticipantsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
     
     # Check if the expected response has the correct status code    
     assert response.status_code == 4041
@@ -121,7 +121,7 @@ def testRetrieveNoParticipantsBuExistOtherParticipants(testClient, initDatabaseE
     db.session.commit()
 
     # We try to retrieve the participants of the user
-    response = testClient.get('/projectapi/viewparticipantsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
     
     # Check if the expected response has the correct status code    
     assert response.status_code == 4041
@@ -172,7 +172,7 @@ def testRetrieveNoParticipantsButExistOwnProject(testClient, initDatabaseEmpty):
     db.session.commit()
 
     # We try to retrieve the participants of the user
-    response = testClient.get('/projectapi/viewparticipantsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
     
     # Check if the expected response has the correct status code    
     assert response.status_code == 4041
@@ -216,7 +216,7 @@ def testRetrieveSingleProjectSingleUserOfUserNoOther(testClient, initDatabase):
     db.session.commit()
 
     # We try to retrieve the projects of the user
-    response = testClient.get('/projectapi/viewparticipantsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
 
     # Check if the expected response has the correct status code
     assert response.status_code == 200
@@ -284,7 +284,7 @@ def testRetrieveSingleProjectMultipleParticipantsOfUserNoOther(testClient, initD
     db.session.commit()
 
     # We try to retrieve the projects of the user
-    response = testClient.get('/projectapi/viewparticipantsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
 
     # Check if the expected response has the correct status code
     assert response.status_code == 200
@@ -368,7 +368,7 @@ def testRetrieveSingleProjectSingleParticipantOfUserWithOther(testClient, initDa
     db.session.commit()
 
     # We try to retrieve the projects of the user
-    response = testClient.get('/projectapi/viewparticipantsofuser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
 
     # Check if the expected response has the correct status code
     assert response.status_code == 200

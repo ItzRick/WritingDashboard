@@ -69,7 +69,7 @@ const Participants = () => {
           return alert(JSON.stringify(thisRow, null, 4));
         };
 
-        return <div><IconButton onClick={(e) => { showDeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton></div>;
+        return <div><IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton></div>;
       }
     }
   ];
@@ -115,7 +115,7 @@ const Participants = () => {
     const headers = {
       "Content-Type": "application/json"
     }
-    axios.post(`${BASE_URL}/addparticipants`, data, { headers: authHeader() }).then(response => {
+    axios.post(`${BASE_URL}/addParticipants`, data, { headers: authHeader() }).then(response => {
       // Post request is successful, participants are registered
       // TODO: reload participant list 
       const fileName = response.headers["custom-filename"];
@@ -196,7 +196,7 @@ const Participants = () => {
    * @param {event} e: event data pushed with the call, not required
    * @param {params} params: params of the row where the current participant that is removed is in, to be able to remove the correct user.
    */
-  const showDeleteProjectDialog = (e, params) => {
+  const showdeleteProjectDialog = (e, params) => {
     setDeleteId(params.id)  // Set id to be deleted
     setShowDeleteDialog(true);  // Show confirmation dialog
   }

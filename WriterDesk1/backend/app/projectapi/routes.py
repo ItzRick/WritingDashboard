@@ -12,7 +12,7 @@ from app import db
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import current_user
 
-@bp.route('/addparticipants', methods=["POST"])
+@bp.route('/addParticipants', methods=["POST"])
 @jwt_required()
 def addParticipantsToExistingProject():
     '''
@@ -151,7 +151,7 @@ def DeleteAllFilesFromProject(projectIds):
                 print('Folder not found')
     return 'success', 200
 
-@bp.route('/viewparticipantsofuser', methods=["GET"])
+@bp.route('/viewParticipantsOfUser', methods=["GET"])
 def viewParticipantsOfUser():
     '''
     This function handles the showing the participants that
@@ -170,7 +170,7 @@ def viewParticipantsOfUser():
         return 'researcher has no participants', 4041
     return jsonify(participants)
 
-@bp.route('/viewprojectsofuser', methods=["GET"])
+@bp.route('/viewProjectsOfUser', methods=["GET"])
 def viewProjectsOfUser():
     '''
     This function handles the showing the projects that

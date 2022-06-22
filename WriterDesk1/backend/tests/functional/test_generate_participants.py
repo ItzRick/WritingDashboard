@@ -97,7 +97,7 @@ def testGenerateParticipantPassword(testClient, initDatabase):
     assert any(x.islower() for x in password) 
     assert any(x.isdigit() for x in password)
 
-def testAddParticipantsValid(testClient, initDatabase):
+def testaddParticipantsValid(testClient, initDatabase):
     '''
         Test if adding participants works correctly with an existing project.
         Attributes:
@@ -126,14 +126,14 @@ def testAddParticipantsValid(testClient, initDatabase):
         'projectid': project.id,
     }
     access_token = loginHelper(testClient, 'Pietje', 'Bell')
-    response = testClient.post('/projectapi/addparticipants', json=data, headers={"Content-Type": "application/json", "Authorization": "Bearer " + access_token})
+    response = testClient.post('/projectapi/addParticipants', json=data, headers={"Content-Type": "application/json", "Authorization": "Bearer " + access_token})
 
     # Check if particpants were added
     assert response.status_code == 200
     ptp = ParticipantToProject.query.filter_by(projectId=project.id).all()
     assert len(ptp) == 2
 
-def testAddParticipantsInvalid(testClient, initDatabase):
+def testaddParticipantsInvalid(testClient, initDatabase):
     '''
         Test if adding participants fails correctly with a non-existing project.
         Attributes:
@@ -168,7 +168,7 @@ def testAddParticipantsInvalid(testClient, initDatabase):
         'projectid': projectId,
     }
     access_token = loginHelper(testClient, 'Pietje', 'Bell')
-    response = testClient.post('/projectapi/addparticipants', json=data, headers={"Content-Type": "application/json", "Authorization": "Bearer " + access_token})
+    response = testClient.post('/projectapi/addParticipants', json=data, headers={"Content-Type": "application/json", "Authorization": "Bearer " + access_token})
 
     # Check if particpants were not added
     assert response.status_code == 400
