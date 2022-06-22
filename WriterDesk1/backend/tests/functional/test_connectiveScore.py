@@ -1,4 +1,4 @@
-from app.getConnectiveScore import getConnectiveScore
+from app.feedback.generateFeedback.CohesionFeedback import CohesionFeedback
 
 '''
     The following tests concern the function getConnectiveScore. 
@@ -17,7 +17,8 @@ def testConZeroWords(testClient):
             score: The scores given for the connective and index score.
     '''
     del testClient
-    score = getConnectiveScore("")
+    feedbackObject = CohesionFeedback('', '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore("")
     assert score == None
 
 def testConOneSentencesNoConnectives(testClient):
@@ -39,7 +40,8 @@ def testConOneSentencesNoConnectives(testClient):
     text = "They are very big."    
     index = 0/4
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
-    score = getConnectiveScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(text)
     assert score == (expected, index)
 
 def testConThreeSentencesNoConnective(testClient):
@@ -62,7 +64,8 @@ def testConThreeSentencesNoConnective(testClient):
     text = "They are very big. That person is bigger. He is the biggest."
     index = 0
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
-    score = getConnectiveScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(text)
     assert score == (expected,index)
 
 def testConOneSentenceSingleConnective(testClient):
@@ -85,7 +88,8 @@ def testConOneSentenceSingleConnective(testClient):
     text = "They are very big, although he is the biggest."
     index = 1/9
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
-    score = getConnectiveScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(text)
     assert score == (expected, index)
 
 def testConOneSentenceMultipleConnectives(testClient):
@@ -109,7 +113,8 @@ def testConOneSentenceMultipleConnectives(testClient):
         " biggest all in all.")    
     index = 2/16
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
-    score = getConnectiveScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(text)
     assert score == (expected, index)
 
 def testConMoreSentencesSingleConnective(testClient):
@@ -132,7 +137,8 @@ def testConMoreSentencesSingleConnective(testClient):
     text = "They are very big. Although he is the biggest."
     index = 1/9
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
-    score = getConnectiveScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(text)
     assert score == (expected, index)
 
 def testConMoreSentencesMultipleConnectives(testClient):
@@ -156,7 +162,8 @@ def testConMoreSentencesMultipleConnectives(testClient):
         " biggest all in all.")
     index = 2/16
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
-    score = getConnectiveScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(text)
     assert score == (expected, index)
 
 def testConOneSentencesAllConnectives(testClient):
@@ -178,7 +185,8 @@ def testConOneSentencesAllConnectives(testClient):
     text = "Although, although although."
     index = 3/3
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
-    score = getConnectiveScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(text)
     assert score == (expected, index)
 
 def testConMoreSentencesAllConnectives(testClient):
@@ -200,7 +208,8 @@ def testConMoreSentencesAllConnectives(testClient):
     text = "Although, although although. "*4
     index = 12/12
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
-    score = getConnectiveScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(text)
     assert score == (expected, index)
 
 def testBigTextMinScore(testClient): 
@@ -224,7 +233,8 @@ def testBigTextMinScore(testClient):
     text = "Although "*50 + "They are very big."
     index = 50/54
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
-    score = getConnectiveScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(text)
     assert score == (expected, index)
 
 def test_con_windowsize_min_score(testClient): 
@@ -248,5 +258,6 @@ def test_con_windowsize_min_score(testClient):
     text = "They are very big. "*15 + "although although although"
     index = 3/63
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
-    score = getConnectiveScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(text)
     assert score == (expected, index)

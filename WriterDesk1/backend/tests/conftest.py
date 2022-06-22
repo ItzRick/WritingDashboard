@@ -114,7 +114,7 @@ def initDatabase(testClient):
     yield   # This is where the testing happens!
     
     # Empties the database after the application has finished testing:
-    db.session.commit()
+    db.session.close()
     db.drop_all()
 
 @pytest.fixture(scope='function')

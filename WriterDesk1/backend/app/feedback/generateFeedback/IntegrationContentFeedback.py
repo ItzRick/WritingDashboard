@@ -39,20 +39,20 @@ class IntegrationContentFeedback(BaseFeedback):
         links, links_doi, numSources = self.getUrlsSources(self.referencesText)
         # Retrieve the words in a set that occur in at least one reference and are not in englishStopwords, 
         # and the number of source which could be looked at:
-        wordsReferences, numSourcesUsed = self.getWordsSources(links, links_doi, self.englishStopwords, self.userId)
+        wordsReferences, numSourcesUsed = self.getWordsSources(links, links_doi)
         # Get the dictionary of the words, which are not in englishStopwords and the number of words in the text:
-        wordsFromText, numWordsText = self.wordsText(self.text, self.englishStopwords)
+        wordsFromText, numWordsText = self.wordsText(self.text)
         # Count the number of paragraphs in the text:
         numParagraphs = self.countParagraphs(self.text)
         # If the words of at least one source could be retrieved:
         if numSourcesUsed > 0: 
             # Calculate the score and get the explanation using the calcScoreAndExplanationSourcesDownloaded method:
-            self.score, explanation = self.calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsReferences, numWordsText, numSources, numParagraphs)
+            self.scoreIntegration, self.explanation = self.calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsReferences, numWordsText, numSources, numParagraphs)
         else: 
             # Else, calculate the score and get the explanation using the calcScoreAndExplanationSourcesNotDownloaded method:
-            self.score, explanation = self.calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
-        self.addSingleExplanation(-1, 1, -1, -1, 3, explanation, '', [])
-        return self.score, self.explanations
+            self.scoreIntegration, self.explanation = self.calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
+        self.addSingleExplanation(-1, 1, -1, -1, 3, self.explanation, '', [])
+        return self.scoreIntegration, self.explanations
 
         
     def calcScoreAndExplanationSourcesDownloaded(self, wordsFromText, wordsReferences, numWordsText, numSources, numParagraphs):
@@ -162,7 +162,7 @@ class IntegrationContentFeedback(BaseFeedback):
                 percentage += wordsFromText[word] / numWordsText
         return percentage
 
-    def getWordsSources(self, links, links_doi, englishStopwords, userId):
+    def getWordsSources(self, links, links_doi):
         '''
             Get the words from the sources as given in links and links_doi by applying the 
             wordsSource, scrapePage and textDoi methods.
@@ -183,20 +183,20 @@ class IntegrationContentFeedback(BaseFeedback):
             # Scrape the text of the page from this link:
             text = scrapePage(link)
             # Add the words from this text if they are not in englishStopwords and not in the set already and increment the count:
-            wordsReferences = self.wordsSource(text, wordsReferences, englishStopwords)
+            wordsReferences = self.wordsSource(text, wordsReferences)
             count += 1
         # For each link_doi in links_doi:
         for link_doi in links_doi:
             # Get the text of the pdf from this link via the textDoi method:
-            text = self.textDoi(link_doi, userId)
+            text = self.textDoi(link_doi, self.userId)
             # If there is an actual test returned increment the count and add the words not in the set already and not in englishStopwords:
             if text != '':
                 count += 1
-                wordsReferences = self.wordsSource(text, wordsReferences, englishStopwords)
+                wordsReferences = self.wordsSource(text, wordsReferences)
         
         return wordsReferences, count
 
-    def wordsSource(self, text, wordsWoStopwords, englishStopwords):
+    def wordsSource(self, text, wordsWoStopwords):
         '''
             Gets the words without stopwords as in the nltk stopwords english library 
             from a single source, as given in text and add this to the wordsWoStopwords set.
@@ -217,12 +217,12 @@ class IntegrationContentFeedback(BaseFeedback):
         tokens = word_tokenize(text.lower())
         # For each word, if it is not in englishStopwords:
         for t in tokens:
-            if t not in englishStopwords:
+            if t not in self.englishStopwords:
                 # Add this word to the text:
                 wordsWoStopwords.add(t)
         return wordsWoStopwords
 
-    def wordsText(self, text, englishStopwords):
+    def wordsText(self, text):
         '''
             Get the words inside the text (without English stopwords as in the nltk library stopwords corpus)
             inside a dictionary with the number of occurrences of each words. Counts the total number of words 
@@ -248,7 +248,7 @@ class IntegrationContentFeedback(BaseFeedback):
         tokens = word_tokenize(text.lower())
         # For each word, if it is not in englishStopwords:
         for t in tokens:
-            if t not in englishStopwords:
+            if t not in self.englishStopwords:
                 # Count this word:
                 count += 1
                 # If the word is not in the dictionary yet, set the count to 1, else increment the count by 1:

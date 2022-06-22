@@ -3,6 +3,8 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 from collections import Counter
 from app.feedback.nltkDownload import downloadNltkCohesion
+import os
+
 class CohesionFeedback(BaseFeedback):
 
     def __init__(self, text, referencesText, fileId, userId, filePath):
@@ -143,10 +145,10 @@ class CohesionFeedback(BaseFeedback):
 
         # The resulting feedback, containing the overall score, feedback on how to
         # improve your score and a small explanation on what connectives are.
-        feedback = scoreExplanation + "\n" + TTRScoreExplanation + "\n" + \
+        self.feedback = scoreExplanation + "\n" + TTRScoreExplanation + "\n" + \
             connectivesScoreExplanation + "\n" + connectivesExplanation
 
-        self.addSingleExplanation(-1, -1, -1, -1, 1, feedback, '', [])
+        self.addSingleExplanation(-1, -1, -1, -1, 1, self.feedback, '', [])
 
         return self.scoreCohesion, self.explanations
 
@@ -180,8 +182,9 @@ class CohesionFeedback(BaseFeedback):
         if text == "":
             return None
 
+        BASEDIR = os.path.abspath(os.path.dirname(__file__))
         # Array containing a list of connectives, from the TAACO user guide.
-        with open('CohesionConnectives.txt', 'rt') as fd:
+        with open(os.path.join(BASEDIR, 'CohesionConnectives.txt'), 'rt') as fd:
             connectives = fd.read().split(', ')
 
         # Function that splits text into tokens.
