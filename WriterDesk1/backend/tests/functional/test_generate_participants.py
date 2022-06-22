@@ -97,7 +97,7 @@ def testGenerateParticipantPassword(testClient, initDatabase):
     assert any(x.islower() for x in password) 
     assert any(x.isdigit() for x in password)
 
-def testaddParticipantsValid(testClient, initDatabase):
+def testAddParticipantsValid(testClient, initDatabase):
     '''
         Test if adding participants works correctly with an existing project.
         Attributes:
@@ -133,7 +133,7 @@ def testaddParticipantsValid(testClient, initDatabase):
     ptp = ParticipantToProject.query.filter_by(projectId=project.id).all()
     assert len(ptp) == 2
 
-def testaddParticipantsInvalid(testClient, initDatabase):
+def testAddParticipantsInvalid(testClient, initDatabase):
     '''
         Test if adding participants fails correctly with a non-existing project.
         Attributes:
