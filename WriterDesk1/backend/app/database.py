@@ -181,43 +181,6 @@ def postParticipantToProject(userId, projectId):
     db.session.add(dataTuple)
     db.session.flush()
 
-def getParticipantsByResearcher(user):
-    '''
-        This function handles the query for retrieving a user's participants.
-        Attributes:
-            participantIds: Ids for participants in the projects created by the 
-            user.
-            participantsOfProject: Participants in the project.
-            participantInfo: userId and ProjectId of participants in the 
-            projects created by the user.
-        Arguments:
-            user: id of the user who's files need to be retrieved
-        Return:
-            projectIds: Project ids of projects created by the user.
-            participantInformation: userId and ProjectId of participant of 
-            projects created by the user.
-    '''
-    # Retrieve the projects of the user
-    projectIds = getProjectsByResearcher(user)
-
-    # Define the array for the participants ids and the participant information
-    participantIds = []
-    participantInformation = []
-
-    # Retrieve the ids of the participants in all projects of the user
-    for projectId in projectIds:
-        participantsOfProject = db.session.query(
-            ParticipantToProject).filter_by(projectId=projectId)
-        participantIds.append(participantsOfProject)
-
-    # Retrieve the information of the participants in all projects of the user
-    for participantId in participantIds:
-        participantInfo = db.session.query(User).filter_by(id=participantId)
-        participantInformation.append(participantInfo)
-
-    # Return the information of the participants in all projects of the user
-    return projectIds, participantInformation
-
 def getProjectsByResearcher(user):
     '''
         This function handles the query for retrieving a user's projects.
