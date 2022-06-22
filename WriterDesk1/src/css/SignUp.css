@@ -1,8 +1,0 @@
-.userDataLinkPopup {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.userDataLinkPopup:hover {
-    background-color: rgba(68, 116, 157, 0.04)
-}

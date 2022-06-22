@@ -1,5 +1,4 @@
 from nltk.corpus import stopwords
-from app.feedback.feedback import getEnglishStopwords
 
 def testEnglishstopwords(englishStopwords):
     '''
@@ -33,16 +32,4 @@ def testEnglishstopwordsManually(englishStopwords):
     'didn', "didn't", 'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', "haven't", 'isn', "isn't", 'ma', 
     'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 'shouldn', "shouldn't", 'wasn', "wasn't", 
     'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't"]
-    assert englishStopwords == english_stopwords
-
-def testMemoizeStopwords(testClient, englishStopwords):
-    '''
-        Test the getEnglishStopwords method from the app.feedback.feedback class. This method memoizes the words. 
-        Arguments: 
-            englishStopwords: English stopwords downloaded from nltk from conftest.py.
-        Arguments:
-            testClient:  The test client we test this for. 
-    ''' 
-    del testClient
-    english_stopwords = getEnglishStopwords()
     assert englishStopwords == english_stopwords

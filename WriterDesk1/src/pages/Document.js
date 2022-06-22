@@ -13,9 +13,6 @@ import "../css/styles.css";
 import "../css/Document.css";
 import Plot from 'react-plotly.js';
 
-// tracking
-import { useContext } from 'react';
-import { TrackingContext } from '@vrbo/react-event-tracking';
 
 /**
  *
@@ -40,8 +37,6 @@ function Document() {
 
   const [explanations, setExplanations] = useState([]);
 
-  // context as given by the Tracking Provider
-  const tc = useContext(TrackingContext);
 
   useEffect(() => {
     setTitle('Document');
@@ -65,7 +60,7 @@ function Document() {
     const url = 'https://127.0.0.1:5000/fileapi/getFileById';
 
     // Make the call to the backend:
-    axios.get(url, { params: { fileId: fileId } })
+    axios.get(url, {params: {fileId: fileId}})
       .then((response) => {
         setPath(response.data.path); // Set path of file given by file id
         setType(response.data.filetype.substring(1)); // Set file type without '.'
@@ -82,7 +77,7 @@ function Document() {
     const url = 'https://127.0.0.1:5000/scoreapi/getScores';
 
     // Make the call to the backend:
-    axios.get(url, { params: { fileId: fileId } })
+    axios.get(url, {params: {fileId: fileId}})
       .then((response) => {
         setScoreStyle(response.data.scoreStyle);
         setScoreStructure(response.data.scoreStructure);
@@ -100,7 +95,7 @@ function Document() {
     const url = 'https://127.0.0.1:5000/scoreapi/getExplanationForFile';
 
     // Make the call to the backend:
-    axios.get(url, { params: { fileId: fileId } })
+    axios.get(url, {params: {fileId: fileId}})
       .then((response) => {
         let explanationsArray = []  // Array of all explanations in the response from the backend call
         for (let i = 0; i < response.data.length; i++) {  // Loop over all explanations
@@ -114,7 +109,6 @@ function Document() {
 
   /**
    * Function to show all the explanation boxes that are being clicked.
-   * In addition, notify the tracker of a click event
    * @param {Object} e - Click event
    * @param {Object} coords - Array of the coordinates of the mistake being clicked
    */
@@ -133,16 +127,7 @@ function Document() {
       let bottom = explanations[i].Y2; // y2 of mistake[i] coordinates
 
       //Set showTextbox true for every mistake that is clicked
-      const hasBeenClicked = (left <= x) && (x <= right) && (top <= y) && (y <= bottom);
-      newArrShowTextbox[i] = hasBeenClicked;
-      //handle tracking
-      if (tc.hasProvider && hasBeenClicked) {
-        // set trigger with explanations type
-        tc.trigger({
-            eventType: 'click.highlight',
-            buttonId: explanations[i].type, 
-        })
-      }
+      newArrShowTextbox[i] = (left <= x) && (x <= right) && (top <= y) && (y <= bottom);
     }
     setShowTextbox(newArrShowTextbox); // Overwrite showTextbox
   }
@@ -173,12 +158,6 @@ function Document() {
     setShowTextbox(newArrShowTextbox); // Overwrite showTextbox
   }
 
-  // tracking
-  const eventFields = {
-    location: 'searchbar',
-    name: 'SomeComponent'
-  };
-  const eventOptions = { asynchronous: 'true' };
 
 
   /**
@@ -190,8 +169,8 @@ function Document() {
    * @returns TextBoxExplanation component
    */
   const TextBoxExplanation = (props) => {
-    return (<>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    return (
+      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
         <div className={showTextbox[props.number] ? 'textBoxExpl' : 'hidden'} id={'textBoxExpl' + props.number}
           style={{ backgroundColor: typeToColor(props.type), borderColor: typeToColor(props.type) }}>
           <Typography className='textBoxType' style={{ color: typeToColor(props.type), fontSize: 'calc(8px + 0.5vw)' }}>
@@ -233,7 +212,6 @@ function Document() {
           </Typography>
         </div>
       </div>
-    </>
     );
   };
 
@@ -264,7 +242,7 @@ function Document() {
    */
   const typeToColor = (type) => {
     if (type === 0) { // Language and Style
-      return '#785EF080'
+      return '#648FFF80'
     } else if (type === 1) { // Cohesion
       return '#FE610080'
     } else if (type === 2) { // Structure
@@ -282,26 +260,22 @@ function Document() {
    */
   const typeToName = (type) => {
     if (type === 0) {
-      return 'Language & Style'
+      return 'Language and Style'
     } else if (type === 1) {
       return 'Cohesion'
     } else if (type === 2) {
       return 'Structure'
     } else {
-      return 'Source Integration & Content'
+      return 'Source Integration and Content'
     }
   };
 
 
   return (
     <>
-      <div className="all-page-container" id="all-page-container" style={{ width: '50%' }}>
+      <div className="all-page-container" id="all-page-container" style={{width: '50%'}}>
         {/** potentially convert document to pdf and show document on page */}
-        <AllPagesPDFViewer 
-          pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`} 
-          docId={location.state.fileId}
-          docName={location.state.fileName}
-        />
+        <AllPagesPDFViewer pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`} />
         {explanations.map((explanation, i) =>
           <ClickableTextDiv
             key={explanation.explId} number={i}
@@ -309,13 +283,13 @@ function Document() {
           />
         )}
       </div>
-      <div className='rightFloat' style={{ width: '50%' }}>
+      <div className='rightFloat' style={{width: '50%'}}>
         {/* The barchart for the scores of this tool: */}
         <Plot
           data={[
             {
               // Order of the bars is as follows: first source integration, then cohesion, then structure, then language & style:
-              x: ['Language & Style', 'Cohesion', 'Structure', 'Source Integration & <br> Content'],
+              x: ['Language & style', 'Cohesion', 'Structure', 'Source integration & <br> content'],
               y: [scoreStyle, scoreCohesion, scoreStructure, scoreIntegration],
               marker: { color: ['#785EF0', '#FE6100', '#FFB000', '#DC267F'] },
               type: 'bar',
@@ -323,16 +297,11 @@ function Document() {
           ]}
           // The title of the char is 'scores':
           layout={{
-            // title: 'Scores',
-            margin: {l: 50, r: 50, b: 40, t: 30, pad: 4},
+            title: 'Scores',
             // Scores can be between 0 and 10, so the y-axis range is set accordingly:
             yaxis: {
               range: [0, 10],
-              fixedrange: true,
               type: 'linear'
-            },
-            xaxis: {
-                fixedrange: true,
             }
           }}
           // Do not display the plotly modebar:
@@ -345,23 +314,8 @@ function Document() {
           }}
           // So the chart can resize:
           useResizeHandler={true}
-          style={{ width: '100%', height: '300px' }}
-          onHover={e => {
-            e.event.target.style.cursor = 'pointer' // Changes cursor on hover to pointer
-          }}
-          onUnhover={e => {
-            e.event.target.style.cursor = 'default' // Change cursor back on unhover
-          }}
+          style={{ width: '100%', height: '50%' }}
         />
-
-        <hr className="horizontalline"/>
-
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-         <button className="buttonShowExplanationsStyle" onClick={e => showAllExplanationsOfType(0)}>Language & Style</button>
-        <button className="buttonShowExplanationsCohesion" onClick={e => showAllExplanationsOfType(1)}>Cohesion</button>
-        <button className="buttonShowExplanationsStructure" onClick={e => showAllExplanationsOfType(2)}>Structure</button>
-        <button className="buttonShowExplanationsIntegration" onClick={e => showAllExplanationsOfType(3)}>Source Integration & Content</button>
-        </div>
 
         <br />
 

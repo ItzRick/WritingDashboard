@@ -5,7 +5,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy.inspection import inspect
 
-class User(db.Model):
+# Class to turn database models into dictionaries,
+# which are able to be turned into json
+class Serializer(object):
+    def serialize(self):
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+    @staticmethod
+    def serializeList(l):
+        return [m.serialize() for m in l]
+
+class User(db.Model, Serializer):
     '''
         Declare user model containing usernames and passwords (hashed), we use single table inheritance for different types of users.
         Cascade makes sure that if a User is removed, related files instances in the db are also removed
@@ -14,33 +24,34 @@ class User(db.Model):
             id: Unique primary key User ID 
             username: email address or username from user
             passwordHash: hashed password from user, hashed using werkzeug.security
-            trackable: whether or not the user wants to be tracked. 
     '''
     __tablename__ = "user"
     role = db.Column(db.String(32))
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), index=True, unique=True)
     passwordHash = db.Column(db.String(128))
-    trackable = db.Column(db.Boolean, default=True)
 
-    def __init__(self, username: str, password_plaintext: str, role: str ='user', trackable: bool = True):
+    def __init__(self, username: str, password_plaintext: str, role: str ='user'):
         ''' 
             Create new user, use set_password to create hashed password for plaintext password
             Arguments:
                 username: Username of new user
                 password_plaintext: Password (to be hashed) for new user
-                role: Role of new user, standard is: 'user'
-                trackable: whether the user wants to be tracked or not  
+                role: Role of new user, standard is: 'user'        
         '''
         self.role = role
         self.username = username
         self.set_password(password_plaintext)
-        self.trackable = trackable
+        # self.id = 123 # Activate me together with initialSetup() in fileapi > uploadfile() # TODO remove before deploy
 
     def serializeUser(self):
         dict = {}
         for c in inspect(self).attrs.keys():
+<<<<<<< HEAD
             if not c in ['file', 'click', 'participant', 'researcher']:
+=======
+            if not c == 'file':
+>>>>>>> parent of 9ff9c56 (I just want to view other branches but VS Code is hard - Merge branch 'manageParticipants' of https://github.com/ItzRick/SEP2021 into manageParticipants)
                 dict[c] =  getattr(self, c)
         return dict
 
@@ -52,7 +63,6 @@ class User(db.Model):
     researcher = db.relationship('Projects', backref='projectOwner', lazy='dynamic', cascade='all,delete')
     participant = db.relationship('ParticipantToProject', backref='participanttoproject', lazy=True, cascade='all,delete')
     file = db.relationship('Files', backref='owner', lazy='dynamic', cascade='all,delete')
-    click = db.relationship('Clicks', backref='clicker', lazy='dynamic', cascade='all,delete')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -88,13 +98,6 @@ class Files(db.Model):
         for c in inspect(self).attrs.keys():
             if not c == 'scores' and not c == 'explanations' and not c == 'owner':
                 dict[c] =  getattr(self, c)
-            elif c == 'scores':
-                for scores in self.scores.all():
-                    for d in inspect(scores).attrs.keys():
-                        if d != 'fileId' and d != 'scoredFile': 
-                            attr = getattr(scores, d)
-                            if attr >= 0:
-                                dict[d] = getattr(scores, d)
         return dict
 
     @staticmethod
@@ -108,7 +111,7 @@ class Files(db.Model):
     def __repr__(self):
         return '<Files {}>'.format(self.filename)
 
-class ParticipantToProject(db.Model):
+class ParticipantToProject(db.Model, Serializer):
     '''
         Model containing user id's and project id's, linking a participant to a research project.
         Attributes:
@@ -120,23 +123,15 @@ class ParticipantToProject(db.Model):
     __tablename__ = "participanttoproject"
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, autoincrement=False)
     projectId = db.Column(db.Integer, db.ForeignKey('projects.id'))
+    
+    # relationships
+    participant = db.relationship('User', backref='participanttoproject', lazy=True, cascade='all,delete')
+    project = db.relationship('Projects', backref='participanttoproject', lazy=True, cascade='all,delete')
 
     def __init__(self, userId: int, projectId: int):
-        '''
-            Create new tuple, linking a participant to a project
-            Arguments:
-                userId: id of the participant
-                projectId: id of the research project
-        '''
+        ''' Create new tuple'''
         self.userId = userId
         self.projectId = projectId
-
-    def serializeParticipantToProject(self):
-        dict = {}
-        for c in inspect(self).attrs.keys():
-            if not c == 'participant' and not c == 'project':
-                dict[c] =  getattr(self, c)
-        return dict
 
     def __repr__(self):
         return '<ParticipantToProject {}>'.format(self.userId)
@@ -154,7 +149,7 @@ class Scores(db.Model):
             scoreIntegration: Score for Source Integration and Content
     '''
     fileId = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
-    # Scores are numeric values with 2 decimals before and 2 decimals after the point. 
+    # Scores are numeric values with 2 decimals before and 2 decimals after the point.
     # Thus, allowing us at least values between 10.00 and 0.00
     scoreStyle       = db.Column(db.Numeric(4,2), unique=False, default=None)
     scoreCohesion    = db.Column(db.Numeric(4,2), unique=False, default=None)
@@ -162,11 +157,11 @@ class Scores(db.Model):
     scoreIntegration = db.Column(db.Numeric(4,2), unique=False, default=None)
 
     def __repr__(self):
-        return '<Scores {}>'.format(self.fileId)
+        return '<ScoresExplanations {}>'.format(self.fileId)
 
 class Explanations(db.Model):
     '''
-        Class to enter explanations related to a file. 
+        Class to enter explanations related to a file.
         Attributes:
             fileId: Id of this database instance, of this file that has been added in the database.
             explId: Id of the file corresponding to a file in the Files
@@ -180,8 +175,8 @@ class Explanations(db.Model):
             Y2: Y of the bottom left corner of the boxing rectangle
             replacement1..3: Three possible replacements for the mistakeText
     '''
-    fileId      = db.Column(db.Integer, db.ForeignKey('files.id'), index=True)
-    explId      = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    fileId      = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
+    explId      = db.Column(db.Integer, primary_key=True)
     type        = db.Column(db.Integer, default=-1)
     explanation = db.Column(db.String, default='')
     mistakeText = db.Column(db.String, default='')
@@ -205,6 +200,7 @@ class Explanations(db.Model):
                 dict[c] = getattr(self, c)
         return dict
 
+
 class Projects(db.Model):
     '''
         Class to enter research projects in the database.
@@ -212,7 +208,6 @@ class Projects(db.Model):
             id: Id of this database instance, of this project that has been added in the database.
             userId: Id of the researcher corresponding to the research project.
             projectName: Name of the research project.
-            participants: participants object linked by projectId
     '''
     __tablename__ = "projects"
     id = db.Column(db.Integer, primary_key=True)
@@ -228,33 +223,3 @@ class Projects(db.Model):
 
     def __repr__(self):
         return '<Project {}>'.format(self.projectName)
-
-class Clicks(db.Model):
-    '''
-        Class to store click data generated by users
-        Many instances here are related to one user
-        Attributes:
-            clickId: id of the click
-            userId: id of the user sending the click
-            timestamp: time the click happened
-            url: end of the url of the page where the click happened
-            eventType: type of event, can be one of [click.button, click.link, view.document, click.highlight]
-            actionId: in case of a click: name of the button
-                      in case of a view: name of the document
-    '''
-    clickId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    userId = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
-    timestamp = db.Column(db.DateTime, unique=False, default=datetime.utcnow())
-    url = db.Column(db.String(64), unique=False)
-    eventType = db.Column(db.String(32), unique=False)
-    actionId = db.Column(db.String(64), unique=False)
-
-    def __init__(self, userId, url, eventType, actionId=None):
-        '''create new instance'''
-        self.userId = userId
-        self.url = url
-        self.eventType = eventType
-        self.actionId = actionId
-
-    def __repr__(self):
-        return '<Clicks {}>'.format(self.userId, self.clickId)

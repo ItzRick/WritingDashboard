@@ -1,4 +1,4 @@
-from app.feedback.retrieveText.convertPdfToText import getPDFText, splitBlocks, getFrequencyX, postProcessText, getLineText, filterLineList, filterLineNoLetters, getBlockText, isBlockTable, isTextCaption
+from app.feedback.convertPdfToText import getPDFText, splitBlocks, getFrequencyX, postProcessText, getLineText, filterLineList, filterLineNoLetters, getBlockText, isBlockTable, isTextCaption
 import os
 import fitz
 
@@ -195,7 +195,7 @@ def testPostProcessText(testClient):
 
     del testClient
     inputText = "First [1] sen- \ntences are hard (Source, 2022) \n  \nSo now you know "
-    output = postProcessText(inputText, False)
+    output = postProcessText(inputText)
     assert output == "First sentences are hard \n\nSo now you know"
 
 def testGetLineText(testClient):

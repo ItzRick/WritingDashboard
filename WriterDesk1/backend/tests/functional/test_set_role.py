@@ -100,7 +100,7 @@ def testInvalidUser(testClient, initDatabase):
     # set data
     data = {
         'userId': userId,
-        'newRole': newRole,
+        'newRole':newRole,
     }
     # send to server
     response = testClient.post('/loginapi/setRole', data=data, headers = {"Authorization": "Bearer " + access_token})

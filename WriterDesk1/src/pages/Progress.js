@@ -54,7 +54,7 @@ function Progress() {
                     data={[
                         {
                             // Order of the bars is as follows: first source integration, then cohesion, then structure, then language & style:
-                            x: ['Language & Style', 'Cohesion', 'Structure', 'Source Integration & <br> Content'],
+                            x: ['Language & style', 'Cohesion', 'Structure', 'Source integration & <br> content'],
                             y: [scoreStyle, scoreCohesion, scoreStructure, scoreIntegration],
                             marker: {color: ['#785EF0', '#FE6100', '#FFB000', '#DC267F']},
                             type: 'bar',
@@ -66,11 +66,7 @@ function Progress() {
                         // Scores can be between 0 and 10, so the y-axis range is set accordingly:
                         yaxis: {
                             range: [0, 10],
-                            fixedrange: true,
                             type: 'linear'
-                        },
-                        xaxis: {
-                            fixedrange: true,
                         }
                     }}
                     // Do not display the plotly modebar:
@@ -80,12 +76,6 @@ function Progress() {
                     // So the chart can resize:
                     useResizeHandler={true}
                     style={{width: '100%', height: '50%'}}
-                    onHover={e => {
-                        e.event.target.style.cursor = 'pointer' // Changes cursor on hover to pointer
-                    }}
-                    onUnhover={e => {
-                        e.event.target.style.cursor = 'default' // Change cursor back on unhover
-                    }}
                 />
                 <br/><br/>
                 <Typography variant='h5'>Progress over time</Typography>

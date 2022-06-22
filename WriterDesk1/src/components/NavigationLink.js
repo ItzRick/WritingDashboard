@@ -15,10 +15,6 @@ import {
 // routing
 import { Link } from 'react-router-dom';
 
-// tracking
-import { useContext } from 'react';
-import { TrackingContext } from '@vrbo/react-event-tracking';
-
 /**
  * Icon with text linking to a page, to be used in a Drawer
  * @param {string} text - Text next to the button icon
@@ -28,17 +24,6 @@ import { TrackingContext } from '@vrbo/react-event-tracking';
  * @returns NavigationLink Component
  */
 const NavigationLink = ({ text, Icon, open, allowed = false, pageLink }) => {
-    // context as given by the Tracking Provider
-    const tc = useContext(TrackingContext);
-    // handle tracking when the link is activated
-    const handleClick = () => {
-        if (tc.hasProvider) {
-            tc.trigger({
-                eventType: 'click.link', //send eventTYpe
-                buttonId: pageLink, //send buttonId
-            })
-        }
-    }
     return (
         <ListItem
             key={text}
@@ -62,7 +47,6 @@ const NavigationLink = ({ text, Icon, open, allowed = false, pageLink }) => {
                         minHeight: 48,
                         px: 2.5,
                     }}
-                    onClick={handleClick}
                     component={Link} to={{ pathname: pageLink }}
                 >
                     <ListItemIcon

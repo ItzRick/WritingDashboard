@@ -14,18 +14,15 @@ import {
 } from "@mui/icons-material";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import BlueButton from './../components/BlueButton';
-import AlertDialog from "../components/AlertDialog";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import fileDownload from 'js-file-download';
+
 
 // routing
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from "axios";
-
-// User authentication
-import {authHeader} from "../helpers/auth-header";
+import AlertDialog from "../components/AlertDialog";
 
 /**
  *
@@ -106,13 +103,11 @@ const Projects = () => {
     // end date of project
     const [endData, setEndData] = useState(new Date());
 
-    const [projectName, setProjectName] = useState();  // Project name for project to be created
-    const [numberOfParticipants, setNumberOfParticipants] = useState();  // Number of participants for project to be created
+    const [projectName, setProjectName] = useState();
+    const [numberOfParticipants, setNumberOfParticipants] = useState();
 
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);  // Show dialog when deleting single project
     const [showDeleteDialogMultiple, setShowDeleteDialogMultiple] = useState(false);  // Show dialog when deleting multiple projects
-    const [showNrOfParticipantsDialog, setShowNrOfParticipantsDialog] = useState(false);  // Show dialog when trying to add invalid number of participants
-
     const [deleteId, setDeleteId] = useState();  // Id that is going to be deleted when pressing delete button
 
      /**
@@ -122,23 +117,23 @@ const Projects = () => {
     const createProject = (e) => {
         // Check if the number of participants is valid
         if (!(numberOfParticipants !== '' && numberOfParticipants >= 0 && numberOfParticipants <= 10000)) {
-            setShowNrOfParticipantsDialog(true);
+            alert('Make sure the number of participants is a valid number between 0 and 10000');
             return null;
         }
+        let userId = 1; //TODO: Change to current userId
 
         const formData = new FormData();
+        formData.append('userId', userId);  // Add userId to form
         formData.append('projectName', projectName);  // Add input name to form
 
         // Create project request
-        axios.post(`https://localhost:5000/projectapi/setProject`, formData, {headers: authHeader()}).then(response => {
+        axios.post(`https://localhost:5000/projectapi/setProject`, formData).then(response => {
             const data = {
-                "nrOfParticipants": numberOfParticipants,  // Add input of numberOfParticipants
+                "count": numberOfParticipants,  // Add input of numberOfParticipants
                 "projectid": response.data,  // Get project id from response
             }
             // Add participants request
-            axios.post(`https://localhost:5000/projectapi/addparticipants`, data, {headers: authHeader()}).then(response => {
-                const fileName = response.headers["custom-filename"];
-                fileDownload(response.data, fileName);
+            axios.post(`https://localhost:5000/projectapi/addparticipants`, data).then(response => {
                 //TODO: Set table data
             });
         });
@@ -154,14 +149,13 @@ const Projects = () => {
     const deleteProject = (e, projId) => {
         setShowDeleteDialog(false);  // Don't show dialog anymore
 
-        // Formdata for the project id to be added:
+        // Url of the server:
+        const url = 'https://127.0.0.1:5000/projectapi/deleteProject'
+        // Formdata for the backend call, to which the id has been added:
         const formData = new FormData();
         formData.append('projectId', projId);
-
-        const headers = authHeader() // Authentication header of current user
-
-        // Delete project from all tables in database and delete files from the server:
-        axios.delete('https://127.0.0.1:5000/projectapi/deleteProject',  {headers, data: formData} ).then(response => {
+        // Make the call to the backend:
+        axios.delete(url, { data: formData }).then(response => {
             //TODO: Set table data
         });
     }
@@ -184,16 +178,16 @@ const Projects = () => {
     const deleteSelectedProjects = (e) => {
         setShowDeleteDialogMultiple(false);  // Don't show confirmation dialog anymore
 
+        // Url of the server:
+        const url = 'https://127.0.0.1:5000/projectapi/deleteProject'
         // Create a new formdata:
         const formData = new FormData();
         // For each of the selected instances, add this id to the formdata:
         selectedInstances.forEach(id => formData.append('projectId', id));
-
-        // Delete projects from all tables in database and delete files from the server:
-        axios.delete('https://127.0.0.1:5000/projectapi/deleteProject', { data: formData }).then(response => {
+        // Make the backend call:
+        axios.delete(url, { data: formData }).then(response => {
             //TODO: Set table data
         });
-
     }
 
 
@@ -201,19 +195,14 @@ const Projects = () => {
         <>
             {showDeleteDialog &&
               <AlertDialog title = "Delete project" text = "Are you sure you want to delete this project?"
-                           buttonAgree={<Button style={{color: "red"}} onClick={(e) => {deleteProject(e, deleteId)}}>Yes</Button>}
-                           buttonCancel={<Button onClick={(e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
+                           buttonAgree={<Button onClick={(e) => {deleteProject(e, deleteId)}}>Yes</Button>}
+                           buttonCancel={<Button style={{color: "red"}} onClick={(e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
               />}
             {showDeleteDialogMultiple &&
               <AlertDialog title = "Delete projects" text = "Are you sure you want to delete the selected projects?"
-                           buttonAgree={<Button style={{color: "red"}} onClick={(e) => {deleteSelectedProjects(e)}}>Yes</Button>}
-                           buttonCancel={<Button onClick={(e) => {setShowDeleteDialogMultiple(false)}}>Cancel</Button>}
+                           buttonAgree={<Button onClick={(e) => {deleteSelectedProjects(e)}}>Yes</Button>}
+                           buttonCancel={<Button style={{color: "red"}} onClick={(e) => {setShowDeleteDialogMultiple(false)}}>Cancel</Button>}
               />}
-            {showNrOfParticipantsDialog &&
-              <AlertDialog title = "Number of participants" text = "Make sure the number of participants is a valid number between 0 and 10000!"
-                           buttonAgree={<Button onClick={(e) => {setShowNrOfParticipantsDialog(false)}}>Ok</Button>}
-              />}
-
                 {/* adding projects */}
                 <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
                     <TextField
@@ -280,7 +269,7 @@ const Projects = () => {
                 <BlueButton idStr='downloadUserData' style={{ margin: '1vh', verticalAlign: 'middle' }}>Download user data</BlueButton>
             </div>
             <div className="topBorder">
-                {/* downloading participants and user data */}
+                {/* downloading participants and user data */}<BlueButton idStr='downloadParticipants' >Download participants of selected projects</BlueButton>
                 <div style={{ paddingLeft: '2vw', display: 'inline' }} />
                 <BlueButton idStr='downloadUserDataForSelectedProject' >Download user data of participants of selected project</BlueButton>
             </div>

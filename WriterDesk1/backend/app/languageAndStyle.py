@@ -1,5 +1,5 @@
+import language_tool_python
 import re
-from app import languageToolEn
 
 
 def feedbackLanguageStyle(text):
@@ -7,7 +7,7 @@ def feedbackLanguageStyle(text):
     Generates feedback on the language & style of the input string.
     This includes grammar mistakes and spelling mistakes.
     Attributes:
-        languageToolEn: LanguageTool object to generate feedback, this is a single object in the application.
+        tool: LanguageTool object to generate feedback.
         matches: List of Match objects containing the feedback.
         match: Match object containing the feedback.
         prevMatchEnd: End character of previous match in loop.
@@ -22,8 +22,13 @@ def feedbackLanguageStyle(text):
                   occurrence of text in context, explanation, and possible replacements.
         score: Score between 0 and 10 given to the text based on the feedback.
     """
+
+    # Instantiate language tool
+    # TODO: Remove out of function to improve performance
+    tool = language_tool_python.LanguageTool('en-US')
+
     # Check for mistakes
-    matches = languageToolEn.check(text)
+    matches = tool.check(text)
 
     mistakes = []
     for match in matches:

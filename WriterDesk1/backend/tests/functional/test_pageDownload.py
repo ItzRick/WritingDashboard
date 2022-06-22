@@ -1,4 +1,4 @@
-from app.feedback.retrieveText.pageDownload import scrapePage, downloadDoi
+from app.feedback.pageDownload import scrapePage, downloadDoi
 import os
 from flask import current_app
 

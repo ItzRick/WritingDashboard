@@ -189,29 +189,6 @@ def testCalcScoreAndExplanationSourcesNotDownloadedZero(testClient):
     'are actually used in the text.' )
     assert explanation == explanationText
 
-def testCalcScoreAndExplanationSourcesNotDownloadedNoSources(testClient):
-    '''
-        Test of the calcScoreAndExplanationSourcesNotDownloaded method, while giving numSources and numParagraphs.
-        This is for no sources, so we will get a score 0. We also test the explanation.
-        Attributes: 
-            numSources: The number of sources we test this method for. 
-            numParagraphs: The number of paragraphs we test this method for.
-            score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
-            explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
-            explanationText: The text manually set, we should retrieve from the method, to check against.
-        Arguments:
-            testClient:  The test client we test this for.
-    '''
-    del testClient
-    numSources = 0
-    numParagraphs = 11
-    score, explanation = calcScoreAndExplanationSourcesNotDownloaded(numSources, numParagraphs)
-    assert score == 0
-    explanationText = ('Your score for source integration and content is 0. You only used 0 sources ' + 
-    'in 11 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
-    'are actually used in the text.' )
-    assert explanation == explanationText
-
 def testCalcScoreAndExplanationSourcesNotDownloadedTwo(testClient):
     '''
         Test of the calcScoreAndExplanationSourcesNotDownloaded method, while giving numSources and numParagraphs.

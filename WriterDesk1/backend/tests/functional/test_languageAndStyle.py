@@ -1,4 +1,4 @@
-from app.feedback.languageAndStyle import feedbackLanguageStyle
+from app.languageAndStyle import feedbackLanguageStyle
 
 
 def testFeedbackLanguageAn(testClient):

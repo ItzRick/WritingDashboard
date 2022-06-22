@@ -11,7 +11,7 @@ import logo from '../images/logo.png'
 import BlueButton from "./../components/BlueButton";
 
 // routing
-import { Link,useOutletContext, useNavigate } from 'react-router-dom';
+import { Link,useOutletContext } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { history } from '../helpers/history';
 
@@ -42,14 +42,13 @@ const Login = () => {
     // Change page using formError when we find an error
     const [formError, setFormError] = useState(false);
 
-    let navigate = useNavigate();
-
      /**
      * Do POST request containing username and password variable, go to main page when login succeeds 
      */
     const handleClick = () => {
         AuthenticationService.login(username, password).then(() => {
-            navigate("../Main", { replace: true });
+            history.push("/Main");
+            window.location.reload();
         }).catch( error => {
             setFormError(true);
         });

@@ -5,12 +5,15 @@ from flask import request
 from app.loginapi import bp
 
 from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt
 from flask_jwt_extended import current_user
+from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
-from app.database import postUser, initialSetup
+from app.database import postUser
 from app.extensions import jwt
 from app.models import User
+from app.database import initialSetup
 
 @bp.route('/login', methods=['POST'])
 def create_token():
@@ -28,7 +31,7 @@ def create_token():
             Otherwise returns Unauthorized response status code
     '''
     # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
-    username = request.json.get("username", None)
+    username = request.json.get("username", None) 
     password = request.json.get("password", None)
     user = User.query.filter_by(username=username).first() # Get user from database corresponding to username
     if user is None or not user.check_password(password): # When there doesn't exists a user corresponding to username or password doesnt match
@@ -69,7 +72,6 @@ def registerUser():
         Attributes:
             username: username as given in frontend
             password: password as given in frontend
-            trackable: whether the user wants to be tracked or not
             isCreated: whether a new user has been registered
         Return:
             Returns request success status code with a message when a new user has been registered
@@ -79,10 +81,9 @@ def registerUser():
     # Retrieve data from request
     username = request.json.get("username", None)
     password = request.json.get("password", None)
-    trackable = request.json.get("trackable", None)
 
     # Try to register new user in database
-    isCreated = postUser(username, password, trackable)
+    isCreated = postUser(username, password)
 
     # Send response based on outcome
     if isCreated:
@@ -118,7 +119,7 @@ def setRole():
             newRole: intended role of the user
             targetUser: user with id == userId
         Return:
-            Returns success if it succeeded, or an
+            Returns success if it succeeded, or an 
             error message:
                 403, if the current user is not an admin
                 404, if there exists no user with userId
@@ -127,7 +128,7 @@ def setRole():
     # check if current_user is Admin
     if current_user.role != 'admin':
         return "Method only accessible for admin users", 403 # return Unauthorized response status code
-
+    
 
     # retrieve data from call
     userId = request.form.get('userId')
@@ -141,8 +142,8 @@ def setRole():
     # check if role is valid
     if newRole not in ['admin', 'participant', 'researcher', 'student']:
         return 'Invalid role', 404
-
-
+    
+    
     # update role
     targetUser.role = newRole
     # update the database
@@ -153,73 +154,25 @@ def setRole():
 @jwt_required()
 def setPassword():
     '''
-        This function handles setting the password for the user, by first checking if the supplied current password is correct.
+        This function handles setting the password for the user
         Function requires a user to be logged in, use helpers > auth-header.js
         Attributes:
             newPassword: intended password for the user
-            oldPassword: Current password for the user.
             current_user: the user currently logged in
         Return:
-            Returns success if it succeeded, or an
+            Returns success if it succeeded, or an 
             error message:
-                403, if the current user's password is incorrect
+                404, if the current user's id does not exist in User table
     '''
     # retrieve data from call
-    newPassword = request.json.get('newPassword')
-    oldPassword = request.json.get('oldPassword')
+    newPassword = request.form.get('newPassword')
 
-    # set password using user function if the password is correct, else return error message:
-    if current_user.check_password(oldPassword):
-        current_user.set_password(newPassword)
-    else:
-        return 'Current password is incorrect!', 403
+    # check if current_user is actually in Users
+    if User.query.filter_by(id=current_user.id).first() is None:
+        return 'user not found', 404
+    
+    # set password using user function
+    current_user.set_password(newPassword)
     # update the database
     db.session.commit()
-    return 'Successfully changed password!'
-
-
-@bp.route("/setTrackable", methods=["POST"])
-@jwt_required()
-def setTrackable():
-    '''
-        This function handles setting the trackable value of the current user.
-        Attributes:
-            newTrackable: id of the user of whom we want to change the role
-        Return:
-            Returns success if it succeeded, or an
-            error message:
-                400, Trackable value sent by front end is not 'yes' or 'no'
-    '''
-    # Retrieve data from front end
-    newTrackable = request.form.get('newTrackable')
-    if newTrackable == 'yes':
-        # Set trackable true
-        current_user.trackable = True
-    elif newTrackable == 'no':
-        # Set trackable false
-        current_user.trackable = False
-    else:
-        return 'newTrackable is not yes or no', 400
-
-    # Update the database
-    db.session.commit()
-
-    return 'success', 200
-
-
-@bp.route("/getTrackable", methods=["GET"])
-@jwt_required()
-def getTrackable():
-    '''
-        This function handles setting the trackable value of the current user.
-        Attributes:
-            newTrackable: id of the user of whom we want to change the role
-        Return:
-            Returns success if it succeeded
-    '''
-
-    query = User.query.filter_by(id=current_user.id).first()
-    if query.trackable:
-        return 'yes', 200
-    elif not query.trackable:
-        return 'no', 200
+    return 'success'
