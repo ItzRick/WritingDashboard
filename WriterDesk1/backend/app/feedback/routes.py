@@ -18,15 +18,15 @@ def generateFeedback():
             Message, that indicated successful or an error if unsuccessful. And a status code, 200 if successful, 400 otherwise.
     '''
     # Get the fileId and file:
-    fileId = request.args.get('fileId')
-    file = Files.query.filter_by(id=fileId).first()
-    # Return error message if necessary:
-    if file == None: 
-        return f'The file with id {fileId} can not be found in the database.', 400
-    # Call the genFeedback method:
-    isSuccessful, message = genFeedback(file)
-    # Return error message if necessary:
-    if not isSuccessful:
-        return str(message), 400
-    else: 
-        return str(message), 200
+    fileIds = request.args.getlist('fileId')
+    for fileId in fileIds:
+        file = Files.query.filter_by(id=fileId).first()
+        # Return error message if necessary:
+        if file == None: 
+            return f'The file with id {fileId} can not be found in the database.', 400
+        # Call the genFeedback method:
+        isSuccessful, message = genFeedback(file)
+        # Return error message if necessary:
+        if not isSuccessful:
+            return str(message), 400
+    return str(message), 200
