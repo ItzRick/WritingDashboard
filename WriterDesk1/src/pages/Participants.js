@@ -138,8 +138,8 @@ function Participants() {
   const handleUserDataParticipants = () => {
     const url = 'https://127.0.0.1:5000/clickapi/getParticipantsUserData';
     const params = new URLSearchParams();
-    for (let userId in selectedInstances) {
-      params.append("userId", userId);
+    for (let index in selectedInstances) {
+      params.append("userId", selectedInstances[index]);
     }
     const request = {
       params: params,

@@ -156,3 +156,50 @@ def getOwnUserData():
     # make a csv file from the list of dictionaries
     response = csvFileMaker(output)
     return response, 200
+
+@bp.route('/getUserData', methods=['GET'])
+@jwt_required()
+def getUserData():
+    '''
+        This function retrieves the user data from a set of users. 
+        Users that do not exist have no information in the returned file.
+        Attributes:
+            ids: the user ids of all users user data needs to be
+            retreived for.
+            output: a list of dictionaries containing all user data for the set
+            of users.
+            data: the user data for one user.
+            response: http response with the csv file.
+        Return:
+            response, 200: an http response with the csv file when it was
+            created succesfully.
+            error 403: if the user accessing this method does not have the
+            rights to call it.
+    '''
+    # check if user is admin (i.e. reject if user is not)
+    if current_user.role != 'admin':
+        return 'Method only accessible for admin users', 403
+
+    # get the ids from the participants
+    ids = request.args.getlist('userId')
+
+    # if no users are selected
+    if len(ids) == 0:
+        return 'Select at least one user', 400
+
+    output = []
+    # go over all user ids
+    for id in ids:
+        # if the user id does not exist in the database
+        if Clicks.query.filter_by(userId=id).first() is None:
+            # add an empty row with only the user id to the csv file
+            output.append(Clicks(id, None, None).serializeClick())
+            continue
+        # retrieve the data for the given user id
+        data = Clicks.query.filter_by(userId=id).all()
+        # add the dictionary to the list of dictionaries
+        output.extend(Clicks.serializeList(data))
+
+    # make a csv file from the list of dictionaries
+    response = csvFileMaker(output)
+    return response, 200
