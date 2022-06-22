@@ -1,8 +1,4 @@
 // materials
-import {
-    Typography
-} from "@mui/material";
-import graphPlaceholder from '../images/chartImage.png';
 import Plot from 'react-plotly.js';
 import './../css/main.css';
 
@@ -164,7 +160,7 @@ const ProgressVisualization = () => {
         }]
       }
     ]}
-    layout={ { hovermode:'closest', margin: {l: 30, r: 0, b: 30, t: 20, pad: 4}, legend:{font: {size: 12}, bgcolor: 'rgba(0, 0, 0, 0)',
+    layout={ { hovermode:'closest', margin: {l: 30, r: 0, b: 35, t: 20, pad: 4}, legend:{font: {size: 12}, bgcolor: 'rgba(0, 0, 0, 0)',
 		xanchor: "left",
 		yanchor: "center"},
       yaxis: {

@@ -17,7 +17,7 @@ import BlueButton from './../components/BlueButton';
 import AlertDialog from "../components/AlertDialog";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import fileDownload from 'js-file-download';
 
 // routing
 import { useOutletContext } from 'react-router-dom';
@@ -95,7 +95,7 @@ const Projects = () => {
                 return (<div>
                     <IconButton onClick={(e) => { }}  ><PersonSearch /></IconButton>
                     <IconButton onClick={(e) => { }}  ><Storage /></IconButton>
-                    <IconButton onClick={(e) => { showDeleteProjectDialog(e, params) }}  ><DeleteOutline /></IconButton>
+                    <IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}  ><DeleteOutline /></IconButton>
                 </div>);
             }
         }
@@ -132,11 +132,13 @@ const Projects = () => {
         // Create project request
         axios.post(`https://localhost:5000/projectapi/setProject`, formData, {headers: authHeader()}).then(response => {
             const data = {
-                "count": numberOfParticipants,  // Add input of numberOfParticipants
+                "nrOfParticipants": numberOfParticipants,  // Add input of numberOfParticipants
                 "projectid": response.data,  // Get project id from response
             }
             // Add participants request
-            axios.post(`https://localhost:5000/projectapi/addparticipants`, data).then(response => {
+            axios.post(`https://localhost:5000/projectapi/addParticipants`, data, {headers: authHeader()}).then(response => {
+                const fileName = response.headers["custom-filename"];
+                fileDownload(response.data, fileName);
                 //TODO: Set table data
             });
         });
@@ -169,7 +171,7 @@ const Projects = () => {
      * @param {event} e: event data pushed with the call, not required
      * @param {params} params: params of the row where the current project that is removed is in, to be able to remove the correct project.
      */
-    const showDeleteProjectDialog = (e, params) => {
+    const showdeleteProjectDialog = (e, params) => {
         setDeleteId(params.id)  // Set id to be deleted
         setShowDeleteDialog(true);  // Show confirmation dialog
     }
@@ -232,59 +234,11 @@ const Projects = () => {
                     <BlueButton idStr='addProject' style={{ verticalAlign: 'middle' }} onClick={(e) => {createProject(e)}}>Add project</BlueButton>
                 </div>
                 <div />
-                <div className="topBorder">
-                    {/* downloading user data */}
-                    {/* Select start data */}
-                    <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ margin: '1vh', verticalAlign: 'middle' }}>
-                        <DatePicker
-                            sx={{ margin: '1vh', verticalAlign: 'middle' }}
-                            label="Start date"
-                            openTo="day"
-                            views={['year', 'month', 'day']}
-                            value={startData}
-                            onChange={(newDate) => {
-                                setStartData(newDate);
-                            }}
-                            renderInput={(params) => <TextField sx={{ margin: '1vh', verticalAlign: 'middle' }} {...params} />}
-                        />
-                    </LocalizationProvider>
-                    {/* Select end date */}
-                    <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ margin: '1vh', verticalAlign: 'middle' }}>
-                        <DatePicker
-                            sx={{ margin: '1vh', verticalAlign: 'middle' }}
-                            label="End date"
-                            openTo="day"
-                            views={['year', 'month', 'day']}
-                            value={endData}
-                            onChange={(newDate) => {
-                                setEndData(newDate);
-                            }}
-                            renderInput={(params) => <TextField sx={{ margin: '1vh', verticalAlign: 'middle' }} {...params} />}
-                        />
-                    </LocalizationProvider>
-                    {/* Project Dropdown */}
-                    <FormControl sx={{ mr: '1vw', verticalAlign: 'middle', minWidth: 200 }}>
-                    <InputLabel id="project-down-participants">Project</InputLabel>
-                    <Select
-                        labelId="project-down-participants-label"
-                        id="project-down-participants"
-                        value={projectDown}
-                        label="Project"
-                        onChange={handleProjDown}
-                    >
-                        {projects.map((inst) => <MenuItem value={inst.id}>{inst.projectName}</MenuItem>)}
-                    </Select>
-                </FormControl>
-                <BlueButton idStr='downloadUserData' style={{ margin: '1vh', verticalAlign: 'middle' }}>Download user data</BlueButton>
-            </div>
             <div className="topBorder">
-                {/* downloading participants and user data */}<BlueButton idStr='downloadParticipants' >Download participants of selected projects</BlueButton>
-                <div style={{ paddingLeft: '2vw', display: 'inline' }} />
-                <BlueButton idStr='downloadUserDataForSelectedProject' >Download user data of participants of selected project</BlueButton>
             </div>
             {/* displaying projects */}
             <div style={{ justifyContent: 'center', display: 'flex' }}>
-                <div style={{ height: '80vh', maxHeight: '400px', width: '50vw' }} >
+                <div style={{ height: '80vh', maxHeight: '400px', width: '70vw' }} >
                     <DataGrid
                         style={{ height: '70%' }}
                         rows={tableData}

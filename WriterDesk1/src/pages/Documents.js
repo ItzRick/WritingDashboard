@@ -123,7 +123,7 @@ const Documents = () => {
    * @param {params} params: params of the row where the current file is that needs to be navigated to.
    */
   const navigateToDoc = (_event, params) => {
-    navigate('/Document', {state: {fileId: params.id}});
+    navigate('/Document', {state: {fileId: params.id, fileName: params.row.filename}});
   }
 
     /**

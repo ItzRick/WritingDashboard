@@ -1,4 +1,3 @@
-from distutils.command.upload import upload
 from app.models import Projects
 from app.database import uploadToDatabase, removeFromDatabase
 from app import db
@@ -120,7 +119,6 @@ def testRemoveFromDatabaseInvalidId(testClient, initDatabase):
     # Try to delete the project from the database
     response = testClient.delete('/projectapi/deleteProject', data={'projectId': project.id},
                                  headers={"Authorization": "Bearer " + access_token})
-
     # Check if we get the correct status_code:
     assert response.status_code == 400
 

@@ -36,7 +36,7 @@ const UploadPopUp = ({func}) => {
 
     return (
         <>
-            <BlueButton addStyle={{ fontSize: '2vw', textTransform: 'none' }} onClick={handleClickOpen}>Upload your document(s)</BlueButton>
+            <BlueButton idStr='uploadYourDocument(s)' addStyle={{ fontSize: '2vw', textTransform: 'none' }} onClick={handleClickOpen}>Upload your document(s)</BlueButton>
             <Dialog
                 open={open}
                 onClose={switchOpen}
@@ -52,8 +52,8 @@ const UploadPopUp = ({func}) => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions sx={{justifyContent:'space-between'}}>
-                    <BlueButton onClick={switchOpen}> Upload more documents </BlueButton>
-                    <BlueButton pathName='/Documents'> View documents </BlueButton>
+                    <BlueButton idStr='uploadMoreDocuments' onClick={switchOpen}> Upload more documents </BlueButton>
+                    <BlueButton idStr='viewDocuments' pathName='/Documents'> View documents </BlueButton>
                 </DialogActions>
             </Dialog>
         </>
