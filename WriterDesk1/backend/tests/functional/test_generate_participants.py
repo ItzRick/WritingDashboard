@@ -28,6 +28,7 @@ def testGenerateParticipants(testClient, initDatabase):
         db.session.commit()
     except Exception as e:
         db.session.rollback()
+        assert False
 
     # Check if particpants are created: check for ParticipantToProject entries,
     # and the username and role of corresponsing User entries
