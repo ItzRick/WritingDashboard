@@ -177,7 +177,7 @@ def setPassword():
         return 'Current password is incorrect!', 403
     # update the database
     db.session.commit()
-    return 'Successfully changed password!'
+    return 'Successfully changed password!', 200
 
 
 @bp.route("/setTrackable", methods=["POST"])
@@ -258,4 +258,4 @@ def setUsername():
     current_user.username = newUsername
     # update the database
     db.session.commit()
-    return 'Successfully changed username!'
+    return 'Successfully changed username!', 200

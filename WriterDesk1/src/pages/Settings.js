@@ -35,9 +35,13 @@ const Settings = () => {
         setTitle('Settings');
     });
 
+    const [userRole, setUserRole] = useState('');
+
     useEffect(() => {
         // Call getTrackable function to show radio button correctly
         getTrackable();
+        setUserRole(AuthenticationService.getRole())
+        console.log(AuthenticationService.getRole());
     }, []);
 
     // Create states for the old password, new Password (including conformation) and states for success or error messages.
@@ -163,7 +167,7 @@ const Settings = () => {
      */
      const confirmUsername = () => {
         if(username !== "" && username !== usernameConfirm) {
-            return "Must match Email";
+            return "Must match username";
         }
         return "";
     }
@@ -268,31 +272,32 @@ const Settings = () => {
                     {formError !== "" && <Typography color="red">{formError}</Typography>}
                     {successMessage !== "" && <Typography>{successMessage}</Typography>}
                 <br />
-
-                <Typography variant='h5' style={{color: '#44749D'}}>
-                    Change email
-                </Typography>
-                <br />
-                <TextField value = {passwordForEmail} onChange={(e) => {setPasswordForEmail(e.target.value); 
-                setFormError(""); setSuccessMessage("")}} id='currPass' label='Insert password.' 
-                variant='outlined' type = 'password' style={{marginBottom: '1vw'}} />
-                <br />
-                <TextField id='changeEmail' label='Insert new email.' variant='outlined'
-                    value={username} onChange={(e) => {setUsername(e.target.value); setFormError("")}}
-                    error={checkUsername() !== ""} helperText={checkUsername() !== "" ? checkUsername() : " "}
-                />
-                <br />
-                <TextField id='changeEmail2' label='Repeat new email.' variant='outlined' style={{marginBottom: '1vw'}}
-                    value={usernameConfirm} onChange={(e) => {setUsernameConfirm(e.target.value); setFormError("")}} 
-                    error={confirmUsername() !== ""} helperText={confirmUsername() !== "" ? confirmUsername() : " "}
-                />
-                <br />
-                <BlueButton idStr='updateEmail' variant='contained' onClick={changeEmail}>Update email</BlueButton>
-                <br />
-                {/* If the password change has failed, or we have a successful change, relay this message: */}
-                    {formMailError !== "" && <Typography color="red">{formMailError}</Typography>}
-                    {successMailMessage !== "" && <Typography>{successMailMessage}</Typography>}
-                <br />
+                {userRole !== 'participant' && <div>
+                    <Typography variant='h5' style={{color: '#44749D'}}>
+                        Change email
+                    </Typography>
+                    <br />
+                    <TextField value = {passwordForEmail} onChange={(e) => {setPasswordForEmail(e.target.value); 
+                    setFormError(""); setSuccessMessage("")}} id='currPass' label='Insert password.' 
+                    variant='outlined' type = 'password' style={{marginBottom: '1vw'}} />
+                    <br />
+                    <TextField id='changeEmail' label='Insert new username.' variant='outlined'
+                        value={username} onChange={(e) => {setUsername(e.target.value); setFormError("")}}
+                        error={checkUsername() !== ""} helperText={checkUsername() !== "" ? checkUsername() : " "}
+                    />
+                    <br />
+                    <TextField id='changeEmail2' label='Repeat new username.' variant='outlined' style={{marginBottom: '1vw'}}
+                        value={usernameConfirm} onChange={(e) => {setUsernameConfirm(e.target.value); setFormError("")}} 
+                        error={confirmUsername() !== ""} helperText={confirmUsername() !== "" ? confirmUsername() : " "}
+                    />
+                    <br />
+                    <BlueButton idStr='updateEmail' variant='contained' onClick={changeEmail}>Update email</BlueButton>
+                    <br />
+                    {/* If the password change has failed, or we have a successful change, relay this message: */}
+                        {formMailError !== "" && <Typography color="red">{formMailError}</Typography>}
+                        {successMailMessage !== "" && <Typography>{successMailMessage}</Typography>}
+                    <br />
+                </div>}
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Delete account
                 </Typography>
