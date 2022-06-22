@@ -58,16 +58,12 @@ const Participants = () => {
       }
     }
   ];
-
-
   //set title in parent 'base'
   const { setTitle } = useOutletContext();
 
   // initialize participants and projects states
   const [participants, setParticipants] = useState([]);
   const [projects, setProjects] = useState([]);
-
-
 
   useEffect(() => {
     setTitle('Participants');
@@ -76,17 +72,11 @@ const Participants = () => {
 
   // project in project add
   const [projectAdd, setProjectAdd] = useState('');
-  // project in project download
-  const [projectDown, setProjectDown] = useState('');
 
   // dropdown handler for project add
   const handleProjAddPart = (event) => {
     setProjectAdd(event.target.value);
   };
-  // dropdown handler for project download
-  const handleProjectDownPart = (event) => {
-    setProjectDown(event.target.value);
-  }
   /*
    * Do POST request containing participantCount and projectAdd variable, recieve status of response.
    * When successful, download response csv file.
@@ -110,7 +100,6 @@ const Participants = () => {
       console.error("Something went wrong:", error.response.data);
     });
   };
-
 
   const [selectedInstances, setSelectedInstances] = useState([]) // list of user ids of selected participants
 
