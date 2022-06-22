@@ -15,11 +15,13 @@ import { useState, useEffect } from 'react';
 import { DataGrid, GridApi, GridCellValue, GridColDef } from "@mui/x-data-grid";
 
 import RoleDialog from "./../components/RoleDialog";
+import BlueButton from './../components/BlueButton';
 
 import React from 'react';
 import "../css/styles.css";
 import "../css/main.css";
 import { authHeader } from "../helpers/auth-header";
+import fileDownload from 'js-file-download';
 
 /**
  * 
@@ -69,8 +71,32 @@ const Users = () => {
     setData();
   }, []);
 
+  const [selectedInstances, setSelectedInstances] = useState([]) // list of user ids of selected users
+
+  const handleUserData = () => {
+    const url = 'https://127.0.0.1:5000/clickapi/getUserData';
+    const params = new URLSearchParams();
+    // add all selected users user ids to the params list
+    for (let index in selectedInstances) {
+      params.append("userId", selectedInstances[index]);
+    }
+    const request = {
+      params: params,
+      headers: authHeader()
+    };
+    axios.get(url, request)
+      .then((response) => {
+        const fileName = response.headers["custom-filename"];
+        fileDownload(response.data, fileName);
+      })
+      .catch(err => {
+        console.log(err.response.data)
+      })
+  }
+
   return (
     <>
+      <BlueButton idStr='downloadUserData' onClick={() => {handleUserData()}}>Download user data</BlueButton>
       <div style={{ height: '80vh', maxHeight: '400px' }} >
         <DataGrid
           style={{ maxHeight: '100%' }}
@@ -79,6 +105,7 @@ const Users = () => {
           pageSize={15}
           rowsPerPageOptions={[15]}
           checkboxSelection
+          onSelectionModelChange={e => setSelectedInstances(e)}
           disableSelectionOnClick
           components={{
             NoRowsOverlay: () => (

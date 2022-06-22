@@ -20,6 +20,8 @@ import axios from 'axios';
 import BlueButton from "../components/BlueButton";
 import AlertDialog from "../components/AlertDialog";
 
+import fileDownload from 'js-file-download';
+
 const BASE_URL = "https://localhost:5000/";
 const PASSWORD_LENGTH = 8;
 const USERNAME_END = "tue.nl";
@@ -148,6 +150,18 @@ const Settings = () => {
         });
     }
 
+    const handleOwnUserData = () => {
+        const url = 'https://127.0.0.1:5000/clickapi/getOwnUserData';
+        axios.get(url, { headers: authHeader()})
+          .then((response) => {
+            const fileName = response.headers["custom-filename"];
+            fileDownload(response.data, fileName);
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+    }
+
     // whether or not the information about the user data is shown.
     const [showUserDataPopup, setShowUserDataPopup] = useState(false)
 
@@ -245,6 +259,8 @@ const Settings = () => {
                         buttonAgree={<Button onClick={() => {setShowUserDataPopup(false)}}>I understand</Button>}
                     />}
                 </div>
+                <br />
+                <BlueButton idStr='downloadMyUserData' onClick={() => {handleOwnUserData()}}>Download my user data</BlueButton>
                 <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Change password

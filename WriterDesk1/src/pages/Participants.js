@@ -58,16 +58,12 @@ const Participants = () => {
       }
     }
   ];
-
-
   //set title in parent 'base'
   const { setTitle } = useOutletContext();
 
   // initialize participants and projects states
   const [participants, setParticipants] = useState([]);
   const [projects, setProjects] = useState([]);
-
-
 
   useEffect(() => {
     setTitle('Participants');
@@ -76,17 +72,11 @@ const Participants = () => {
 
   // project in project add
   const [projectAdd, setProjectAdd] = useState('');
-  // project in project download
-  const [projectDown, setProjectDown] = useState('');
 
   // dropdown handler for project add
   const handleProjAddPart = (event) => {
     setProjectAdd(event.target.value);
   };
-  // dropdown handler for project download
-  const handleProjectDownPart = (event) => {
-    setProjectDown(event.target.value);
-  }
   /*
    * Do POST request containing participantCount and projectAdd variable, recieve status of response.
    * When successful, download response csv file.
@@ -111,10 +101,33 @@ const Participants = () => {
     });
   };
 
-  const [participantCount, setParticipantCount] = useState(0);
+  const [selectedInstances, setSelectedInstances] = useState([]) // list of user ids of selected participants
 
-  //list of selected items
-  const [selectedInstances, setSelectedInstances] = useState([])
+  /**
+   * Perform GET request to retrieve csv file containing user data of selected
+   * participants.
+   */
+  const handleUserDataParticipants = () => {
+    const url = 'https://127.0.0.1:5000/clickapi/getParticipantsUserData';
+    const params = new URLSearchParams();
+    // add all selected participant user ids to the params list
+    for (let index in selectedInstances) {
+      params.append("userId", selectedInstances[index]);
+    }
+    const request = {
+      params: params,
+      headers: authHeader()
+    };
+    axios.get(url, request)
+      .then((response) => {
+        const fileName = response.headers["custom-filename"];
+        fileDownload(response.data, fileName);
+      })
+      .catch(err => {
+        console.log(err.response.data)
+      })
+    }
+  const [participantCount, setParticipantCount] = useState(0);
 
   /**
    * Perform GET request to retrieve participants of current user from backend
@@ -150,7 +163,6 @@ const Participants = () => {
         console.log('no success')
         console.log(err.response.projects);
       });
-
   }
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);  // Show dialog when deleting single participant
@@ -250,7 +262,8 @@ const Participants = () => {
         <BlueButton idStr='addParticipants' onClick={handleAddToProject}>Add participants</BlueButton>
       </div>
       <div className='topBorder'>
-        <BlueButton idStr='downloadUserDataSelectedParticipants'>Download user data of selected participants</BlueButton>
+        <div style={{ paddingLeft: '2vw', display: 'inline' }} />
+        <BlueButton idStr='downloadUserDataSelectedParticipants' onClick={handleUserDataParticipants}>Download user data of selected participants</BlueButton>
       </div>
       <div style={{ justifyContent: 'center', display: 'flex' }}>
         <div style={{ height: '80vh', maxHeight: '400px', width: '50vw' }} >
@@ -260,6 +273,7 @@ const Participants = () => {
             pageSize={5}
             rowsPerPageOptions={[5]}
             checkboxSelection
+            onSelectionModelChange={e => setSelectedInstances(e)}
             disableSelectionOnClick
             components={{
               NoRowsOverlay: () => (
