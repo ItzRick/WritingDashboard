@@ -40,7 +40,7 @@ class User(db.Model):
     def serializeUser(self):
         dict = {}
         for c in inspect(self).attrs.keys():
-            if not c == 'file' and not c == 'click':
+            if not c in ['file', 'click']:
                 dict[c] =  getattr(self, c)
         return dict
 
@@ -118,6 +118,8 @@ class ParticipantToProject(db.Model):
     __tablename__ = "participanttoproject"
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, autoincrement=False)
     projectId = db.Column(db.Integer, db.ForeignKey('projects.id'))
+
+    # relationships
     participant = db.relationship('User', backref='participanttoproject', lazy=True, cascade='all,delete')
     project = db.relationship('Projects', backref='participanttoproject', lazy=True, cascade='all,delete')
 
@@ -130,6 +132,13 @@ class ParticipantToProject(db.Model):
         '''
         self.userId = userId
         self.projectId = projectId
+
+    def serializeParticipantToProject(self):
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            if not c == 'participant' and not c == 'project':
+                dict[c] =  getattr(self, c)
+        return dict
 
     def __repr__(self):
         return '<ParticipantToProject {}>'.format(self.userId)
