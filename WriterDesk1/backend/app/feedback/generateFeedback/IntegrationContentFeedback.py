@@ -9,8 +9,25 @@ import os
 from app.feedback.nltkDownload import getEnglishStopwords
 
 class IntegrationContentFeedback(BaseFeedback):
-
+    '''
+        Class, which inherits BaseFeedback, to generate the feedback for the source integration and content writing category.
+    '''
     def __init__(self, text, referencesText, fileId, userId, filePath):
+        '''
+            A method to initialize this class, which sets the text, referencesText, fileId, userId, filePath variables, 
+            sets the explanationType variable to 1, to indicate a cohesion feedback and does all functionality of the 
+            BaseFeedback.
+            Arguments: 
+                self: The current class object.
+                text: Text for which the feedback will be generated.
+                referencesText: The text containing the references for which the feedback will be generated.
+                fileId: File id of the file for which feedback will be generated.
+                userId: userId of the file for which the feedback will be generated.
+                filePath: The filePath of which the file for which we generate feedback is located.
+            Attributes: 
+                explanationType: explanationType of the current class, 3, to indicate Integration and Content.
+                englishStopwords: english stopwords as retrieved from the getEnglishStopwords method.
+        '''
         super().__init__(text, referencesText, fileId, userId, filePath)
         self.explanationType = 3
         self.englishStopwords = getEnglishStopwords()
@@ -26,14 +43,16 @@ class IntegrationContentFeedback(BaseFeedback):
                 numWordsText: Total number of words in the text without stopWords.
                 numSourcesUsed: Number of sources that are used by the application, so of which the words could be retrieved.
                 numParagraphs: The number of paragraphs in the text.
-            Arguments: 
                 text: The text we calculate the source-integration and content for.
                 references: References ofr this text, for which we calculate the source integration and content.
                 englishStopwords: Corpus of all the english stopwords, as taken from the nltk library.
                 userId: userId of the current user, we calculate this score for.
+                explanation: explanation of the source-integration and content corresponding to the given score.
+            Arguments: 
+                self: The current class object.
             Returns:
-                score: Score of the source-integration and content for this text.
-                explanation: explanation of the source-integration and content corresponding to this score.
+                scoreIntegration: Score of the source-integration and content for this text.
+                explanations: explanations of the source-integration and content corresponding to this score.
         '''
         # Retrieve the links, links_doi and number of sources from the references string:
         links, links_doi, numSources = self.getUrlsSources(self.referencesText)
@@ -63,6 +82,7 @@ class IntegrationContentFeedback(BaseFeedback):
             of 25% of words in the text also occurring in the sources for a 10, which goes down to the 1 if no words in the text are also 
             contained in the sources. 
             Arguments:
+                self: The current class object.
                 wordsFromText: Dictionary of words without stopWords occurring in the text.
                 wordsReferences: Set of words without stopwords occurring in the references.
                 numWordsText: Number of words in the text.
@@ -111,6 +131,7 @@ class IntegrationContentFeedback(BaseFeedback):
             and 1 score per paragraph is a 10, and everything inbetween. So the score increments by 2 for paragraph 
             per source that is added. 
             Arguments: 
+                self: The current class object.
                 numSources: Total number of sources in this text.
                 numParagraphs: Total number of paragraphs in this text.
             Returns: 
@@ -147,6 +168,7 @@ class IntegrationContentFeedback(BaseFeedback):
             Attributes:
                 word: Single word from wordsFromText. 
             Arguments:
+                self: The current class object.
                 wordsFromText: All words in the dictionary from the text.
                 wordsReferences: Set with all words from the references. 
                 numWordsText: The amount of words in the original text.
@@ -170,8 +192,11 @@ class IntegrationContentFeedback(BaseFeedback):
                 link: single link from the links list.
                 link_doi: single link from the links_doi list.
                 text: text as retrieved from either a single link or single link_doi.
-            Arguments: 
                 englishStopwords: Corpus of all the english stopwords, as taken from the nltk library.
+            Arguments: 
+                self: The current class object.
+                links: List with links from the sources of the current file.
+                links_doi: List with links from the doi sources of the current file.
             Returns:
                 wordReferences: set of the words without stopwords of all sources in links and links_doi.
                 count: Number of sources actually retrieved the words from.
@@ -203,9 +228,10 @@ class IntegrationContentFeedback(BaseFeedback):
             Attributes: 
                 t: Single token inside the for-loop.
                 tokens: Tokens of the words inside the text, that is each word individually. 
-            Arguments:
-                text: Text we want to find the words with occurrences from.
                 englishStopwords: Corpus of all the english stopwords, as taken from the nltk library.
+            Arguments:
+                self: The current class object.
+                text: Text we want to find the words with occurrences from.
                 wordsWoStopwords: Set with the words without stopwords in the texts that have already been processed.
             Returns:
                 wordsWoStopwords: Set with the words without stopwords added to the wordsWoStopwords set, if not there yet.
@@ -230,9 +256,10 @@ class IntegrationContentFeedback(BaseFeedback):
             Attributes:
                 t: Single token inside the for-loop.
                 tokens: Tokens of the words inside the text, that is each word individually. 
-            Arguments:
-                text: Text we want to find the words with occurrences from.
                 englishStopwords: Corpus of all the english stopwords, as taken from the nltk library.
+            Arguments:
+                self: The current class object.
+                text: Text we want to find the words with occurrences from.
             Returns:
                 wordsWoStopwords: Dictionary with the words without stopwords in the text as key and their occurrences as value.
                 count: The number of words without stopwords inside the text.
@@ -263,6 +290,7 @@ class IntegrationContentFeedback(BaseFeedback):
         '''
             Function to count the number of paragraphs in the text.
             Arguments:
+                self: The current class object.
                 text: Text to count the number of paragraphs from.
             Returns:
                 The number of paragraphs in the text, where each paragraph is divided by 
@@ -270,7 +298,7 @@ class IntegrationContentFeedback(BaseFeedback):
         '''
         return text.count('\n\n') + 1
 
-    def textDoi(self, doi, userId):
+    def textDoi(self, doi):
         '''
             Method to extract the text from urls containing doi.org, which are generally papers. 
             Used the downloadDoi and getPDFText functions.
@@ -278,14 +306,16 @@ class IntegrationContentFeedback(BaseFeedback):
                 basePath: Path consisting of joining the UPLOAD_FOLDER in the flask config and the current userId.
                 tempPath: Path consisting of joining the basePath and 'temp', to create a temp folder.
                 filePath: Path consisting of joining this tempPath and 'temp.pdf' to create a temporary filepath.
+                userId: Id of the current user.
             Arguments:
+                self: The current class object.
                 doi: doi link of the document we want to get the text from.
             Returns:
                 text: Text from the document the link in the doi variable points to, empty string if no document could be found.
         '''
         text = ''
         # Get (and join) the paths:
-        basePath = os.path.join(current_app.config['UPLOAD_FOLDER'], str(userId))
+        basePath = os.path.join(current_app.config['UPLOAD_FOLDER'], str(self.userId))
         tempPath = os.path.join(basePath, 'temp')
         filePath = os.path.join(tempPath, 'temp.pdf')
         # If this folder does not yet exist, create it:
@@ -314,6 +344,7 @@ class IntegrationContentFeedback(BaseFeedback):
                 url1: Retrieved the text of each url match element if there is a string in the source.
                 url_doi: Search for the doi.org text inside a link, to see if we are working with a doi link.
             Arguments: 
+                self: The current class object.
                 sourceString: String with all sources, where each source is split by a newline character.
             Returns:
                 links: array with the links which do not contain the text "doi.org".

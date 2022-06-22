@@ -22,7 +22,8 @@ class CohesionFeedback(BaseFeedback):
                 fileId: File id of the file for which feedback will be generated.
                 userId: userId of the file for which the feedback will be generated.
                 filePath: The filePath of which the file for which we generate feedback is located.
-            Attributes: explanationType: explanationType of the current class, 2, to indicate Cohesion.
+            Attributes: 
+                explanationType: explanationType of the current class, 2, to indicate Cohesion.
         '''
         super().__init__(text, referencesText, fileId, userId, filePath)
         self.explanationType = 1
