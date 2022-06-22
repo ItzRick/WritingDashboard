@@ -38,7 +38,12 @@ class User(db.Model):
         self.trackable = trackable
 
     # list of columns and relationships that should not get serialized
-    nonSerializable = ['file', 'passwordHash', 'project', 'participantToProject', 'click']
+    nonSerializable = [
+        'passwordHash', 
+        'file', 
+        'click',
+        'participanttoproject',
+    ]
 
     def serializeUser(self):
         dict = {}
