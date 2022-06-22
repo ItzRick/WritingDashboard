@@ -40,7 +40,7 @@ class User(db.Model):
     def serializeUser(self):
         dict = {}
         for c in inspect(self).attrs.keys():
-            if not c == 'file' and not c == 'click':
+            if not c in ['file', 'click', 'participant', 'researcher']:
                 dict[c] =  getattr(self, c)
         return dict
 
@@ -49,6 +49,8 @@ class User(db.Model):
         return [m.serializeUser() for m in l]
 
     # relationships
+    researcher = db.relationship('Projects', backref='projectOwner', lazy='dynamic', cascade='all,delete')
+    participant = db.relationship('ParticipantToProject', backref='participanttoproject', lazy=True, cascade='all,delete')
     file = db.relationship('Files', backref='owner', lazy='dynamic', cascade='all,delete')
     click = db.relationship('Clicks', backref='clicker', lazy='dynamic', cascade='all,delete')
 

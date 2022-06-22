@@ -40,7 +40,6 @@ def getParticipantsProjects():
     '''
     This function handles retrieving the participants and related for a particular user
     The user must be an admin or researcher to access this method
-    TODO: descibe return data
     Attributes:
         researcherId: id of the researcher or admin calling this function
     Return:

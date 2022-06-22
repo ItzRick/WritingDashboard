@@ -29,7 +29,7 @@ def testDefaultPartPro(testClient, initDatabase):
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
-
+    # check response data
     data = json.loads(response.data)
     assert data == []
 

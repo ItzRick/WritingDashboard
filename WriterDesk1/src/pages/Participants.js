@@ -68,7 +68,7 @@ const Participants = () => {
 
           return alert(JSON.stringify(thisRow, null, 4));
         };
-
+        // add icon to delete a participant
         return <div><IconButton onClick={(e) => { showDeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton></div>;
       }
     }
@@ -78,7 +78,7 @@ const Participants = () => {
   //set title in parent 'base'
   const { setTitle } = useOutletContext();
 
-  // initialize participants and projects variables
+  // initialize participants and projects states
   const [participants, setParticipants] = useState([]);
   const [projects, setProjects] = useState([]);
 
@@ -139,13 +139,15 @@ const Participants = () => {
     axios.get(url, { headers: authHeader() })
       .then((response) => {
         const resp = response.data
+        // if we get a response that contains data
         if (resp != null) {
+          // first store this in the participants
           setParticipants(resp);
-
-          // get all unique project ids
+          // then get all unique project ids and names
           const result = []; //result
-          const map = new Map(); //store all ids here
+          const map = new Map(); //store all projecIds here
           for (const item of resp) {
+            // new projectId found, since it is not in our map
             if (!map.has(item.projectid)) {
               map.set(item.projectid, true);    // set any value to Map
               // add to result
@@ -178,6 +180,7 @@ const Participants = () => {
     */
   const deleteParticipant = (e, userId) => {
     setShowDeleteDialog(false);  // Don't show dialog anymore
+    //TODO: add delete functionality (Bas' I believe)
     // Url of the server:
     //const url = 'https://127.0.0.1:5000/...'
     // Formdata for the backend call, to which the id has been added:
@@ -187,7 +190,6 @@ const Participants = () => {
     //     axios.delete(url, { data: formData }).then(response => {
     //         //TODO: Set table data
     //     });
-
   }
 
 
@@ -207,16 +209,17 @@ const Participants = () => {
     */
   const deleteSelectedParticipants = (e) => {
     setShowDeleteDialogMultiple(false);  // Don't show dialog anymore
-    // Url of the server:
-    const url = 'https://127.0.0.1:5000/...'
-    // Create a new formdata:
-    const formData = new FormData();
-    // For each of the selected instances, add this id to the formdata:
-    selectedInstances.forEach(id => formData.append('id', id));
-    // Make the backend call:
-    axios.delete(url, { data: formData }).then(response => {
-      //TODO: Set table data
-    });
+    //TODO: delete participants
+    // // Url of the server:
+    // const url = 'https://127.0.0.1:5000/...'
+    // // Create a new formdata:
+    // const formData = new FormData();
+    // // For each of the selected instances, add this id to the formdata:
+    // selectedInstances.forEach(id => formData.append('id', id));
+    // // Make the backend call:
+    // axios.delete(url, { data: formData }).then(response => {
+    //   //TODO: Set table data
+    // });
   }
 
   return (
