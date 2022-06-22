@@ -49,9 +49,7 @@ const Users = () => {
         const userName = params.row.username;
   
         // display role, and show dialog when clicked
-        return (
-          userRole !== 'participant' && <div><RoleDialog userRole={userRole} userId={userId} userName={userName}></RoleDialog></div>
-        )
+        return <div><RoleDialog userRole={userRole} userId={userId} userName={userName}></RoleDialog></div>
       }
     }
   ];

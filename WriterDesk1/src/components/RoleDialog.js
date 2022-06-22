@@ -20,8 +20,6 @@ import { AdminPanelSettingsOutlined, MoreHorizOutlined, BiotechOutlined, SchoolO
 import axios from 'axios';
 import { authHeader } from '../helpers/auth-header';
 import { AuthenticationService } from '../services/authenticationService';
-import { history } from '../helpers/history';
-
 
 /**
  * This function sends a request to the server where we ask to change the role for a specific user
@@ -112,7 +110,8 @@ const RoleDialog = ({userRole, userId, userName}) => {
 
     return (
         <>
-            <div title={"Change role of user"} className={"roleColumn"} onClick={handleClickOpen}>{value } <MoreHorizOutlined/></div>
+            {userRole !== 'participant' && <div title={"Change role of user"} className={"roleColumn"} onClick={handleClickOpen}> { value } <MoreHorizOutlined/> </div>}
+            {userRole === 'participant' && <div title={"Change role of user"} className={"roleColumn"}> { value } </div>}
             <Dialog
                 fullWidth={true}
                 maxWidth='xs'
