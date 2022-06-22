@@ -176,3 +176,50 @@ def setPassword():
     # update the database
     db.session.commit()
     return 'Successfully changed password!'
+
+
+@bp.route("/setTrackable", methods=["POST"])
+@jwt_required()
+def setTrackable():
+    '''
+        This function handles setting the trackable value of the current user.
+        Attributes:
+            newTrackable: id of the user of whom we want to change the role
+        Return:
+            Returns success if it succeeded, or an
+            error message:
+                400, Trackable value sent by front end is not 'yes' or 'no'
+    '''
+    # Retrieve data from front end
+    newTrackable = request.form.get('newTrackable')
+    if newTrackable == 'yes':
+        # Set trackable true
+        current_user.trackable = True
+    elif newTrackable == 'no':
+        # Set trackable false
+        current_user.trackable = False
+    else:
+        return 'newTrackable is not yes or no', 400
+
+    # Update the database
+    db.session.commit()
+
+    return 'success', 200
+
+
+@bp.route("/getTrackable", methods=["GET"])
+@jwt_required()
+def getTrackable():
+    '''
+        This function handles setting the trackable value of the current user.
+        Attributes:
+            newTrackable: id of the user of whom we want to change the role
+        Return:
+            Returns success if it succeeded
+    '''
+
+    query = User.query.filter_by(id=current_user.id).first()
+    if query.trackable:
+        return 'yes', 200
+    elif not query.trackable:
+        return 'no', 200

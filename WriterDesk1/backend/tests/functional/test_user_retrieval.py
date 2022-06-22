@@ -112,6 +112,7 @@ def testNotAdmin(testClient, initDatabase):
     assert response.status_code == 403
     assert response.data == b'Method only accessible for admin users'
 
+
 def testAdmin(testClient, initDatabase):
     '''
     Test if we are allowed access when in admin mode

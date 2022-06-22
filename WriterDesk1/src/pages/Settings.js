@@ -37,12 +37,19 @@ const Settings = () => {
         setTitle('Settings');
     });
 
+    useEffect(() => {
+        // Call getTrackable function to show radio button correctly
+        getTrackable();
+    }, []);
+
     // Create states for the old password, new Password (including conformation) and states for success or error messages.
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const [formError, setFormError] = useState("");
+
+    const [trackableValue, setTrackableValue] = useState('');  // Value for radio buttons to accept or refuse data, can be 'yes' or 'no'.
 
     const [accountDeletionPopup, setAccountDeletionPopup] = useState(false)
 
@@ -88,7 +95,25 @@ const Settings = () => {
         navigate("/", { replace: true });
     }
 
-    
+    /**
+     * Function to make the backend call to change the trackable value for the current user in the database.
+     * @param {string} newTrackable: String value with 'yes' or 'no' to set new trackable value.
+     */
+    const changeTrackable = (newTrackable) => {
+        const formData = new FormData();
+        formData.append('newTrackable', newTrackable);
+        axios.post('https://localhost:5000/loginapi/setTrackable', formData, {headers: authHeader()})
+    }
+
+    /**
+     * Function to make the backend call to get the trackable value for the current user.
+     */
+    const getTrackable = () => {
+        axios.get('https://localhost:5000/loginapi/getTrackable', {headers: authHeader()}).then(
+          response => {
+              setTrackableValue(response.data)
+          })
+    }
     
     /*
      * Do POST request containing new and old password variables, recieve status of response.
@@ -135,6 +160,8 @@ const Settings = () => {
                     defaultValue='yes'
                     name='terms group'
                     style={{display: 'inline'}}
+                    onChange={(e) => {setTrackableValue(e.target.value); changeTrackable(e.target.value);}}
+                    value={trackableValue}
                 >
                     <FormControlLabel value="yes" control={<Radio />} label="I accept the data conditions." />
                     <br /><br />
