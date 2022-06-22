@@ -1,3 +1,4 @@
+from this import d
 from app.models import Files, Scores, Explanations
 from app.database import uploadToDatabase, removeFromDatabase
 
@@ -151,3 +152,30 @@ def setExplanationDB(fileId, type, explanation, explId = -1, mistakeText = '', X
     uploadToDatabase(explanationIndb)
 
     return True, 'successfully uploaded Explanations'
+
+def getExplanationsFileType(fileId, explType):
+    '''
+        Returns list for all explanationIds for explanations for a certain explanation type and fileId.
+        Attributes:
+            explanations: Explanation database instances for all explanations for a certain fileId and explanation type.
+        Arguments:
+            fileId: File id, together with the explanation type, we need to find all the explanations for.
+            explType: Explanation type, together with the file id, we need to find all explanations for.
+        Returns:
+            List with all explanation ids for the explanations with this explanation type and fileId.
+    '''
+    explanations = Explanations.query.filter_by(fileId=fileId, type=explType).all()
+    return [explanation.explId for explanation in explanations]
+
+def removeExplanationsFileType(fileId, explType):
+    '''
+        Removes the explanations belonging to a certain fileId and explType from the database.
+        Arguments:
+            fileId: File id, together with the explanation type, we need to remove all the explanations for.
+            explType: Explanation type, together with the file id, we need to remove all explanations for.
+        Attributes:
+            explanations: Explanation database instances for all explanations for a certain fileId and explanation type.
+    '''
+    explanations = Explanations.query.filter_by(fileId=fileId, type=explType).all()
+    for explanation in explanations:
+        removeFromDatabase(explanation)

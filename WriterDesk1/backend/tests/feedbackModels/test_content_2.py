@@ -1,4 +1,4 @@
-from app.feedback.content import calcPercentageWordsUsed, calcScoreAndExplanationSourcesDownloaded, getWordsSources, sourceIntegration
+from app.feedback.generateFeedback.IntegrationContentFeedback import IntegrationContentFeedback
 
 def testCalcPercentageWordsUsed(testClient):
     '''
@@ -9,6 +9,7 @@ def testCalcPercentageWordsUsed(testClient):
             numWords: The number of words inside this dictionary, it mimics the number of words in the text.
             wordsFromSources: Set of words, that mimics words that are retrieved from sources.
             percentage: Percentage of words in this wordsFromText dictionary that are also in the wordsFromSources set.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -17,7 +18,8 @@ def testCalcPercentageWordsUsed(testClient):
     'add': 2, 'useful': 2, 'information': 2}
     numWords = 16
     wordsFromSources = {'useful', 'information'}
-    percentage = calcPercentageWordsUsed(wordsFromText, wordsFromSources, numWords)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    percentage = feedbackObject.calcPercentageWordsUsed(wordsFromText, wordsFromSources, numWords)
     assert percentage == 0.25
 
 def testCalcScoreAndExplanationSourcesDownloadedZero(testClient):
@@ -29,6 +31,7 @@ def testCalcScoreAndExplanationSourcesDownloadedZero(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -37,7 +40,8 @@ def testCalcScoreAndExplanationSourcesDownloadedZero(testClient):
     numParagraphs = 11
     explanationText = ('Your score for source integration and content is 0. You only used 2 sources ' + 
     'in 11 paragraphs of text. Try adding more sources.' )
-    score, explanation = calcScoreAndExplanationSourcesDownloaded(dict(), set(), 0, numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesDownloaded(dict(), set(), 0, numSources, numParagraphs)
     assert score == 0
     assert explanation == explanationText
 
@@ -50,6 +54,7 @@ def testCalcScoreAndExplanationSourcesDownloadedNoSources(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -58,7 +63,8 @@ def testCalcScoreAndExplanationSourcesDownloadedNoSources(testClient):
     numParagraphs = 11
     explanationText = ('Your score for source integration and content is 0. You only used 0 sources ' + 
     'in 11 paragraphs of text. Try adding more sources.' )
-    score, explanation = calcScoreAndExplanationSourcesDownloaded(dict(), set(), 0, numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesDownloaded(dict(), set(), 0, numSources, numParagraphs)
     assert score == 0
     assert explanation == explanationText
 
@@ -71,6 +77,7 @@ def testCalcScoreAndExplanationSourcesDownloadedHalf(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -79,7 +86,8 @@ def testCalcScoreAndExplanationSourcesDownloadedHalf(testClient):
     numParagraphs = 13
     explanationText = ('Your score for source integration and content is 0.5. You only used 3 sources ' + 
     'in 13 paragraphs of text. Try adding more sources.' )
-    score, explanation = calcScoreAndExplanationSourcesDownloaded(dict(), set(), 0, numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesDownloaded(dict(), set(), 0, numSources, numParagraphs)
     assert score == 0.5
     assert explanation == explanationText
 
@@ -92,6 +100,7 @@ def testCalcScoreAndExplanationSourcesDownloadedOne(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -100,7 +109,8 @@ def testCalcScoreAndExplanationSourcesDownloadedOne(testClient):
     numParagraphs = 13
     explanationText = ('Your score for source integration and content is 1. You only used 4 sources ' + 
     'in 13 paragraphs of text. Try adding more sources.' )
-    score, explanation = calcScoreAndExplanationSourcesDownloaded(dict(), set(), 0, numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesDownloaded(dict(), set(), 0, numSources, numParagraphs)
     assert score == 1
     assert explanation == explanationText
 
@@ -116,6 +126,7 @@ def testCalcScoreAndExplanationSourcesDownloadedPercentageOne(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -129,7 +140,9 @@ def testCalcScoreAndExplanationSourcesDownloadedPercentageOne(testClient):
     explanationText =  (f'Your score for source integration and content is 10.0. You used 2 sources ' + 
     'in 2 paragraphs of text. You used 25.0% of the words used in the sources in your text. ' +  
     'This gives a perfect score, you could try adding more words used in the sources in your text.')
-    score, explanation = calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsFromSources, numWords, numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsFromSources, 
+        numWords, numSources, numParagraphs)
     assert score == 10
     assert explanation == explanationText
 
@@ -145,6 +158,7 @@ def testCalcScoreAndExplanationSourcesDownloadedPercentageTwo(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -158,7 +172,9 @@ def testCalcScoreAndExplanationSourcesDownloadedPercentageTwo(testClient):
     explanationText =  ('Your score for source integration and content is 5.5. You used 2 sources ' + 
     'in 2 paragraphs of text. You used 12.5% of the words used in the sources in your text. ' +  
     'For a higher score, you could try adding more words used in the sources in your text.')
-    score, explanation = calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsFromSources, numWords, numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsFromSources, 
+        numWords, numSources, numParagraphs)
     assert score == 5.5
     assert explanation == explanationText
 
@@ -175,6 +191,7 @@ def testCalcScoreAndExplanationSourcesDownloadedPercentageThree(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -188,11 +205,13 @@ def testCalcScoreAndExplanationSourcesDownloadedPercentageThree(testClient):
     explanationText =  ('Your score for source integration and content is 10. You used 2 sources ' + 
     'in 2 paragraphs of text. You used 37.5% of the words used in the sources in your text. ' +  
     'This gives a perfect score, you could try adding more words used in the sources in your text.')
-    score, explanation = calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsFromSources, numWords, numSources, numParagraphs)
+    feedbackObject = IntegrationContentFeedback('', '', 1, 1, '')
+    score, explanation = feedbackObject.calcScoreAndExplanationSourcesDownloaded(wordsFromText, wordsFromSources, 
+        numWords, numSources, numParagraphs)
     assert score == 10
     assert explanation == explanationText
 
-def testGetWordsSources(testClient, englishStopwords):
+def testGetWordsSources(testClient):
     '''
         Test the getWordsSources method and implicitly test the textDoi method.
         Attributes:
@@ -202,6 +221,7 @@ def testGetWordsSources(testClient, englishStopwords):
             words: The wordslist set as retrieved from the getWordsSources method.
             numSources: The number of sources the getWordsSources method was able to retrieve the words from.
             expectedWords: The set of words we want to find, so we compare against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
             englishStopwords: English stopwords downloaded from nltk from conftest.py.
@@ -210,7 +230,8 @@ def testGetWordsSources(testClient, englishStopwords):
     links_doi = ['https://doi.org/10.1103/PhysRev.82.554.2']
     links = ['https://www2.latech.edu/~acm/helloworld/python.html']
     userId = 123
-    words, numSources = getWordsSources(links, links_doi, englishStopwords, userId)
+    feedbackObject = IntegrationContentFeedback('', '', 1, userId, '')
+    words, numSources = feedbackObject.getWordsSources(links, links_doi)
     expectedWords = {'q', 'iz0', 'target', '183612005', 'ithe', 'germany', 'fine', '200i', 'i2w', 'initial', 'equivalent', 'smith', 'bd', 
     'holloway', '372', 'field', 'al', 'b', '81', '0', 'group', 'soc', 'moore', '120', 'program', 'barut', 'mass', 'hello', 'l4', 'aparticles', 
     'b8', 'equal', 'changes', 'exact', 'lsl', 'bombard', 'submitted', 'normal', 'id4', 'lauritsen', '273020', 'proc', 'may', 'nuclei', '2b', 
@@ -237,20 +258,23 @@ def testSourceIntegarationCorrect(testClient, englishStopwords):
             score: Score as retrieved from the sourceIntegration method.
             explanation: explanation as retrieved from the sourceIntegration method.
             explanationText: Expected explanation text as retrieved from the sourceIntegration method.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
             englishStopwords: English stopwords downloaded from nltk from conftest.py.
     '''
-    del testClient
+    del testClient, englishStopwords
     userId = 123
     references = 'https://www2.latech.edu/~acm/helloworld/python.html \n\n https://doi.org/10.1103/PhysRev.82.554.2'
     text = 'This is a very nice text with a single paragraph, which is of course a negligible text.'
-    score, explanation = sourceIntegration(text, references, englishStopwords, userId)
+    feedbackObject = IntegrationContentFeedback(text, references, 1, userId, '')
+    score, explanation = feedbackObject.genFeedback()
     explanationText =  ('Your score for source integration and content is 6.14. You used 2 sources ' + 
     'in 1 paragraphs of text. You used 14.29% of the words used in the sources in your text. ' +  
     'For a higher score, you could try adding more words used in the sources in your text.')
     assert score == 6.14
-    assert explanation == explanationText
+    assert explanation == [[-1, 1, -1, -1, 3, explanationText, '', []]]
+    assert feedbackObject.explanation == explanationText
 
 def testSourceIntegarationWrong(testClient, englishStopwords):
     '''
@@ -262,6 +286,7 @@ def testSourceIntegarationWrong(testClient, englishStopwords):
             score: Score as retrieved from the sourceIntegration method.
             explanation: explanation as retrieved from the sourceIntegration method.
             explanationText: Expected explanation text as retrieved from the sourceIntegration method.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
             englishStopwords: English stopwords downloaded from nltk from conftest.py.
@@ -270,9 +295,11 @@ def testSourceIntegarationWrong(testClient, englishStopwords):
     userId = 123
     references = 'This is a reference'
     text = 'This is a very nice text with a single paragraph, which is of course a negligible text.'
-    score, explanation = sourceIntegration(text, references, englishStopwords, userId)
+    feedbackObject = IntegrationContentFeedback(text, references, 1, 1, '')
+    score, explanation = feedbackObject.genFeedback()
     explanationText = ('Your score for source integration and content is 10. You only used 1 sources ' + 
     'in 1 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 
     'are actually used in the text.' )
     assert score == 10
-    assert explanation == explanationText
+    assert explanation == [[-1, 1, -1, -1, 3, explanationText, '', []]]
+    assert feedbackObject.explanation == explanationText

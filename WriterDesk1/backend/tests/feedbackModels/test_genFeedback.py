@@ -54,7 +54,7 @@ def testGenFeedbackNoFile(testClient, initDatabase):
     # Call the genFeedback method and check if we get the correct info returned:
     isSuccessful, message = genFeedback(file)
     assert not isSuccessful
-    assert message == 'cannot unpack non-iterable NoneType object'
+    assert 'no such file' in message
 
 def testGenFeedbackDocxFile(testClient, initDatabase):
     ''' 
@@ -82,13 +82,14 @@ def testGenFeedbackDocxFile(testClient, initDatabase):
     # Check if we have added the correct score to the database:
     score = Scores.query.filter_by(fileId=file.id).first()
     assert float(score.scoreStyle) == 8.40
-    assert float(score.scoreCohesion) == -2
+    assert float(score.scoreCohesion) == 8.03
     assert float(score.scoreStructure) == 6.5
     assert float(score.scoreIntegration) == 0.0
     # Get all explanations for this file from the database.
     explanations = Explanations.query.filter_by(fileId = file.id).all()
+    # Check if the correct number of explanations has been added to the database:
+    assert len(explanations) == 9
     # Check if all information about the style mistakes mistake has been added to this database correctly:
-    assert len(explanations) == 8
     assert explanations[0].mistakeText == 'a'
     assert explanations[0].explanation == 'Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.'
     assert explanations[0].type == 0
@@ -102,16 +103,18 @@ def testGenFeedbackDocxFile(testClient, initDatabase):
     page = doc.load_page(0)
     assert page.get_textbox(fitz.Rect(explanations[0].X1, explanations[0].Y1, explanations[0].X2, explanations[0].Y2)) == 'a'
     assert page.get_textbox(fitz.Rect(explanations[1].X1, explanations[1].Y1, explanations[1].X2, explanations[1].Y2)) == 'must try'
-    explanationTextStructure = 'This paragraph is too short, try to make paragraphs with approximately 200 words.'
-    assert explanations[2].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
-    ' if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing'+
-    ' with a another human, like with the Google Duplex. ')
-    # Check if all information about the style Structure mistake has been added to this database correctly:
-    assert explanations[2].explanation == explanationTextStructure
-    assert explanations[2].type == 2
+    # Check if all information for the Cohesion writing structures has been added to the database:
+    assert explanations[2].mistakeText == ''
+    assert explanations[2].explanation == ('Your score for cohesion is 8.03.\nYou used enough variation of words. You have in between 70'+ 
+    ' and 90 percent variation in your text. These are your most used words: "the", "to" and "a".\nYou could use less connectives in your text.' +
+    ' You have a percentage of 12 in your text, ideally this would be 9 percent.\nConnectives are words or phrases that link ' +
+        'other linguistic units.')
+    assert explanations[2].type == 1
     assert explanations[3].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
     ' if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing'+
     ' with a another human, like with the Google Duplex. ')
+    # Check if all information about the style Structure mistake has been added to this database correctly:
+    explanationTextStructure = 'This paragraph is too short, try to make paragraphs with approximately 200 words.'
     assert explanations[3].explanation == explanationTextStructure
     assert explanations[3].type == 2
     assert explanations[4].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
@@ -119,30 +122,35 @@ def testGenFeedbackDocxFile(testClient, initDatabase):
     ' with a another human, like with the Google Duplex. ')
     assert explanations[4].explanation == explanationTextStructure
     assert explanations[4].type == 2
-    assert explanations[5].mistakeText == ('C does this by the hand of asking (written) questions. A must try to cause C to make the wrong' + 
-        ' identification, while B must try to help C make the right identification (Turing, 1950).')
+    assert explanations[5].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
+    ' if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing'+
+    ' with a another human, like with the Google Duplex. ')
     assert explanations[5].explanation == explanationTextStructure
     assert explanations[5].type == 2
     assert explanations[6].mistakeText == ('C does this by the hand of asking (written) questions. A must try to cause C to make the wrong' + 
         ' identification, while B must try to help C make the right identification (Turing, 1950).')
     assert explanations[6].explanation == explanationTextStructure
     assert explanations[6].type == 2
+    assert explanations[7].mistakeText == ('C does this by the hand of asking (written) questions. A must try to cause C to make the wrong' + 
+        ' identification, while B must try to help C make the right identification (Turing, 1950).')
+    assert explanations[7].explanation == explanationTextStructure
+    assert explanations[7].type == 2
     # Check if the coordinates of the structure mistakes have also been found correctly:
-    assert page.get_textbox(fitz.Rect(explanations[2].X1, explanations[2].Y1, explanations[2].X2, explanations[2].Y2)) == (
-        'So the Turing test might not good test to determine if machines can think, but determine if a ')
     assert page.get_textbox(fitz.Rect(explanations[3].X1, explanations[3].Y1, explanations[3].X2, explanations[3].Y2)) == (
-        'machine is programmed well enough to imitate a human being so that it can trick an ')
+        'So the Turing test might not good test to determine if machines can think, but determine if a ')
     assert page.get_textbox(fitz.Rect(explanations[4].X1, explanations[4].Y1, explanations[4].X2, explanations[4].Y2)) == (
-        'interrogator into thinking it is conversing with a another human, like with the Google Duplex. ')
+        'machine is programmed well enough to imitate a human being so that it can trick an ')
     assert page.get_textbox(fitz.Rect(explanations[5].X1, explanations[5].Y1, explanations[5].X2, explanations[5].Y2)) == (
+        'interrogator into thinking it is conversing with a another human, like with the Google Duplex. ')
+    assert page.get_textbox(fitz.Rect(explanations[6].X1, explanations[6].Y1, explanations[6].X2, explanations[6].Y2)) == (
         'C does this by the hand of asking (written) questions. A must try to cause C to make the ')
-    assert page.get_textbox(fitz.Rect(explanations[5].X1, explanations[6].Y1, explanations[6].X2, explanations[6].Y2)) == (
+    assert page.get_textbox(fitz.Rect(explanations[7].X1, explanations[7].Y1, explanations[7].X2, explanations[7].Y2)) == (
         'wrong identification, while B must try to help C make the right identification (Turing, 1950).')
     # Check if the information for the source integration and content mistakes have been added correctly:
-    assert explanations[7].mistakeText == ''
-    assert explanations[7].explanation == ('Your score for source integration and content is 0. You only used 0 sources in 2 paragraphs of text.' +
+    assert explanations[8].mistakeText == ''
+    assert explanations[8].explanation == ('Your score for source integration and content is 0. You only used 0 sources in 2 paragraphs of text.' +
     ' Try adding more sources. Writing Dashboard Could not check if text from the sources are actually used in the text.')
-    assert explanations[7].type == 3
+    assert explanations[8].type == 3
 
 def testGenFeedbackPdfFile(testClient, initDatabase):
     ''' 
@@ -170,13 +178,14 @@ def testGenFeedbackPdfFile(testClient, initDatabase):
     # Check if we have added the correct score to the database:
     score = Scores.query.filter_by(fileId=file.id).first()
     assert float(score.scoreStyle) == 8.40
-    assert float(score.scoreCohesion) == -2
+    assert float(score.scoreCohesion) == 7.81
     assert float(score.scoreStructure) == 6.5
     assert float(score.scoreIntegration) == 0.0
     # Get all explanations for this file from the database.
     explanations = Explanations.query.filter_by(fileId = file.id).all()
+    # Check if all explanations have been added to the database:
+    assert len(explanations) == 9
     # Check if all information about the style mistakes mistake has been added to this database correctly:
-    assert len(explanations) == 8
     assert explanations[0].mistakeText == 'a'
     assert explanations[0].explanation == 'Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.'
     assert explanations[0].type == 0
@@ -190,13 +199,15 @@ def testGenFeedbackPdfFile(testClient, initDatabase):
     page = doc.load_page(0)
     assert page.get_textbox(fitz.Rect(explanations[0].X1, explanations[0].Y1, explanations[0].X2, explanations[0].Y2)) == 'a'
     assert page.get_textbox(fitz.Rect(explanations[1].X1, explanations[1].Y1, explanations[1].X2, explanations[1].Y2)) == 'must try'
+    # Check if all information fro the cohesion writing skill has been added to the database correctly:
+    assert explanations[2].mistakeText == ''
+    assert explanations[2].explanation == ('Your score for cohesion is 7.81.\nYou used enough variation of words. You have in between 70'+ 
+    ' and 90 percent variation in your text. These are your most used words: "the", "to" and "a".\nYou could use less connectives in your text.' +
+    ' You have a percentage of 12 in your text, ideally this would be 9 percent.\nConnectives are words or phrases that link ' +
+        'other linguistic units.')
+    assert explanations[2].type == 1
+    # Check if all information about the Structure mistake has been added to this database correctly:
     explanationTextStructure = 'This paragraph is too short, try to make paragraphs with approximately 200 words.'
-    assert explanations[2].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
-    ' if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing'+
-    ' with a another human, like with the Google Duplex. ')
-    # Check if all information about the style Structure mistake has been added to this database correctly:
-    assert explanations[2].explanation == explanationTextStructure
-    assert explanations[2].type == 2
     assert explanations[3].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
     ' if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing'+
     ' with a another human, like with the Google Duplex. ')
@@ -207,30 +218,35 @@ def testGenFeedbackPdfFile(testClient, initDatabase):
     ' with a another human, like with the Google Duplex. ')
     assert explanations[4].explanation == explanationTextStructure
     assert explanations[4].type == 2
-    assert explanations[5].mistakeText == ('C does this by the hand of asking (written) questions. A must try to cause C to make the wrong' + 
-        ' identification, while B must try to help C make the right identification (Turing, 1950).')
+    assert explanations[5].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
+    ' if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing'+
+    ' with a another human, like with the Google Duplex. ')
     assert explanations[5].explanation == explanationTextStructure
     assert explanations[5].type == 2
     assert explanations[6].mistakeText == ('C does this by the hand of asking (written) questions. A must try to cause C to make the wrong' + 
         ' identification, while B must try to help C make the right identification (Turing, 1950).')
     assert explanations[6].explanation == explanationTextStructure
     assert explanations[6].type == 2
+    assert explanations[7].mistakeText == ('C does this by the hand of asking (written) questions. A must try to cause C to make the wrong' + 
+        ' identification, while B must try to help C make the right identification (Turing, 1950).')
+    assert explanations[7].explanation == explanationTextStructure
+    assert explanations[7].type == 2
     # Check if the coordinates of the structure mistakes have also been found correctly:
-    assert page.get_textbox(fitz.Rect(explanations[2].X1, explanations[2].Y1, explanations[2].X2, explanations[2].Y2)) == (
-        'So the Turing test might not good test to determine if machines can think, but determine if a machine is programmed well ')
     assert page.get_textbox(fitz.Rect(explanations[3].X1, explanations[3].Y1, explanations[3].X2, explanations[3].Y2)) == (
-        'enough to imitate a human being so that it can trick an interrogator into thinking it is conversing with a another human, like ')
+        'So the Turing test might not good test to determine if machines can think, but determine if a machine is programmed well ')
     assert page.get_textbox(fitz.Rect(explanations[4].X1, explanations[4].Y1, explanations[4].X2, explanations[4].Y2)) == (
-    'with the Google Duplex. ')
+        'enough to imitate a human being so that it can trick an interrogator into thinking it is conversing with a another human, like ')
     assert page.get_textbox(fitz.Rect(explanations[5].X1, explanations[5].Y1, explanations[5].X2, explanations[5].Y2)) == (
+    'with the Google Duplex. ')
+    assert page.get_textbox(fitz.Rect(explanations[6].X1, explanations[6].Y1, explanations[6].X2, explanations[6].Y2)) == (
         'C does this by the hand of asking (written) questions. A must try to cause C to make the wrong identification, while B must ')
-    assert page.get_textbox(fitz.Rect(explanations[5].X1, explanations[6].Y1, explanations[6].X2, explanations[6].Y2)) == (
+    assert page.get_textbox(fitz.Rect(explanations[7].X1, explanations[7].Y1, explanations[7].X2, explanations[7].Y2)) == (
         'try to help C make the right identification (Turing, 1950).')
     # Check if the information for the source integration and content mistakes have been added correctly:
-    assert explanations[7].mistakeText == ''
-    assert explanations[7].explanation == ('Your score for source integration and content is 0. You only used 0 sources in 2 paragraphs of text.' +
+    assert explanations[8].mistakeText == ''
+    assert explanations[8].explanation == ('Your score for source integration and content is 0. You only used 0 sources in 2 paragraphs of text.' +
     ' Try adding more sources. Writing Dashboard Could not check if text from the sources are actually used in the text.')
-    assert explanations[7].type == 3
+    assert explanations[8].type == 3
 
 def testGenFeedbackTxtFile(testClient, initDatabase):
     ''' 
@@ -258,13 +274,14 @@ def testGenFeedbackTxtFile(testClient, initDatabase):
     # Check if we have added the correct score to the database:
     score = Scores.query.filter_by(fileId=file.id).first()
     assert float(score.scoreStyle) == 8.40
-    assert float(score.scoreCohesion) == -2
+    assert float(score.scoreCohesion) == 8.03
     assert float(score.scoreStructure) == 6.5
     assert float(score.scoreIntegration) == 0.0
     # Get all explanations for this file from the database.
     explanations = Explanations.query.filter_by(fileId = file.id).all()
+    # Check if the correct number of explanations has been uploaded to the database:
+    assert len(explanations) == 11
     # Check if all information about the style mistakes mistake has been added to this database correctly:
-    assert len(explanations) == 10
     assert explanations[0].mistakeText == 'a'
     assert explanations[0].explanation == 'Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.'
     assert explanations[0].type == 0
@@ -278,16 +295,18 @@ def testGenFeedbackTxtFile(testClient, initDatabase):
     page = doc.load_page(0)
     assert page.get_textbox(fitz.Rect(explanations[0].X1, explanations[0].Y1, explanations[0].X2, explanations[0].Y2)) == 'a'
     assert page.get_textbox(fitz.Rect(explanations[1].X1, explanations[1].Y1, explanations[1].X2, explanations[1].Y2)) == 'must try'
+    # Check if the correct information for the Cohesion writing skill has been added to the database:
+    assert explanations[2].mistakeText == ''
+    assert explanations[2].explanation == ('Your score for cohesion is 8.03.\nYou used enough variation of words. You have in between 70'+ 
+    ' and 90 percent variation in your text. These are your most used words: "the", "to" and "a".\nYou could use less connectives in your text.' +
+    ' You have a percentage of 12 in your text, ideally this would be 9 percent.\nConnectives are words or phrases that link ' +
+        'other linguistic units.')
+    assert explanations[2].type == 1
     explanationTextStructure = 'This paragraph is too short, try to make paragraphs with approximately 200 words.'
-    assert explanations[2].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
-    ' if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing'+
-    ' with a another human, like with the Google Duplex.')
-    # Check if all information about the style Structure mistake has been added to this database correctly:
-    assert explanations[2].explanation == explanationTextStructure
-    assert explanations[2].type == 2
     assert explanations[3].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
     ' if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing'+
     ' with a another human, like with the Google Duplex.')
+    # Check if all information about the style Structure mistake has been added to this database correctly:
     assert explanations[3].explanation == explanationTextStructure
     assert explanations[3].type == 2
     assert explanations[4].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
@@ -300,8 +319,9 @@ def testGenFeedbackTxtFile(testClient, initDatabase):
     ' with a another human, like with the Google Duplex.')
     assert explanations[5].explanation == explanationTextStructure
     assert explanations[5].type == 2
-    assert explanations[6].mistakeText == ('C does this by the hand of asking (written) questions. A must try to cause C to make the wrong' + 
-        ' identification, while B must try to help C make the right identification (Turing, 1950).')
+    assert explanations[6].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
+    ' if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing'+
+    ' with a another human, like with the Google Duplex.')
     assert explanations[6].explanation == explanationTextStructure
     assert explanations[6].type == 2
     assert explanations[7].mistakeText == ('C does this by the hand of asking (written) questions. A must try to cause C to make the wrong' + 
@@ -312,23 +332,27 @@ def testGenFeedbackTxtFile(testClient, initDatabase):
         ' identification, while B must try to help C make the right identification (Turing, 1950).')
     assert explanations[8].explanation == explanationTextStructure
     assert explanations[8].type == 2
+    assert explanations[9].mistakeText == ('C does this by the hand of asking (written) questions. A must try to cause C to make the wrong' + 
+        ' identification, while B must try to help C make the right identification (Turing, 1950).')
+    assert explanations[9].explanation == explanationTextStructure
+    assert explanations[9].type == 2
     # Check if the coordinates of the structure mistakes have also been found correctly:
-    assert page.get_textbox(fitz.Rect(explanations[2].X1, explanations[2].Y1, explanations[2].X2, explanations[2].Y2)) == (
-        'So the Turing test might not good test to determine if machines can think, but')
     assert page.get_textbox(fitz.Rect(explanations[3].X1, explanations[3].Y1, explanations[3].X2, explanations[3].Y2)) == (
-        'determine if a machine is programmed well enough to imitate a human being so')
+        'So the Turing test might not good test to determine if machines can think, but')
     assert page.get_textbox(fitz.Rect(explanations[4].X1, explanations[4].Y1, explanations[4].X2, explanations[4].Y2)) == (
-        'that it can trick an interrogator into thinking it is conversing with a another')
+        'determine if a machine is programmed well enough to imitate a human being so')
     assert page.get_textbox(fitz.Rect(explanations[5].X1, explanations[5].Y1, explanations[5].X2, explanations[5].Y2)) == (
-        'human, like with the Google Duplex.')
+        'that it can trick an interrogator into thinking it is conversing with a another')
     assert page.get_textbox(fitz.Rect(explanations[6].X1, explanations[6].Y1, explanations[6].X2, explanations[6].Y2)) == (
-        'C does this by the hand of asking (written) questions. A must try to cause C to')
+        'human, like with the Google Duplex.')
     assert page.get_textbox(fitz.Rect(explanations[7].X1, explanations[7].Y1, explanations[7].X2, explanations[7].Y2)) == (
-        'make the wrong identification, while B must try to help C make the right')
+        'C does this by the hand of asking (written) questions. A must try to cause C to')
     assert page.get_textbox(fitz.Rect(explanations[8].X1, explanations[8].Y1, explanations[8].X2, explanations[8].Y2)) == (
+        'make the wrong identification, while B must try to help C make the right')
+    assert page.get_textbox(fitz.Rect(explanations[9].X1, explanations[9].Y1, explanations[9].X2, explanations[9].Y2)) == (
         'identification (Turing, 1950).')
     # Check if the information for the source integration and content mistakes have been added correctly:
-    assert explanations[9].mistakeText == ''
-    assert explanations[9].explanation == ('Your score for source integration and content is 0. You only used 0 sources in 2 paragraphs of text.' +
+    assert explanations[10].mistakeText == ''
+    assert explanations[10].explanation == ('Your score for source integration and content is 0. You only used 0 sources in 2 paragraphs of text.' +
     ' Try adding more sources. Writing Dashboard Could not check if text from the sources are actually used in the text.')
-    assert explanations[9].type == 3
+    assert explanations[10].type == 3

@@ -20,7 +20,6 @@ import { AdminPanelSettingsOutlined, MoreHorizOutlined, BiotechOutlined, SchoolO
 import axios from 'axios';
 import { authHeader } from '../helpers/auth-header';
 import { AuthenticationService } from '../services/authenticationService';
-import { history } from '../helpers/history';
 import AlertDialog from "./AlertDialog";
 
 
@@ -144,7 +143,9 @@ const RoleDialog = ({userRole, userId, userName}) => {
               <AlertDialog title = "Error while changing role" text = {alertMessage}
                            buttonAgree={<Button style={{color: "red"}} onClick={(e) => {setShowErrorDialog(false)}}>Ok</Button>}
               />}
-            <div title={"Change role of user"} className={"roleColumn"} onClick={handleClickOpen}>{value } <MoreHorizOutlined/></div>
+            {/* clickable and ... only for non-participants */}
+            {userRole !== 'participant' && <div title={"Change role of user"} className={"roleColumn"} onClick={handleClickOpen}> { value } <MoreHorizOutlined/> </div>}
+            {userRole === 'participant' && <div title={"Cannot change role of participant"} className={"roleColumn"}> { value } </div>}
             <Dialog
                 fullWidth={true}
                 maxWidth='xs'
