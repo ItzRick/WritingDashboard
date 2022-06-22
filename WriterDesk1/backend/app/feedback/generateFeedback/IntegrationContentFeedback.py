@@ -12,11 +12,12 @@ class IntegrationContentFeedback(BaseFeedback):
     '''
         Class, which inherits BaseFeedback, to generate the feedback for the source integration and content writing category.
     '''
+    
     def __init__(self, text, referencesText, fileId, userId, filePath):
         '''
             A method to initialize this class, which sets the text, referencesText, fileId, userId, filePath variables, 
             sets the explanationType variable to 1, to indicate a cohesion feedback and does all functionality of the 
-            BaseFeedback.
+            init method of BaseFeedback.
             Arguments: 
                 self: The current class object.
                 text: Text for which the feedback will be generated.

@@ -8,6 +8,7 @@ class BaseFeedback:
         Attributes: 
             explanationType: The explanationType of the current class.
     '''
+    
     explanationType = -1
 
     def __init__(self, text, referencesText, fileId, userId, filePath):

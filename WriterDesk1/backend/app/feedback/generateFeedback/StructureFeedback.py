@@ -4,8 +4,25 @@ from decimal import ROUND_HALF_UP, Decimal
 import fitz
 
 class StructureFeedback(BaseFeedback):
-    
+    '''
+        Class, which inherits BaseFeedback, to generate the feedback for the source integration and content writing category.
+    '''
+
     def __init__(self, text, referencesText, fileId, userId, filePath):
+        '''
+            A method to initialize this class, which sets the text, referencesText, fileId, userId, filePath variables, 
+            sets the explanationType variable to 2, to indicate cohesion feedback and does all functionality of the 
+            init function of BaseFeedback.
+            Arguments: 
+                self: The current class object.
+                text: Text for which the feedback will be generated.
+                referencesText: The text containing the references for which the feedback will be generated.
+                fileId: File id of the file for which feedback will be generated.
+                userId: userId of the file for which the feedback will be generated.
+                filePath: The filePath of which the file for which we generate feedback is located.
+            Attributes: 
+                explanationType: explanationType of the current class, 2, to indicate Cohesion.
+        '''
         super().__init__(text, referencesText, fileId, userId, filePath)
         self.explanationType = 2
 
@@ -19,11 +36,14 @@ class StructureFeedback(BaseFeedback):
                 structure aspects (in this case paragraph size only).
                 score: the score for the structure writing skill.
                 scoreRounded = the score rounded to one decimal behind the comma.
-            Arguments:
+                explanationsDict: Dictionary with the explanations, which will also be added to the database.
                 text: the text on which the structure score should be calculated.
+            Arguments:
+                self: The current class object.
             Return: 
-                scoreRouned: the score for the structure writing skill (in this 
+                scoreStructure: the score for the structure writing skill (in this 
                 case based on paragraph size only).
+                explanations: List of explanations as added to the database.
         '''
         # If the input text is empty
         if len(self.text) == 0:
@@ -67,6 +87,7 @@ class StructureFeedback(BaseFeedback):
                 score: The average score taken over all paragraphs.
                 scoreRounded: The score rounded to one decimal behind the comma.
             Arguments:
+                self: The current class object.
                 text: The text on which this will be run.
             Return: 
                 scoreRounded: the score from 0 to 10 based on the average of the
@@ -132,9 +153,9 @@ class StructureFeedback(BaseFeedback):
     
     def getMistakesInformationStructure(self, mistakes):
         '''
-            This function makes a list of lists that contains the coordinates, 
-            writing skill number (2), explanation and mistake text of each occurence
-            of each structure mistake in a specified document.
+            This function adds a single explanation to the explanations list of the current class, 
+            that contains the coordinates, writing skill number (2), explanation and 
+            mistake text of each occurence of each structure mistake in a specified document.
             Attributes:
                 listForDatabase: used for returning all database entries.
                 doc: The document to get information from.
@@ -144,13 +165,11 @@ class StructureFeedback(BaseFeedback):
                 for every page of the document.
                 values: list containing all the information needed for highlighting
                 that is to be put in the database.
+                filePath: the path to the document to get information from.
             Arguments:
                 mistakes: a format of mistakes in a document for the structure
                 writing skill.
-                filePath: the path to the document to get information from.
-            Return:
-                listForDatabase: a list contain all values objects that can be put
-                in the database.
+                self: The current class object.
         '''
         doc = fitz.open(self.filePath)
 
