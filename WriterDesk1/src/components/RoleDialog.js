@@ -21,6 +21,7 @@ import axios from 'axios';
 import { authHeader } from '../helpers/auth-header';
 import { AuthenticationService } from '../services/authenticationService';
 import { history } from '../helpers/history';
+import AlertDialog from "./AlertDialog";
 
 
 /**
@@ -61,6 +62,13 @@ const RoleDialog = ({userRole, userId, userName}) => {
      // new role value for user
     const [selectedValue, setSelected] = useState(userRole);
 
+    // Show dialog when changing own role
+    const [showChangeOwnRoleDialog, setShowChangeOwnRoleDialog] = useState(false);
+    // Show error dialog when error occurred in setRole call
+    const [showErrorDialog, setShowErrorDialog] = useState(false);
+    // Alert message given by the setRole backend call when there is an error
+    const [alertMessage, setAlertMessage] = useState('');
+
     // handle opening of popup
     const handleClickOpen = () => {
         setSelected(value);
@@ -82,27 +90,42 @@ const RoleDialog = ({userRole, userId, userName}) => {
 
     let navigate = useNavigate();
 
-    // handle conformation of selection
+    /**
+     * Show dialog when changing own role, otherwise change role immediately.
+     */
     const handleOk = () => {
         if (AuthenticationService.getCurrentUserId() === userId) {
-            if (!window.confirm("You're about to change your own role.\n Do you want to continue?")) {
-                return;
-            }
+            setShowChangeOwnRoleDialog(true);
+        } else {
+            onClose(selectedValue);
+            callChangeRole();
         }
 
-        onClose(selectedValue);
+     };
+
+    /**
+     * First unshow alert dialog, then call change role function with the correct parameters.
+     */
+    const callChangeRole = () => {
+        // Don't show dialog anymore if it was displayed.
+        setShowChangeOwnRoleDialog(false);
+
         // Send request and handle possible error
-        ChangeRole(userId, selectedValue.toLowerCase()).catch((error) => {
+        ChangeRole(userId, selectedValue.toLowerCase()).then(r => {
+            if(AuthenticationService.getCurrentUserId() === userId && selectedValue !== 'Admin') {
+                AuthenticationService.logout();  // If admin role is changed to another role, logout
+                navigate("../Login", {replace: true});
+            }
+        }).catch((error) => {
+            // Reset shown role to previous role
             setValue(userRole);
-            let alertText = "Error while changing role: \n" + error.message;
-            alert(alertText);
+
+            // Show alert dialog with error message
+            setAlertMessage(error.response.data);
+            setShowErrorDialog(true);
         });
 
-        if (AuthenticationService.getCurrentUserId() === userId && selectedValue !== 'Admin'){
-            AuthenticationService.logout();
-            navigate("../Login", { replace: true });
-        }
-     };
+    }
     
      // handle cancel of selection
     const handleCancel = () => {
@@ -112,6 +135,15 @@ const RoleDialog = ({userRole, userId, userName}) => {
 
     return (
         <>
+            {showChangeOwnRoleDialog &&
+              <AlertDialog title = "Change own role" text = "You're about to change your own role. Do you want to continue?"
+                           buttonAgree={<Button style={{color: "red"}} onClick={(e) => {onClose(selectedValue); callChangeRole();}}>Yes</Button>}
+                           buttonCancel={<Button onClick={(e) => {setShowChangeOwnRoleDialog(false)}}>Cancel</Button>}
+              />}
+            {showErrorDialog &&
+              <AlertDialog title = "Error while changing role" text = {alertMessage}
+                           buttonAgree={<Button style={{color: "red"}} onClick={(e) => {setShowErrorDialog(false)}}>Ok</Button>}
+              />}
             <div title={"Change role of user"} className={"roleColumn"} onClick={handleClickOpen}>{value } <MoreHorizOutlined/></div>
             <Dialog
                 fullWidth={true}
