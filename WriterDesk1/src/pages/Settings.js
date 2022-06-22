@@ -188,11 +188,11 @@ const Settings = () => {
     const changeEmail = () => {
         // Check if input is valid
         if (passwordForEmail === "" || username === "" || usernameConfirm === "") {
-            setFormError("One or more fields are empty!");
+            setFormMailError("One or more fields are empty!");
             return;
         }
         if (checkUsername() !== "" || confirmUsername() !== "") {
-            setFormError("One or more fields are not complete!");
+            setFormMailError("One or more fields are not complete!");
             return;
         }
         // If input is valid, do post request
