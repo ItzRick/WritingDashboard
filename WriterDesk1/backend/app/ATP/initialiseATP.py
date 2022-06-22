@@ -5,28 +5,41 @@ from app.models import User, Projects, Clicks, Files, Scores, Explanations
 from app.generateParticipants import generateParticipants
 from app.database import uploadToDatabase
 
-def helperFiles(filename, uid, courseCode, extension):
+from app.feedback.feedback import genFeedback
+
+'''
+TO RUN THE INITIALIZATION
+simply run:
+
+flask shell
+
+from the backend in cmd. And then run:
+
+from app.ATP.initialiseATP import initialiseATP
+initialiseATP()
+
+'''
+
+
+def helperFiles(fileName, uid, courseCode, extension):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, filename)
+    fileDir = os.path.join(BASEDIR, fileName)
     f = Files(
         path=fileDir, 
-        filename=filename, 
+        filename=fileName, 
         userId=uid, 
         courseCode=courseCode,
         fileType=extension
     )
     uploadToDatabase(f)
-    return f.id
+    return f
 
-def helperScores(fileId, sSty, sCoh, sStr, sInt):
-    s = Scores(fileId, sSty, sCoh, sStr, sInt)
+def helperScores(file, sSty, sCoh, sStr, sInt):
+    s = Scores(file.id, sSty, sCoh, sStr, sInt)
     uploadToDatabase(s)
 
-def helperExpl(fileId, type, expl, ):
-    e = Explanations()
-    # TODO
-    uploadToDatabase(e)
-    return 0
+def helperExpl(file):
+    genFeedback(file)
 
 def initialiseATP():
     '''
@@ -47,31 +60,31 @@ def initialiseATP():
     assert User.query.filter_by(username=uname).first() is not None
 
     # Five files ’file 1-5’ with as userId the id of ’student@tue.nl’.
-    fid1 = helperFiles(
+    f1 = helperFiles(
         fileName='test1.pdf',
         extension='.pdf',
         uid=uid,
         courseCode='c1',
     )
-    fid2 = helperFiles(
+    f2 = helperFiles(
         fileName='test2.pdf',
         extension='.pdf',
         uid=uid,
         courseCode='c2',
     )
-    fid3 = helperFiles(
+    f3 = helperFiles(
         fileName='test3.pdf',
         extension='.pdf',
         uid=uid,
         courseCode='c3',
     )
-    fid4 = helperFiles(
+    f4 = helperFiles(
         fileName='test4.pdf',
         extension='.pdf',
         uid=uid,
         courseCode='c4',
     )
-    fid5 = helperFiles(
+    f5 = helperFiles(
         fileName='test5.pdf',
         extension='.pdf',
         uid=uid,
@@ -82,46 +95,48 @@ def initialiseATP():
     # Cohesion scores ’scoreCohesion 1-5’ for files ’file 1-5’.
     # Structure scores ’scoreStructure 1-5’ for files ’file 1-5’.
     # Source integration and content scores ’scoreIntegration 1-5’ for files ’file 1-5’.
-    helperScores(fid1, 1,2,3,4)
-    helperScores(fid2, 5,6,7,8)
-    helperScores(fid3, 9,10,0,1)
-    helperScores(fid4, 2,3,4,5)
-    helperScores(fid5, 6,7,8,9)
+    helperExpl(f1)
+    helperExpl(f2)
+    helperExpl(f3)
+    helperExpl(f4)
+    helperExpl(f5)
 
     # A user with username ’researcher@tue.nl’, password ’ResearcherPass1’ and the researcher role.
+    uname='researcher@tue.nl'
     u = User(username=uname, password_plaintext='ResearcherPass1', role='researcher')
-    researcherId = u.id #save id for later
     uploadToDatabase(u)
-    assert User.query.filter_by(id=researcherId).first() is not None
+    res = User.query.filter_by(username=uname).first()
+    researcherId = res.id #save id for later
+    assert res is not None
 
     # A project with projectName ’DeleteMe’ and as userId the id of ’researcher@tue.nl’.
     p = Projects(userId=researcherId, projectName='DeleteMe')
-    projectId = p.id #save id for later
     uploadToDatabase(p)
-    assert Projects.query.filter_by(id=projectId).first() is not None
+    pro = Projects.query.filter_by(userId=researcherId).first()
+    projectId = pro.id #save id for later
+    assert pro is not None
 
     # Two users with usernames ’par ’ and ’par ’, passwords ” and ” and the participant role.
     # Two ParticipantToProject entries with as userId the ids of ’par ’ and ’par ’ and as projectId the id of ’DeleteMe’.
     participants = generateParticipants(nrOfParticipants=2, projectId=projectId)
-    participantsIds = [User.query.filter_by(username=x.username).first() for x in participants]
+    participantsIds = [User.query.filter_by(username=x['username']).first().id for x in participants]
     
     # A file ’participant file’ with as userId the id of ’par ’.
-    fid1 = helperFiles(
+    f1 = helperFiles(
         fileName='test1.pdf',
         extension='.pdf',
         uid=participantsIds[0],
         courseCode='c1',
     )
-    fid2 = helperFiles(
+    f2 = helperFiles(
         fileName='test2.pdf',
         extension='.pdf',
         uid=participantsIds[0],
         courseCode='c2',
     )
-
     # Scores and explanations for file ’participant file’.
-    helperScores(fid1, 1,2,3,4)
-    helperScores(fid2, 5,6,7,8)
+    helperExpl(f1)
+    helperExpl(f2)
 
     # At least two Clickdata entries with as userId the id of ’par ’, one containing the url of the Document page, one containing another url.
     idParOne = participantsIds[0]
@@ -133,3 +148,6 @@ def initialiseATP():
     # A user with username ’admin@tue.nl’, password ’AdminPass1’ and administrator role.
     u = User(username='admin@tue.nl', password_plaintext='AdminPass1', role='admin')
     uploadToDatabase(u)
+
+    print('participants')
+    print(participants) # keep this print here, and read it 
