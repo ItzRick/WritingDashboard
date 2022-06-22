@@ -5,7 +5,7 @@ def test_convertDocx(testClient):
     '''
         Tests if a docx file gets converted to a pdf file and the location of
         the converted file is returned
-        Requires libreoficce to run, needs to be added to PATH
+        Requires libreoficce to run, and requires libreoffice to be added to PATH
         Attributes:
             BASEPATH: path to the files.
             fileLoc: pointer to the docx file.

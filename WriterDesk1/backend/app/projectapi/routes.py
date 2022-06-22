@@ -6,7 +6,7 @@ from app.projectapi import bp
 from flask import request, jsonify, current_app
 from app.models import Projects, User, ParticipantToProject
 
-from app.database import uploadToDatabase, removeFromDatabase, getProjectsByResearcher, recordsToCsv, getParticipantsWithProjectsByResearcher
+from app.database import removeFromDatabase, getProjectsByResearcher, recordsToCsv, getParticipantsWithProjectsByResearcher
 from app import generateParticipants as gp
 from app import db
 from flask_jwt_extended import jwt_required
@@ -158,7 +158,6 @@ def viewParticipantsOfUser():
     this specific user created to that user, using that user id.
     Attributes:
         userId: user id as given by the frontend
-    Arguments:
         participants: the participants that this user has created
     '''
     # Get the user id as sent by the react frontend
@@ -178,7 +177,6 @@ def viewProjectsOfUser():
     this specific user created to that user, using that user id.
     Attributes:
         userId: user id as given by the frontend
-    Arguments:
         projects: the projects that this user has created
     '''
     # Get the user id as sent by the react frontend

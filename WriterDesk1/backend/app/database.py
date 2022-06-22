@@ -18,7 +18,6 @@ def initialSetup():
     # comment out:
     #   - loginapi > create_token() > initialSetup()
 
-# Upload the given file to the database of this session
 def uploadToDatabase(toUpload):
     '''
         This functions adds data to the database.
@@ -78,10 +77,17 @@ def getFilesByUser(user, sortingAttribute):
     return Files.serializeList(files.all())
 
 def getUsers() :
+    '''
+        Retrieves and returns a list of all users that are not assigned the participant role
+        Attributes:
+            users: list containing entries from user table without the users that are assigned the
+            participant role.
+        Return:
+            Returns a list containing dictionary entries of users
+    '''
     users = db.session.query(User).filter(User.role != 'participant').all()
     return User.serializeList(users)
 
-# Registers new user with username and password
 def postUser(username, password, trackable=True):
     '''
         This function handles the signup query. When there is no user present in
@@ -189,12 +195,11 @@ def getProjectsByResearcher(user):
         Arguments:
             user: id of the user whose projects need to be retrieved
         Return:
-            projectIds: List of project ids of the given user.
+            List of project ids of the given user.
     '''
     # Retrieve the projects of the user
     projectList = Projects.query.filter_by(userId=user).all()
-    projects = [dict(userId = proj.userId, projectName = proj.projectName, id = proj.id) for proj in projectList]
-    return projects 
+    return [dict(userId = proj.userId, projectName = proj.projectName, id = proj.id) for proj in projectList]
 
 def getParticipantsByResearcher(user):
     '''
@@ -218,9 +223,8 @@ def getParticipantsByResearcher(user):
     participantIdList = ParticipantToProject.query.join(projectList, ParticipantToProject.projectId == projectList.c.id).subquery()
     # Get the participants of the projects of the user
     participantList = User.query.join(participantIdList, User.id == participantIdList.c.userId).all()
-    participants = [dict(role = part.role, id = part.id, username = part.username, passwordHash = part.passwordHash) for part in participantList]
     # Return the information of the participants in all projects of the user
-    return participants
+    return [dict(role = part.role, id = part.id, username = part.username, passwordHash = part.passwordHash) for part in participantList]
     
 def getParticipantsWithProjectsByResearcher(user):
     '''
@@ -238,11 +242,12 @@ def getParticipantsWithProjectsByResearcher(user):
     '''
     participants = getParticipantsByResearcher(user)
     
+    # for each participant add the related project name and projectId 
     for participant in participants:
-        projectParticipantConnection = ParticipantToProject.query.filter_by(userId=participant['id']).all()
-        projectid = projectParticipantConnection[0].projectId
-        project = Projects.query.filter_by(id=projectid).all()
-        projectname = project[0].projectName
+        projectParticipantConnection = ParticipantToProject.query.filter_by(userId=participant['id']).first()
+        projectid = projectParticipantConnection.projectId
+        project = Projects.query.filter_by(id=projectid).first()
+        projectname = project.projectName
         participant['projectid'] = projectid
         participant['projectname'] = projectname
 

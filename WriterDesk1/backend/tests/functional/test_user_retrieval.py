@@ -7,7 +7,7 @@ from test_set_role import loginHelper
 
 def checkUserRet(uid, uName, uRole, data):
     '''
-    Checks userId, userName and userRole is in the data
+    Checks if uid, uName and uRole is in the data
     Argunments:
         uid: user Id
         uName: user name
@@ -35,23 +35,14 @@ def testRetrieveUsers(testClient, initDatabase):
     '''
     del initDatabase
     # We add five users to the database session
-    try:
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
-    try:
-        user = User(username='John', password_plaintext='blegh')
-        db.session.add(user)
-        user2 = User(username='Kevin', password_plaintext='bleh')
-        db.session.add(user2)
-        user3 = User(username='Samantha', password_plaintext='bleurgh')
-        user3.role = 'participant'
-        db.session.add(user3)
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
+    user = User(username='John', password_plaintext='blegh')
+    db.session.add(user)
+    user2 = User(username='Kevin', password_plaintext='bleh')
+    db.session.add(user2)
+    user3 = User(username='Samantha', password_plaintext='bleurgh')
+    user3.role = 'participant'
+    db.session.add(user3)
+    db.session.commit()
 
     assert User.query.filter_by(username='ad').first() is not None
 
@@ -101,7 +92,7 @@ def testNotAdmin(testClient, initDatabase):
         initDatabase: The database instance we test this for.
     Attributes:
         user: user 'Pietje'
-        userId: invalid user id
+        userId: user id of pietje, not an admin
         newRole: new proposed and valid role
         access_token: admin's access token
         data: data for request to server
@@ -131,7 +122,7 @@ def testAdmin(testClient, initDatabase):
         initDatabase: The database instance we test this for.
     Attributes:
         user: user 'ad'
-        userId: invalid user id
+        userId: user of admin
         newRole: new proposed and valid role
         access_token: admin's access token
         data: data for request to server
