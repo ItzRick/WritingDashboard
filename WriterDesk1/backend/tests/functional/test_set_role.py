@@ -189,8 +189,8 @@ def testLastAdmin(testClient, initDatabase):
         testClient:   The test client we test this for.
         initDatabase: The database instance we test this for.
     Attributes:
-        user: user 'Pietje'
-        userId: invalid user id
+        user: user 'ad min'
+        userId: user id of ad min
         newRole: new proposed and valid role
         access_token: admin's access token
         data: data for request to server
