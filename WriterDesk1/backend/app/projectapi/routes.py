@@ -6,7 +6,7 @@ from app.projectapi import bp
 from flask import request, jsonify, current_app
 from app.models import Projects, User, ParticipantToProject
 
-from app.database import uploadToDatabase, removeFromDatabase, getParticipantsByResearcher, getProjectsByResearcher, recordsToCsv
+from app.database import uploadToDatabase, removeFromDatabase, getProjectsByResearcher, recordsToCsv, getParticipantsWithProjectsByResearcher
 from app import generateParticipants as gp
 from app import db
 from flask_jwt_extended import jwt_required
