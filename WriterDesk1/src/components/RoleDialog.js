@@ -145,7 +145,7 @@ const RoleDialog = ({userRole, userId, userName}) => {
               />}
             {/* clickable and ... only for non-participants */}
             {userRole !== 'participant' && <div title={"Change role of user"} className={"roleColumn"} onClick={handleClickOpen}> { value } <MoreHorizOutlined/> </div>}
-            {userRole === 'participant' && <div title={"Change role of user"} className={"roleColumn"}> { value } </div>}
+            {userRole === 'participant' && <div title={"Cannot change role of participant"} className={"roleColumn"}> { value } </div>}
             <Dialog
                 fullWidth={true}
                 maxWidth='xs'
