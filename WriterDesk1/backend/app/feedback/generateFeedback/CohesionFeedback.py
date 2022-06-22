@@ -6,10 +6,26 @@ from app.feedback.nltkDownload import downloadNltkCohesion
 import os
 
 class CohesionFeedback(BaseFeedback):
+    '''
+        Class, which inherits BaseFeedback, to generate the feedback for the Cohesion writing category.
+    '''
 
     def __init__(self, text, referencesText, fileId, userId, filePath):
+        '''
+            A method to initialize this class, which sets the text, referencesText, fileId, userId, filePath variables, 
+            sets the explanationType variable to 1, to indicate a cohesion feedback and does all functionality of the 
+            BaseFeedback.
+            Arguments: 
+                self: The current class object.
+                text: Text for which the feedback will be generated.
+                referencesText: The text containing the references for which the feedback will be generated.
+                fileId: File id of the file for which feedback will be generated.
+                userId: userId of the file for which the feedback will be generated.
+                filePath: The filePath of which the file for which we generate feedback is located.
+            Attributes: explanationType: explanationType of the current class, 2, to indicate Cohesion.
+        '''
         super().__init__(text, referencesText, fileId, userId, filePath)
-        self.explanationType 
+        self.explanationType = 1
 
     def genFeedback(self):
         """
@@ -33,17 +49,20 @@ class CohesionFeedback(BaseFeedback):
                 connectivesScoreExplanation: string, gives feedback on how to
                         improve the connectivesScore, the indexScore has some
                         influence on this as well.
-            Arguments:
+                feedback: string, combination of scoreExplanation, 
+                    TTRScoreExplanation and connectivesScoreExplanation. This
+                    is the feedback that the user will see.
                 text: string, the text on which the cohesion score should be
                         calculated.
+            Arguments:
+                self: The current class object.
             Return:
-                cohesionScore: float, calculated by calculating the average of
+                scoreCohesion: float, calculated by calculating the average of
                         TTRScore and connectivesScore, rounded to 2 decimals. This
                         is the final score that the user will get.
-                feedback: string, combination of scoreExplanation, 
-                        TTRScoreExplanation and connectivesScoreExplanation. This
-                        is the feedback that the user will see.
+                explanations: List, with the explanations as they will be added to the database.
         """
+        # Download the nltk libraries required for this function:
         downloadNltkCohesion()
         # If the text string is empty the function returns null.
         if self.text == "":
@@ -147,9 +166,9 @@ class CohesionFeedback(BaseFeedback):
         # improve your score and a small explanation on what connectives are.
         self.feedback = scoreExplanation + "\n" + TTRScoreExplanation + "\n" + \
             connectivesScoreExplanation + "\n" + connectivesExplanation
-
+        # Add the explanation to the existing list:
         self.addSingleExplanation(-1, -1, -1, -1, 1, self.feedback, '', [])
-
+        # Return the scoreCohesion and explanations as required:
         return self.scoreCohesion, self.explanations
 
     def getConnectiveScore(self, text):
@@ -166,6 +185,7 @@ class CohesionFeedback(BaseFeedback):
                 tokens: list containing the text split up into tokens as strings.
                 numberOfConnectives: integer, number of connectives in text.        
             Arguments:
+                self: The current class object.
                 text: string, the text on which the connective score should be 
                         calculated.
             Return:
@@ -263,6 +283,7 @@ class CohesionFeedback(BaseFeedback):
                         before; initially this is 50, if there are less than 50 
                         tokens then that is the number of tokens.            
             Arguments:
+                self: The current class object.
                 text: string, the text on which the TTR score should be calculated.
             Return:
                 TTRScore: float, TTR score calculated as follows: (average of) 
