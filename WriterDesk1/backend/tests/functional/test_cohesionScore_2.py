@@ -16,13 +16,13 @@ def testConnectivesLowestManyConnectives(testClient, downloadNltk):
             text: Input text for the test.            
             score: The scores given for the cohesion score.
             expected_feedback: The expected feedback string.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient, downloadNltk
     text = "Although, although although."
     feedbackObject = CohesionFeedback(text, '', 1, 1, '')
     score = feedbackObject.genFeedback()
-    expectedFeedback = feedbackObject.feedback
     expected_feedback = ("You have too many connectives in your text. You have"
         " a percentage of 100 in your text, ideally this would be 9 percent.")
     assert score[0] == 1.67
-    assert expectedFeedback.splitlines()[2] == expected_feedback
+    assert feedbackObject.feedback.splitlines()[2] == expected_feedback

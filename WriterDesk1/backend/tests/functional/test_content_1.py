@@ -7,6 +7,7 @@ def testCountParagraphsOne(testClient):
     2 newline characters. Test this for a text with 1 paragraph.
     Attributes:  
         text: The text we run the method on, containing 1 paragraph.
+        feedbackObject: Object to create feedback for the source integration and content writing category.
     Arguments:
         testClient:  The test client we test this for.
     '''
@@ -21,6 +22,7 @@ def testCountParagraphsTwo(testClient):
     2 newline characters. Test this for a text with 2 paragraphs.
     Attributes:  
         text: The text we run the method on, containing 2 paragraphs.
+        feedbackObject: Object to create feedback for the source integration and content writing category.
     Arguments:
         testClient:  The test client we test this for.
     '''
@@ -52,6 +54,7 @@ def testWordsSources(testClient, englishStopwords):
             text: The text we want to run the wordsSource method on. 
             wordsWoStopwordsExpected: The words set we expect to find. 
             wordsWoStopwords: The words set as we get from the wordsSource method.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
             englishStopwords: English stopwords downloaded from nltk from conftest.py.
@@ -75,6 +78,7 @@ def testWordsSourcesMultiple(testClient, englishStopwords):
             wordsWoStopwords: The words set as we get from the wordsSource method.
             wordsWoStopwordsInitial: Initial empty set of words, we put into the wordsSource method.
             wordsWoStopWordsExpectedSecond: The words set as we get from the wordsSource method, after the two texts.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
             englishStopwords: English stopwords downloaded from nltk from conftest.py.
@@ -103,6 +107,7 @@ def testWordsText(testClient, englishStopwords):
             expectedDictWords: the Dictionary we expect to get from this function. 
             wordsDict: The dictionary with words we get from this function. 
             count: Count of the number of words we get from the wordsText function.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
             englishStopwords: English stopwords downloaded from nltk from conftest.py.
@@ -125,6 +130,7 @@ def testWordsTextSecond(testClient, englishStopwords):
             expectedDictWords: the Dictionary we expect to get from this function. 
             wordsDict: The dictionary with words we get from this function. 
             count: Count of the number of words we get from the wordsText function.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
             englishStopwords: English stopwords downloaded from nltk from conftest.py.
@@ -157,6 +163,7 @@ def testGetUrlSources(testClient):
             links: The links as retrieved from the getUrlsSources method.
             links_doi: The links containing doi.org as retrieved from the getUrlsSources method.
             numSources: The number of sources inside the sources string, as retrieved from the getUrlsSources method.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -182,6 +189,8 @@ def testCalcScoreAndExplanationSourcesNotDownloadedZero(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -208,6 +217,8 @@ def testCalcScoreAndExplanationSourcesNotDownloadedNoSources(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -232,6 +243,8 @@ def testCalcScoreAndExplanationSourcesNotDownloadedTwo(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -258,6 +271,7 @@ def testCalcScoreAndExplanationSourcesNotDownloadedFour(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -284,6 +298,7 @@ def testCalcScoreAndExplanationSourcesNotDownloadedSix(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -310,6 +325,7 @@ def testCalcScoreAndExplanationSourcesNotDownloadedEight(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''
@@ -336,6 +352,7 @@ def testCalcScoreAndExplanationSourcesNotDownloadedTen(testClient):
             score: The score as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanation: The explanation as retrieved from the calcScoreAndExplanationSourcesNotDownloaded method.
             explanationText: The text manually set, we should retrieve from the method, to check against.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
     '''

@@ -1,5 +1,17 @@
 from nltk.corpus import stopwords
-from app.feedback.nltkDownload import getEnglishStopwords
+from app.feedback.nltkDownload import getEnglishStopwords, downloadNltkCohesion
+
+def testNltkDownload():
+    '''
+        Test if we can use downloadNltkCohesion without errors.
+    '''
+    # Either have an error:
+    try:
+        downloadNltkCohesion()
+    except:
+        assert False
+    # Or assert
+    assert True
 
 def testEnglishstopwords(englishStopwords):
     '''

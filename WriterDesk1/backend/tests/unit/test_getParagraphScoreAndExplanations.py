@@ -7,6 +7,7 @@ def test_zero_words():
         Test if a text with zero words returns None.
         Attributes:
             output: the returning value from running the function
+            feedbackObject: Object of the class that generates the feedback for this language and style category.
     '''
     feedbackObject = StructureFeedback('', '', 1, 1, '')
     # generate the output on an empty text
@@ -26,6 +27,7 @@ def test_400_words():
             score: the score given for the structure writing skill.
             explanations: the explanations given for this text for the structure
             writing skill.
+            feedbackObject: Object of the class that generates the feedback for this language and style category.
     '''
     # generate a text with 400 words by multiplying a text with 8 words 50 times
     testText = ('This is a large text with 400 words. ' * 50).strip()
@@ -47,6 +49,12 @@ def test_50_words():
         returns a dictionary with the paragraph as key and the string 
         'This paragraph is too short, try to make paragraphs with approximately 200 words.'
         as value.
+        Attributes:
+            testText: the text the function is run on.
+            score: the score given for the structure writing skill.
+            explanations: the explanations given for this text for the structure
+            writing skill.
+            feedbackObject: Object of the class that generates the feedback for this language and style category.
     '''
     # generate a text with 50 words by multiplying a text with 5 words 10 times
     testText = ('A short 50 word text. ' * 10).strip()
@@ -65,6 +73,12 @@ def test_200_words():
     '''
         Test if a text with 200 words returns 10.0 as score and returns an empty
         dictionary since 200 words in a paragraph is good.
+        Attributes:
+            testText: the text the function is run on.
+            score: the score given for the structure writing skill.
+            explanations: the explanations given for this text for the structure
+            writing skill.
+            feedbackObject: Object of the class that generates the feedback for this language and style category.
     '''
     # generate a text with 200 words by multiplying a text with 8 words 25 times
     testText = ('This is a good text with 200 words. ' * 25).strip()
@@ -87,6 +101,12 @@ def test_2_paragraphs_large_different_lengths():
         with the paragraphs as keys and the string 
         'This paragraph is too long, try to make paragraphs with approximately 200 words.'
         as values.
+        Attributes:
+            testText: the text the function is run on.
+            score: the score given for the structure writing skill.
+            explanations: the explanations given for this text for the structure
+            writing skill.
+            feedbackObject: Object of the class that generates the feedback for this language and style category.
     '''
     # generate a text with 350 and 450 words by multiplying a text with 5 words 
     # 70 times and 90 times and then adding them together
@@ -114,6 +134,12 @@ def test_2_paragraphs_small_different_lengths():
         dictionary with the paragraphs as keys and the string 
         'This paragraph is too short, try to make paragraphs with approximately 200 words.'
         as values.
+        Attributes:
+            testText: the text the function is run on.
+            score: the score given for the structure writing skill.
+            explanations: the explanations given for this text for the structure
+            writing skill.
+            feedbackObject: Object of the class that generates the feedback for this language and style category.
     '''
     # generate a text with 30 and 70 words by multiplying a text with 6 words 
     # 5 times and a text with 7 words 10 times and then adding them together
@@ -137,6 +163,12 @@ def test_2_paragraphs_good_different_lengths():
         Test if a text with 2 paragraphs of 150 and 250 words returns 10.0
         The score should be (10.0 + 10.0) / 2 = 10.0 and it returns an empty
         dictionary since 150 and 250 words in a paragraph is good.
+        Attributes:
+            testText: the text the function is run on.
+            score: the score given for the structure writing skill.
+            explanations: the explanations given for this text for the structure
+            writing skill.
+            feedbackObject: Object of the class that generates the feedback for this language and style category.
     '''
     # generate a text with 150 and 250 words by multiplying a text with 5 words 
     # 30 times and 50 times and then adding them together
@@ -163,6 +195,12 @@ def test_4_paragraphs_all_lengths():
         strings 'This paragraph is too long, try to make paragraphs with approximately 200
         words.' and 'This paragraph is too short, try to make paragraphs with 
         approximately 200 words.' as correspoding values.
+        Attributes:
+            testText: the text the function is run on.
+            score: the score given for the structure writing skill.
+            explanations: the explanations given for this text for the structure
+            writing skill.
+            feedbackObject: Object of the class that generates the feedback for this language and style category.
     '''
     # generate a text with 0, 400, 50 and 200 words by multiplying a text with 8
     # words 50 times, a text with 5 words 10 times and a text with 9 words 25
@@ -194,6 +232,12 @@ def test_2_paragraphs_large_same_content():
         with the content as key and the string 
         'This paragraph is too long, try to make paragraphs with approximately 200 words.'
         as value.
+        Attributes:
+            testText: the text the function is run on.
+            score: the score given for the structure writing skill.
+            explanations: the explanations given for this text for the structure
+            writing skill.
+            feedbackObject: Object of the class that generates the feedback for this language and style category.
     '''
     # generate a text with 400 and 400 words by multiplying a text with 8 words 
     # 50 times twice and then adding them together

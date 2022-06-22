@@ -15,6 +15,7 @@ def testConZeroWords(testClient):
             testClient: The test client we test this for.            
         Attributes:             
             score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient
     feedbackObject = CohesionFeedback('', '', 1, 1, '')
@@ -35,6 +36,7 @@ def testConOneSentencesNoConnectives(testClient):
             index: Expected index score.
             expected: Expected connective score.
             score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient
     text = "They are very big."    
@@ -59,6 +61,7 @@ def testConThreeSentencesNoConnective(testClient):
             index: Expected index score.
             expected: Expected connective score.
             score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient
     text = "They are very big. That person is bigger. He is the biggest."
@@ -83,6 +86,7 @@ def testConOneSentenceSingleConnective(testClient):
             index: Expected index score.
             expected: Expected connective score.
             score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient
     text = "They are very big, although he is the biggest."
@@ -107,6 +111,7 @@ def testConOneSentenceMultipleConnectives(testClient):
             index: Expected index score.
             expected: Expected connective score.
             score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient
     text = ("Despite the fact that they are very big, unfortunantely he is the"
@@ -132,6 +137,7 @@ def testConMoreSentencesSingleConnective(testClient):
             index: Expected index score.
             expected: Expected connective score.
             score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient
     text = "They are very big. Although he is the biggest."
@@ -156,6 +162,7 @@ def testConMoreSentencesMultipleConnectives(testClient):
             index: Expected index score.
             expected: Expected connective score.
             score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient
     text = ("Despite the fact that they are very big. Unfortunantely he is the"
@@ -180,6 +187,7 @@ def testConOneSentencesAllConnectives(testClient):
             index: Expected index score.
             expected: Expected connective score.
             score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient
     text = "Although, although although."
@@ -203,6 +211,7 @@ def testConMoreSentencesAllConnectives(testClient):
             index: Expected index score.
             expected: Expected connective score.
             score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient
     text = "Although, although although. "*4
@@ -228,6 +237,7 @@ def testBigTextMinScore(testClient):
             index: Expected index score.
             expected: Expected connective score.
             score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient
     text = "Although "*50 + "They are very big."
@@ -253,6 +263,7 @@ def test_con_windowsize_min_score(testClient):
             index: Expected index score.
             expected: Expected connective score.
             score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
     '''
     del testClient
     text = "They are very big. "*15 + "although although although"

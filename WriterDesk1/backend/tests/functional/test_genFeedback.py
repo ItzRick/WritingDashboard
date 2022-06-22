@@ -87,8 +87,9 @@ def testGenFeedbackDocxFile(testClient, initDatabase):
     assert float(score.scoreIntegration) == 0.0
     # Get all explanations for this file from the database.
     explanations = Explanations.query.filter_by(fileId = file.id).all()
-    # Check if all information about the style mistakes mistake has been added to this database correctly:
+    # Check if the correct number of explanations has been added to the database:
     assert len(explanations) == 9
+    # Check if all information about the style mistakes mistake has been added to this database correctly:
     assert explanations[0].mistakeText == 'a'
     assert explanations[0].explanation == 'Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.'
     assert explanations[0].type == 0
@@ -102,7 +103,7 @@ def testGenFeedbackDocxFile(testClient, initDatabase):
     page = doc.load_page(0)
     assert page.get_textbox(fitz.Rect(explanations[0].X1, explanations[0].Y1, explanations[0].X2, explanations[0].Y2)) == 'a'
     assert page.get_textbox(fitz.Rect(explanations[1].X1, explanations[1].Y1, explanations[1].X2, explanations[1].Y2)) == 'must try'
-    explanationTextStructure = 'This paragraph is too short, try to make paragraphs with approximately 200 words.'
+    # Check if all information for the Cohesion writing structures has been added to the database:
     assert explanations[2].mistakeText == ''
     assert explanations[2].explanation == ('Your score for cohesion is 8.03.\nYou used enough variation of words. You have in between 70'+ 
     ' and 90 percent variation in your text. These are your most used words: "the", "to" and "a".\nYou could use less connectives in your text.' +
@@ -113,6 +114,7 @@ def testGenFeedbackDocxFile(testClient, initDatabase):
     ' if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing'+
     ' with a another human, like with the Google Duplex. ')
     # Check if all information about the style Structure mistake has been added to this database correctly:
+    explanationTextStructure = 'This paragraph is too short, try to make paragraphs with approximately 200 words.'
     assert explanations[3].explanation == explanationTextStructure
     assert explanations[3].type == 2
     assert explanations[4].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
@@ -181,8 +183,9 @@ def testGenFeedbackPdfFile(testClient, initDatabase):
     assert float(score.scoreIntegration) == 0.0
     # Get all explanations for this file from the database.
     explanations = Explanations.query.filter_by(fileId = file.id).all()
-    # Check if all information about the style mistakes mistake has been added to this database correctly:
+    # Check if all explanations have been added to the database:
     assert len(explanations) == 9
+    # Check if all information about the style mistakes mistake has been added to this database correctly:
     assert explanations[0].mistakeText == 'a'
     assert explanations[0].explanation == 'Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.'
     assert explanations[0].type == 0
@@ -196,17 +199,18 @@ def testGenFeedbackPdfFile(testClient, initDatabase):
     page = doc.load_page(0)
     assert page.get_textbox(fitz.Rect(explanations[0].X1, explanations[0].Y1, explanations[0].X2, explanations[0].Y2)) == 'a'
     assert page.get_textbox(fitz.Rect(explanations[1].X1, explanations[1].Y1, explanations[1].X2, explanations[1].Y2)) == 'must try'
+    # Check if all information fro the cohesion writing skill has been added to the database correctly:
     assert explanations[2].mistakeText == ''
     assert explanations[2].explanation == ('Your score for cohesion is 7.81.\nYou used enough variation of words. You have in between 70'+ 
     ' and 90 percent variation in your text. These are your most used words: "the", "to" and "a".\nYou could use less connectives in your text.' +
     ' You have a percentage of 12 in your text, ideally this would be 9 percent.\nConnectives are words or phrases that link ' +
         'other linguistic units.')
     assert explanations[2].type == 1
+    # Check if all information about the Structure mistake has been added to this database correctly:
     explanationTextStructure = 'This paragraph is too short, try to make paragraphs with approximately 200 words.'
     assert explanations[3].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
     ' if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing'+
     ' with a another human, like with the Google Duplex. ')
-    # Check if all information about the style Structure mistake has been added to this database correctly:
     assert explanations[3].explanation == explanationTextStructure
     assert explanations[3].type == 2
     assert explanations[4].mistakeText == ('So the Turing test might not good test to determine if machines can think, but determine'+
@@ -275,8 +279,9 @@ def testGenFeedbackTxtFile(testClient, initDatabase):
     assert float(score.scoreIntegration) == 0.0
     # Get all explanations for this file from the database.
     explanations = Explanations.query.filter_by(fileId = file.id).all()
-    # Check if all information about the style mistakes mistake has been added to this database correctly:
+    # Check if the correct number of explanations has been uploaded to the database:
     assert len(explanations) == 11
+    # Check if all information about the style mistakes mistake has been added to this database correctly:
     assert explanations[0].mistakeText == 'a'
     assert explanations[0].explanation == 'Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.'
     assert explanations[0].type == 0
@@ -290,6 +295,7 @@ def testGenFeedbackTxtFile(testClient, initDatabase):
     page = doc.load_page(0)
     assert page.get_textbox(fitz.Rect(explanations[0].X1, explanations[0].Y1, explanations[0].X2, explanations[0].Y2)) == 'a'
     assert page.get_textbox(fitz.Rect(explanations[1].X1, explanations[1].Y1, explanations[1].X2, explanations[1].Y2)) == 'must try'
+    # Check if the correct information for the Cohesion writing skill has been added to the database:
     assert explanations[2].mistakeText == ''
     assert explanations[2].explanation == ('Your score for cohesion is 8.03.\nYou used enough variation of words. You have in between 70'+ 
     ' and 90 percent variation in your text. These are your most used words: "the", "to" and "a".\nYou could use less connectives in your text.' +

@@ -12,7 +12,7 @@ class IntegrationContentFeedback(BaseFeedback):
     '''
         Class, which inherits BaseFeedback, to generate the feedback for the source integration and content writing category.
     '''
-    
+
     def __init__(self, text, referencesText, fileId, userId, filePath):
         '''
             A method to initialize this class, which sets the text, referencesText, fileId, userId, filePath variables, 
@@ -214,7 +214,7 @@ class IntegrationContentFeedback(BaseFeedback):
         # For each link_doi in links_doi:
         for link_doi in links_doi:
             # Get the text of the pdf from this link via the textDoi method:
-            text = self.textDoi(link_doi, self.userId)
+            text = self.textDoi(link_doi)
             # If there is an actual test returned increment the count and add the words not in the set already and not in englishStopwords:
             if text != '':
                 count += 1

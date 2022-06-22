@@ -14,6 +14,7 @@ def testSetFeedbackStyleNoAlternatives(testClient, initDatabase):
             BASEPATH: Path of the current test_setFeedbackStyle.py file.
             fileLoc: Location of the file we test this for.
             explanations: Database for the current file, containing explanations, as retrieved from the database.
+            feedbackObject: Object of the class that generates the feedback for the language and style category.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -36,7 +37,7 @@ def testSetFeedbackStyleNoAlternatives(testClient, initDatabase):
     # Set the file location of the test file:
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'testFilesStyle', 'testStyleOnePageTwoMistakes.pdf')
-    # Call the setFeedbackStyle method:
+    # Call the setFeedbackStyle method of the feedbackObject and the uploadToDatabase method:
     feedbackObject = LanguageStyleFeedback('', '', fileId, 1, fileLoc)
     feedbackObject.getMistakesInformationStyle(mistakes)
     feedbackObject.uploadToDatabase()
@@ -68,6 +69,7 @@ def testSetFeedbackStyleOneAlternative(testClient, initDatabase):
             explanations: Database for the current file, containing explanations, as retrieved from the database.
             doc: The file opened by fitz.
             page: page of the document as opened by fitz.
+            feedbackObject: Object of the class that generates the feedback for the language and style category.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -90,7 +92,7 @@ def testSetFeedbackStyleOneAlternative(testClient, initDatabase):
     # Set the file location of the test file:
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'testFilesStyle', 'testStyleOnePageTwoMistakes.pdf')
-    # Call the setFeedbackStyle method:
+    # Call the setFeedbackStyle method of the feedbackObject and the uploadToDatabase method:
     feedbackObject = LanguageStyleFeedback('', '', fileId, 1, fileLoc)
     feedbackObject.getMistakesInformationStyle(mistakes)
     feedbackObject.uploadToDatabase()
@@ -124,6 +126,7 @@ def testSetFeedbackStyleTwoAlternatives(testClient, initDatabase):
             explanations: Database for the current file, containing explanations, as retrieved from the database.
             doc: The file opened by fitz.
             page: page of the document as opened by fitz.
+            feedbackObject: Object of the class that generates the feedback for the language and style category.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -146,7 +149,7 @@ def testSetFeedbackStyleTwoAlternatives(testClient, initDatabase):
     # Set the file location of the test file:
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'testFilesStyle', 'testStyleOnePageTwoMistakes.pdf')
-    # Call the setFeedbackStyle method:
+    # Call the setFeedbackStyle method of the feedbackObject and the uploadToDatabase method:
     feedbackObject = LanguageStyleFeedback('', '', fileId, 1, fileLoc)
     feedbackObject.getMistakesInformationStyle(mistakes)
     feedbackObject.uploadToDatabase()
@@ -182,6 +185,7 @@ def testSetFeedbackStyleThreeAlternatives(testClient, initDatabase):
             explanations: Database for the current file, containing explanations, as retrieved from the database.
             doc: The file opened by fitz.
             page: page of the document as opened by fitz.
+            feedbackObject: Object of the class that generates the feedback for the language and style category.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 

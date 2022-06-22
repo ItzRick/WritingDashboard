@@ -74,8 +74,9 @@ def testGenerateFeedbackPdf(testClient, initDatabase):
     assert float(score.scoreIntegration) == 0.0
     # Get all explanations for this file from the database.
     explanations = Explanations.query.filter_by(fileId = file.id).all()
-    # Check if all information about the style mistakes mistake has been added to this database correctly:
+    # Check if all explanations have been added to the database:
     assert len(explanations) == 9
+    # Check if all information about the style mistakes mistake has been added to this database correctly:
     assert explanations[0].mistakeText == 'a'
     assert explanations[0].explanation == 'Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.'
     assert explanations[0].type == 0
@@ -89,6 +90,7 @@ def testGenerateFeedbackPdf(testClient, initDatabase):
     page = doc.load_page(0)
     assert page.get_textbox(fitz.Rect(explanations[0].X1, explanations[0].Y1, explanations[0].X2, explanations[0].Y2)) == 'a'
     assert page.get_textbox(fitz.Rect(explanations[1].X1, explanations[1].Y1, explanations[1].X2, explanations[1].Y2)) == 'must try'
+    # Check if the Cohesion mistakes have been added to the database correctly:
     assert explanations[2].mistakeText == ''
     assert explanations[2].explanation == ('Your score for cohesion is 7.81.\nYou used enough variation of words. You have in between 70'+ 
     ' and 90 percent variation in your text. These are your most used words: "the", "to" and "a".\nYou could use less connectives in your text.' +
