@@ -1,5 +1,5 @@
 from decimal import ROUND_HALF_UP, Decimal
-from app.feedback.structureCheck import getStructureScore
+from app.feedback.generateFeedback.StructureFeedback import StructureFeedback
 
 def test_zero_words():
     '''
@@ -8,7 +8,9 @@ def test_zero_words():
             score: the score given for the structure writing skill.
     '''
     # calculate the score on an empty text
-    score = getStructureScore('')
+    feedbackObject = StructureFeedback('', '', 1, 1, '')
+    score = feedbackObject.genFeedback()
+    assert feedbackObject.scoreStructure == -2
     assert score == None
 
 
@@ -28,14 +30,18 @@ def test_400_words():
     # generate a text with 400 words by multiplying a text with 8 words 50 times
     testText = ('This is a large text with 400 words. ' * 50).strip()
     # retrieve the scores and explanations by running the function on the text
-    score = getStructureScore(testText)[0]
-    explanations = getStructureScore(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.genFeedback()[0]
+    explanations = feedbackObject.genFeedback()[1]
+    explanationsDict = feedbackObject.explanationsDict
     # check if the output scores and explanations match 
     assert score == Decimal(6.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
-    assert list(explanations.keys()) == [testText]
-    assert list(explanations.values()) == [
+    assert explanations == []
+    assert list(explanationsDict.keys()) == [testText]
+    assert list(explanationsDict.values()) == [
         'This paragraph is too long, try to make paragraphs with approximately 200 words.']
+
 
 def test_50_words():
     '''
@@ -53,13 +59,16 @@ def test_50_words():
     # generate a text with 50 words by multiplying a text with 5 words 10 times
     testText = ('A short 50 word text. ' * 10).strip()
     # retrieve the scores and explanations by running the function on the text
-    score = getStructureScore(testText)[0]
-    explanations = getStructureScore(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.genFeedback()[0]
+    explanations = feedbackObject.genFeedback()[1]
+    explanationsDict = feedbackObject.explanationsDict
     # check if the output scores and explanations match 
     assert score == Decimal(7.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
-    assert list(explanations.keys()) == [testText]
-    assert list(explanations.values()) == [
+    assert explanations == []
+    assert list(explanationsDict.keys()) == [testText]
+    assert list(explanationsDict.values()) == [
         'This paragraph is too short, try to make paragraphs with approximately 200 words.']
 
 def test_200_words():
@@ -75,13 +84,16 @@ def test_200_words():
     # generate a text with 200 words by multiplying a text with 8 words 25 times
     testText = ('This is a good text with 200 words. ' * 25).strip()
     # retrieve the scores and explanations by running the function on the text
-    score = getStructureScore(testText)[0]
-    explanations = getStructureScore(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.genFeedback()[0]
+    explanations = feedbackObject.genFeedback()[1]
+    explanationsDict = feedbackObject.explanationsDict
     # check if the output scores and explanations match 
     assert score == Decimal(10.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
-    assert list(explanations.keys()) == []
-    assert list(explanations.values()) == []
+    assert explanations == []
+    assert list(explanationsDict.keys()) == []
+    assert list(explanationsDict.values()) == []
 
 def test_2_paragraphs_large_different_lengths():
     '''
@@ -104,13 +116,16 @@ def test_2_paragraphs_large_different_lengths():
     testTextPart2 = ('A bigger 450 word text. ' * 90).strip()
     testText = testTextPart1 + '\n' + testTextPart2
     # retrieve the scores and explanations by running the function on the text
-    score = getStructureScore(testText)[0]
-    explanations = getStructureScore(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.genFeedback()[0]
+    explanations = feedbackObject.genFeedback()[1]
+    explanationsDict = feedbackObject.explanationsDict
     # check if the output scores and explanations match 
     assert score == Decimal(6.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
-    assert list(explanations.keys()) == [testTextPart1, testTextPart2]
-    assert list(explanations.values()) == [
+    assert explanations == []
+    assert list(explanationsDict.keys()) == [testTextPart1, testTextPart2]
+    assert list(explanationsDict.values()) == [
         'This paragraph is too long, try to make paragraphs with approximately 200 words.',
         'This paragraph is too long, try to make paragraphs with approximately 200 words.']
 
@@ -135,13 +150,16 @@ def test_2_paragraphs_small_different_lengths():
     testTextPart2 = ('A small bit longer 70 word text. ' * 10).strip()
     testText = testTextPart1 + '\n' + testTextPart2
     # retrieve the scores and explanations by running the function on the text
-    score = getStructureScore(testText)[0]
-    explanations = getStructureScore(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.genFeedback()[0]
+    explanations = feedbackObject.genFeedback()[1]
+    explanationsDict = feedbackObject.explanationsDict
     # check if the output scores and explanations match 
     assert score == Decimal(7.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
-    assert list(explanations.keys()) == [testTextPart1, testTextPart2]
-    assert list(explanations.values()) == [
+    assert explanations == []
+    assert list(explanationsDict.keys()) == [testTextPart1, testTextPart2]
+    assert list(explanationsDict.values()) == [
         'This paragraph is too short, try to make paragraphs with approximately 200 words.',
         'This paragraph is too short, try to make paragraphs with approximately 200 words.']
 
@@ -162,13 +180,16 @@ def test_2_paragraphs_good_different_lengths():
     testTextPart2 = ('Another good 250 word text ' * 50).strip()
     testText = testTextPart1 + '\n' + testTextPart2
     # retrieve the scores and explanations by running the function on the text
-    score = getStructureScore(testText)[0]
-    explanations = getStructureScore(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.genFeedback()[0]
+    explanations = feedbackObject.genFeedback()[1]
+    explanationsDict = feedbackObject.explanationsDict
     # check if the output scores and explanations match 
     assert score == Decimal(10.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
-    assert list(explanations.keys()) == []
-    assert list(explanations.values()) == []
+    assert explanations == []
+    assert list(explanationsDict.keys()) == []
+    assert list(explanationsDict.values()) == []
 
 def test_4_paragraphs_all_lengths():
     '''
@@ -196,13 +217,16 @@ def test_4_paragraphs_all_lengths():
     testText = (testTextPart1 + '\n' + testTextPart2 + '\n' + testTextPart3 +
      '\n' + testTextPart4)
     # retrieve the scores and explanations by running the function on the text
-    score = getStructureScore(testText)[0]
-    explanations = getStructureScore(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.genFeedback()[0]
+    explanations = feedbackObject.genFeedback()[1]
+    explanationsDict = feedbackObject.explanationsDict
     # check if the output scores and explanations match 
     assert score == Decimal(7.7).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
-    assert list(explanations.keys()) == [testTextPart2, testTextPart3]
-    assert list(explanations.values()) == [
+    assert explanations == []
+    assert list(explanationsDict.keys()) == [testTextPart2, testTextPart3]
+    assert list(explanationsDict.values()) == [
         'This paragraph is too long, try to make paragraphs with approximately 200 words.',
         'This paragraph is too short, try to make paragraphs with approximately 200 words.']
 
@@ -227,14 +251,17 @@ def test_2_paragraphs_large_same_content():
     testTextPart2 = testTextPart1
     testText = testTextPart1 + '\n' + testTextPart2
     # retrieve the scores and explanations by running the function on the text
-    score = getStructureScore(testText)[0]
-    explanations = getStructureScore(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.genFeedback()[0]
+    explanations = feedbackObject.genFeedback()[1]
+    explanationsDict = feedbackObject.explanationsDict
     # Since both testTextPart1 and testTextPart2 are the same, there should be
     # one key in explanations that is equal to testTextPart1 and testTextPart2
     # then check if the output scores and explanations match 
     assert score == Decimal(6.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
-    assert list(explanations.keys()) == [testTextPart1]
-    assert list(explanations.keys()) == [testTextPart2]
-    assert list(explanations.values()) == [
+    assert explanations == []
+    assert list(explanationsDict.keys()) == [testTextPart1]
+    assert list(explanationsDict.keys()) == [testTextPart2]
+    assert list(explanationsDict.values()) == [
         'This paragraph is too long, try to make paragraphs with approximately 200 words.']

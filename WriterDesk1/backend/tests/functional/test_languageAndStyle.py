@@ -1,4 +1,4 @@
-from app.feedback.languageAndStyle import feedbackLanguageStyle
+from app.feedback.generateFeedback.LanguageStyleFeedback import LanguageStyleFeedback
 
 
 def testFeedbackLanguageAn(testClient):
@@ -12,8 +12,12 @@ def testFeedbackLanguageAn(testClient):
         score: Score given to the text based on the feedback.
     """
     del testClient
-    mistakes, score = feedbackLanguageStyle("This is an sentence with a mistake.")
+    text = "This is an sentence with a mistake."
+    feedbackObject = LanguageStyleFeedback(text, '', 1, 1, '')
+    score, explanations = feedbackObject.genFeedback()
+    mistakes = feedbackObject.explanationsList
     assert 0 <= score <= 10  # Score is between 0 and 10
+    assert explanations == []
     assert mistakes[0][0] == "an"  # Word of mistake
     assert mistakes[0][1] == "This is an sentence with a mistake."  # Context of mistake
     assert len(mistakes) == 1  # There is only one language and style mistake in the sentence
@@ -30,7 +34,11 @@ def testFeedbackLanguageEmpty(testClient):
         score: Score given to the text based on the feedback.
     """
     del testClient
-    mistakes, score = feedbackLanguageStyle('')
+    text = ''
+    feedbackObject = LanguageStyleFeedback(text, '', 1, 1, '')
+    score, explanations = feedbackObject.genFeedback()
+    mistakes = feedbackObject.explanationsList
+    assert explanations == []
     assert score == 0  # Score is 0 when there is no text
     assert len(mistakes) == 0  # No language and style mistakes
 
@@ -46,7 +54,11 @@ def testFeedbackLanguageMultipleSentences(testClient):
         score: Score given to the text based on the feedback.
     """
     del testClient
-    mistakes, score = feedbackLanguageStyle("Hello, My name is Susan. I'm forteen and I life in germany.")
+    text = "Hello, My name is Susan. I'm forteen and I life in germany."
+    feedbackObject = LanguageStyleFeedback(text, '', 1, 1, '')
+    score, explanations = feedbackObject.genFeedback()
+    mistakes = feedbackObject.explanationsList
+    assert explanations == []
     assert 0 <= score <= 10  # Score is between 0 and 10
 
     assert mistakes[0][0] == "forteen"  # First mistake in text
@@ -72,7 +84,11 @@ def testFeedbackLanguageMissingLetter(testClient):
         score: Score given to the text based on the feedback.
     """
     del testClient
-    mistakes, score = feedbackLanguageStyle("The computr was hot and overheated.")
+    text = "The computr was hot and overheated."
+    feedbackObject = LanguageStyleFeedback(text, '', 1, 1, '')
+    score, explanations = feedbackObject.genFeedback()
+    mistakes = feedbackObject.explanationsList
+    assert explanations == []
     assert 0 <= score <= 10
 
     assert mistakes[0][0] == "computr"  # Word of mistake
@@ -93,7 +109,11 @@ def testFeedbackLanguagePerfectSentence(testClient):
         score: Score given to the text based on the feedback.
     """
     del testClient
-    mistakes, score = feedbackLanguageStyle("Are you opening the door?")
+    text = "Are you opening the door?"
+    feedbackObject = LanguageStyleFeedback(text, '', 1, 1, '')
+    score, explanations = feedbackObject.genFeedback()
+    mistakes = feedbackObject.explanationsList
+    assert explanations == []
     assert score == 10  # Perfect score for correct sentence
 
     assert len(mistakes) == 0  # No mistakes in sentence
@@ -110,7 +130,11 @@ def testFeedbackLanguageParenthesis(testClient):
         score: Score given to the text based on the feedback.
     """
     del testClient
-    mistakes, score = feedbackLanguageStyle("(This is a sentence with a missing parenthesis.")
+    text = "(This is a sentence with a missing parenthesis."
+    feedbackObject = LanguageStyleFeedback(text, '', 1, 1, '')
+    score, explanations = feedbackObject.genFeedback()
+    mistakes = feedbackObject.explanationsList
+    assert explanations == []
     assert 0 <= score <= 10  # Score is between 0 and 10
     assert mistakes[0][0] == "("  # Word of mistake
     assert len(mistakes) == 1  # There is only one language and style mistake in the sentence
@@ -127,7 +151,11 @@ def testFeedbackLanguageParenthesis(testClient):
         score: Score given to the text based on the feedback.
     """
     del testClient
-    mistakes, score = feedbackLanguageStyle("(This is a sentence with a missing parenthesis.")
+    text = "(This is a sentence with a missing parenthesis."
+    feedbackObject = LanguageStyleFeedback(text, '', 1, 1, '')
+    score, explanations = feedbackObject.genFeedback()
+    mistakes = feedbackObject.explanationsList
+    assert explanations == []
     assert 0 <= score <= 10  # Score is between 0 and 10
     assert mistakes[0][0] == "("  # Word of mistake
     assert len(mistakes) == 1  # There is only one language and style mistake in the sentence

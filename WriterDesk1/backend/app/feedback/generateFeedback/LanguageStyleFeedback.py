@@ -32,7 +32,7 @@ class LanguageStyleFeedback(BaseFeedback):
         # Check for mistakes
         matches = languageToolEn.check(self.text)
 
-        explanationsList = []
+        self.explanationsList = []
         for match in matches:
 
             prevMatchEnd = -1  # Position of last character of previous match in loop, initiated on -1
@@ -60,11 +60,11 @@ class LanguageStyleFeedback(BaseFeedback):
                 context = context[:-3]
 
             # Append matched text, context, occurrence in context, explanation, and top 3 replacements to a list
-            explanationsList.append([match.matchedText, context, occurrenceInContext, match.message, match.replacements[:3]])
+            self.explanationsList.append([match.matchedText, context, occurrenceInContext, match.message, match.replacements[:3]])
 
         # Compute score
         self.scoreStyle = self.calculateScore(len(matches), len(self.text.split()))
-        self.getMistakesInformationStyle(explanationsList)
+        self.getMistakesInformationStyle(self.explanationsList)
 
         return self.scoreStyle, self.explanations
 

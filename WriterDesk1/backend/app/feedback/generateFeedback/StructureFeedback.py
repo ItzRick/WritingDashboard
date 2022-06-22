@@ -27,24 +27,25 @@ class StructureFeedback(BaseFeedback):
         '''
         # If the input text is empty
         if len(self.text) == 0:
+            self.scoreStructure = -2
             return None
         
         scores = []
-        explanationsDict = dict()
+        self.explanationsDict = dict()
         # Multiple different ways of getting scores for the structure writing 
         # skill can be added here.
         score, explanation = self.getParagraphScoreAndExplanations(self.text)
         scores.append(score)
         # Multiple different ways of getting explanations for the structure writing
         # skill can be added here.
-        explanationsDict.update(explanation)
+        self.explanationsDict.update(explanation)
 
         # Take the average score of each submethod of getting scores for the 
         # structure writing skill and round it to one decimal behind the comma.
         score = sum(scores) / len(scores)
         self.scoreStructure = Decimal(score).quantize(
             Decimal('0.1'), rounding=ROUND_HALF_UP)
-        self.getMistakesInformationStructure(explanationsDict)
+        self.getMistakesInformationStructure(self.explanationsDict)
 
         return self.scoreStructure, self.explanations
 
