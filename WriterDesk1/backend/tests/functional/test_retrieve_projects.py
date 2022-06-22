@@ -30,7 +30,7 @@ def testRetrieveNoProjects(testClient, initDatabaseEmpty):
     response = testClient.get('/projectapi/viewProjectsOfUser', query_string=data)
     
     # Check if the expected response has the correct status code    
-    assert response.status_code == 4041
+    assert response.status_code == 404
 
     # Check if the expected response is correct:
     assert response.data == b'researcher has no projects'
@@ -44,6 +44,7 @@ def testRetrieveNoProjectsOfUser(testClient, initDatabaseEmpty):
         Attributes: 
             data: the information to be inserted in the request
             userId: the user for which the files are retrieved
+            project1: new project
             response: the result of retrieving the files in the specified order
         Arguments: 
             testClient:  the test client we test this for.
@@ -66,7 +67,7 @@ def testRetrieveNoProjectsOfUser(testClient, initDatabaseEmpty):
     response = testClient.get('/projectapi/viewProjectsOfUser', query_string=data)
 
     # Check if the expected response has the correct status code
-    assert response.status_code == 4041
+    assert response.status_code == 404
 
     # Check if the expected response is correct:
     assert response.data == b'researcher has no projects'
@@ -80,7 +81,9 @@ def testRetrieveSingleProjectOfUser(testClient, initDatabaseEmpty):
         Attributes: 
             data: the information to be inserted in the request
             userId: the user for which the files are retrieved
+            project1: new project
             response: the result of retrieving the files in the specified order
+            expected_response: response we expect
         Arguments: 
             testClient:  the test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -122,7 +125,11 @@ def testRetrieveMultipleProjectsOfUser(testClient, initDatabaseEmpty):
         Attributes: 
             data: the information to be inserted in the request
             userId: the user for which the files are retrieved
+            project1: new project
+            project2: new project
+            project3: new project
             response: the result of retrieving the files in the specified order
+            expected_response: response we expected
         Arguments: 
             testClient:  the test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -176,7 +183,11 @@ def testRetrieveOnlyProjectsOfUser(testClient, initDatabaseEmpty):
         Attributes: 
             data: the information to be inserted in the request
             userId: the user for which the files are retrieved
+            project1: new project
+            project2: new project
+            project3: new project
             response: the result of retrieving the files in the specified order
+            expected_response: response we expected
         Arguments: 
             testClient:  the test client we test this for.
             initDatabase: the database instance we test this for. 
