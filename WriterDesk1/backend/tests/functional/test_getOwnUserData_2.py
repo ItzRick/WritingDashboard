@@ -48,7 +48,7 @@ def testAdminOneClick(testClient, initDatabase):
     assert adminClick.url == url
     assert adminClick.eventType == eventType
 
-    # retreive and check the user data
+    # retrieve and check the user data
     userId = admin.id
     params = {
         'userId': userId,
@@ -119,7 +119,7 @@ def testAdminTwoClicks(testClient, initDatabase):
     assert adminClick1.url == url1
     assert adminClick1.eventType == eventType1
 
-    # retreive and check the user data
+    # retrieve and check the user data
     userId = admin.id
     params = {
         'userId': userId,
@@ -166,7 +166,7 @@ def testNoClicks(testClient, initDatabase):
     # get access token
     access_token = loginHelper(testClient, 'u1', 'p1')
 
-    # retreive and check the user data
+    # retrieve and check the user data
     userId = user.id
     params = {
         'userId': userId,

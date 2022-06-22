@@ -48,7 +48,7 @@ def testStudentOneClick(testClient, initDatabase):
     assert studentClick.url == url
     assert studentClick.eventType == eventType
 
-    # retreive and check the user data
+    # retrieve and check the user data
     userId = student.id
     params = {
         'userId': userId,
@@ -119,7 +119,7 @@ def testStudentTwoClicks(testClient, initDatabase):
     assert studentClick1.url == url1
     assert studentClick1.eventType == eventType1
 
-    # retreive and check the user data
+    # retrieve and check the user data
     userId = student.id
     params = {
         'userId': userId,
@@ -180,7 +180,7 @@ def testParticipantOneClick(testClient, initDatabase):
     assert participantClick.url == url
     assert participantClick.eventType == eventType
 
-    # retreive and check the user data
+    # retrieve and check the user data
     userId = participant.id
     params = {
         'userId': userId,
@@ -251,7 +251,7 @@ def testParticipantTwoClicks(testClient, initDatabase):
     assert participantClick1.url == url1
     assert participantClick1.eventType == eventType1
 
-    # retreive and check the user data
+    # retrieve and check the user data
     userId = participant.id
     params = {
         'userId': userId,
@@ -312,7 +312,7 @@ def testResearcherOneClick(testClient, initDatabase):
     assert researcherClick.url == url
     assert researcherClick.eventType == eventType
 
-    # retreive and check the user data
+    # retrieve and check the user data
     userId = researcher.id
     params = {
         'userId': userId,
@@ -383,7 +383,7 @@ def testResearcherTwoClicks(testClient, initDatabase):
     assert researcherClick1.url == url1
     assert researcherClick1.eventType == eventType1
 
-    # retreive and check the user data
+    # retrieve and check the user data
     userId = researcher.id
     params = {
         'userId': userId,
