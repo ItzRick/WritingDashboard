@@ -42,6 +42,17 @@ def usersRetrieve():
 @bp.route('/deleteUserAdmin', methods=['POST'])
 @jwt_required()
 def deleteUserAdmin():
+    '''
+        This function deletes the user corresponding to the userId that is supplied by the front-end.
+        The function can only be used when signed in as an user with the admin role.
+        Attributes:
+            userID: userId supplied by the front-end
+        Return:
+            Returns a string saying the account is deleted with a 200 code.
+            error message:
+                403, when calling this function while not singed is as an admin.
+                404, when trying to delete an user that does not exist.
+    '''
     if current_user.role != 'admin':
         return 'Method only accessible for admin users', 403
     userID = request.json.get("userID", None)
@@ -54,6 +65,25 @@ def deleteUserAdmin():
 @bp.route('/deleteUserResearcher', methods=['POST'])
 @jwt_required()
 def deleteUserResearcher():
+    '''
+        This function deletes the user with the participant role corresponding to the userId that is
+        supplied by the front-end.
+        The function can only be used when signed in as an user with the admin or researcher role and only allows
+        participants belonging to the signed in user's projects to be deleted.
+        Attributes:
+            userID: userId supplied by the front-end
+            user: user corresponding to userID
+            project: project the participant to be deleted is in
+            projectID: projectId corresponding to project
+        Return:
+            Returns a string saying the account is deleted with a 200 code.
+            error message:
+                403, when calling this function while not singed is as an admin or researcher.
+                404, when trying to delete an user that does not exist.
+                403, when trying to delete an user that is not a participant.
+                403, when trying to delete an user that is a participant but does not belong to
+                a project owned by the currently singed in user.
+    '''
     if current_user.role != 'researcher' and current_user.role != 'admin':
         return 'Method only accessible for researcher and admin users', 403
     userID = request.json.get("userID", None)
@@ -64,6 +94,8 @@ def deleteUserResearcher():
         return 'Target user is not an participant', 403
     projectID = ParticipantToProject.query.filter_by(userId=user.id).first().projectId
     project = Projects.query.filter_by(id=projectID).first()
+    # loops over the projects owned by the currently signed in user and checks whether the user to
+    # be deleted is related to one of them, if not an error is thrown.
     for researcherProject in Projects.query.filter_by(userId=current_user.id):
         if project.projectName == researcherProject.projectName:
             deleteUser(userID)
@@ -74,12 +106,26 @@ def deleteUserResearcher():
 @bp.route('/deleteUserSelf', methods=['POST'])
 @jwt_required()
 def deleteUserSelf():
+    '''
+        This function deletes the currently signed in user.
+        Return:
+            Returns a string saying the account is deleted with a 200 code.
+    '''
     deleteUser(current_user.id)
     return 'Account deleted!', 200
 
 
 # Removes the given user and the associated files, explanations and scores from the database
 def deleteUser(userID):
+    '''
+        This function deletes the user corresponding to the supplied userId and through dependencies everything
+        that is related to said user.
+        Attributes:
+            filesToBeRemoved: the files owned by the user
+            usersToBeRemoved: the user corresponding to the supplied userId
+        Arguments:
+            userID: the userId related to the user that needs to be deleted.
+    '''
     filesToBeRemoved = Files.query.filter_by(userId=userID).all()
     for i in filesToBeRemoved:
         deleteFile(i)
