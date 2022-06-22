@@ -12,6 +12,8 @@ import {useOutletContext} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import ProgressVisualization from "../components/ProgressVisualization";
 import axios from "axios";
+// Authentication service:
+import { AuthenticationService } from "../services/authenticationService";
 
 
 /**
@@ -36,11 +38,13 @@ function Progress() {
      * then calculates the averages and sets the variables.
      */
     const fetchScores = () => {
+        // The userId of the current user:
+        const userId = AuthenticationService.getCurrentUserId();
         // Url of the server:
         const url = 'https://127.0.0.1:5000/scoreapi//getAvgScores';
 
         // Make the call to the backend:
-        axios.get(url, {params: {userId: 123}})
+        axios.get(url, {params: {userId: userId}})
             .then((response) => {
                 setScoreStyle(response.data.scoreStyle);
                 setScoreStructure(response.data.scoreStructure);
