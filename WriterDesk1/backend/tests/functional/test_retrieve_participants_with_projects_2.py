@@ -10,12 +10,12 @@ def testRetrieveSingleProjectMultiplearticipantOfUserWithOther(testClient, initD
         user, here with user id 201, has one project with one participant
         and the database contains other projects.
         Attributes: 
-            data: the information to be inserted in the request
-        Arguments: 
-            testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            data: the information to be inserted in the request 
             userId: the user for which the files are retrieved
             response: the result of retrieving the files in the specified order
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
     '''
     del initDatabase
     # We define the user and the data
@@ -99,12 +99,12 @@ def testRetrieveMultipleProjectsSingleParticipantOfUserNoOther(testClient, initD
         user, here with user id 201, has multiple projects where only one has one 
         participant and the database contains no other projects.
         Attributes: 
-            data: the information to be inserted in the request
-        Arguments: 
-            testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            data: the information to be inserted in the request 
             userId: the user for which the files are retrieved
             response: the result of retrieving the files in the specified order
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
     '''
     del initDatabase
     # We define the user and the data
@@ -166,12 +166,12 @@ def testRetrieveMultipleProjectSingleParticipantOfUserWithOther(testClient, init
         user, here with user id 201, has one project with one participant
         and other projects without participants and the database contains other projects.
         Attributes: 
-            data: the information to be inserted in the request
-        Arguments: 
-            testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            data: the information to be inserted in the request 
             userId: the user for which the files are retrieved
             response: the result of retrieving the files in the specified order
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
     '''
     del initDatabase
     # We define the user and the data
@@ -254,12 +254,12 @@ def testRetrieveMultipleProjectSingleParticipantOfUserNoOther(testClient, initDa
         user, here with user id 201, has multiple projects with one participant
         and the database contains only these projects.
         Attributes: 
-            data: the information to be inserted in the request
-        Arguments: 
-            testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            data: the information to be inserted in the request 
             userId: the user for which the files are retrieved
             response: the result of retrieving the files in the specified order
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
     '''
     del initDatabase
     # We define the user and the data
@@ -345,12 +345,12 @@ def testRetrieveMultipleProjectMultipleParticipantsOfUserNoOther(testClient, ini
         user, here with user id 201, has multiple projects with multiple participants
         and the database contains only these projects.
         Attributes: 
-            data: the information to be inserted in the request
-        Arguments: 
-            testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            data: the information to be inserted in the request 
             userId: the user for which the files are retrieved
             response: the result of retrieving the files in the specified order
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
     '''
     del initDatabase
     # We define the user and the data

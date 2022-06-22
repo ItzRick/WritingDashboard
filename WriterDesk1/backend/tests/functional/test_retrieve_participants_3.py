@@ -10,12 +10,12 @@ def testRetrieveMultipleProjectMultipleParticipantsOfUserWithOther(testClient, i
         user, here with user id 201, has multiple projects with multiple participants
         and the database contains also other projects.
         Attributes: 
-            data: the information to be inserted in the request
-        Arguments: 
-            testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            data: the information to be inserted in the request 
             userId: the user for which the files are retrieved
             response: the result of retrieving the files in the specified order
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
     '''
     del initDatabase
     # We define the user and the data
@@ -110,11 +110,11 @@ def testRetrieveMultipleProjectMultipleParticipantsOfUserWithOther(testClient, i
         and the database contains also other projects.
         Attributes: 
             data: the information to be inserted in the request
+            userId: the user for which the files are retrieved
+            response: the result of retrieving the files in the specified order
         Arguments: 
             testClient:  the test client we test this for.
             initDatabase: the database instance we test this for. 
-            userId: the user for which the files are retrieved
-            response: the result of retrieving the files in the specified order
     '''
     del initDatabase
     # We define the user and the data

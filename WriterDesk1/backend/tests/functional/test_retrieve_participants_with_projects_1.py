@@ -12,11 +12,11 @@ def testRetrieveNoParticipants(testClient, initDatabaseEmpty):
         projects in the database.
         Attributes: 
             data: the information to be inserted in the request
+            userId: the user for which the files are retrieved
+            response: the result of retrieving the files in the specified order
         Arguments: 
             testClient:  the test client we test this for.
             initDatabase: the database instance we test this for. 
-            userId: the user for which the files are retrieved
-            response: the result of retrieving the files in the specified order
     '''
     del initDatabaseEmpty
     # We define the user and the data
@@ -38,11 +38,8 @@ def testRetrieveNoParticipants(testClient, initDatabaseEmpty):
     # Check if the expected response has the correct status code    
     assert response.status_code == 4041
 
-    # Create the expected response:
-    expected_response = b'researcher has no participants'
-
     # Check if the expected response is correct:
-    assert response.data == expected_response
+    assert response.data == b'researcher has no participants'
 
 def testRetrieveNoParticipantsOneProject(testClient, initDatabaseEmpty): 
     '''
@@ -51,11 +48,11 @@ def testRetrieveNoParticipantsOneProject(testClient, initDatabaseEmpty):
         and there are no other projects/participants in the database.
         Attributes: 
             data: the information to be inserted in the request
+            userId: the user for which the files are retrieved
+            response: the result of retrieving the files in the specified order
         Arguments: 
             testClient:  the test client we test this for.
             initDatabase: the database instance we test this for. 
-            userId: the user for which the files are retrieved
-            response: the result of retrieving the files in the specified order
     '''
     del initDatabaseEmpty
     # We define the user and the data
@@ -81,11 +78,8 @@ def testRetrieveNoParticipantsOneProject(testClient, initDatabaseEmpty):
     # Check if the expected response has the correct status code    
     assert response.status_code == 4041
 
-    # Create the expected response:
-    expected_response = b'researcher has no participants'
-
     # Check if the expected response is correct:
-    assert response.data == expected_response
+    assert response.data == b'researcher has no participants'
 
 def testRetrieveNoParticipantsBuExistOtherParticipants(testClient, initDatabaseEmpty): 
     '''
@@ -93,12 +87,12 @@ def testRetrieveNoParticipantsBuExistOtherParticipants(testClient, initDatabaseE
         user, here with user id 200, has no projects but there are other
         projects in the database.
         Attributes: 
-            data: the information to be inserted in the request
-        Arguments: 
-            testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            data: the information to be inserted in the request 
             userId: the user for which the files are retrieved
             response: the result of retrieving the files in the specified order
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
     '''
     del initDatabaseEmpty
     # We define the user and the data
@@ -132,11 +126,8 @@ def testRetrieveNoParticipantsBuExistOtherParticipants(testClient, initDatabaseE
     # Check if the expected response has the correct status code    
     assert response.status_code == 4041
 
-    # Create the expected response:
-    expected_response = b'researcher has no participants'
-
     # Check if the expected response is correct:
-    assert response.data == expected_response
+    assert response.data == b'researcher has no participants'
 
 def testRetrieveNoParticipantsButExistOwnProject(testClient, initDatabaseEmpty): 
     '''
@@ -144,12 +135,12 @@ def testRetrieveNoParticipantsButExistOwnProject(testClient, initDatabaseEmpty):
         user, here with user id 200, has no projects but there are other
         projects in the database.
         Attributes: 
-            data: the information to be inserted in the request
-        Arguments: 
-            testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            data: the information to be inserted in the request 
             userId: the user for which the files are retrieved
             response: the result of retrieving the files in the specified order
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
     '''
     del initDatabaseEmpty
     # We define the user and the data
@@ -185,11 +176,8 @@ def testRetrieveNoParticipantsButExistOwnProject(testClient, initDatabaseEmpty):
     # Check if the expected response has the correct status code    
     assert response.status_code == 4041
 
-    # Create the expected response:
-    expected_response = b'researcher has no participants'
-
     # Check if the expected response is correct:
-    assert response.data == expected_response
+    assert response.data == b'researcher has no participants'
 
 def testRetrieveSingleProjectSingleUserOfUserNoOther(testClient, initDatabase): 
     '''
@@ -197,12 +185,12 @@ def testRetrieveSingleProjectSingleUserOfUserNoOther(testClient, initDatabase):
         user, here with user id 201, has one project with one participant
         and the database contains only one project.
         Attributes: 
-            data: the information to be inserted in the request
-        Arguments: 
-            testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            data: the information to be inserted in the request 
             userId: the user for which the files are retrieved
             response: the result of retrieving the files in the specified order
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
     '''
     del initDatabase
     # We define the user and the data
@@ -259,12 +247,12 @@ def testRetrieveSingleProjectMultipleParticipantsOfUserNoOther(testClient, initD
         user, here with user id 201, has one project with multiple participants
         and the database contains only one project.
         Attributes: 
-            data: the information to be inserted in the request
-        Arguments: 
-            testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            data: the information to be inserted in the request 
             userId: the user for which the files are retrieved
             response: the result of retrieving the files in the specified order
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
     '''
     del initDatabase
     # We define the user and the data
@@ -345,12 +333,12 @@ def testRetrieveSingleProjectSingleParticipantOfUserWithOther(testClient, initDa
         user, here with user id 201, has one project with one participant
         and the database contains other projects.
         Attributes: 
-            data: the information to be inserted in the request
-        Arguments: 
-            testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            data: the information to be inserted in the request 
             userId: the user for which the files are retrieved
             response: the result of retrieving the files in the specified order
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
     '''
     del initDatabase
     # We define the user and the data
