@@ -14,7 +14,6 @@ def testGenerateParticipants(testClient, initDatabase):
             testClient: the test client we test this for
             initDatabase: the database instance we test this for
     '''
-
     del testClient, initDatabase
     
     # Create a new project
@@ -23,12 +22,8 @@ def testGenerateParticipants(testClient, initDatabase):
     db.session.commit()
 
     # Try to add participants to the project
-    try:
-        data = gp.generateParticipants(3,project.id)
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        assert False
+    data = gp.generateParticipants(3, project.id)
+    db.session.commit()
 
     # Check if particpants are created: check for ParticipantToProject entries,
     # and the username and role of corresponsing User entries
@@ -48,7 +43,6 @@ def testGenerateParticipantsData(testClient, initDatabase):
             testClient: the test client we test this for
             initDatabase: the database instance we test this for
     '''
-
     del testClient, initDatabase
 
     # Create a new project
@@ -57,11 +51,8 @@ def testGenerateParticipantsData(testClient, initDatabase):
     db.session.commit()
 
     # Try to add participants to the project
-    try:
-        data = gp.generateParticipants(3,project.id)
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
+    data = gp.generateParticipants(3,project.id)
+    db.session.commit()
     
     # Check if dictionary with correct data is returned
     # every row should have a valid username and a password of at least 
