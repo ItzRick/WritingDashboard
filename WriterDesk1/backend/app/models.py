@@ -37,21 +37,13 @@ class User(db.Model):
         self.set_password(password_plaintext)
         self.trackable = trackable
 
-    def serializeUserNoParticipants(self):
-        dict = {}
-        for c in inspect(self).attrs.keys():
-            if not c == 'file' and not c == 'passwordHash':
-                dict[c] =  getattr(self, c)
-        return dict
-
-    @staticmethod
-    def serializeListNoParticipants(l):
-        return [m.serializeUserNoParticipants() for m in l]
+    # list of columns and relationships that should not get serialized
+    nonSerializable = ['file', 'passwordHash', 'project', 'participantToProject', 'click']
 
     def serializeUser(self):
         dict = {}
         for c in inspect(self).attrs.keys():
-            if not c in ['file', 'click']:
+            if not c in self.nonSerializable:
                 dict[c] =  getattr(self, c)
         return dict
 

@@ -90,7 +90,7 @@ def getUsers():
             Returns a list containing dictionary entries of users
     '''
     users = db.session.query(User).filter(User.role != 'participant').all()
-    return User.serializeListNoParticipants(users)
+    return User.serializeList(users)
 
 def postUser(username, password, trackable=True):
     '''
