@@ -37,7 +37,8 @@ def testGenerateFeedbackNoFileOnDisk(testClient, initDatabase):
     }    
     response = testClient.post('/feedback/generate', query_string=data)   
     assert response.status_code == 400
-    assert response.data == b"no such file: 'C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/URD_Group3_vers03_Rc.pdf'"
+    # Test if the response message contains 'no such file':
+    assert 'no such file' in response.data.decode("utf-8")
 
 def testGenerateFeedbackPdf(testClient, initDatabase):
     '''
