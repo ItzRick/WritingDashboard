@@ -1,10 +1,5 @@
-from distutils.command.upload import upload
 from app.models import User
-from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from app import db
-from datetime import datetime, date
-import os
-from werkzeug.utils import secure_filename
 import json
 
 from test_set_role import loginHelper
@@ -12,23 +7,22 @@ from test_set_role import loginHelper
 
 def checkUserRet(uid, uName, uRole, data):
     '''
-        Checks userId, userName and userRole is in the data
-        Arguments:
-            uid: user Id
-            uName: user name
-            uRole: user role
-            data: array of dictionaries containing user data
-        Returns:
-            Whether data contains an instance with uid, uName an uRole
+    Checks if uid, uName and uRole is in the data
+    Argunments:
+        uid: user Id
+        uName: user name
+        uRole: user role
+        data: array of dictionaries containing user data
+    Returns:
+        Whether data contains an instance with uid, uName an uRole
     '''
     return (
         (any(
             (d['id'] == uid and
-             d['username'] == uName and
-             d['role'] == uRole)
-            in d) for d in data)
+            d['username'] == uName and
+            d['role'] == uRole)
+        in d) for d in data)
     )
-
 
 def testRetrieveUsers(testClient, initDatabase):
     '''
@@ -41,23 +35,14 @@ def testRetrieveUsers(testClient, initDatabase):
     '''
     del initDatabase
     # We add five users to the database session
-    try:
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
-    try:
-        user = User(username='John', password_plaintext='blegh')
-        db.session.add(user)
-        user2 = User(username='Kevin', password_plaintext='bleh')
-        db.session.add(user2)
-        user3 = User(username='Samantha', password_plaintext='bleurgh')
-        user3.role = 'participant'
-        db.session.add(user3)
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
+    user = User(username='John', password_plaintext='blegh')
+    db.session.add(user)
+    user2 = User(username='Kevin', password_plaintext='bleh')
+    db.session.add(user2)
+    user3 = User(username='Samantha', password_plaintext='bleurgh')
+    user3.role = 'participant'
+    db.session.add(user3)
+    db.session.commit()
 
     assert User.query.filter_by(username='ad').first() is not None
 
@@ -69,28 +54,6 @@ def testRetrieveUsers(testClient, initDatabase):
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
-    # Create the expected response:
-    expected_response = [dict(role='user',
-                              id=User.query.filter_by(username='Pietje').first().id,
-                              username='Pietje'
-                              ),
-                         dict(role='user',
-                              id=User.query.filter_by(username='Donald').first().id,
-                              username='Donald'
-                              ),
-                         dict(role='admin',
-                              id=User.query.filter_by(username='ad').first().id,
-                              username='ad'
-                              ),
-                         dict(role='user',
-                              id=User.query.filter_by(username='John').first().id,
-                              username='John'
-                              ),
-                         dict(role='user',
-                              id=User.query.filter_by(username='Kevin').first().id,
-                              username='Kevin'
-                              ),
-                         ]
 
     # Check if the expected response is correct:
     data = json.loads(response.data)
@@ -119,7 +82,6 @@ def testRetrieveUsers(testClient, initDatabase):
         data=data
     )
 
-
 def testNotAdmin(testClient, initDatabase):
     '''
     Test if we are refused access when not in admin mode
@@ -130,7 +92,7 @@ def testNotAdmin(testClient, initDatabase):
         initDatabase: The database instance we test this for.
     Attributes:
         user: user 'Pietje'
-        userId: invalid user id
+        userId: user id of pietje, not an admin
         newRole: new proposed and valid role
         access_token: admin's access token
         data: data for request to server
@@ -161,7 +123,7 @@ def testAdmin(testClient, initDatabase):
         initDatabase: The database instance we test this for.
     Attributes:
         user: user 'ad'
-        userId: invalid user id
+        userId: user of admin
         newRole: new proposed and valid role
         access_token: admin's access token
         data: data for request to server

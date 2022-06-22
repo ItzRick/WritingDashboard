@@ -10,7 +10,6 @@ def initialSetup():
     db.session.close()
     db.drop_all()
     db.create_all()
-
     # create admin user
     u = User.query.filter_by(username='admin').first()
     if u is None:
@@ -20,7 +19,6 @@ def initialSetup():
 
     # comment out:
     #   - loginapi > create_token() > initialSetup()
-
 
 def uploadToDatabase(toUpload):
     '''
@@ -94,7 +92,6 @@ def getUsers():
     '''
     users = db.session.query(User).filter(User.role != 'participant').all()
     return User.serializeList(users)
-
 
 def postUser(username, password, trackable=True):
     '''
@@ -198,56 +195,69 @@ def postParticipantToProject(userId, projectId):
     db.session.add(dataTuple)
     db.session.flush()
 
-
-def getParticipantsByResearcher(user):
-    '''
-        This function handles the query for retrieving a user's participants.
-        Attributes:
-            participantIds: Ids for participants in the projects created by the 
-            user.
-            participantsOfProject: Participants in the project.
-            participantInfo: userId and ProjectId of participants in the 
-            projects created by the user.
-        Arguments:
-            user: id of the user who's files need to be retrieved
-        Return:
-            projectIds: Project ids of projects created by the user.
-            participantInformation: userId and ProjectId of participant of 
-            projects created by the user.
-    '''
-    # Retrieve the projects of the user
-    projectIds = getProjectsByResearcher(user)
-
-    # Define the array for the participants ids and the participant information
-    participantIds = []
-    participantInformation = []
-
-    # Retrieve the ids of the participants in all projects of the user
-    for projectId in projectIds:
-        participantsOfProject = db.session.query(
-            ParticipantToProject).filter_by(projectId=projectId)
-        participantIds.append(participantsOfProject)
-
-    # Retrieve the information of the participants in all projects of the user
-    for participantId in participantIds:
-        participantInfo = db.session.query(User).filter_by(id=participantId)
-        participantInformation.append(participantInfo)
-
-    # Return the information of the participants in all projects of the user
-    return projectIds, participantInformation
-
-
 def getProjectsByResearcher(user):
     '''
         This function handles the query for retrieving a user's projects.
         Attributes:
             projectIds: List of project ids of the given user.
         Arguments:
-            user: id of the user who's files need to be retrieved.
+            user: id of the user whose projects need to be retrieved
         Return:
-            projectIds: List of project ids of the given user.
+            List of project ids of the given user.
     '''
     # Retrieve the projects of the user
-    projectIds = db.session.query(Projects).filter_by(userId=user)
+    projectList = Projects.query.filter_by(userId=user).all()
+    return [dict(userId = proj.userId, projectName = proj.projectName, id = proj.id) for proj in projectList]
 
-    return projectIds
+def getParticipantsByResearcher(user):
+    '''
+        This function handles the query for retrieving a user's participants.
+        Attributes:
+            userList: a query that gets the user information
+            projectList: a query that gets the projects of the user
+            participantIdList: a query that gets the participant ids of the projects of the user
+            participantList: retrieve the list of participants
+            participants: result of the query, containing the participants of the given user
+        Arguments:
+            user: id of the user whose participants need to be retrieved
+        Return:
+            Returns list of participants of the given user
+    '''
+    # Get the query that gets the user information
+    userList = User.query.filter_by(id=user).subquery()
+    # Get the query that gets the projects of the user
+    projectList = Projects.query.join(userList, Projects.userId == userList.c.id).subquery()
+    # Get the query that gets the participant ids of the projects of the user
+    participantIdList = ParticipantToProject.query.join(projectList, ParticipantToProject.projectId == projectList.c.id).subquery()
+    # Get the participants of the projects of the user
+    participantList = User.query.join(participantIdList, User.id == participantIdList.c.userId).all()
+    # Return the information of the participants in all projects of the user
+    return [dict(role = part.role, id = part.id, username = part.username, passwordHash = part.passwordHash) for part in participantList]
+    
+def getParticipantsWithProjectsByResearcher(user):
+    '''
+        This function handles the query for retrieving a user's participants, including the projects they correspond to.
+        Attributes:
+            projectParticipantConnection: the connection between the participant and the project
+            projectid: the id of the project that the participant is in
+            project: the project that the participant is in
+            projectname: the name of the project that the participant is in
+            participants: result of the query, containing the participants of the given user
+        Arguments:
+            user: id of the user whose participants need to be retrieved
+        Return:
+            Returns list of participants of the given user including the projects they correspond to
+    '''
+    participants = getParticipantsByResearcher(user)
+    
+    # for each participant add the related project name and projectId 
+    for participant in participants:
+        projectParticipantConnection = ParticipantToProject.query.filter_by(userId=participant['id']).first()
+        projectid = projectParticipantConnection.projectId
+        project = Projects.query.filter_by(id=projectid).first()
+        projectname = project.projectName
+        participant['projectid'] = projectid
+        participant['projectname'] = projectname
+
+    # Return the information of the participants in all projects of the user
+    return participants

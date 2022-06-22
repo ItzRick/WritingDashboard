@@ -6,13 +6,13 @@ from app.projectapi import bp
 from flask import request, jsonify, current_app
 from app.models import Projects, User, ParticipantToProject
 
-from app.database import uploadToDatabase, removeFromDatabase, getParticipantsByResearcher, getProjectsByResearcher, recordsToCsv
+from app.database import removeFromDatabase, getProjectsByResearcher, recordsToCsv, getParticipantsWithProjectsByResearcher
 from app import generateParticipants as gp
 from app import db
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import current_user
 
-@bp.route('/addparticipants', methods=["POST"])
+@bp.route('/addParticipants', methods=["POST"])
 @jwt_required()
 def addParticipantsToExistingProject():
     '''
@@ -150,3 +150,45 @@ def DeleteAllFilesFromProject(projectIds):
             except FileNotFoundError:
                 print('Folder not found')
     return 'success', 200
+
+@bp.route('/viewParticipantsOfUser', methods=["GET"])
+def viewParticipantsOfUser():
+    '''
+    This function handles the showing the participants that
+    this specific user created to that user, using that user id.
+    Attributes:
+        userId: user id as given by the frontend
+        participants: the participants that this user has created
+    '''
+    # Get the user id as sent by the react frontend
+    userId = request.args.get('userId')
+    # Retrieve the information from the participants corresponding to the projects of the user
+    participants = getParticipantsWithProjectsByResearcher(userId)
+    # Throw an error if the project variable is empty
+    # in other words, if the user has no projects
+    if participants == []:
+        return 'researcher has no participants', 404
+    return jsonify(participants)
+
+@bp.route('/viewProjectsOfUser', methods=["GET"])
+def viewProjectsOfUser():
+    '''
+    This function handles the showing the projects that
+    this specific user created to that user, using that user id.
+    Attributes:
+        userId: user id as given by the frontend
+        projects: the projects that this user has created
+    '''
+    # Get the user id as sent by the react frontend
+    userId = request.args.get('userId')
+
+    # Retrieve the information from the projects corresponding to the projects of the user
+    projects = getProjectsByResearcher(userId)
+
+    # Throw an error if the project variable is empty
+    # in other words, if the user has no projects
+    if projects == []:
+        return 'researcher has no projects', 404
+
+    return jsonify(projects)
+    

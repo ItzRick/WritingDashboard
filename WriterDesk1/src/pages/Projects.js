@@ -95,7 +95,7 @@ const Projects = () => {
                 return (<div>
                     <IconButton onClick={(e) => { }}  ><PersonSearch /></IconButton>
                     <IconButton onClick={(e) => { }}  ><Storage /></IconButton>
-                    <IconButton onClick={(e) => { showDeleteProjectDialog(e, params) }}  ><DeleteOutline /></IconButton>
+                    <IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}  ><DeleteOutline /></IconButton>
                 </div>);
             }
         }
@@ -136,7 +136,7 @@ const Projects = () => {
                 "projectid": response.data,  // Get project id from response
             }
             // Add participants request
-            axios.post(`https://localhost:5000/projectapi/addparticipants`, data, {headers: authHeader()}).then(response => {
+            axios.post(`https://localhost:5000/projectapi/addParticipants`, data, {headers: authHeader()}).then(response => {
                 const fileName = response.headers["custom-filename"];
                 fileDownload(response.data, fileName);
                 //TODO: Set table data
@@ -171,7 +171,7 @@ const Projects = () => {
      * @param {event} e: event data pushed with the call, not required
      * @param {params} params: params of the row where the current project that is removed is in, to be able to remove the correct project.
      */
-    const showDeleteProjectDialog = (e, params) => {
+    const showdeleteProjectDialog = (e, params) => {
         setDeleteId(params.id)  // Set id to be deleted
         setShowDeleteDialog(true);  // Show confirmation dialog
     }
