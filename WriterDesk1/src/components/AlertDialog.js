@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -11,7 +10,7 @@ import { Link, Outlet } from 'react-router-dom';
 
 
 /**
- * AlertDialog with
+ * AlertDialog that is shown on top of page. This shows a dialog with a title and text and two buttons that can be clicked.
  * @property title - Title shown in the alert dialog
  * @property text - Body shown in the alert dialog
  * @property buttonCancel - Button component to cancel

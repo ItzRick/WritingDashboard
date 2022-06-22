@@ -40,6 +40,9 @@ import Users from './pages/Users';
 //testing page, to be removed later
 import TestingPage from './pages/TestingPage';
 
+// tracking
+import TrackingWrapper from "./services/TrackingWrapper";
+
 // theme and style
 const ThemeColors = {
   darkBlue: '#44749D',
@@ -108,7 +111,8 @@ root.render(
           </Route>
           {/* TODO: add authentication */}
           {/* Private part of the router, requires authentication */}
-          <Route path='/' element={<Base />}>
+          {/* provide trackingWrapper around the base, to serve as context for the application */}
+          <Route path='/' element={<TrackingWrapper><Base /></TrackingWrapper>}>
             {/* For all users */}
             <Route element={<ProtectedU/>}>
               <Route name='Settings' path='Settings' element={<Settings />} />

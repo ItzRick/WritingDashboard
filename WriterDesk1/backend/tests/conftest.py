@@ -87,6 +87,7 @@ def initDatabase(testClient):
         a test case is run, so that one test case does not influence the database of another test case. 
     '''
     # Create the database:
+    db.drop_all()
     db.create_all()
 
     # Add the 2 files:
@@ -109,12 +110,12 @@ def initDatabase(testClient):
 
     db.session.commit()
 
-
     yield   # This is where the testing happens!
     
     # Empties the database after the application has finished testing:
-    db.session.commit()
+    db.session.close()
     db.drop_all()
+    
 
 @pytest.fixture(scope='function')
 def initDatabaseEmpty(testClient):
@@ -143,11 +144,11 @@ def englishStopwords():
     return english_stopwords
 
 @pytest.fixture(scope='module')
-def englishStopwords():
+def downloadNltk():
     '''
-        Downloads the nltk stopwords and punkt and returns englishStopwords, the english stopwords.
+        Downloads the nltk punkt, averaged_perceptron_tagger, wordnet and omw-1.4 corpora, to be able to use them in test cases.
     '''
-    nltk.download('stopwords')
     nltk.download('punkt')
-    english_stopwords = stopwords.words('english')
-    return english_stopwords
+    nltk.download('averaged_perceptron_tagger')
+    nltk.download('wordnet')
+    nltk.download('omw-1.4')

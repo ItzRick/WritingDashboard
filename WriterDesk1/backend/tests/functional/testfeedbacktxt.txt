@@ -1,0 +1,3 @@
+So the Turing test might not good test to determine if machines can think, but determine if a machine is programmed well enough to imitate a human being so that it can trick an interrogator into thinking it is conversing with a another human, like with the Google Duplex. 
+
+C does this by the hand of asking (written) questions. A must try to cause C to make the wrong identification, while B must try to help C make the right identification (Turing, 1950).
