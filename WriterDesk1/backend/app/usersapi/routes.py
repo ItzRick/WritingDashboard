@@ -45,23 +45,25 @@ def deleteUserAdmin():
     if current_user.role != 'admin':
         return 'Method only accessible for admin users', 403
     userID = request.json.get("userID", None)
-    if User.query.filter_by(userId='userID').first() is None:
+    if User.query.filter_by(id=userID).first() is None:
         return 'User does not exist', 404
     deleteUser(userID)
     return 'Account deleted!', 200
 
+
 @bp.route('/deleteUserResearcher', methods=['POST'])
 @jwt_required()
 def deleteUserResearcher():
-    if current_user.role != 'researcher':
-        return 'Method only accessible for researcher users', 403
+    if current_user.role != 'researcher' and current_user.role != 'admin':
+        return 'Method only accessible for researcher and admin users', 403
     userID = request.json.get("userID", None)
-    if User.query.filter_by(userId='userID') is None:
+    if User.query.filter_by(id=userID).first() is None:
         return 'User does not exist', 404
-    user = User.query.filter_by(id=userID)
+    user = User.query.filter_by(id=userID).first()
     if user.role != 'participant':
         return 'Target user is not an participant', 403
-    project = ParticipantToProject.query.filter_by(userId=user.id).first()
+    projectID = ParticipantToProject.query.filter_by(userId=user.id).first().projectId
+    project = Projects.query.filter_by(id=projectID).first()
     for researcherProject in Projects.query.filter_by(userId=current_user.id):
         if project.projectName == researcherProject.projectName:
             deleteUser(userID)
@@ -80,20 +82,7 @@ def deleteUserSelf():
 def deleteUser(userID):
     filesToBeRemoved = Files.query.filter_by(userId=userID).all()
     for i in filesToBeRemoved:
-        fileID = i.id
-        explanationsToBeRemoved = Explanations.query.filter_by(fileId=fileID).all()
-        for j in explanationsToBeRemoved:
-            removeFromDatabase(j)
-        scoresToBeRemoved = Scores.query.filter_by(fileId=fileID).all()
-        for j in scoresToBeRemoved:
-            removeFromDatabase(j)
         deleteFile(i)
-    participantToProjectToBeRemoved = ParticipantToProject.query.filter_by(userId=userID).all()
-    for j in participantToProjectToBeRemoved:
-        removeFromDatabase(j)
-    projectsToBeRemoved = Projects.query.filter_by(userId=userID).all()
-    for j in projectsToBeRemoved:
-        removeFromDatabase(j)
     userToBeRemoved = User.query.filter_by(id=userID).first()
     removeFromDatabase(userToBeRemoved)
 
