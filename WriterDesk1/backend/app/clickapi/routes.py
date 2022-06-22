@@ -52,6 +52,35 @@ def addClick():
 
     return 'successfully uploaded click'
 
+def csvFileMaker(listOfRecords):
+    '''
+        This function makes a csv file from a list of dictionaries.
+        Attributes:
+            path: the path to the csv with user data.
+            response: http response with the csv file 
+        Arguments:
+            listOfRecords:
+        Return:
+            response: http response with the csv file.
+    '''
+    # create the csv file from the list of dictionaries
+    path = os.path.join(current_app.config['UPLOAD_FOLDER'], str(current_user.id), "UserData.csv")
+    recordsToCsv(path, listOfRecords)
+
+    # generator to delete file after sending
+    def generate():
+            with open(path) as f:
+                yield from f
+
+            os.remove(path)
+
+    # create response
+    response = current_app.response_class(generate(), mimetype='text/csv')
+    # set headers to show that the response contains a file and what the name of the file should be
+    response.headers.set('Content-Disposition', 'attachment')
+    response.headers.set('custom-filename', 'UserData.csv')
+    return response
+
 @bp.route('/getParticipantsUserData', methods=['GET'])
 @jwt_required()
 def getParticipantsUserData():
@@ -64,7 +93,6 @@ def getParticipantsUserData():
             output: a list of dictionaries containing all user data for the set
             of participants.
             data: the user data for one participant.
-            path: the path to the csv with user data for a set of participants.
             response: http response with the csv file.
         Return:
             response, 200: an http response with the csv file when it was
@@ -79,6 +107,10 @@ def getParticipantsUserData():
     # get the ids from the participants
     ids = request.args.getlist('userId')
 
+    # if no participants are selected
+    if len(ids) == 0:
+        return 'Select at least one participant', 400
+
     output = []
     # go over all user ids
     for id in ids:
@@ -91,21 +123,36 @@ def getParticipantsUserData():
         data = Clicks.query.filter_by(userId=id).all()
         # add the dictionary to the list of dictionaries
         output.extend(Clicks.serializeList(data))
-    
-    # create the csv file from the list of dictionaries
-    path = os.path.join(current_app.config['UPLOAD_FOLDER'], str(current_user.id), "downloadParticipantsUserData.csv")
-    recordsToCsv(path, output)
 
-    # generator to delete file after sending
-    def generate():
-            with open(path) as f:
-                yield from f
+    # make a csv file from the list of dictionaries
+    response = csvFileMaker(output)
+    return response, 200
 
-            os.remove(path)
+@bp.route('/getOwnUserData', methods=['GET'])
+@jwt_required()
+def getOwnUserData():
+    '''
+        This function retrieves the user data of a user. 
+        Attributes:
+            id: the user id of the current user.
+            output: a list of dictionaries containing all user data for this
+            user.
+            response: http response with the csv file.
+        Return:
+            response, 200: an http response with the csv file when it was
+            created succesfully.
+    '''
+    # get the id from the user
+    id = request.args.get('userId')
 
-    # create response
-    response = current_app.response_class(generate(), mimetype='text/csv')
-    # set headers to show that the response contains a file and what the name of the file should be
-    response.headers.set('Content-Disposition', 'attachment')
-    response.headers.set('custom-filename', 'participantsUserData.csv')
+    # if the user id does not exist in the database
+    if Clicks.query.filter_by(userId=id).first() is None:
+        # add an empty row with only the user id to the csv file
+        output = [(Clicks(id, None, None).serializeClick())]
+    else :
+        # retrieve the data for the given user id
+        output = Clicks.serializeList(Clicks.query.filter_by(userId=id).all())
+
+    # make a csv file from the list of dictionaries
+    response = csvFileMaker(output)
     return response, 200

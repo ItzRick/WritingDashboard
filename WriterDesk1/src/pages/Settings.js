@@ -22,6 +22,8 @@ import axios from 'axios';
 import BlueButton from "../components/BlueButton";
 import AlertDialog from "../components/AlertDialog";
 
+import fileDownload from 'js-file-download';
+
 const BASE_URL = "https://localhost:5000/loginapi";
 const PASSWORD_LENGTH = 8;
 
@@ -120,6 +122,23 @@ const Settings = () => {
             setFormError(error.response.data);
         });
     }
+
+    const handleOwnUserData = () => {
+        const url = 'https://127.0.0.1:5000/clickapi/getOwnUserData';
+        const userId = AuthenticationService.getCurrentUserId();
+        const params = {
+          userId: userId,
+        };
+        axios.get(url, {params, headers: authHeader()})
+          .then((response) => {
+            const fileName = response.headers["custom-filename"];
+            fileDownload(response.data, fileName);
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      }
+
     return (
         <>
             <div className='title'>
@@ -144,6 +163,8 @@ const Settings = () => {
                 <Typography sx={{maxWidth: '60%', margin:'auto'}}>
                 The data conditions allow the application to record user data. The user data is the clicks of the user within the application and their time and location. This data is only used to improve the automatic feedback generated within the application. The application is still fully available when refusing the data conditions.
                 </Typography>
+                <br />
+                <BlueButton idStr='downloadMyUserData' onClick={() => {handleOwnUserData()}}>Download my user data</BlueButton>
                 <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Change password
