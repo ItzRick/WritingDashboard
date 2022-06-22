@@ -2,6 +2,7 @@ from app.feedback.generateFeedback.BaseFeedback import BaseFeedback
 import nltk
 from nltk.stem import WordNetLemmatizer
 from collections import Counter
+from app.feedback.nltkDownload import downloadNltkCohesion
 class CohesionFeedback(BaseFeedback):
 
     def __init__(self, text, referencesText, fileId, userId, filePath):
@@ -41,7 +42,7 @@ class CohesionFeedback(BaseFeedback):
                         TTRScoreExplanation and connectivesScoreExplanation. This
                         is the feedback that the user will see.
         """
-
+        downloadNltkCohesion()
         # If the text string is empty the function returns null.
         if self.text == "":
             return None

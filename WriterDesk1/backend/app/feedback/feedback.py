@@ -49,18 +49,17 @@ def genFeedback(file):
             text = getTXTText(path)
             path = convertTxt(path)
             textStructure = text
+
         feedbackEngines = [
-            CohesionFeedback(text, references, userId, path),
-            IntegrationContentFeedback(text, references, userId, path),
-            LanguageStyleFeedback(text, references, userId, path),
-            StructureFeedback(textStructure, references, userId, path)
+            LanguageStyleFeedback(text, references, fileId, userId, path),
+            CohesionFeedback(text, references, fileId, userId, path),
+            StructureFeedback(textStructure, references, fileId, userId, path),
+            IntegrationContentFeedback(text, references, fileId, userId, path)
         ]
 
         for feedbackEngine in feedbackEngines:
             feedbackEngine.genFeedback()
-        for feedbackEngine in feedbackEngines:
             feedbackEngine.uploadToDatabase()
-        for feedbackEngine in feedbackEngines:
             del feedbackEngine
     except Exception as e:
         return False, str(e)

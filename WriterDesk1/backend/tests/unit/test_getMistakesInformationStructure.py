@@ -1,4 +1,4 @@
-from app.feedback.getMistakesInformation import getMistakesInformationStructure
+from app.feedback.generateFeedback.StructureFeedback import StructureFeedback
 import fitz
 import os
 
@@ -18,7 +18,9 @@ def testOnePageZeroMistakes():
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'testFilesStructure', 'testStructureOnePageZeroMistakes.pdf')
     # generate the output on an empty text with no mistakes
-    output = getMistakesInformationStructure(mistakes, fileLoc)
+    feedbackObject = StructureFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStructure(mistakes)
+    output = feedbackObject.explanations
     assert output == []
 
 def testOnePageOneMistakeOneLine():
@@ -41,7 +43,10 @@ def testOnePageOneMistakeOneLine():
     fileLoc = os.path.join(BASEPATH, 'testFilesStructure', 'testStructureOnePageOneMistakeOneLine.pdf')
     # generate the output on a document with one page and one line of text and 
     # one mistake
-    output = getMistakesInformationStructure(mistakes, fileLoc)
+    feedbackObject = StructureFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStructure(mistakes)
+    output = feedbackObject.explanations
+    # del feedbackObject
     # check if the output contains one list of information
     assert len(output) == 1
     doc = fitz.open(fileLoc)
@@ -73,7 +78,9 @@ def testOnePageOneMistakeTwoLines():
     fileLoc = os.path.join(BASEPATH, 'testFilesStructure', 'testStructureOnePageOneMistakeTwoLines.pdf')
     # generate the output on a document with one page and two lines of text and 
     # one mistake
-    output = getMistakesInformationStructure(mistakes, fileLoc)
+    feedbackObject = StructureFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStructure(mistakes)
+    output = feedbackObject.explanations
     # check if the output contains two lists of information
     assert len(output) == 2
     doc = fitz.open(fileLoc)
@@ -110,7 +117,9 @@ def testOnePageTwoMistakesOneLine():
     fileLoc = os.path.join(BASEPATH, 'testFilesStructure', 'testStructureOnePageTwoMistakesOneLine.pdf')
     # generate the output on a document with one page and one line of text and 
     # two mistakes
-    output = getMistakesInformationStructure(mistakes, fileLoc)
+    feedbackObject = StructureFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStructure(mistakes)
+    output = feedbackObject.explanations
     # check if the output contains two lists of information
     assert len(output) == 2
     doc = fitz.open(fileLoc)
@@ -147,7 +156,9 @@ def testOnePageTwoMistakesTwoLines():
     fileLoc = os.path.join(BASEPATH, 'testFilesStructure', 'testStructureOnePageTwoMistakesTwoLines.pdf')
     # generate the output on a document with one page and two lines of text and 
     # two mistakes
-    output = getMistakesInformationStructure(mistakes, fileLoc)
+    feedbackObject = StructureFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStructure(mistakes)
+    output = feedbackObject.explanations
     # check if the output contains two lists of information
     assert len(output) == 2
     doc = fitz.open(fileLoc)
@@ -184,7 +195,9 @@ def testTwoPagesOneMistakeOneLine():
     fileLoc = os.path.join(BASEPATH, 'testFilesStructure', 'testStructureTwoPageOneMistakeOneLine.pdf')
     # generate the output on a document with two pages and one line of text and 
     # one mistake
-    output = getMistakesInformationStructure(mistakes, fileLoc)
+    feedbackObject = StructureFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStructure(mistakes)
+    output = feedbackObject.explanations
     # check if the output contains one list of information
     assert len(output) == 1
     doc = fitz.open(fileLoc)
@@ -218,7 +231,9 @@ def testTwoPagesOneMistakeTwoLines():
     fileLoc = os.path.join(BASEPATH, 'testFilesStructure', 'testStructureTwoPagesOneMistakeTwoLines.pdf')
     # generate the output on a document with two pages and two lines of text and 
     # one mistake
-    output = getMistakesInformationStructure(mistakes, fileLoc)
+    feedbackObject = StructureFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStructure(mistakes)
+    output = feedbackObject.explanations
     # check if the output contains two lists of information
     assert len(output) == 2
     doc = fitz.open(fileLoc)
@@ -257,7 +272,9 @@ def testTwoPagesTwoMistakesOneLine():
     fileLoc = os.path.join(BASEPATH, 'testFilesStructure', 'testStructureTwoPagesTwoMistakesOneLine.pdf')
     # generate the output on a document with two pages and one line of text and 
     # two mistakes
-    output = getMistakesInformationStructure(mistakes, fileLoc)
+    feedbackObject = StructureFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStructure(mistakes)
+    output = feedbackObject.explanations
     # check if the output contains two lists of information
     assert len(output) == 2
     doc = fitz.open(fileLoc)
@@ -296,7 +313,9 @@ def testTwoPagesTwoMistakesTwoLines():
     fileLoc = os.path.join(BASEPATH, 'testFilesStructure', 'testStructureTwoPagesTwoMistakesTwoLines.pdf')
     # generate the output on a document with two pages and two lines of text and 
     # two mistakes
-    output = getMistakesInformationStructure(mistakes, fileLoc)
+    feedbackObject = StructureFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStructure(mistakes)
+    output = feedbackObject.explanations
     # check if the output contains two lists of information
     assert len(output) == 2
     doc = fitz.open(fileLoc)

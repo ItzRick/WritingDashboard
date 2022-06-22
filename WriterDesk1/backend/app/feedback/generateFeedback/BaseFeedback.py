@@ -1,12 +1,7 @@
 from app.scoreapi.scores import setScoreDB, setExplanationDB, getExplanationsFileType, removeExplanationsFileType
 
 class BaseFeedback:
-    scoreStyle = -1
-    scoreCohesion = -1 
-    scoreStructure = -1 
-    scoreIntegration = -1
-    explanations = []
-    explanationType = 0
+    explanationType = -1
 
     def __init__(self, text, referencesText, fileId, userId, filePath):
         self.text = text
@@ -14,13 +9,21 @@ class BaseFeedback:
         self.fileId = fileId
         self.userId = userId
         self.filePath = filePath
+        self.resetVariables()
+
+    def resetVariables(self):
+        self.scoreStyle = -1
+        self.scoreCohesion = -1 
+        self.scoreStructure = -1 
+        self.scoreIntegration = -1
+        self.explanations = []
 
     def genFeedback(self):
         pass
 
     def uploadToDatabase(self):
         setScoreDB(self.fileId, self.scoreStyle, self.scoreCohesion, self.scoreStructure, self.scoreIntegration)
-        if len(self.explanations > 0):
+        if len(self.explanations) > 0:
             explanationIds = getExplanationsFileType(self.fileId, self.explanationType)
             if len(explanationIds) == len(self.explanations):
                 for idexp, (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in enumerate(self.explanations):

@@ -1,4 +1,4 @@
-from app.feedback.feedback import setFeedbackStructure
+from app.feedback.generateFeedback.StructureFeedback import StructureFeedback
 from app.models import Files, Explanations
 import os
 import fitz
@@ -36,7 +36,9 @@ def testSetFeedbackStructure(testClient, initDatabase):
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'testFilesStructure', 'testStructureOnePageTwoMistakesTwoLines.pdf')
     # Make the call to the setFeedbackStructure method:
-    setFeedbackStructure(mistakes, fileLoc, fileId)
+    feedbackObject = StructureFeedback('', '', fileId, 1, fileLoc)
+    feedbackObject.getMistakesInformationStructure(mistakes)
+    feedbackObject.uploadToDatabase()
     # Retrieve this explanation from the database:
     explanations = Explanations.query.filter_by(fileId = fileId).all()
     # Check if all information about this mistake has been added to this database correctly:

@@ -2,7 +2,8 @@ import nltk
 from app import cache
 from nltk.corpus import stopwords
 
-def downloadNltk():
+@cache.memoize(30*24*60*60)
+def downloadNltkCohesion():
     nltk.download('punkt')
     nltk.download('averaged_perceptron_tagger')
     nltk.download('wordnet')

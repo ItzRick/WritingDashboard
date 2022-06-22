@@ -1,4 +1,4 @@
-from app.feedback.getMistakesInformation import getMistakesInformationStyle
+from app.feedback.generateFeedback.LanguageStyleFeedback import LanguageStyleFeedback
 import fitz
 import os
 
@@ -16,7 +16,9 @@ def testOnePageZeroMistakes():
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'testFilesStyle', 'testStyleOnePageZeroMistakes.pdf')
     # generate the output on an empty text with no mistakes
-    output = getMistakesInformationStyle(mistakes, fileLoc)
+    feedbackObject = LanguageStyleFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStyle(mistakes)
+    output = feedbackObject.explanations
     assert output == []
 
 def testOnePageOneMistake():
@@ -40,7 +42,9 @@ def testOnePageOneMistake():
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'testFilesStyle', 'testStyleOnePageOneMistake.pdf')
     # generate the output on a document with one page and one mistake
-    output = getMistakesInformationStyle(mistakes, fileLoc)
+    feedbackObject = LanguageStyleFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStyle(mistakes)
+    output = feedbackObject.explanations
     # check if the output contains one list of information
     assert len(output) == 1
     doc = fitz.open(fileLoc)
@@ -78,7 +82,9 @@ def testOnePageTwoMistakes():
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'testFilesStyle', 'testStyleOnePageTwoMistakes.pdf')
     # generate the output on a document with one page and two mistakes
-    output = getMistakesInformationStyle(mistakes, fileLoc)
+    feedbackObject = LanguageStyleFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStyle(mistakes)
+    output = feedbackObject.explanations
     # check if the output contains two lists of information
     assert len(output) == 2
     doc = fitz.open(fileLoc)
@@ -118,7 +124,9 @@ def testTwoPagesOneMistake():
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'testFilesStyle', 'testStyleTwoPagesOneMistake.pdf')
     # generate the output on a document with two pages and one mistake
-    output = getMistakesInformationStyle(mistakes, fileLoc)
+    feedbackObject = LanguageStyleFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStyle(mistakes)
+    output = feedbackObject.explanations
     # check if the output contains one list of information
     assert len(output) == 1
     doc = fitz.open(fileLoc)
@@ -157,7 +165,9 @@ def testTwoPagesTwoMistakes():
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
     fileLoc = os.path.join(BASEPATH, 'testFilesStyle', 'testStyleTwoPagesTwoMistakes.pdf')
     # generate the output on a document with two pages and two mistakes
-    output = getMistakesInformationStyle(mistakes, fileLoc)
+    feedbackObject = LanguageStyleFeedback('', '', 1, 1, fileLoc)
+    feedbackObject.getMistakesInformationStyle(mistakes)
+    output = feedbackObject.explanations
     # check if the output contains two lists of information
     assert len(output) == 2
     doc = fitz.open(fileLoc)

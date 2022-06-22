@@ -17,6 +17,7 @@ class TestConfig(Config):
     '''
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
+    CACHE_TYPE = "SimpleCache"
     UPLOAD_FOLDER = os.path.join(BASEDIR, "saved_documents")
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.abspath(os.path.join(BASEDIR, 'app_test.db'))

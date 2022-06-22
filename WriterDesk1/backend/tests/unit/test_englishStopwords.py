@@ -1,5 +1,5 @@
 from nltk.corpus import stopwords
-from app.feedback.feedback import getEnglishStopwords
+from app.feedback.nltkDownload import getEnglishStopwords
 
 def testEnglishstopwords(englishStopwords):
     '''

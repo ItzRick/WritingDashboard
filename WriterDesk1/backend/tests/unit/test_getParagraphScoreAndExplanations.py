@@ -1,5 +1,5 @@
 from decimal import ROUND_HALF_UP, Decimal
-from app.feedback.structureCheck import getParagraphScoreAndExplanations
+from app.feedback.generateFeedback.StructureFeedback import StructureFeedback
 
 
 def test_zero_words():
@@ -8,8 +8,9 @@ def test_zero_words():
         Attributes:
             output: the returning value from running the function
     '''
+    feedbackObject = StructureFeedback('', '', 1, 1, '')
     # generate the output on an empty text
-    output = getParagraphScoreAndExplanations('')
+    output = feedbackObject.getParagraphScoreAndExplanations('')
     assert output == None
 
 
@@ -29,8 +30,9 @@ def test_400_words():
     # generate a text with 400 words by multiplying a text with 8 words 50 times
     testText = ('This is a large text with 400 words. ' * 50).strip()
     # retrieve the scores and explanations by running the function on the text
-    score = getParagraphScoreAndExplanations(testText)[0]
-    explanations = getParagraphScoreAndExplanations(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.getParagraphScoreAndExplanations(testText)[0]
+    explanations = feedbackObject.getParagraphScoreAndExplanations(testText)[1]
     # check if the output scores and explanations match 
     assert score == Decimal(6.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
@@ -49,8 +51,9 @@ def test_50_words():
     # generate a text with 50 words by multiplying a text with 5 words 10 times
     testText = ('A short 50 word text. ' * 10).strip()
     # retrieve the scores and explanations by running the function on the text
-    score = getParagraphScoreAndExplanations(testText)[0]
-    explanations = getParagraphScoreAndExplanations(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.getParagraphScoreAndExplanations(testText)[0]
+    explanations = feedbackObject.getParagraphScoreAndExplanations(testText)[1]
     # check if the output scores and explanations match 
     assert score == Decimal(7.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
@@ -66,8 +69,9 @@ def test_200_words():
     # generate a text with 200 words by multiplying a text with 8 words 25 times
     testText = ('This is a good text with 200 words. ' * 25).strip()
     # retrieve the scores and explanations by running the function on the text
-    score = getParagraphScoreAndExplanations(testText)[0]
-    explanations = getParagraphScoreAndExplanations(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.getParagraphScoreAndExplanations(testText)[0]
+    explanations = feedbackObject.getParagraphScoreAndExplanations(testText)[1]
     # check if the output scores and explanations match 
     assert score == Decimal(10.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
@@ -90,8 +94,9 @@ def test_2_paragraphs_large_different_lengths():
     testTextPart2 = ('A bigger 450 word text. ' * 90).strip()
     testText = testTextPart1 + '\n' + testTextPart2
     # retrieve the scores and explanations by running the function on the text
-    score = getParagraphScoreAndExplanations(testText)[0]
-    explanations = getParagraphScoreAndExplanations(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.getParagraphScoreAndExplanations(testText)[0]
+    explanations = feedbackObject.getParagraphScoreAndExplanations(testText)[1]
     # check if the output scores and explanations match 
     assert score == Decimal(6.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
@@ -116,8 +121,9 @@ def test_2_paragraphs_small_different_lengths():
     testTextPart2 = ('A small bit longer 70 word text. ' * 10).strip()
     testText = testTextPart1 + '\n' + testTextPart2
     # retrieve the scores and explanations by running the function on the text
-    score = getParagraphScoreAndExplanations(testText)[0]
-    explanations = getParagraphScoreAndExplanations(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.getParagraphScoreAndExplanations(testText)[0]
+    explanations = feedbackObject.getParagraphScoreAndExplanations(testText)[1]
     # check if the output scores and explanations match 
     assert score == Decimal(7.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
@@ -138,8 +144,9 @@ def test_2_paragraphs_good_different_lengths():
     testTextPart2 = ('Another good 250 word text ' * 50).strip()
     testText = testTextPart1 + '\n' + testTextPart2
     # retrieve the scores and explanations by running the function on the text
-    score = getParagraphScoreAndExplanations(testText)[0]
-    explanations = getParagraphScoreAndExplanations(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.getParagraphScoreAndExplanations(testText)[0]
+    explanations = feedbackObject.getParagraphScoreAndExplanations(testText)[1]
     # check if the output scores and explanations match 
     assert score == Decimal(10.0).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
@@ -167,8 +174,9 @@ def test_4_paragraphs_all_lengths():
     testText = (testTextPart1 + '\n' + testTextPart2 + '\n' + testTextPart3 +
      '\n' + testTextPart4)
     # retrieve the scores and explanations by running the function on the text
-    score = getParagraphScoreAndExplanations(testText)[0]
-    explanations = getParagraphScoreAndExplanations(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.getParagraphScoreAndExplanations(testText)[0]
+    explanations = feedbackObject.getParagraphScoreAndExplanations(testText)[1]
     # check if the output scores and explanations match 
     assert score == Decimal(7.7).quantize(
         Decimal('0.1'), rounding=ROUND_HALF_UP)
@@ -193,8 +201,9 @@ def test_2_paragraphs_large_same_content():
     testTextPart2 = testTextPart1
     testText = testTextPart1 + '\n' + testTextPart2
     # retrieve the scores and explanations by running the function on the text
-    score = getParagraphScoreAndExplanations(testText)[0]
-    explanations = getParagraphScoreAndExplanations(testText)[1]
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.getParagraphScoreAndExplanations(testText)[0]
+    explanations = feedbackObject.getParagraphScoreAndExplanations(testText)[1]
     # Since both testTextPart1 and testTextPart2 are the same, there should be
     # one key in explanations that is equal to testTextPart1 and testTextPart2
     # then check if the output scores and explanations match 
