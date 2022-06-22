@@ -106,6 +106,8 @@ const Settings = () => {
         // Make the backend call and set the table data from the response data:
         axios.post(url,{},{headers: authHeader()}).then((response) => {
         })
+        window.location.reload();
+        return false;
 	}
 
     /**

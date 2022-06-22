@@ -33,7 +33,9 @@ const Users = () => {
         // Make the backend call and set the table data from the response data:
         axios.post(url,{userID: userID},{headers: authHeader()}).then((response) => {
         })
-    }
+        window.location.reload();
+        return false;
+  }
 
   // State to keep track of the data inside the table:
   const [tableData, setTableData] = useState([])
