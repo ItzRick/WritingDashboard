@@ -53,22 +53,7 @@ const Participants = () => {
       headerName: "Actions",
       sortable: false,
       renderCell: (params) => {
-        const onClick = (e) => {
-          e.stopPropagation(); // don't select this row after clicking
-
-          const api: GridApi = params.api;
-          const thisRow: Record<string, GridCellValue> = {};
-
-          api
-            .getAllColumns()
-            .filter((c) => c.field !== "__check__" && !!c)
-            .forEach(
-              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-            );
-
-          return alert(JSON.stringify(thisRow, null, 4));
-        };
-
+        // action buttons
         return <div><IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton></div>;
       }
     }
@@ -78,7 +63,7 @@ const Participants = () => {
   //set title in parent 'base'
   const { setTitle } = useOutletContext();
 
-  // initialize participants and projects variables
+  // initialize participants and projects states
   const [participants, setParticipants] = useState([]);
   const [projects, setProjects] = useState([]);
 
@@ -131,8 +116,10 @@ const Participants = () => {
   //list of selected items
   const [selectedInstances, setSelectedInstances] = useState([])
 
-  // Perform GET request to retrieve participants of current user from backend
-  // Puts response in variable 'participants'
+  /**
+   * Perform GET request to retrieve participants of current user from backend
+   * Puts response in variable 'participants'
+   */
   const getParticpantsAndProjects = () => {
     const url = 'https://127.0.0.1:5000/usersapi/getParticipantsProjects';
     //Perform GET request
@@ -178,6 +165,7 @@ const Participants = () => {
     */
   const deleteParticipant = (e, userId) => {
     setShowDeleteDialog(false);  // Don't show dialog anymore
+    // TODO: future feature for Bas or Jordy
     // Url of the server:
     //const url = 'https://127.0.0.1:5000/...'
     // Formdata for the backend call, to which the id has been added:
@@ -207,16 +195,17 @@ const Participants = () => {
     */
   const deleteSelectedParticipants = (e) => {
     setShowDeleteDialogMultiple(false);  // Don't show dialog anymore
-    // Url of the server:
-    const url = 'https://127.0.0.1:5000/...'
-    // Create a new formdata:
-    const formData = new FormData();
-    // For each of the selected instances, add this id to the formdata:
-    selectedInstances.forEach(id => formData.append('id', id));
-    // Make the backend call:
-    axios.delete(url, { data: formData }).then(response => {
-      //TODO: Set table data
-    });
+    // TODO: future feature for Bas or Jordy
+    // // Url of the server:
+    // const url = 'https://127.0.0.1:5000/...'
+    // // Create a new formdata:
+    // const formData = new FormData();
+    // // For each of the selected instances, add this id to the formdata:
+    // selectedInstances.forEach(id => formData.append('id', id));
+    // // Make the backend call:
+    // axios.delete(url, { data: formData }).then(response => {
+    //   //TODO: Set table data
+    // });
   }
 
   return (

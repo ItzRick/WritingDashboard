@@ -213,10 +213,8 @@ def testRetrieveSingleProjectSingleUserOfUserNoOther(testClient, initDatabase):
     connection = ParticipantToProject(200, 10)
     db.session.add(connection)
     db.session.commit()
-
     # We try to retrieve the projects of the user
     response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
-
     # Check if the expected response has the correct status code
     assert response.status_code == 200
 
@@ -229,7 +227,6 @@ def testRetrieveSingleProjectSingleUserOfUserNoOther(testClient, initDatabase):
                         projectname = "Project1", 
                         ), 
                         ]
-
     # Placing the response data into a variable
     actual_response = json.loads(response.data)
     # Check if the expected response is correct:
@@ -261,7 +258,6 @@ def testRetrieveSingleProjectMultipleParticipantsOfUserNoOther(testClient, initD
     data = {
         'userId': userId,
     }
-
     # We add a single project with a single user to the database, which is from the user
     researcher1 = User(username="Researcher1", password_plaintext="password2", role="researcher")
     researcher1.id = 201
@@ -285,10 +281,8 @@ def testRetrieveSingleProjectMultipleParticipantsOfUserNoOther(testClient, initD
     connection2 = ParticipantToProject(204, 10)
     db.session.add(connection2)
     db.session.commit()
-
     # We try to retrieve the projects of the user
     response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
-
     # Check if the expected response has the correct status code
     assert response.status_code == 200
 
@@ -315,7 +309,6 @@ def testRetrieveSingleProjectMultipleParticipantsOfUserNoOther(testClient, initD
                         projectname = "Project1", 
                         ), 
                         ]
-
     # Placing the response data into a variable
     actual_response = json.loads(response.data)
     # Check if the expected response is correct:
@@ -347,7 +340,6 @@ def testRetrieveSingleProjectSingleParticipantOfUserWithOther(testClient, initDa
     data = {
         'userId': userId,
     }
-
     # We add a single project with a single user to the database, which is from the user
     researcher1 = User(username="Researcher1", password_plaintext="password2", role="researcher")
     researcher1.id = 201
@@ -377,13 +369,10 @@ def testRetrieveSingleProjectSingleParticipantOfUserWithOther(testClient, initDa
     connection2 = ParticipantToProject(204, 11)
     db.session.add(connection2)
     db.session.commit()
-
     # We try to retrieve the projects of the user
     response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
-
     # Check if the expected response has the correct status code
     assert response.status_code == 200
-
     # Create the expected response:
     expected_response = [dict(id = 200,
                         password_plaintext="password",

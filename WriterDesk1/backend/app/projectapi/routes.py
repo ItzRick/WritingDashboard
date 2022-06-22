@@ -167,7 +167,7 @@ def viewParticipantsOfUser():
     # Throw an error if the project variable is empty
     # in other words, if the user has no projects
     if participants == []:
-        return 'researcher has no participants', 4041
+        return 'researcher has no participants', 404
     return jsonify(participants)
 
 @bp.route('/viewProjectsOfUser', methods=["GET"])
@@ -188,7 +188,7 @@ def viewProjectsOfUser():
     # Throw an error if the project variable is empty
     # in other words, if the user has no projects
     if projects == []:
-        return 'researcher has no projects', 4041
+        return 'researcher has no projects', 404
 
     return jsonify(projects)
     
