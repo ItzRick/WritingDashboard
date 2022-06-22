@@ -92,16 +92,18 @@ const RoleDialog = ({userRole, userId, userName}) => {
 
         onClose(selectedValue);
         // Send request and handle possible error
-        ChangeRole(userId, selectedValue.toLowerCase()).catch((error) => {
+        ChangeRole(userId, selectedValue.toLowerCase()).then(r => {
+            if(AuthenticationService.getCurrentUserId() === userId && selectedValue !== 'Admin') {
+                AuthenticationService.logout();
+                navigate("../Login", {replace: true});
+            }
+        }).catch((error) => {
             setValue(userRole);
             let alertText = "Error while changing role: \n" + error.message;
             alert(alertText);
         });
 
-        if (AuthenticationService.getCurrentUserId() === userId && selectedValue !== 'Admin'){
-            AuthenticationService.logout();
-            navigate("../Login", { replace: true });
-        }
+
      };
     
      // handle cancel of selection

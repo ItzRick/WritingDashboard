@@ -135,6 +135,10 @@ def setRole():
     # get targetUser
     targetUser = User.query.filter_by(id=userId).first()
 
+    if current_user == targetUser and newRole != 'admin' and User.query.filter_by(role='admin').count() == 1:
+        # Error when last administrator removes its own administrator role
+        return 'The role of the last administrator can not be changed', 404
+
     # check if userId exists
     if targetUser is None:
         return 'user with userId not found', 404
