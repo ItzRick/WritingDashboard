@@ -157,7 +157,12 @@ class LanguageStyleFeedback(BaseFeedback):
 
                 # add the height of the page to the coordinates for returning
                 if page.number != 0:
+                    # initial
                     pageHeight += page.rect.y1
+                    # another option, should be the same but maybe it works
+                    # pageHeight += page.mediabox.y1
+                    # another option, should be the same but maybe it works
+                    # pageHeight += page.cropbox.y1
 
                 # check if the word found is in the sentence, if this is the case
                 # it gets added to a list that contains all specific words found in
