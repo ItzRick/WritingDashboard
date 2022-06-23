@@ -67,6 +67,9 @@ def testGenFeedbackDocxFile(testClient, initDatabase):
             mistakes: mistakes in the correct format as given to the setFeedbackStyle method. 
             BASEPATH: Path of the current test_setFeedbackStyle.py file.
             fileLoc: Location of the file we test this for.
+            convertedFileLoc: pointer to the pdf file that is created by converting this docx file.
+            head: The head of the filePath of the file for which the feedback will be generated.
+            tail: The tail of the filepath of the file for which the feedback will be generated.
             explanations: Database for the current file, containing explanations, as retrieved from the database 
                 and created using the genFeedback method.
         Arguments:
@@ -99,7 +102,9 @@ def testGenFeedbackDocxFile(testClient, initDatabase):
     assert explanations[1].type == 0
     assert explanations[1].replacement1 == 'must-try'
     # Check if the coordinates of the style mistakes have also been found correctly:
-    doc = fitz.open(file.path.replace('.docx', '.pdf'))
+    head, tail = os.path.split(file.path)
+    convertedFileLoc = os.path.join(head, 'converted', tail.replace(".docx", ".pdf"))
+    doc = fitz.open(convertedFileLoc)
     page = doc.load_page(0)
     assert page.get_textbox(fitz.Rect(explanations[0].X1, explanations[0].Y1, explanations[0].X2, explanations[0].Y2)) == 'a'
     assert page.get_textbox(fitz.Rect(explanations[1].X1, explanations[1].Y1, explanations[1].X2, explanations[1].Y2)) == 'must try'
@@ -259,6 +264,9 @@ def testGenFeedbackTxtFile(testClient, initDatabase):
             mistakes: mistakes in the correct format as given to the setFeedbackStyle method. 
             BASEPATH: Path of the current test_setFeedbackStyle.py file.
             fileLoc: Location of the file we test this for.
+            convertedFileLoc: pointer to the pdf file that is created by converting this docx file.
+            head: The head of the filePath of the file for which the feedback will be generated.
+            tail: The tail of the filepath of the file for which the feedback will be generated.
             explanations: Database for the current file, containing explanations, as retrieved from the database 
                 and created using the genFeedback method.
         Arguments:
@@ -291,7 +299,9 @@ def testGenFeedbackTxtFile(testClient, initDatabase):
     assert explanations[1].type == 0
     assert explanations[1].replacement1 == 'must-try'
     # Check if the coordinates of the style mistakes have also been found correctly:
-    doc = fitz.open(file.path.replace('.txt', '.pdf'))
+    head, tail = os.path.split(file.path)
+    convertedFileLoc = os.path.join(head, 'converted', tail.replace(".txt", ".pdf"))
+    doc = fitz.open(convertedFileLoc)
     page = doc.load_page(0)
     assert page.get_textbox(fitz.Rect(explanations[0].X1, explanations[0].Y1, explanations[0].X2, explanations[0].Y2)) == 'a'
     assert page.get_textbox(fitz.Rect(explanations[1].X1, explanations[1].Y1, explanations[1].X2, explanations[1].Y2)) == 'must try'

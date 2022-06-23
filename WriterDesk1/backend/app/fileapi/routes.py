@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify, send_file
 from app.models import Files, User
 from app.fileapi import bp
-from app.fileapi.convert import convertDocx, convertTxt
+from app.fileapi.convert import convertDocx, convertTxt, removeConvertedFiles
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from magic import from_buffer
 from datetime import date
@@ -136,11 +136,13 @@ def fileDelete():
             return 'file does not exist in database', 404
         # Retrieve the paths of the file to be removed
         path = fileToBeRemoved.path
+        fileType = fileToBeRemoved.fileType
         basepath = os.path.dirname(path)
         # If the path exists, remove the file from the database
         # Else, throw an error message
         if os.path.isfile(path):
             os.remove(path)
+            removeConvertedFiles(path, fileType)
             removeFromDatabase(fileToBeRemoved)
             if not os.listdir(basepath):
                 os.rmdir(basepath)
