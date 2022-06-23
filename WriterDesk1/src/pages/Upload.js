@@ -1,11 +1,14 @@
 // materials
 import {
-    Typography,
     Box,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
 } from "@mui/material";
 
 import UploadSingleFile from "./../components/UploadSingleFile";
-import UploadPopUp from "./../components/UploadPopUp";
 import BlueButton from "./../components/BlueButton";
 
 // routing
@@ -17,14 +20,32 @@ import { useEffect, useState, useRef } from 'react';
  * @returns File Upload page
  */
 const Upload = () => {
-    // list of references
-    const refs = useRef([]);
-
     //set title in parent 'base'
     const { setTitle } = useOutletContext();
     useEffect(() => {
         setTitle('Upload');
     });
+    
+    // list of references
+    const refs = useRef([]);
+
+    // whether the dialog is open or not
+    const [open, setOpen] = useState(false);
+    // number of successes and failures during uploading of files
+    const [succ, setSucc] = useState(0);
+    const [fail, setFail] = useState(0);
+    // close the popup and reset to successes and failures to 0
+    const popUpClose = () => {
+        setOpen(false)
+        setSucc(0)
+        setFail(0)
+    }
+
+    // open popup and upload all documents
+    const handleClickOpen = () => {
+        uploadDocuments();
+        setOpen(true);
+    };
 
     // id provider
     const [id, setId] = useState(1);
@@ -38,6 +59,8 @@ const Upload = () => {
             <UploadSingleFile
                 thisIndex={id}
                 key={id}
+                setSucc={setSucc}
+                setFail={setFail}
                 setUploadSingleFiles={setUploadSingleFiles}
                 ref={(el) => (refs.current[id] = el)}
             />
@@ -61,6 +84,8 @@ const Upload = () => {
         setUploadSingleFiles([<UploadSingleFile
             thisIndex={0}
             key={0}
+                setSucc={setSucc}
+                setFail={setFail}
             setUploadSingleFiles={setUploadSingleFiles}
             ref={(el) => (refs.current[0] = el)}
         />]);
@@ -78,9 +103,33 @@ const Upload = () => {
             </Box>
             <br />
             <Box className='title'>
-                <UploadPopUp func={uploadDocuments} fileCount={1} />
-            </Box>
-            
+            <BlueButton idStr='uploadYourDocument(s)' addStyle={{ fontSize: '2vw', textTransform: 'none' }} onClick={handleClickOpen}>Upload your document(s)</BlueButton>
+            <Dialog
+                open={open}
+                onClose={popUpClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Upload your documents?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {succ <= 0 && <>No documents were successfully uploaded. </>}
+                        {succ == 1 && <>1 document was successfully uploaded. </>}
+                        {succ > 1 && <>{succ} documents were successfully uploaded. </>}
+                        {fail <= 0 && <>No documents failed to upload. </>}
+                        {fail == 1 && <>1 document failed to upload. </>}
+                        {fail > 1 && <>{fail} documents failed to upload. </>}
+                        What would you like to do next?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions sx={{justifyContent:'space-between'}}>
+                    <BlueButton idStr='uploadMoreDocuments' onClick={popUpClose}> Upload more documents </BlueButton>
+                    <BlueButton idStr='viewDocuments' pathName='/Documents'> View documents </BlueButton>
+                </DialogActions>
+            </Dialog>
+            </Box>            
         </>
     );
 }

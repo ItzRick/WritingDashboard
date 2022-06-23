@@ -25,7 +25,7 @@ import { TrackingContext } from '@vrbo/react-event-tracking';
  * @param {function} setUploadSingleFiles function in parent to change the list of UploadSingleFile objects
  * @returns Single File Upload Object
  */
-const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) => {
+const UploadSingleFile = forwardRef(({ setSucc, setFail, setUploadSingleFiles, thisIndex }, ref) => {
 
     // context as given by the Tracking Provider
     const tc = useContext(TrackingContext);
@@ -69,8 +69,11 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
             }
 
             //post the file
-            axios.post(url, formData, headers).catch((error) => {
+            axios.post(url, formData, headers).then(() => {
+                setSucc((v) => (v+1))
+            }).catch((error) => {
                 console.log(error.response.data);
+                setFail((v) => (v+1))
             });
 
             //post-update
