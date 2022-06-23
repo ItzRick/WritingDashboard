@@ -221,6 +221,7 @@ def getFileById():
 
 
 @bp.route('/display', methods= ['GET'])
+@jwt_required()
 def displayFile():
     '''
         Function to convert a document of type docx or txt to a document of

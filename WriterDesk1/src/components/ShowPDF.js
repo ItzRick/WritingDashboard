@@ -4,6 +4,7 @@ import { Document, Page } from "react-pdf";
 // tracking
 import { useContext, useEffect } from 'react';
 import { TrackingContext } from '@vrbo/react-event-tracking';
+import { authHeader } from "../helpers/auth-header";
 
 /**
  * Document panel in which the document can be scrolled to prevent page from becoming very long.
@@ -43,7 +44,7 @@ const AllPages = ({ pdf, docId=null, docName=null }) => {
 
 return (
   <Document // render document using react-pdf
-    file={pdf}
+    file={{url: pdf, httpHeaders: authHeader()}}
     options={{ workerSrc: "../pdf.worker.js" }}
     onLoadSuccess={onDocumentLoadSuccess}
   >
