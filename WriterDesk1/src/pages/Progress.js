@@ -14,6 +14,7 @@ import ProgressVisualization from "../components/ProgressVisualization";
 import axios from "axios";
 // Authentication service:
 import { AuthenticationService } from "../services/authenticationService";
+import { authHeader } from "../helpers/auth-header";
 
 
 /**
@@ -44,7 +45,7 @@ function Progress() {
         const url = 'https://127.0.0.1:5000/scoreapi//getAvgScores';
 
         // Make the call to the backend:
-        axios.get(url, {params: {userId: userId}})
+        axios.get(url, {params: {userId: userId}, headers: authHeader() })
             .then((response) => {
                 setScoreStyle(response.data.scoreStyle);
                 setScoreStructure(response.data.scoreStructure);

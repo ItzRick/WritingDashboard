@@ -33,6 +33,7 @@ def setScore():
 
 
 @bp.route('/getScores', methods = ['GET'])
+@jwt_required()
 def getScores(): 
     '''
         This function handles returning the score of some file
@@ -66,6 +67,7 @@ def getScores():
 
 
 @bp.route('/getExplanation', methods = ['GET'])
+@jwt_required()
 def getExplanation(): 
     '''
         This function handles returning a specific explanation of some file
@@ -102,6 +104,7 @@ def getExplanation():
     return explanation.serialize, 200
 
 @bp.route('/getAvgScores', methods = ['GET'])
+@jwt_required()
 def getAverageScores():
     '''
         This function handles returning the average scores of the latest (date) files
