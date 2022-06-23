@@ -95,8 +95,7 @@ const Settings = () => {
     * Logs out the user and redirects the user to the homepage.
     */   
     const logout = () => {
-        AuthenticationService.logout();
-        navigate("/", { replace: true });
+        AuthenticationService.logout();  
     }
 
 	/**
