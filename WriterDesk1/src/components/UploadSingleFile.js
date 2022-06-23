@@ -87,7 +87,10 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
                       'Content-Type': 'application/x-www-form-urlencoded'
                     }
                   }
-                axios.post(generateUrl, {}, config);
+                axios.post(generateUrl, {}, config)
+                .catch((error) => {
+                    console.log(error.response.data);
+                });
               })
             .catch((error) => {
                 console.log(error.response.data);

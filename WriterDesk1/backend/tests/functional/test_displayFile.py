@@ -11,15 +11,21 @@ def test_docx(testClient):
             data: the data needed by the display function.
             response: the result fo retrieving the file.
             pdfFile: the converted docx file.
+            convertedFileLoc: pointer to the pdf file that has been created by having converted the docx file.
+            head: The head of the filePath of the file that is converted.
+            tail: The tail of the filepath of the file that is converted.
         Arguments:
             testClient: The test client we test this for.
     '''
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileName = 'test_docx.docx'
     fileDir = os.path.join(BASEDIR, fileName)
+    # Get the path of the converted file:
+    head, tail = os.path.split(fileDir)
+    convertedFileLoc = os.path.join(head, 'converted', tail.replace(".docx", ".pdf"))
     # check if the converted file already exists, if so remove it
-    if os.path.isfile(fileDir.replace('.docx', '.pdf')):
-        os.remove(fileDir.replace('.docx', '.pdf'))
+    if os.path.isfile(convertedFileLoc):
+        os.remove(convertedFileLoc)
     # put the data needed for the display function in a dictionary
     data = {
         'filepath': fileDir,
@@ -30,7 +36,7 @@ def test_docx(testClient):
     assert response.status_code == 200
     assert response.headers['Content-Disposition'] == 'inline; filename=test_docx.pdf'
     # read the newly converted file as a pdf
-    with open(fileDir.replace(".docx", ".pdf"), 'rb') as file:
+    with open(convertedFileLoc, 'rb') as file:
         pdfFile = BytesIO(file.read())
     assert response.data == pdfFile.read() 
 
@@ -44,15 +50,21 @@ def test_txt(testClient):
             data: the data needed by the display function.
             response: the result fo retrieving the file.
             pdfFile: the converted txt file.
+            convertedFileLoc: pointer to the pdf file that has been created by having converted the txt file.
+            head: The head of the filePath of the file that is converted.
+            tail: The tail of the filepath of the file that is converted.
         Arguments:
             testClient: The test client we test this for.
     '''
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileName = 'test_txt.txt'
     fileDir = os.path.join(BASEDIR, fileName)
+    # Get the path of the converted file:
+    head, tail = os.path.split(fileDir)
+    convertedFileLoc = os.path.join(head, 'converted', tail.replace(".txt", ".pdf"))
     # check if the converted file already exists, if so remove it
-    if os.path.isfile(fileDir.replace('.txt', '.pdf')):
-        os.remove(fileDir.replace('.txt', '.pdf'))
+    if os.path.isfile(convertedFileLoc):
+        os.remove(convertedFileLoc)
     # put the data needed for the display function in a dictionary
     data = {
         'filepath': fileDir,
@@ -63,7 +75,7 @@ def test_txt(testClient):
     assert response.status_code == 200
     assert response.headers['Content-Disposition'] == 'inline; filename=test_txt.pdf'
     # read the newly converted file as a pdf
-    with open(fileDir.replace(".txt", ".pdf"), 'rb') as file:
+    with open(convertedFileLoc, 'rb') as file:
         pdfFile = BytesIO(file.read())
     assert response.data == pdfFile.read()
 
