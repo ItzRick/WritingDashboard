@@ -6,6 +6,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Typography,
 } from "@mui/material";
 
 import UploadSingleFile from "./../components/UploadSingleFile";
@@ -13,7 +14,7 @@ import BlueButton from "./../components/BlueButton";
 
 // routing
 import { useOutletContext } from 'react-router-dom';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Fragment } from 'react';
 
 /**
  * 
@@ -34,11 +35,15 @@ const Upload = () => {
     // number of successes and failures during uploading of files
     const [succ, setSucc] = useState(0);
     const [fail, setFail] = useState(0);
+    // store failed filenames
+    const [failedFiles, setFailedFiles] = useState([]);
+
     // close the popup and reset to successes and failures to 0
     const popUpClose = () => {
         setOpen(false)
         setSucc(0)
         setFail(0)
+        setFailedFiles([])
     }
 
     // open popup and upload all documents
@@ -59,6 +64,7 @@ const Upload = () => {
             <UploadSingleFile
                 thisIndex={id}
                 key={id}
+                setFailedFiles={setFailedFiles}
                 setSucc={setSucc}
                 setFail={setFail}
                 setUploadSingleFiles={setUploadSingleFiles}
@@ -84,8 +90,9 @@ const Upload = () => {
         setUploadSingleFiles([<UploadSingleFile
             thisIndex={0}
             key={0}
-                setSucc={setSucc}
-                setFail={setFail}
+            setFailedFiles={setFailedFiles}
+            setSucc={setSucc}
+            setFail={setFail}
             setUploadSingleFiles={setUploadSingleFiles}
             ref={(el) => (refs.current[0] = el)}
         />]);
@@ -118,9 +125,12 @@ const Upload = () => {
                         {succ <= 0 && <>No documents were successfully uploaded. </>}
                         {succ == 1 && <>1 document was successfully uploaded. </>}
                         {succ > 1 && <>{succ} documents were successfully uploaded. </>}
-                        {fail <= 0 && <>No documents failed to upload. </>}
-                        {fail == 1 && <>1 document failed to upload. </>}
-                        {fail > 1 && <>{fail} documents failed to upload. </>}
+                        <br/>
+                        {fail <= 0 && <>No documents failed to upload</>}
+                        {fail == 1 && <>1 document failed to upload</>}
+                        {fail > 1 && <>{fail} documents failed to upload</>}
+                        , because:<br/>
+                        {failedFiles.map((item) =><Typography component={'span'} key={item.id}>{item.content}<br/></Typography>)}
                         What would you like to do next?
                     </DialogContentText>
                 </DialogContent>
