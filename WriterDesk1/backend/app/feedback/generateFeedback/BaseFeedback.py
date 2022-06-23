@@ -29,7 +29,6 @@ class BaseFeedback:
         self.userId = userId
         self.filePath = filePath
         self.resetVariables()
-        self.setFeedbackVersion(0.01)
 
     def resetVariables(self):
         '''
@@ -44,10 +43,6 @@ class BaseFeedback:
         self.scoreStructure = -1 
         self.scoreIntegration = -1
         self.explanations = []
-
-    def setFeedbackVersion(self, feedbackVersion):
-        self.feedbackVersion = feedbackVersion
-        current_app.config['feedbackVersion'] = feedbackVersion
 
     def genFeedback(self):
         '''
@@ -77,7 +72,7 @@ class BaseFeedback:
                 replacements: The replacements for the current explanation.
         '''
         # Upload the scores:
-        setScoreDB(self.fileId, self.scoreStyle, self.scoreCohesion, self.scoreStructure, self.scoreIntegration, self.feedbackVersion)
+        setScoreDB(self.fileId, self.scoreStyle, self.scoreCohesion, self.scoreStructure, self.scoreIntegration, current_app.config['FEEDBACKVERSION'])
         # If there are any explanations upload them:
         if len(self.explanations) > 0:
             # See if there are any previously uploaded explanations for the current file:
@@ -85,7 +80,7 @@ class BaseFeedback:
             # If there are as much previously uploaded explanations as new explanations, we use the existing explanationIds:
             if len(explanationIds) == len(self.explanations):
                 for idexp, (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in enumerate(self.explanations):
-                    self.uploadExplanation(X1, Y1, X2, Y2, explanationIds[idexp], explType, expl, mistake, replacements, self.feedbackVersion)
+                    self.uploadExplanation(X1, Y1, X2, Y2, explanationIds[idexp], explType, expl, mistake, replacements, current_app.config['FEEDBACKVERSION'])
             else:
                 # If there are not as much currently existing explanations, we remove all explanations 
                 # for the current file from the database:
@@ -93,7 +88,7 @@ class BaseFeedback:
                     removeExplanationsFileType(self.fileId, self.explanationType)
                 # Upload all new explanations to the database:
                 for (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in self.explanations:
-                    self.uploadExplanation(X1, Y1, X2, Y2, -1, explType, expl, mistake, replacements, self.feedbackVersion)
+                    self.uploadExplanation(X1, Y1, X2, Y2, -1, explType, expl, mistake, replacements, current_app.config['FEEDBACKVERSION'])
     
     def uploadExplanation(self, X1, Y1, X2, Y2, explId, explanationType, explanation, mistake, replacements, feedbackVersion):
         '''
