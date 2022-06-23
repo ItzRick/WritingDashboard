@@ -1,4 +1,3 @@
-from this import d
 from app.models import Files, Scores, Explanations
 from app.database import uploadToDatabase, removeFromDatabase
 
