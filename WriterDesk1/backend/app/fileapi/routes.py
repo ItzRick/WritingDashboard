@@ -30,10 +30,12 @@ def fileUpload():
             fileInDatabase: information about the current file that is being handled, that should be added to the database. 
             existing: current existing files with the same userId and fileName 
             associated in the database for the current file that is being handled.
+            fileIds: ids of the file that have been uploaded.
     '''
     # Retrieve the files as send by the react frontend and give this to the fileUpload function,
     # which does all the work:
     files = request.files.getlist('files')
+    fileIds = []
     # If the length of the files, as retrieved is 0, no file has been uploaded, indicate with an error message
     # and a 400 return code:
     if (len(files) == 0):
@@ -79,8 +81,9 @@ def fileUpload():
             removeFromDatabase(file)
         # Add the data to the database:
         uploadToDatabase(fileInDatabase)
+        fileIds.append(fileInDatabase.id)
     # Indicate that we have successfully uploaded this file to the server:
-    return 'success'
+    return f'Uploaded file with ids: {fileIds}'
 
 @bp.route('/fileretrieve', methods = ['GET'])
 def fileRetrieve():

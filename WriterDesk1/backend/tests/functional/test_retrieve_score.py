@@ -33,8 +33,8 @@ def uploadFile(testClient):
     }
     # Create the response by means of the post request:
     response = testClient.post('/fileapi/upload', data=data)
-    assert response.data == b'success'
-    file = Files.query.filter_by(filename=secure_filename(fileName)).first()
+    file = Files.query.filter_by(filename=fileName).first()
+    assert response.data == f'Uploaded file with ids: [{file.id}]'.encode('utf-8')
     assert file.courseCode == courseCode
     return response, file
 

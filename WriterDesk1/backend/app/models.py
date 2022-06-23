@@ -38,7 +38,13 @@ class User(db.Model):
         self.trackable = trackable
 
     # list of columns and relationships that should not get serialized
-    nonSerializable = ['file', 'passwordHash', 'project', 'participantToProject', 'click']
+
+    nonSerializable = [
+        'passwordHash', 
+        'file', 
+        'click',
+        'participanttoproject',
+    ]
 
     def serializeUser(self):
         dict = {}
@@ -265,3 +271,14 @@ class Clicks(db.Model):
 
     def __repr__(self):
         return '<Clicks {}>'.format(self.userId, self.clickId)
+
+    def serializeClick(self):
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            if not c == 'file' and not c == 'clicker':
+                dict[c] =  getattr(self, c)
+        return dict
+
+    @staticmethod
+    def serializeList(l):
+        return [m.serializeClick() for m in l]

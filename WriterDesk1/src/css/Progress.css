@@ -1,0 +1,13 @@
+.plotContainerAverage {
+    min-height: 260px;
+    height: 36vh;
+    width: 90%;
+    margin: auto;
+}
+
+.plotContainerLine {
+    display: -webkit-flex;
+    display: flex;
+    min-height: 280px;
+    height: 40vh;
+}

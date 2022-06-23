@@ -69,7 +69,27 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
             }
 
             //post the file
-            axios.post(url, formData, headers).catch((error) => {
+            axios.post(url, formData, headers)
+            .then((response) => {
+                // Make the backend call to generate feedback:
+                // Get the ids of the uploaded files from the backend:
+                let message = response.data
+                let ids = /\[(.*?)\]/.exec(message)[0];
+                ids = ids.replace(/[\[\]']+/g,'')
+                ids = ids.split(', ')
+                // Make a post request with the correct parameters:
+                let params = new URLSearchParams();
+                ids.forEach(element => params.append("fileId", element));
+                let generateUrl = 'https://localhost:5000/feedback/generate';
+                const config = {
+                    params: params,
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                  }
+                axios.post(generateUrl, {}, config);
+              })
+            .catch((error) => {
                 console.log(error.response.data);
             });
 
