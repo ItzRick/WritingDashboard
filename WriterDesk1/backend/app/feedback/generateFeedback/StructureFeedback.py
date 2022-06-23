@@ -2,8 +2,6 @@ from this import d
 from app.feedback.generateFeedback.BaseFeedback import BaseFeedback
 from decimal import ROUND_HALF_UP, Decimal
 import fitz
-from pdfminer.pdfdocument import PDFDocument
-from pdfminer.pdfparser import PDFParser
 
 class StructureFeedback(BaseFeedback):
     '''
@@ -175,9 +173,6 @@ class StructureFeedback(BaseFeedback):
         '''
         doc = fitz.open(self.filePath)
 
-        parser = PDFParser(open(self.filePath, 'rb'))
-        doc2 = PDFDocument(parser)
-
         # go over all mistakes in the input
         for mistake in mistakes:
             pageHeight = 0
@@ -188,7 +183,7 @@ class StructureFeedback(BaseFeedback):
                 # add the height of the page to the coordinates for returning
                 if page.number != 0:
                     # if document is created through LaTeX or something similar
-                    if 'TeX'.encode('utf-8') in doc2.info[0]['Creator']:
+                    if 'TeX' in doc.metadata['creator']:
                         pageHeight += page.rect.y1 * 0.999
                     else:
                         pageHeight += page.rect.y1
