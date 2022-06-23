@@ -9,7 +9,11 @@ from magic import from_buffer
 from datetime import date
 from mimetypes import guess_extension
 
+# For protecting endpoint using JWT Tokens
+from flask_jwt_extended import jwt_required
+
 @bp.route('/upload', methods = ['POST'])
+@jwt_required()
 def fileUpload():
     '''
         This functions handles the file upload, so handles adding the file to the correct subdirectory
@@ -86,6 +90,7 @@ def fileUpload():
     return f'Uploaded file with ids: {fileIds}'
 
 @bp.route('/fileretrieve', methods = ['GET'])
+@jwt_required()
 def fileRetrieve():
     '''
     This function handles the retrieval of files in a specified order from a 
@@ -116,6 +121,7 @@ def fileRetrieve():
         return 'No user available', 400
 
 @bp.route('/filedelete', methods = ['DELETE'])
+@jwt_required()
 def fileDelete():
     '''
     This function handles the deletion of files using the corresponding file id. 
