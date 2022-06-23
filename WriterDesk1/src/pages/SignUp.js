@@ -114,8 +114,9 @@ const SignUp = () => {
             setFormError("One or more fields are not complete!");
             return;
         }
+        // check if the user accepted the necessary data agreement
         if (!acceptNeceData) {
-            setFormError('You must allow the storage of necessary data!')
+            setFormError('You must allow the storage and execution of necessary application data!')
             return;
         }
 
@@ -214,10 +215,10 @@ const SignUp = () => {
                         <div style={{display: 'flex', alignSelf: 'flex-end', verticalAlign: 'middle'}}>
                             <Checkbox sx={{alignSelf: 'center'}} onChange={(e) => {setAcceptNeceData(e.target.checked)}} />
                             <Typography sx={{alignSelf: 'center', alignContent:'inline'}}>
-                            I allow the storage of <a className='userDataLinkPopup' onClick={() => {setShowNeceDataPopup(true)}} >necessary data</a>. and the execution of the application on this necessary data.
+                            I allow the storage and execution of <a className='userDataLinkPopup' onClick={() => {setShowNeceDataPopup(true)}} >necessary application data</a>.
                             </Typography>
                             {showNeceDataPopup && <AlertDialog title = "Necessary Data" 
-                                text = "We store uploaded files and the generated feedback. You can always delete these files and consequently the generated data."
+                                text = "We store uploaded files, its meta data and generated feedback. You can always delete these files and generated data on the Documents page. It is possible to delete you account on the Settings page."
                                 buttonAgree={<Button onClick={() => {setShowNeceDataPopup(false)}}>I understand</Button>}
                             />}
                         </div>
