@@ -34,11 +34,12 @@ def generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype):
     }
     # Create the response by means of the post request:
     response = testClient.post('/fileapi/upload', data=data)
-    # See if we indeed get code 200 and the correct message from this request:
-    assert response.data == b'success'
+    # See if we indeed get code 200:
     assert response.status_code == 200
     # See if the correct data has been added to the database which we retrieve by the filename:
     file = Files.query.filter_by(filename=secure_filename(fileName)).first()
+    # see if we get the correct response message:
+    assert response.data == f'Uploaded file with ids: [{file.id}]'.encode('utf-8')
     assert file.filename == secure_filename(fileName)
     assert file.courseCode == courseCode
     assert file.userId == userId
@@ -80,11 +81,12 @@ def testUploadTextStream(testClient, initDatabase):
     }
     # Create the response by means of the post request:
     response = testClient.post('/fileapi/upload', data=data)
-    # See if we indeed get code 200 and the correct message from this request:
-    assert response.data == b'success'
+    # See if we indeed get code 200:
     assert response.status_code == 200
     # See if the correct data has been added to the database which we retrieve by the filename:
     file = Files.query.filter_by(filename=fileName).first()
+    # see if we get the correct response message:
+    assert response.data == f'Uploaded file with ids: [{file.id}]'.encode('utf-8')
     assert file.filename == fileName
     assert file.courseCode == courseCode
     assert file.userId == userId

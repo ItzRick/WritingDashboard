@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-bp = Blueprint('users', __name__)
+bp = Blueprint('userapi', __name__)
 
 from app.usersapi import routes

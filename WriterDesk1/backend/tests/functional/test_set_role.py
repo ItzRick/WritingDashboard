@@ -180,3 +180,39 @@ def testNotAdmin(testClient, initDatabase):
     response = testClient.post('/loginapi/setRole', data=data, headers = {"Authorization": "Bearer " + access_token})
     assert response.status_code == 403
     assert response.data == b'Method only accessible for admin users'
+
+
+def testLastAdmin(testClient, initDatabase):
+    '''
+    Test if we get an error message when the last administrator tries to remove its administrator role.
+    Arguments:
+        testClient:   The test client we test this for.
+        initDatabase: The database instance we test this for.
+    Attributes:
+        user: user 'ad min'
+        userId: user id of ad min
+        newRole: new proposed and valid role
+        access_token: admin's access token
+        data: data for request to server
+        response: response of setting the role
+    '''
+    del initDatabase
+    user = User.query.filter_by(username='ad').first()
+    # get his user id
+    userId = user.id
+
+    assert User.query.filter_by(id=userId).first() is not None
+
+    # get access token for Pietje Bell
+    access_token = loginHelper(testClient, 'ad', 'min')
+
+    newRole = 'student'
+    # set new role in data
+    data = {
+        'userId': userId,
+        'newRole': newRole
+    }
+
+    response = testClient.post('/loginapi/setRole', data=data, headers={"Authorization": "Bearer " + access_token})
+    assert response.status_code == 404
+    assert response.data == b'The role of the last administrator can not be changed.'

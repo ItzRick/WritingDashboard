@@ -13,8 +13,6 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // Import the AuthenticationService for the logout:
 import {AuthenticationService} from '../services/authenticationService';
-// Import the history to be able to go to the homepage after logout:
-import {history} from '../helpers/history';
 // Change password request setup
 import { authHeader } from '../helpers/auth-header';
 import axios from 'axios';
@@ -22,9 +20,11 @@ import axios from 'axios';
 import BlueButton from "../components/BlueButton";
 import AlertDialog from "../components/AlertDialog";
 
-const BASE_URL = "https://localhost:5000/loginapi";
-const PASSWORD_LENGTH = 8;
+import fileDownload from 'js-file-download';
 
+const BASE_URL = "https://localhost:5000/";
+const PASSWORD_LENGTH = 8;
+const USERNAME_END = "tue.nl";
 
 /**
  * 
@@ -37,9 +37,13 @@ const Settings = () => {
         setTitle('Settings');
     });
 
+    const [userRole, setUserRole] = useState('');
+
     useEffect(() => {
         // Call getTrackable function to show radio button correctly
         getTrackable();
+        setUserRole(AuthenticationService.getRole())
+        console.log(AuthenticationService.getRole());
     }, []);
 
     // Create states for the old password, new Password (including conformation) and states for success or error messages.
@@ -95,6 +99,19 @@ const Settings = () => {
         navigate("/", { replace: true });
     }
 
+	/**
+	 *	Function that makes the api call to delete the user
+	 */
+    const deleteUser = () => {
+        //   The backend url:
+        const url = 'https://127.0.0.1:5000/usersapi/deleteUserSelf';
+        // Make the backend call and set the table data from the response data:
+        axios.post(url,{},{headers: authHeader()}).then((response) => {
+        })
+        window.location.reload();
+        return false;
+	}
+
     /**
      * Function to make the backend call to change the trackable value for the current user in the database.
      * @param {string} newTrackable: String value with 'yes' or 'no' to set new trackable value.
@@ -133,7 +150,7 @@ const Settings = () => {
             "oldPassword": oldPassword,
             "newPassword": newPassword,
         }
-        axios.post(`${BASE_URL}/setPassword`, data, {headers: authHeader()}).then(response =>{
+        axios.post(`${BASE_URL}loginapi/setPassword`, data, {headers: authHeader()}).then(response =>{
             // Set a success message, reset the field.
             setSuccessMessage(response.data);
             // Reset all the fields:
@@ -145,12 +162,90 @@ const Settings = () => {
             setFormError(error.response.data);
         });
     }
+
+    const handleOwnUserData = () => {
+        const url = 'https://127.0.0.1:5000/clickapi/getOwnUserData';
+        axios.get(url, { headers: authHeader()})
+          .then((response) => {
+            const fileName = response.headers["custom-filename"];
+            fileDownload(response.data, fileName);
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+    }
+
+    // whether or not the information about the user data is shown.
+    const [showUserDataPopup, setShowUserDataPopup] = useState(false)
+
+    
+    // Set password from textfield for email change
+    const [passwordForEmail, setPasswordForEmail] = useState("");
+    // Set username from textfield
+    const [username, setUsername] = useState("");
+    // Set repeated username from textfield
+    const [usernameConfirm, setUsernameConfirm] = useState("");
+    // error bellow mail button
+    const [formMailError, setFormMailError] = useState("");
+    const [successMailMessage, setSuccessMailMessage] = useState("");
+    /**
+     * Check if repeated username input is valid.
+     * @returns helper text for second username textfield
+     */
+     const confirmUsername = () => {
+        if(username !== "" && username !== usernameConfirm) {
+            return "Must match username";
+        }
+        return "";
+    }
+
+    /** 
+     * Check if username input is valid.
+     * @returns helper text for username textfield
+     */
+    const checkUsername = () => {
+        if(username === "") {
+            return "";
+        } else if(!username.endsWith(USERNAME_END)) {
+            return "Must be a TU/e email-address";
+        }
+        return "";
+    }
+
+    const changeEmail = () => {
+        // Check if input is valid
+        if (passwordForEmail === "" || username === "" || usernameConfirm === "") {
+            setFormMailError("One or more fields are empty!");
+            return;
+        }
+        if (checkUsername() !== "" || confirmUsername() !== "") {
+            setFormMailError("One or more fields are not complete!");
+            return;
+        }
+        // If input is valid, do post request
+        const data = {
+            "currentPassword": passwordForEmail,
+            "newUsername": username,
+        }
+        axios.post(`${BASE_URL}loginapi/setUsername`, data, {headers: authHeader()})
+        .then(response =>{
+            // Set a success message, reset the field.
+            setSuccessMailMessage(response.data);
+            // Reset all the fields:
+            setPasswordForEmail("");
+            setUsername("");
+            setUsernameConfirm("");
+        }).catch(error =>{
+            // Post request failed, user is not created
+            setFormMailError(error.response.data);
+        });
+    }
     return (
         <>
             <div className='title'>
                 {/* The logout button: */}
                 <BlueButton idStr='logOut' onClick={logout}> Log out </BlueButton>
-                <br />
+                <br /><br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Data setting
                 </Typography>
@@ -167,10 +262,18 @@ const Settings = () => {
                     <br /><br />
                     <FormControlLabel value="no" control={<Radio />} label="I refuse the data conditions." />
                 </RadioGroup>
+                <br /> <br />
+                <div>
+                    <Typography sx={{alignSelf: 'center', alignContent:'inline'}}>
+                        View the <a className='userDataLinkPopup' onClick={() => {setShowUserDataPopup(true)}} >user data agreement</a>.
+                    </Typography>
+                    {showUserDataPopup && <AlertDialog title = "User data agreement" 
+                        text = "The data conditions allow the application to record user data. The user data includes the URL of the page, the location on the screen, and the timestamp of each click from the user.  The user data is only used to improve the automatic feedback generated within the application. If the purpose of the data changes, the application will ask the user again for permission to save their user data. This data does not include necessary sign-up information, such as the university email address and the password, since that is saved to ensure the functionalities of the application. The sign-up information is not used for any other purposes than logging into the application. The application is still fully available when refusing the data conditions. If the user refuses permission, no user data will be recorded of this user until the moment that they accept the data settings in the future. If the user accepts the permission at first but later revokes the permission, their recorded user data is deleted and no user data will be recorded of this user, until the moment that they accept the data settings in the future. Users can retrieve the recorded user data so far at any time. Users can ask questions regarding their data by sending a mail to i.l.h.rutten@student.tue.nl; a response will be provided within a month."
+                        buttonAgree={<Button onClick={() => {setShowUserDataPopup(false)}}>I understand</Button>}
+                    />}
+                </div>
                 <br />
-                <Typography sx={{maxWidth: '60%', margin:'auto'}}>
-                The data conditions allow the application to record user data. The user data is the clicks of the user within the application and their time and location. This data is only used to improve the automatic feedback generated within the application. The application is still fully available when refusing the data conditions.
-                </Typography>
+                <BlueButton idStr='downloadMyUserData' onClick={() => {handleOwnUserData()}}>Download my user data</BlueButton>
                 <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Change password
@@ -197,7 +300,33 @@ const Settings = () => {
                 {/* If the password change has failed, or we have a successful change, relay this message: */}
                     {formError !== "" && <Typography color="red">{formError}</Typography>}
                     {successMessage !== "" && <Typography>{successMessage}</Typography>}
-                <br /><br /><br />
+                <br />
+                {userRole !== 'participant' && <div>
+                    <Typography variant='h5' style={{color: '#44749D'}}>
+                        Change email
+                    </Typography>
+                    <br />
+                    <TextField value = {passwordForEmail} onChange={(e) => {setPasswordForEmail(e.target.value); 
+                    setFormError(""); setSuccessMessage("")}} id='currPass' label='Insert password.' 
+                    variant='outlined' type = 'password' style={{marginBottom: '1vw'}} />
+                    <br />
+                    <TextField id='changeEmail' label='Insert new username.' variant='outlined'
+                        value={username} onChange={(e) => {setUsername(e.target.value); setFormError("")}}
+                        error={checkUsername() !== ""} helperText={checkUsername() !== "" ? checkUsername() : " "}
+                    />
+                    <br />
+                    <TextField id='changeEmail2' label='Repeat new username.' variant='outlined' style={{marginBottom: '1vw'}}
+                        value={usernameConfirm} onChange={(e) => {setUsernameConfirm(e.target.value); setFormError("")}} 
+                        error={confirmUsername() !== ""} helperText={confirmUsername() !== "" ? confirmUsername() : " "}
+                    />
+                    <br />
+                    <BlueButton idStr='updateEmail' variant='contained' onClick={changeEmail}>Update email</BlueButton>
+                    <br />
+                    {/* If the password change has failed, or we have a successful change, relay this message: */}
+                        {formMailError !== "" && <Typography color="red">{formMailError}</Typography>}
+                        {successMailMessage !== "" && <Typography>{successMailMessage}</Typography>}
+                    <br />
+                </div>}
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Delete account
                 </Typography>
@@ -205,8 +334,7 @@ const Settings = () => {
                 <BlueButton idStr='DeleteMyAccount' variant='contained' onClick={(e) => {setAccountDeletionPopup(true)}}>I want to delete my account.</BlueButton>
                 {accountDeletionPopup && <AlertDialog title = "Account deletion" 
                     text = "Are you sure you want to delete your account?"
-                    // TODO
-                    buttonAgree={<Button style={{color: "red"}}>Yes, I want to delete my account!</Button>}
+                    buttonAgree={<Button onClick={(e) => {deleteUser()}} style={{color: "red"}}>Yes, I want to delete my account!</Button>}
                     buttonCancel={<Button onClick={(e) => {setAccountDeletionPopup(false)}}>Cancel</Button>}
                 />}
             </div>

@@ -37,10 +37,14 @@ class User(db.Model):
         self.set_password(password_plaintext)
         self.trackable = trackable
 
+    # list of columns and relationships that should not get serialized
+
+    nonSerializable = ['file', 'passwordHash', 'project', 'participantToProject', 'click']
+
     def serializeUser(self):
         dict = {}
         for c in inspect(self).attrs.keys():
-            if not c == 'file' and not c == 'click':
+            if not c in self.nonSerializable:
                 dict[c] =  getattr(self, c)
         return dict
 
@@ -50,6 +54,8 @@ class User(db.Model):
 
     # relationships
     file = db.relationship('Files', backref='owner', lazy='dynamic', cascade='all,delete')
+    project = db.relationship('Projects', backref='projectCreator', lazy='dynamic', cascade='all,delete')
+    participantToProject = db.relationship('ParticipantToProject', backref='linkedParticipant', cascade='all,delete')
     click = db.relationship('Clicks', backref='clicker', lazy='dynamic', cascade='all,delete')
 
     def __repr__(self):
@@ -118,6 +124,8 @@ class ParticipantToProject(db.Model):
     __tablename__ = "participanttoproject"
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, autoincrement=False)
     projectId = db.Column(db.Integer, db.ForeignKey('projects.id'))
+
+    # relationships
     participant = db.relationship('User', backref='participanttoproject', lazy=True, cascade='all,delete')
     project = db.relationship('Projects', backref='participanttoproject', lazy=True, cascade='all,delete')
 
@@ -130,6 +138,13 @@ class ParticipantToProject(db.Model):
         '''
         self.userId = userId
         self.projectId = projectId
+
+    def serializeParticipantToProject(self):
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            if not c == 'participant' and not c == 'project':
+                dict[c] =  getattr(self, c)
+        return dict
 
     def __repr__(self):
         return '<ParticipantToProject {}>'.format(self.userId)
@@ -251,3 +266,14 @@ class Clicks(db.Model):
 
     def __repr__(self):
         return '<Clicks {}>'.format(self.userId, self.clickId)
+
+    def serializeClick(self):
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            if not c == 'file' and not c == 'clicker':
+                dict[c] =  getattr(self, c)
+        return dict
+
+    @staticmethod
+    def serializeList(l):
+        return [m.serializeClick() for m in l]

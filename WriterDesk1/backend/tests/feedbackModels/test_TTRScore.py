@@ -1,4 +1,4 @@
-from app.getTTRScore import getTTRScore
+from app.feedback.generateFeedback.CohesionFeedback import CohesionFeedback
 from string import ascii_lowercase
 
 '''
@@ -22,7 +22,8 @@ def testTTRZeroWords(testClient, downloadNltk):
             score: The score given for the TTR score.
     '''
     del testClient, downloadNltk
-    score = getTTRScore("")
+    feedbackObject = CohesionFeedback('', '', 1, 1, '')
+    score = feedbackObject.getTTRScore("")
     assert score == None
 
 def testTTRSentenceWithMinScore(testClient, downloadNltk):
@@ -43,7 +44,8 @@ def testTTRSentenceWithMinScore(testClient, downloadNltk):
     '''
     del testClient, downloadNltk
     text = "Big bigger biggest."
-    score = getTTRScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getTTRScore(text)
     assert score == (3.33, ["big"])
 
 def testTTRTextWithMinScore(testClient, downloadNltk):
@@ -65,7 +67,8 @@ def testTTRTextWithMinScore(testClient, downloadNltk):
     del testClient, downloadNltk
     text = ("Big bigger biggest. Bigger. Biggest. Big bigger. Bigger biggest "
         "big!")
-    score = getTTRScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getTTRScore(text)
     assert score == (1.0, ["big"])
 
 def testTTRSentenceWithMaxScore(testClient, downloadNltk):
@@ -84,7 +87,8 @@ def testTTRSentenceWithMaxScore(testClient, downloadNltk):
     '''
     del testClient, downloadNltk
     text = "He is a very unique animal."
-    score = getTTRScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getTTRScore(text)
     assert score == (10.0, ["he", "be", "a"])
 
 def testTTRTextWithMaxScore(testClient, downloadNltk):
@@ -104,7 +108,8 @@ def testTTRTextWithMaxScore(testClient, downloadNltk):
     del testClient, downloadNltk
     text = ("He is a very unique animal. That shows amazing results. No wonder"
         " they exist in here.")
-    score = getTTRScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getTTRScore(text)
     assert score == (10.0, ["he", "be", "a"])
 
 def testTTRSingleSentence(testClient, downloadNltk):
@@ -131,7 +136,8 @@ def testTTRSingleSentence(testClient, downloadNltk):
     '''
     del testClient, downloadNltk
     text = "They are very big and that person is also bigger."
-    score = getTTRScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getTTRScore(text)
     assert score == (8.0, ["be", "big", "they"])
 
 def testTTRThreeSentences(testClient, downloadNltk):
@@ -158,7 +164,8 @@ def testTTRThreeSentences(testClient, downloadNltk):
     '''
     del testClient, downloadNltk
     text = "They are very big. That person is bigger. He is the biggest."
-    score = getTTRScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getTTRScore(text)
     assert score == (round(8/12*10,2), ["be", "big", "they"])
 
 def testTTRWindowsizeMinScore(testClient, downloadNltk): 
@@ -182,7 +189,8 @@ def testTTRWindowsizeMinScore(testClient, downloadNltk):
     '''
     del testClient, downloadNltk
     text = "big "*51 + "hello this is a different text"
-    score = getTTRScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getTTRScore(text)
     assert score == (round((1+1+2+3+4+5+6+7)/8/5,2), ["big", "hello", "this"])
 
 def testTTRWindowsizeMaxScore(testClient, downloadNltk): 
@@ -202,5 +210,6 @@ def testTTRWindowsizeMaxScore(testClient, downloadNltk):
         for second_letter in ascii_lowercase:
             text += first_letter + second_letter + " "
     text += "big "*10
-    score = getTTRScore(text)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getTTRScore(text)
     assert score == (9.98, ["big", "be", "aa"])
