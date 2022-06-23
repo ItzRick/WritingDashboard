@@ -11,6 +11,7 @@ def test_docx(testClient):
             data: the data needed by the display function.
             response: the result fo retrieving the file.
             pdfFile: the converted docx file.
+            convertedFileLoc: pointer to the pdf file that has been created by having converted the docx file.
             head: The head of the filePath of the file that is converted.
             tail: The tail of the filepath of the file that is converted.
         Arguments:
@@ -49,6 +50,7 @@ def test_txt(testClient):
             data: the data needed by the display function.
             response: the result fo retrieving the file.
             pdfFile: the converted txt file.
+            convertedFileLoc: pointer to the pdf file that has been created by having converted the txt file.
             head: The head of the filePath of the file that is converted.
             tail: The tail of the filepath of the file that is converted.
         Arguments:
