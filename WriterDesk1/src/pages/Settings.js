@@ -99,6 +99,19 @@ const Settings = () => {
         navigate("/", { replace: true });
     }
 
+	/**
+	 *	Function that makes the api call to delete the user
+	 */
+    const deleteUser = () => {
+        //   The backend url:
+        const url = 'https://127.0.0.1:5000/usersapi/deleteUserSelf';
+        // Make the backend call and set the table data from the response data:
+        axios.post(url,{},{headers: authHeader()}).then((response) => {
+        })
+        window.location.reload();
+        return false;
+	}
+
     /**
      * Function to make the backend call to change the trackable value for the current user in the database.
      * @param {string} newTrackable: String value with 'yes' or 'no' to set new trackable value.
@@ -321,8 +334,7 @@ const Settings = () => {
                 <BlueButton idStr='DeleteMyAccount' variant='contained' onClick={(e) => {setAccountDeletionPopup(true)}}>I want to delete my account.</BlueButton>
                 {accountDeletionPopup && <AlertDialog title = "Account deletion" 
                     text = "Are you sure you want to delete your account?"
-                    // TODO
-                    buttonAgree={<Button style={{color: "red"}}>Yes, I want to delete my account!</Button>}
+                    buttonAgree={<Button onClick={(e) => {deleteUser()}} style={{color: "red"}}>Yes, I want to delete my account!</Button>}
                     buttonCancel={<Button onClick={(e) => {setAccountDeletionPopup(false)}}>Cancel</Button>}
                 />}
             </div>

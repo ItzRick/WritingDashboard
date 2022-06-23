@@ -12,6 +12,7 @@ from app.database import postUser, initialSetup
 from app.extensions import jwt
 from app.models import User
 
+
 @bp.route('/login', methods=['POST'])
 def create_token():
     '''

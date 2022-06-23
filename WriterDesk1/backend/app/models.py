@@ -38,12 +38,8 @@ class User(db.Model):
         self.trackable = trackable
 
     # list of columns and relationships that should not get serialized
-    nonSerializable = [
-        'passwordHash', 
-        'file', 
-        'click',
-        'participanttoproject',
-    ]
+
+    nonSerializable = ['file', 'passwordHash', 'project', 'participantToProject', 'click']
 
     def serializeUser(self):
         dict = {}
@@ -58,6 +54,8 @@ class User(db.Model):
 
     # relationships
     file = db.relationship('Files', backref='owner', lazy='dynamic', cascade='all,delete')
+    project = db.relationship('Projects', backref='projectCreator', lazy='dynamic', cascade='all,delete')
+    participantToProject = db.relationship('ParticipantToProject', backref='linkedParticipant', cascade='all,delete')
     click = db.relationship('Clicks', backref='clicker', lazy='dynamic', cascade='all,delete')
 
     def __repr__(self):
