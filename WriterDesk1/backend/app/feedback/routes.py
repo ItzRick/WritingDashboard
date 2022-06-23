@@ -1,7 +1,8 @@
 from app.feedback import bp
-from flask import request
+from flask import request, current_app
 from app.models import Files
 from app.feedback.feedback import genFeedback
+from app.scoreapi.scores import getCurrentExplanationVersion
 
 @bp.route('/generate', methods = ['POST'])
 def generateFeedback():
@@ -26,6 +27,10 @@ def generateFeedback():
         # Return error message if necessary:
         if file == None: 
             return f'The file with id {fileId} can not be found in the database.', 400
+        # Check if the feedback has already been generated:
+        currentVersion = getCurrentExplanationVersion(fileId)
+        if currentVersion >= current_app.config['feedbackVersion']:
+            return 'Feedback has already been generated!', 200
         # Call the genFeedback method:
         isSuccessful, message = genFeedback(file)
         # Return error message if necessary:

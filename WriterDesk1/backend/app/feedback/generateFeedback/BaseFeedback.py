@@ -1,4 +1,5 @@
 from app.scoreapi.scores import setScoreDB, setExplanationDB, getExplanationsFileType, removeExplanationsFileType
+from flask import current_app
 
 class BaseFeedback:
     '''
@@ -8,7 +9,6 @@ class BaseFeedback:
         Attributes: 
             explanationType: The explanationType of the current class.
     '''
-    
     explanationType = -1
 
     def __init__(self, text, referencesText, fileId, userId, filePath):
@@ -29,6 +29,7 @@ class BaseFeedback:
         self.userId = userId
         self.filePath = filePath
         self.resetVariables()
+        self.setFeedbackVersion(0.01)
 
     def resetVariables(self):
         '''
@@ -43,6 +44,10 @@ class BaseFeedback:
         self.scoreStructure = -1 
         self.scoreIntegration = -1
         self.explanations = []
+
+    def setFeedbackVersion(self, feedbackVersion):
+        self.feedbackVersion = feedbackVersion
+        current_app.config['feedbackVersion'] = feedbackVersion
 
     def genFeedback(self):
         '''
@@ -72,7 +77,7 @@ class BaseFeedback:
                 replacements: The replacements for the current explanation.
         '''
         # Upload the scores:
-        setScoreDB(self.fileId, self.scoreStyle, self.scoreCohesion, self.scoreStructure, self.scoreIntegration)
+        setScoreDB(self.fileId, self.scoreStyle, self.scoreCohesion, self.scoreStructure, self.scoreIntegration, self.feedbackVersion)
         # If there are any explanations upload them:
         if len(self.explanations) > 0:
             # See if there are any previously uploaded explanations for the current file:
@@ -80,7 +85,7 @@ class BaseFeedback:
             # If there are as much previously uploaded explanations as new explanations, we use the existing explanationIds:
             if len(explanationIds) == len(self.explanations):
                 for idexp, (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in enumerate(self.explanations):
-                    self.uploadExplanation(X1, Y1, X2, Y2, explanationIds[idexp], explType, expl, mistake, replacements)
+                    self.uploadExplanation(X1, Y1, X2, Y2, explanationIds[idexp], explType, expl, mistake, replacements, self.feedbackVersion)
             else:
                 # If there are not as much currently existing explanations, we remove all explanations 
                 # for the current file from the database:
@@ -88,9 +93,9 @@ class BaseFeedback:
                     removeExplanationsFileType(self.fileId, self.explanationType)
                 # Upload all new explanations to the database:
                 for (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in self.explanations:
-                    self.uploadExplanation(X1, Y1, X2, Y2, -1, explType, expl, mistake, replacements)
+                    self.uploadExplanation(X1, Y1, X2, Y2, -1, explType, expl, mistake, replacements, self.feedbackVersion)
     
-    def uploadExplanation(self, X1, Y1, X2, Y2, explId, explanationType, explanation, mistake, replacements):
+    def uploadExplanation(self, X1, Y1, X2, Y2, explId, explanationType, explanation, mistake, replacements, feedbackVersion):
         '''
             Method to upload a single explanation to the database.
             Arguments:
@@ -120,7 +125,7 @@ class BaseFeedback:
         # Upload the explanation to the database.
         setExplanationDB(X1 = X1, Y1 = Y1, X2 = X2, Y2 = Y2, fileId = self.fileId, explId = explId, 
         type = explanationType, explanation = explanation, mistakeText = mistake, replacement1 = replacement1, replacement2 = replacement2, 
-        replacement3 = replacement3)
+        replacement3 = replacement3, feedbackVersion = feedbackVersion)
 
     def addSingleExplanation(self, X1, Y1, X2, Y2, explanationType, explanation, mistake, replacements):
         '''

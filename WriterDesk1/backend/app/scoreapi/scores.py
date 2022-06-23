@@ -32,7 +32,7 @@ def compareScores(current, new, NULL_VALUE):
     else:
         return float(new)
 
-def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
+def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration, feedbackVersion):
     '''
         This functions handles setting the score and explanations for a file.
         If score is -1, the previous score is used
@@ -74,13 +74,14 @@ def setScoreDB(fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegrati
         scoreIntegration = compareScores(NULL_VALUE, scoreIntegration, NULL_VALUE)
     
     # create Scores object
-    scoreIndb = Scores(fileId=fileId, scoreStyle=scoreStyle, scoreStructure=scoreStructure, scoreCohesion=scoreCohesion, scoreIntegration=scoreIntegration)
+    scoreIndb = Scores(fileId=fileId, scoreStyle=scoreStyle, scoreStructure=scoreStructure, scoreCohesion=scoreCohesion, 
+    scoreIntegration=scoreIntegration, feedbackVersion = feedbackVersion)
     # upload
     uploadToDatabase(scoreIndb)
     return 'successfully uploaded Scores'
 
 def setExplanationDB(fileId, type, explanation, explId = -1, mistakeText = '', X1 = -1, X2 = -1, Y1 = -1, Y2 = -1, 
-    replacement1 = '', replacement2 = '', replacement3 = ''):
+    replacement1 = '', replacement2 = '', replacement3 = '', feedbackVersion = 0):
     '''
         This functions handles adding an explanation to the database
         attributes: 
@@ -111,17 +112,18 @@ def setExplanationDB(fileId, type, explanation, explId = -1, mistakeText = '', X
         # create new record
         # create Explanations object
         explanationIndb = Explanations(
-            fileId = fileId,
-            type        = type,
-            explanation = explanation,
-            mistakeText = mistakeText,
-            X1          = X1,
-            X2          = X2,
-            Y1          = Y1,
-            Y2          = Y2,
-            replacement1= replacement1,
-            replacement2= replacement2,
-            replacement3= replacement3,
+            fileId          = fileId,
+            type            = type,
+            explanation     = explanation,
+            mistakeText     = mistakeText,
+            X1              = X1,
+            X2              = X2,
+            Y1              = Y1,
+            Y2              = Y2,
+            replacement1    = replacement1,
+            replacement2    = replacement2,
+            replacement3    = replacement3,
+            feedbackVersion = feedbackVersion
         )
     else:
         # already in Explanations
@@ -134,18 +136,19 @@ def setExplanationDB(fileId, type, explanation, explId = -1, mistakeText = '', X
 
         # create Explanations object
         explanationIndb = Explanations(
-            fileId = fileId,
-            explId = explId,
-            type = type,
-            explanation = explanation,
-            mistakeText = mistakeText,
-            X1          = X1,
-            X2          = X2,
-            Y1          = Y1,
-            Y2          = Y2,
-            replacement1= replacement1,
-            replacement2= replacement2,
-            replacement3= replacement3,
+            fileId          = fileId,
+            explId          = explId,
+            type            = type,
+            explanation     = explanation,
+            mistakeText     = mistakeText,
+            X1              = X1,
+            X2              = X2,
+            Y1              = Y1,
+            Y2              = Y2,
+            replacement1    = replacement1,
+            replacement2    = replacement2,
+            replacement3    = replacement3,
+            feedbackVersion = feedbackVersion
         )
     
     # upload
@@ -179,3 +182,18 @@ def removeExplanationsFileType(fileId, explType):
     explanations = Explanations.query.filter_by(fileId=fileId, type=explType).all()
     for explanation in explanations:
         removeFromDatabase(explanation)
+
+def getCurrentExplanationVersion(fileId):
+    scores = Scores.query.filter_by(fileId=fileId).all()
+    explanations = Explanations.query.filter_by(fileId=fileId).all()
+    feedbackVersion = scores.feedbackVersion
+    if len(scores) > 0:
+        for score in scores: 
+            removeFromDatabase(score)
+        for explanation in explanations:
+            removeFromDatabase(explanation)
+        return -1
+    for explanation in explanations:
+        if explanation.feedbackVersion != feedbackVersion:
+            removeFromDatabase(explanation)
+    return scores[0].feedbackVersion

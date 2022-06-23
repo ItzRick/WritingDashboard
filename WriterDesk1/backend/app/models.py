@@ -162,6 +162,7 @@ class Scores(db.Model):
             scoreCohesion: Score for Cohesion
             scoreStructure: Score for Structure
             scoreIntegration: Score for Source Integration and Content
+            feedbackVersion: Version of the feedback model with which this score has been created.
     '''
     fileId = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
     # Scores are numeric values with 2 decimals before and 2 decimals after the point. 
@@ -170,6 +171,7 @@ class Scores(db.Model):
     scoreCohesion    = db.Column(db.Numeric(4,2), unique=False, default=None)
     scoreStructure   = db.Column(db.Numeric(4,2), unique=False, default=None)
     scoreIntegration = db.Column(db.Numeric(4,2), unique=False, default=None)
+    # Feedbackversion is a numeric value, with 2 decimal numbers and 5 numbers in total. 
     feedbackVersion  = db.Column(db.Numeric(5,2), unique=False, default=None)
 
     def __repr__(self):
@@ -190,6 +192,7 @@ class Explanations(db.Model):
             Y1: Y of the top right corner of the boxing rectangle
             Y2: Y of the bottom left corner of the boxing rectangle
             replacement1..3: Three possible replacements for the mistakeText
+            feedbackVersion: Version of the feedback model with which this score has been created.
     '''
     fileId          = db.Column(db.Integer, db.ForeignKey('files.id'), index=True)
     explId          = db.Column(db.Integer, primary_key=True, autoincrement=True)
