@@ -2,6 +2,7 @@ from this import d
 from app.feedback.generateFeedback.BaseFeedback import BaseFeedback
 from decimal import ROUND_HALF_UP, Decimal
 import fitz
+import pdfminer as pm
 
 class StructureFeedback(BaseFeedback):
     '''
@@ -173,6 +174,14 @@ class StructureFeedback(BaseFeedback):
         '''
         doc = fitz.open(self.filePath)
 
+        parser = pm.PDFParser(open(self.filePath, 'rb'))
+        doc2 = pm.PDFDocument(parser)
+
+        pageSizesList = []
+
+        for page in pm.PDFPage.create_pages(doc2):
+            pageSizesList.append(page.mediabox.y1)
+
         # go over all mistakes in the input
         for mistake in mistakes:
             pageHeight = 0
@@ -183,11 +192,13 @@ class StructureFeedback(BaseFeedback):
                 # add the height of the page to the coordinates for returning
                 if page.number != 0:
                     # initial
-                    pageHeight += page.rect.y1
+                    # pageHeight += page.rect.y1
                     # another option, should be the same but maybe it works
                     # pageHeight += page.mediabox.y1
                     # another option, should be the same but maybe it works
                     # pageHeight += page.cropbox.y1
+                    # pdfminer.six
+                    pageHeight += pageSizesList[page.number - 1]
                 # go over all occurences of the mistake
                 for inst in textInstances:
                     # list contains coordinates, type number, explanation and 
