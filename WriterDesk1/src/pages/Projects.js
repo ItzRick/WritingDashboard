@@ -121,7 +121,7 @@ const Projects = () => {
       */
     const createProject = (e) => {
         // Check if the number of participants is valid
-        if (!(numberOfParticipants !== '' && numberOfParticipants >= 0 && numberOfParticipants <= 10000)) {
+        if (!(numberOfParticipants !== '' && numberOfParticipants >= 0 && numberOfParticipants <= 1000)) {
             setShowNrOfParticipantsDialog(true);
             return null;
         }
@@ -210,7 +210,7 @@ const Projects = () => {
                            buttonCancel={<Button onClick={(e) => {setShowDeleteDialogMultiple(false)}}>Cancel</Button>}
               />}
             {showNrOfParticipantsDialog &&
-              <AlertDialog title = "Number of participants" text = "Make sure the number of participants is a valid number between 0 and 10000!"
+              <AlertDialog title = "Number of participants" text = "Make sure the number of participants is a valid number between 0 and 1000!"
                            buttonAgree={<Button onClick={(e) => {setShowNrOfParticipantsDialog(false)}}>Ok</Button>}
               />}
 

@@ -84,6 +84,11 @@ const Participants = () => {
    * When successful, download response csv file.
    */
   const handleAddToProject = () => {
+    if (!(participantCount !== '' && participantCount >= 0 && participantCount <= 1000)) {
+            setShowNrOfParticipantsDialog(true);
+            return null;
+        }
+
     // If input is valid, do post request
     const data = {
       "nrOfParticipants": participantCount,
@@ -94,7 +99,8 @@ const Participants = () => {
     }
     axios.post(`${BASE_URL}/addParticipants`, data, { headers: authHeader() }).then(response => {
       // Post request is successful, participants are registered
-      // TODO: reload participant list 
+
+      getParticpantsAndProjects();
       const fileName = response.headers["custom-filename"];
       fileDownload(response.data, fileName);
     }).catch(error => {
@@ -170,7 +176,7 @@ const Participants = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);  // Show dialog when deleting single participant
   const [showDeleteDialogMultiple, setShowDeleteDialogMultiple] = useState(false);  // Show dialog when deleting multiple participants
   const [deleteId, setDeleteId] = useState();  // Id of user that is going to be deleted when pressing delete button
-
+  const [showNrOfParticipantsDialog, setShowNrOfParticipantsDialog] = useState(false);  // Show dialog when trying to add invalid number of participants
 
   /**
     * Delete the participant with the given id from the database. Also delete all corresponding data to the user.
@@ -236,6 +242,10 @@ const Participants = () => {
         <AlertDialog title="Delete participants" text="Are you sure you want to delete the selected participants?"
           buttonAgree={<Button style={{color: "red"}} onClick={(e) => { deleteSelectedParticipants(e) }}>Yes</Button>}
           buttonCancel={<Button onClick={(e) => { setShowDeleteDialogMultiple(false) }}>Cancel</Button>}
+        />}
+      {showNrOfParticipantsDialog &&
+        <AlertDialog title = "Number of participants" text = "Make sure the number of participants is a valid number between 0 and 1000!"
+                     buttonAgree={<Button onClick={(e) => {setShowNrOfParticipantsDialog(false)}}>Ok</Button>}
         />}
       <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
         <TextField
