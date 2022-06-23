@@ -20,6 +20,9 @@ import Plot from 'react-plotly.js';
 import { useContext } from 'react';
 import { TrackingContext } from '@vrbo/react-event-tracking';
 
+// authentication
+import { authHeader } from "../helpers/auth-header";
+
 /**
  *
  * @returns Documents Page
@@ -68,7 +71,7 @@ function Document() {
     const url = 'https://api.writingdashboard.xyz/fileapi/getFileById';
 
     // Make the call to the backend:
-    axios.get(url, { params: { fileId: fileId } })
+    axios.get(url, { params: { fileId: fileId }, headers: authHeader() })
       .then((response) => {
         setPath(response.data.path); // Set path of file given by file id
         setType(response.data.filetype.substring(1)); // Set file type without '.'
