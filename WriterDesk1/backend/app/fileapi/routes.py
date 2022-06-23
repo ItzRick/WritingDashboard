@@ -10,7 +10,14 @@ from datetime import date
 from mimetypes import guess_extension
 
 # For protecting endpoint using JWT Tokens
+from app.extensions import jwt
 from flask_jwt_extended import jwt_required
+from flask_jwt_extended import current_user
+
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]
+    return User.query.filter_by(id=identity).one_or_none()
 
 @bp.route('/upload', methods = ['POST'])
 @jwt_required()
@@ -46,7 +53,7 @@ def fileUpload():
         return 'No file uploaded', 400
     # Get the other data as sent by the react frontend:
     courseCodes = request.form.getlist('courseCode')
-    userIds = request.form.getlist('userId')
+    userId = current_user.id
     dates = request.form.getlist('date')
     # Handle each file separately:
     for idx, file in enumerate(files):
@@ -64,7 +71,7 @@ def fileUpload():
         # contain any spaces:
         filename = secure_filename(file.filename)
         # Get the path to save the file to, as indicated in the config and then having a subfolder for every user:
-        userFileLocation = os.path.join(current_app.config['UPLOAD_FOLDER'], userIds[idx])
+        userFileLocation = os.path.join(current_app.config['UPLOAD_FOLDER'], str(userId))
         fileLocation = os.path.join(userFileLocation, filename)
         # If this subdirectory does not exist yet, create it:
         if not os.path.exists(userFileLocation):
@@ -78,9 +85,9 @@ def fileUpload():
         # Put the date in the correct object, by getting it from the isoformat as given by the frontend:
         date1 = date.fromisoformat(dates[idx])
         # Add it to the database:
-        fileInDatabase = Files(path=fileLocation, filename=filename, userId=userIds[idx], courseCode=courseCodes[idx], date=date1, fileType=extension)
+        fileInDatabase = Files(path=fileLocation, filename=filename, userId=userId, courseCode=courseCodes[idx], date=date1, fileType=extension)
         # If it already exists in the database for this user and filename, remove it:
-        existing = Files.query.filter_by(userId=userIds[idx], filename=filename).all()
+        existing = Files.query.filter_by(userId=userId, filename=filename).all()
         for file in existing:
             removeFromDatabase(file)
         # Add the data to the database:
@@ -140,6 +147,9 @@ def fileDelete():
         # And if so, throw an error message 
         if fileToBeRemoved is None:
             return 'file does not exist in database', 404
+        # check if user is authorized to delete file        
+        if fileToBeRemoved.userId != current_user.id:
+            return 'Unauthorized', 403
         # Retrieve the paths of the file to be removed
         path = fileToBeRemoved.path
         fileType = fileToBeRemoved.fileType
@@ -177,6 +187,7 @@ def searchId():
 
 
 @bp.route('/getFileById', methods = ['GET'])
+@jwt_required()
 def getFileById():
     '''
     This function handles the retrieval of a single file by the fileId.
