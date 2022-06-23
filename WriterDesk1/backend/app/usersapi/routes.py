@@ -132,9 +132,22 @@ def deleteUser(userID):
 
 
 def deleteFile(fileToBeRemoved):
+    '''
+        This function deletes the supplied file from both the database and the disk.
+        Attributes:
+            path: path of given file
+            basepath: basepath of the to be removed file
+        Arguments:
+            fileToBeRemoved: the database entry of the to be removed file
+        Return:
+            returns a string with succes and a 200 code
+            error message:
+                404, if the file does not exist in the database
+                404, if the file does not exist on the disk
+    '''
     # Check if the file is nonexistent
     # And if so, throw an error message
-    if fileToBeRemoved == None:
+    if fileToBeRemoved is None:
         return 'file does not exist in database', 404
     # Retrieve the paths of the file to be removed
     path = fileToBeRemoved.path

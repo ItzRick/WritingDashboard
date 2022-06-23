@@ -129,7 +129,7 @@ def fileDelete():
         fileToBeRemoved = Files.query.filter_by(id=fileID).first()
         # Check if the file is nonexistent
         # And if so, throw an error message 
-        if fileToBeRemoved == None:
+        if fileToBeRemoved is None:
             return 'file does not exist in database', 404
         # Retrieve the paths of the file to be removed
         path = fileToBeRemoved.path

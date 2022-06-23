@@ -1,8 +1,11 @@
-from datetime import datetime
+import os
+from datetime import datetime, date
 
 from app import db
 from app.models import User, Files, Explanations, Projects, ParticipantToProject, Scores
 from app.usersapi.routes import deleteUser
+from werkzeug.utils import secure_filename
+
 from test_set_role import loginHelper
 
 
@@ -31,40 +34,46 @@ def testDeleteUser(testClient, initDatabase):
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
     '''
-    del testClient, initDatabase
-    try:
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
-    try:
-        user = User(username='John', password_plaintext='test')
-        db.session.add(user)
-        userID = User.query.filter_by(username='John').first().id
-        file = Files(
-            path='C:/Users/20192435/Downloads/SEP2021/WriterDesk1/backend/saved_documents/ScrumAndXpFromTheTrenchesonline07-31.pdf',
-            filename='ScrumAndXpFromTheTrenchesonline07-31.pdf', date=datetime(2019, 2, 12), userId=userID,
-            courseCode='2IPE0', fileType='.pdf')
-        # Add the file to the database:
-        db.session.add(file)
-        fileID = Files.query.filter_by(userId=userID).first().id
-        explanation = Explanations(fileId=fileID)
-        db.session.add(explanation)
-        project = Projects(userId=userID, projectName='test')
-        db.session.add(project)
-        projectID = Projects.query.filter_by(userId=userID).first().id
-        participant = User(username='Kevin', role='participant', password_plaintext='test')
-        db.session.add(participant)
-        participantID = User.query.filter_by(username='Kevin').first().id
-        participantToProject = ParticipantToProject(userId=participantID, projectId=projectID)
-        db.session.add(participantToProject)
-        scores = Scores(fileId=fileID)
-        db.session.add(scores)
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
+    del initDatabase
+    user = User(username='John', password_plaintext='test')
+    db.session.add(user)
+    userID = User.query.filter_by(username='John').first().id
+    # Get the BASEDIR and set the fileDir with that:
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'SEP_1.pdf')
+    # Create the data packet:
+    data = {
+        'files': (open(fileDir, 'rb'), 'SEP_1.pdf'),
+        'fileName': 'SEP_1.pdf',
+        'courseCode': 'test',
+        'userId': userID,
+        'date': date(2019, 2, 12)
+    }
+
+    # Create the response by means of the post request:
+    testClient.post('/fileapi/upload', data=data)
+
+    # See if the correct data has been added to the database which we retrieve by the filename:
+    file = Files.query.filter_by(filename=secure_filename('SEP_1.pdf')).first()
+    assert file.filename == 'SEP_1.pdf'
+
+    fileID = Files.query.filter_by(userId=userID).first().id
+    explanation = Explanations(fileId=fileID)
+    db.session.add(explanation)
+    project = Projects(userId=userID, projectName='test')
+    db.session.add(project)
+    projectID = Projects.query.filter_by(userId=userID).first().id
+    participant = User(username='Kevin', role='participant', password_plaintext='test')
+    db.session.add(participant)
+    participantID = User.query.filter_by(username='Kevin').first().id
+    participantToProject = ParticipantToProject(userId=participantID, projectId=projectID)
+    db.session.add(participantToProject)
+    scores = Scores(fileId=fileID)
+    db.session.add(scores)
+    db.session.commit()
+
     deleteUser(userID)
+    assert not os.path.exists(file.path)
     assert User.query.filter_by(username='John').first() is None
     assert Files.query.filter_by(userId=userID).first() is None
     assert Explanations.query.filter_by(fileId=fileID).first() is None
@@ -119,18 +128,10 @@ def testAdmin(testClient, initDatabase):
             initDatabase: the database instance we test this for.
     '''
     del initDatabase
-    try:
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
-    try:
-        user = User(username='John', password_plaintext='test')
-        db.session.add(user)
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
+
+    user = User(username='John', password_plaintext='test')
+    db.session.add(user)
+    db.session.commit()
     userID = User.query.filter_by(username='John').first().id
     userId = User.query.filter_by(username='ad').first().id
 
@@ -149,6 +150,7 @@ def testAdmin(testClient, initDatabase):
                                headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
     assert response.data == b'Account deleted!'
+    assert User.query.filter_by(id=userID).first() is None
 
 
 def testNotResearcher(testClient, initDatabase):
@@ -208,36 +210,27 @@ def testResearcher(testClient, initDatabase):
             initDatabase: the database instance we test this for.
     '''
     del initDatabase
-    try:
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
-    try:
-        user = User.query.filter_by(username='ad').first()
-        # get his user id
-        userId = user.id
-        project = Projects(userId=userId, projectName='test')
-        db.session.add(project)
-        unrelatedProject = Projects(userId=-1, projectName='test2')
-        db.session.add(unrelatedProject)
-        projectID = Projects.query.filter_by(userId=userId).first().id
-        unrelatedProjectID = Projects.query.filter_by(userId=-1).first().id
-        participant = User(username='Kevin', role='participant', password_plaintext='test')
-        db.session.add(participant)
-        participantID = User.query.filter_by(username='Kevin').first().id
-        unrelatedParticipant = User(username='David', role='participant', password_plaintext='test')
-        db.session.add(unrelatedParticipant)
-        unrelatedParticipantID = User.query.filter_by(username='David').first().id
-        participantToProject = ParticipantToProject(userId=participantID, projectId=projectID)
-        db.session.add(participantToProject)
-        unrelatedParticipantToProject = ParticipantToProject(userId=unrelatedParticipantID,
-                                                             projectId=unrelatedProjectID)
-        db.session.add(unrelatedParticipantToProject)
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
+    user = User.query.filter_by(username='ad').first()
+    # get his user id
+    userId = user.id
+    project = Projects(userId=userId, projectName='test')
+    db.session.add(project)
+    unrelatedProject = Projects(userId=-1, projectName='test2')
+    db.session.add(unrelatedProject)
+    projectID = Projects.query.filter_by(userId=userId).first().id
+    unrelatedProjectID = Projects.query.filter_by(userId=-1).first().id
+    participant = User(username='Kevin', role='participant', password_plaintext='test')
+    db.session.add(participant)
+    participantID = User.query.filter_by(username='Kevin').first().id
+    unrelatedParticipant = User(username='David', role='participant', password_plaintext='test')
+    db.session.add(unrelatedParticipant)
+    unrelatedParticipantID = User.query.filter_by(username='David').first().id
+    participantToProject = ParticipantToProject(userId=participantID, projectId=projectID)
+    db.session.add(participantToProject)
+    unrelatedParticipantToProject = ParticipantToProject(userId=unrelatedParticipantID,
+                                                         projectId=unrelatedProjectID)
+    db.session.add(unrelatedParticipantToProject)
+    db.session.commit()
 
     assert User.query.filter_by(id=userId).first() is not None
 
@@ -254,11 +247,13 @@ def testResearcher(testClient, initDatabase):
                                headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
     assert response.data == b'Account deleted!'
+    assert User.query.filter_by(id=participantID).first() is None
 
     response = testClient.post('/usersapi/deleteUserResearcher', json={'userID': unrelatedParticipantID},
                                headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 403
     assert response.data == b'Participant is not created by this researcher'
+    assert User.query.filter_by(id=unrelatedParticipantID).first() is not None
 
 
 def testDeleteSelf(testClient, initDatabase):
@@ -275,18 +270,9 @@ def testDeleteSelf(testClient, initDatabase):
             initDatabase: the database instance we test this for.
     '''
     del initDatabase
-    try:
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
-    try:
-        user = User(username='Bob', password_plaintext='pass')
-        db.session.add(user)
-        db.session.commit()
-    except:
-        db.session.rollback()
-        assert False
+    user = User(username='Bob', password_plaintext='pass')
+    db.session.add(user)
+    db.session.commit()
 
     access_token = loginHelper(testClient, 'Bob', 'pass')
 
