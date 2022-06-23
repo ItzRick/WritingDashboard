@@ -180,7 +180,7 @@ class StructureFeedback(BaseFeedback):
         doc2 = PDFDocument(parser)
 
         pageSizesList = []
-
+        print(doc2.info)
         for page in PDFPage.create_pages(doc2):
             pageSizesList.append(page.mediabox[3])
 
