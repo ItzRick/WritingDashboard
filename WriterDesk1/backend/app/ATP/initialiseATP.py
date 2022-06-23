@@ -39,6 +39,7 @@ def helperScores(file, sSty, sCoh, sStr, sInt):
     uploadToDatabase(s)
 
 def helperExpl(file):
+    print(file.id)
     genFeedback(file)
 
 def initialiseATP():
@@ -73,14 +74,14 @@ def initialiseATP():
         courseCode='c2',
     )
     f3 = helperFiles(
-        fileName='test3.pdf',
-        extension='.pdf',
+        fileName='test3.docx',
+        extension='.docx',
         uid=uid,
         courseCode='c3',
     )
     f4 = helperFiles(
-        fileName='test4.pdf',
-        extension='.pdf',
+        fileName='test4.docx',
+        extension='.docx',
         uid=uid,
         courseCode='c4',
     )
