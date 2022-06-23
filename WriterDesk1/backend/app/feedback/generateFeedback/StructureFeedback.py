@@ -2,7 +2,9 @@ from this import d
 from app.feedback.generateFeedback.BaseFeedback import BaseFeedback
 from decimal import ROUND_HALF_UP, Decimal
 import fitz
-import pdfminer as pm
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfparser import PDFParser
 
 class StructureFeedback(BaseFeedback):
     '''
@@ -174,13 +176,13 @@ class StructureFeedback(BaseFeedback):
         '''
         doc = fitz.open(self.filePath)
 
-        parser = pm.PDFParser(open(self.filePath, 'rb'))
-        doc2 = pm.PDFDocument(parser)
+        parser = PDFParser(open(self.filePath, 'rb'))
+        doc2 = PDFDocument(parser)
 
         pageSizesList = []
 
-        for page in pm.PDFPage.create_pages(doc2):
-            pageSizesList.append(page.mediabox.y1)
+        for page in PDFPage.create_pages(doc2):
+            pageSizesList.append(page.mediabox[3])
 
         # go over all mistakes in the input
         for mistake in mistakes:
