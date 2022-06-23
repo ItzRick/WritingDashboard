@@ -179,16 +179,18 @@ const Participants = () => {
     */
   const deleteParticipant = (e, userId) => {
     setShowDeleteDialog(false);  // Don't show dialog anymore
-    // TODO: future feature for Bas or Jordy
     // Url of the server:
-    //const url = 'https://127.0.0.1:5000/...'
+    const url = 'https://127.0.0.1:5000/usersapi/deleteUserResearcher'
     // Formdata for the backend call, to which the id has been added:
-    //     const formData = new FormData();
-    //     formData.append('id', userId);
-    //     // Make the call to the backend:
-    //     axios.delete(url, { data: formData }).then(response => {
-    //         //TODO: Set table data
-    //     });
+        const formData = new FormData();
+        formData.append('userID', userId);
+        const data = {
+          "userID": userId,  // Add input of numberOfParticipants
+        }
+        // Make the call to the backend:
+        axios.post(url, data, {headers: authHeader()}).then(response => {
+          getParticpantsAndProjects();
+        });
 
   }
 
@@ -209,17 +211,18 @@ const Participants = () => {
     */
   const deleteSelectedParticipants = (e) => {
     setShowDeleteDialogMultiple(false);  // Don't show dialog anymore
-    // TODO: future feature for Bas or Jordy
     // // Url of the server:
-    // const url = 'https://127.0.0.1:5000/...'
-    // // Create a new formdata:
-    // const formData = new FormData();
-    // // For each of the selected instances, add this id to the formdata:
-    // selectedInstances.forEach(id => formData.append('id', id));
-    // // Make the backend call:
-    // axios.delete(url, { data: formData }).then(response => {
-    //   //TODO: Set table data
-    // });
+    const url = 'https://127.0.0.1:5000/usersapi/deleteUserResearcher'
+    // Create a new formdata:
+    const formData = new FormData();
+    // For each of the selected instances, add this id to the formdata:
+    selectedInstances.forEach(id => {
+      const data = {
+          "userID": id
+      }
+      axios.post(url, data, {headers: authHeader()}).then(r => {getParticpantsAndProjects()})
+    });
+
   }
 
   return (

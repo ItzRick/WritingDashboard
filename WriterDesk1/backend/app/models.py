@@ -127,7 +127,6 @@ class ParticipantToProject(db.Model):
 
     # relationships
     participant = db.relationship('User', backref='participanttoproject', lazy=True, cascade='all,delete')
-    project = db.relationship('Projects', backref='participanttoproject', lazy=True, cascade='all,delete')
 
     def __init__(self, userId: int, projectId: int):
         '''
