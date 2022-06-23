@@ -88,7 +88,7 @@ function Document() {
     const url = 'https://api.writingdashboard.xyz/scoreapi/getScores';
 
     // Make the call to the backend:
-    axios.get(url, { params: { fileId: fileId } })
+    axios.get(url, { params: { fileId: fileId }, headers: authHeader() })
       .then((response) => {
         setScoreStyle(response.data.scoreStyle);
         setScoreStructure(response.data.scoreStructure);
@@ -106,7 +106,7 @@ function Document() {
     const url = 'https://api.writingdashboard.xyz/scoreapi/getExplanationForFile';
 
     // Make the call to the backend:
-    axios.get(url, { params: { fileId: fileId } })
+    axios.get(url, { params: { fileId: fileId }, headers: authHeader() })
       .then((response) => {
         let explanationsArray = []  // Array of all explanations in the response from the backend call
         for (let i = 0; i < response.data.length; i++) {  // Loop over all explanations
