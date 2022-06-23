@@ -35,10 +35,12 @@ const Upload = () => {
     // number of successes and failures during uploading of files
     const [succ, setSucc] = useState(0);
     const [fail, setFail] = useState(0);
-    // store failed filenames
+    // filenames of the failed uploads
     const [failedFiles, setFailedFiles] = useState([]);
 
-    // close the popup and reset to successes and failures to 0
+    /**
+     * close the popup and reset to successes and failures to 0
+     */
     const popUpClose = () => {
         setOpen(false)
         setSucc(0)
@@ -46,7 +48,9 @@ const Upload = () => {
         setFailedFiles([])
     }
 
-    // open popup and upload all documents
+    /**
+     * open popup and upload all documents
+     */
     const handleClickOpen = () => {
         uploadDocuments();
         setOpen(true);
@@ -58,7 +62,9 @@ const Upload = () => {
     // list of UploadSingleFile objects
     const [uploadSingleFiles, setUploadSingleFiles] = useState([]);
 
-    // add UploadSingleFile object to uploadSingleFiles
+    /**
+     * add UploadSingleFile object to uploadSingleFiles
+     */
     const addRow = () => {
         setUploadSingleFiles(uploadSingleFiles.concat([
             <UploadSingleFile
@@ -81,7 +87,9 @@ const Upload = () => {
         addRow();
     }, []);
 
-    // upload all documents present in the UploadSingleFile objects in uploadSingleFiles
+    /**
+     * upload all documents present in the UploadSingleFile objects in uploadSingleFiles
+     */
     const uploadDocuments = () => {
         uploadSingleFiles.forEach(item => {
             refs.current[item.props.thisIndex].uploadFile();
@@ -111,6 +119,7 @@ const Upload = () => {
             <br />
             <Box className='title'>
             <BlueButton idStr='uploadYourDocument(s)' addStyle={{ fontSize: '2vw', textTransform: 'none' }} onClick={handleClickOpen}>Upload your document(s)</BlueButton>
+            {/* Dialog after upload, displays number of documents uploaded and failed and has 2 buttons */}
             <Dialog
                 open={open}
                 onClose={popUpClose}
