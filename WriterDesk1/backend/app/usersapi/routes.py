@@ -85,7 +85,6 @@ def deleteUserResearcher():
     if current_user.role != 'researcher' and current_user.role != 'admin':
         return 'Method only accessible for researcher and admin users', 403
     userID = request.json.get("userID", None)
-    print(userID)
 
     if User.query.filter_by(id=userID).first() is None:
         return 'User does not exist', 404
@@ -126,7 +125,6 @@ def deleteUser(userID):
         Arguments:
             userID: the userId related to the user that needs to be deleted.
     '''
-    print(userID)
     filesToBeRemoved = Files.query.filter_by(userId=userID).all()
     for i in filesToBeRemoved:
         deleteFile(i)

@@ -86,7 +86,7 @@ const Participants = () => {
   const handleAddToProject = () => {
     if (!(participantCount !== '' && participantCount >= 0 && participantCount <= 1000)) {
             setShowNrOfParticipantsDialog(true);
-            return null;
+            return null;  // Return null to skip rest of function
         }
 
     // If input is valid, do post request
