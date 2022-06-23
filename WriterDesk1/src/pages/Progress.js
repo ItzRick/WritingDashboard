@@ -4,11 +4,16 @@ import {
 } from "@mui/material";
 import Plot from 'react-plotly.js';
 
+// css
+import "./../css/Progress.css";
+
 // routing
 import {useOutletContext} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import ProgressVisualization from "../components/ProgressVisualization";
 import axios from "axios";
+// Authentication service:
+import { AuthenticationService } from "../services/authenticationService";
 
 
 /**
@@ -33,11 +38,13 @@ function Progress() {
      * then calculates the averages and sets the variables.
      */
     const fetchScores = () => {
+        // The userId of the current user:
+        const userId = AuthenticationService.getCurrentUserId();
         // Url of the server:
         const url = 'https://127.0.0.1:5000/scoreapi//getAvgScores';
 
         // Make the call to the backend:
-        axios.get(url, {params: {userId: 123}})
+        axios.get(url, {params: {userId: userId}})
             .then((response) => {
                 setScoreStyle(response.data.scoreStyle);
                 setScoreStructure(response.data.scoreStructure);
@@ -50,46 +57,47 @@ function Progress() {
         <>
             <div className='subTitle'>
                 <Typography variant='h5'>Average score per skill category</Typography>
-                <Plot
-                    data={[
-                        {
-                            // Order of the bars is as follows: first source integration, then cohesion, then structure, then language & style:
-                            x: ['Language & Style', 'Cohesion', 'Structure', 'Source Integration & <br> Content'],
-                            y: [scoreStyle, scoreCohesion, scoreStructure, scoreIntegration],
-                            marker: {color: ['#785EF0', '#FE6100', '#FFB000', '#DC267F']},
-                            type: 'bar',
-                        },
-                    ]}
-                    // The title of the char is 'scores':
-                    layout={{
-                        title: 'Average scores',
-                        // Scores can be between 0 and 10, so the y-axis range is set accordingly:
-                        yaxis: {
-                            range: [0, 10],
-                            fixedrange: true,
-                            type: 'linear'
-                        },
-                        xaxis: {
-                            fixedrange: true,
-                        }
-                    }}
-                    // Do not display the plotly modebar:
-                    config={{
-                        displayModeBar: false, // this is the line that hides the bar.
-                    }}
-                    // So the chart can resize:
-                    useResizeHandler={true}
-                    style={{width: '100%', height: '50%'}}
-                    onHover={e => {
-                        e.event.target.style.cursor = 'pointer' // Changes cursor on hover to pointer
-                    }}
-                    onUnhover={e => {
-                        e.event.target.style.cursor = 'default' // Change cursor back on unhover
-                    }}
-                />
-                <br/><br/>
+                <div className="plotContainerAverage">
+                    <Plot
+                        data={[
+                            {
+                                // Order of the bars is as follows: first source integration, then cohesion, then structure, then language & style:
+                                x: ['Language & Style', 'Cohesion', 'Structure', 'Source Integration & <br> Content'],
+                                y: [scoreStyle, scoreCohesion, scoreStructure, scoreIntegration],
+                                marker: {color: ['#785EF0', '#FE6100', '#FFB000', '#DC267F']},
+                                type: 'bar',
+                            },
+                        ]}
+                        // The title of the char is 'scores':
+                        layout={{
+                            margin: {l: 80, r: 70, b: 35, t: 20, pad: 4},
+                            // Scores can be between 0 and 10, so the y-axis range is set accordingly:
+                            yaxis: {
+                                range: [0, 10],
+                                fixedrange: true,
+                                type: 'linear'
+                            },
+                            xaxis: {
+                                fixedrange: true,
+                            }
+                        }}
+                        // Do not display the plotly modebar:
+                        config={{
+                            displayModeBar: false, // this is the line that hides the bar.
+                        }}
+                        // So the chart can resize:
+                        useResizeHandler={true}
+                        style={{width: '100%', height: '100%'}}
+                        onHover={e => {
+                            e.event.target.style.cursor = 'pointer' // Changes cursor on hover to pointer
+                        }}
+                        onUnhover={e => {
+                            e.event.target.style.cursor = 'default' // Change cursor back on unhover
+                        }}
+                    />
+                </div>
                 <Typography variant='h5'>Progress over time</Typography>
-                <div className="plotContainer">
+                <div className="plotContainerLine">
                     <ProgressVisualization/>
                 </div>
             </div>

@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify, send_file
 from app.models import Files, User
 from app.fileapi import bp
-from app.fileapi.convert import convertDocx, convertTxt
+from app.fileapi.convert import convertDocx, convertTxt, removeConvertedFiles
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from magic import from_buffer
 from datetime import date
@@ -30,10 +30,12 @@ def fileUpload():
             fileInDatabase: information about the current file that is being handled, that should be added to the database. 
             existing: current existing files with the same userId and fileName 
             associated in the database for the current file that is being handled.
+            fileIds: ids of the file that have been uploaded.
     '''
     # Retrieve the files as send by the react frontend and give this to the fileUpload function,
     # which does all the work:
     files = request.files.getlist('files')
+    fileIds = []
     # If the length of the files, as retrieved is 0, no file has been uploaded, indicate with an error message
     # and a 400 return code:
     if (len(files) == 0):
@@ -79,8 +81,9 @@ def fileUpload():
             removeFromDatabase(file)
         # Add the data to the database:
         uploadToDatabase(fileInDatabase)
+        fileIds.append(fileInDatabase.id)
     # Indicate that we have successfully uploaded this file to the server:
-    return 'success'
+    return f'Uploaded file with ids: {fileIds}'
 
 @bp.route('/fileretrieve', methods = ['GET'])
 def fileRetrieve():
@@ -129,15 +132,17 @@ def fileDelete():
         fileToBeRemoved = Files.query.filter_by(id=fileID).first()
         # Check if the file is nonexistent
         # And if so, throw an error message 
-        if fileToBeRemoved == None:
+        if fileToBeRemoved is None:
             return 'file does not exist in database', 404
         # Retrieve the paths of the file to be removed
         path = fileToBeRemoved.path
+        fileType = fileToBeRemoved.fileType
         basepath = os.path.dirname(path)
         # If the path exists, remove the file from the database
         # Else, throw an error message
         if os.path.isfile(path):
             os.remove(path)
+            removeConvertedFiles(path, fileType)
             removeFromDatabase(fileToBeRemoved)
             if not os.listdir(basepath):
                 os.rmdir(basepath)
