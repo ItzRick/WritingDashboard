@@ -76,5 +76,6 @@ function checkAuth () {
  * @returns role of current user
  */
 function getRole (){
-    return JSON.parse(localStorage.getItem('currentUser')).role;
+    const  user = getCurrentUser();
+    return user === null ? null : user.role;
 }
