@@ -3,7 +3,7 @@ import {
   Button,
   IconButton,
   Stack,
-  Tooltip
+  Tooltip,
 } from "@mui/material";
 import {
   DeleteOutline,
@@ -114,13 +114,13 @@ const Documents = () => {
       flex: 1,
       renderCell: (params) => {
         return <div>
-            <Tooltip title="View the feedback of this document.">
-                <IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
-            </Tooltip>
-            <Tooltip title="Delete this file.">
-                <IconButton onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton>
-            </Tooltip>
-            </div>;
+          <Tooltip title="View the feedback of this document.">
+            <IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
+          </Tooltip>
+          <Tooltip title="Delete this document.">
+            <IconButton onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton>
+          </Tooltip>
+        </div>;
       }
     }
   ];
@@ -132,18 +132,18 @@ const Documents = () => {
    * @param {params} params: params of the row where the current file is that needs to be navigated to.
    */
   const navigateToDoc = (_event, params) => {
-    navigate('/Document', {state: {fileId: params.id, fileName: params.row.filename}});
+    navigate('/Document', { state: { fileId: params.id, fileName: params.row.filename } });
   }
 
-    /**
-     * Show the confirmation dialog that asks whether to delete the file or not
-     * @param {event} e: event data pushed with the call, not required
-     * @param {params} params: params of the row where the current file that is removed is in, to be able to remove the correct file.
-     */
-    const showDeleteFileDialog = (e, params) => {
-        setDeleteId(params.id)  // Set id to be deleted
-        setShowDeleteDialog(true);  // Show confirmation dialog
-    }
+  /**
+   * Show the confirmation dialog that asks whether to delete the file or not
+   * @param {event} e: event data pushed with the call, not required
+   * @param {params} params: params of the row where the current file that is removed is in, to be able to remove the correct file.
+   */
+  const showDeleteFileDialog = (e, params) => {
+    setDeleteId(params.id)  // Set id to be deleted
+    setShowDeleteDialog(true);  // Show confirmation dialog
+  }
 
 
   /**
@@ -187,20 +187,20 @@ const Documents = () => {
   * Re generate the feedback for the files which are selected, so which are in selectedInstances.
   * 
   */
-   const generateFeedback = () => {
+  const generateFeedback = () => {
     let params = new URLSearchParams();
     selectedInstances.forEach(id => params.append("fileId", id));
     let generateUrl = 'https://localhost:5000/feedback/generate';
     const config = {
-        params: params,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-        }
+      params: params,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }
     axios.post(generateUrl, {}, config)
-    .catch((error) => {
+      .catch((error) => {
         console.log(error.response.data);
-    });
+      });
   }
 
   /**
@@ -231,17 +231,17 @@ const Documents = () => {
   return (
     <>
       {showDeleteDialog &&
-              <AlertDialog title = "Delete file" text = "Are you sure you want to delete this file?"
-                           buttonAgree={<Button style={{color: "red"}} onClick={(e) => {deleteFile(e, deleteId)}}>Yes</Button>}
-                           buttonCancel={<Button onClick={(e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
-              />}
+        <AlertDialog title="Delete file" text="Are you sure you want to delete this file?"
+          buttonAgree={<Button style={{ color: "red" }} onClick={(e) => { deleteFile(e, deleteId) }}>Yes</Button>}
+          buttonCancel={<Button onClick={(e) => { setShowDeleteDialog(false) }}>Cancel</Button>}
+        />}
       {showDeleteDialogMultiple &&
-        <AlertDialog title = "Delete files" text = "Are you sure you want to delete the selected files?"
-                     buttonAgree={<Button style={{color: "red"}} onClick={(e) => {deleteAllFiles()}}>Yes</Button>}
-                     buttonCancel={<Button onClick={(e) => {setShowDeleteDialogMultiple(false)}}>Cancel</Button>}
+        <AlertDialog title="Delete files" text="Are you sure you want to delete the selected files?"
+          buttonAgree={<Button style={{ color: "red" }} onClick={(e) => { deleteAllFiles() }}>Yes</Button>}
+          buttonCancel={<Button onClick={(e) => { setShowDeleteDialogMultiple(false) }}>Cancel</Button>}
         />}
       <DataGrid
-        style={{ maxHeight: '100%'}}
+        style={{ maxHeight: '100%' }}
         rows={tableData}
         columns={columns}
         pageSize={15}
@@ -257,7 +257,7 @@ const Documents = () => {
           ),
           Toolbar: () => (
             <GridToolbarContainer>
-              <Tooltip title="Remove selected files.">
+              <Tooltip title="Delete selected documents.">
                 <IconButton onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton>
               </Tooltip>
               <Tooltip title="Refresh the documents overview.">
@@ -266,10 +266,10 @@ const Documents = () => {
               <Tooltip title="Regenerate feedback for selected files.">
                 <IconButton onClick={generateFeedback} ><Cached /></IconButton>
               </Tooltip>
-            </GridToolbarContainer>
+            </GridToolbarContainer >
           )
         }}
-      />
+/>
     </>
   );
 }

@@ -1,5 +1,8 @@
 // materials
-import { Typography } from "@mui/material";
+import {
+  Typography,
+  Tooltip,
+} from "@mui/material";
 
 // routing
 import { useOutletContext, useLocation } from 'react-router-dom';
@@ -139,8 +142,8 @@ function Document() {
       if (tc.hasProvider && hasBeenClicked) {
         // set trigger with explanations type
         tc.trigger({
-            eventType: 'click.highlight',
-            buttonId: explanations[i].type, 
+          eventType: 'click.highlight',
+          buttonId: explanations[i].type,
         })
       }
     }
@@ -325,8 +328,8 @@ function Document() {
     <>
       <div className="all-page-container" id="all-page-container" style={{ width: '50%' }}>
         {/** potentially convert document to pdf and show document on page */}
-        <AllPagesPDFViewer 
-          pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`} 
+        <AllPagesPDFViewer
+          pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`}
           docId={location.state.fileId}
           docName={location.state.fileName}
         />
@@ -352,7 +355,7 @@ function Document() {
           // The title of the char is 'scores':
           layout={{
             // title: 'Scores',
-            margin: {l: 50, r: 50, b: 40, t: 30, pad: 4},
+            margin: { l: 50, r: 50, b: 40, t: 30, pad: 4 },
             // Scores can be between 0 and 10, so the y-axis range is set accordingly:
             yaxis: {
               range: [0, 10],
@@ -360,7 +363,7 @@ function Document() {
               type: 'linear'
             },
             xaxis: {
-                fixedrange: true,
+              fixedrange: true,
             }
           }}
           // Do not display the plotly modebar:
@@ -382,13 +385,21 @@ function Document() {
           }}
         />
 
-        <hr className="horizontalline"/>
+        <hr className="horizontalline" />
 
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-         <button className="buttonShowExplanationsStyle" onClick={e => showAllExplanationsOfType(0)}>Language & Style</button>
-        <button className="buttonShowExplanationsCohesion" onClick={e => showAllExplanationsOfType(1)}>Cohesion</button>
-        <button className="buttonShowExplanationsStructure" onClick={e => showAllExplanationsOfType(2)}>Structure</button>
-        <button className="buttonShowExplanationsIntegration" onClick={e => showAllExplanationsOfType(3)}>Source Integration & Content</button>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Tooltip title="Display feedback Language and Style.">
+            <button className="buttonShowExplanationsStyle" onClick={e => showAllExplanationsOfType(0)}>Language & Style</button>
+          </Tooltip>
+          <Tooltip title="Display feedback Cohesion.">
+            <button className="buttonShowExplanationsCohesion" onClick={e => showAllExplanationsOfType(1)}>Cohesion</button>
+          </Tooltip>
+          <Tooltip title="Display feedback Structure.">
+            <button className="buttonShowExplanationsStructure" onClick={e => showAllExplanationsOfType(2)}>Structure</button>
+          </Tooltip>
+          <Tooltip title="Display feedback Source Integration and Content.">
+            <button className="buttonShowExplanationsIntegration" onClick={e => showAllExplanationsOfType(3)}>Source Integration & Content</button>
+          </Tooltip>
         </div>
 
         <br />

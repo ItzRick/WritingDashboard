@@ -208,25 +208,27 @@ const Base = ({
         }}>
           <Settings style={{ opacity: '0', margin: '8' }} />
           <Typography variant="h6" component="div" sx={{ color: "appBar.text", }}> {title} </Typography>
-          <IconButton
-            sx={{
-              justifySelf: "flex-end",
-              color: "appBar.icon",
-            }}
-            onClick={() => {
-              // handle tracking when the link is activated
-              if (tc.hasProvider) {
-                tc.trigger({
-                  eventType: 'click.link', //send eventType
-                  buttonId: 'Settings', //send buttonId
-                  linkPath: '/Settings' //send linkPath
-                })
-              }
-            }}
-            component={Link} to='/Settings'
-          >
-            <Person />
-          </IconButton>
+          <Tooltip title="Settings">
+            <IconButton
+              sx={{
+                justifySelf: "flex-end",
+                color: "appBar.icon",
+              }}
+              onClick={() => {
+                // handle tracking when the link is activated
+                if (tc.hasProvider) {
+                  tc.trigger({
+                    eventType: 'click.link', //send eventType
+                    buttonId: 'Settings', //send buttonId
+                    linkPath: '/Settings' //send linkPath
+                  })
+                }
+              }}
+              component={Link} to='/Settings'
+            >
+              <Person />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </CustomAppBar>
 

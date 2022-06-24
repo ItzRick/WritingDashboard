@@ -2,10 +2,8 @@ import {
     TextField,
     IconButton,
     Stack,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select, Button,
+    Button,
+    Tooltip,
 } from "@mui/material";
 import {
     DeleteOutline,
@@ -15,8 +13,6 @@ import {
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import BlueButton from './../components/BlueButton';
 import AlertDialog from "../components/AlertDialog";
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import fileDownload from 'js-file-download';
 
 // routing
@@ -63,14 +59,6 @@ const Projects = () => {
     const [tableData, setTableData] = useState([])
     //list of selected items
     const [selectedInstances, setSelectedInstances] = useState([])
-    // project selected in download user data
-    const [projectDown, setProjectDown] = useState('');
-
-    // dropdown handler for project add
-    const handleProjDown = (event) => {
-        setProjectDown(event.target.value);
-    };
-
     // columns in data-grid
     const columns = [
         {
@@ -93,18 +81,13 @@ const Projects = () => {
             flex: 1,
             renderCell: (params) => {
                 return (<div>
-                    <IconButton onClick={(e) => { }}  ><PersonSearch /></IconButton>
-                    <IconButton onClick={(e) => { }}  ><Storage /></IconButton>
-                    <IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}  ><DeleteOutline /></IconButton>
+                    <Tooltip title="Delete this project.">
+                        <IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}  ><DeleteOutline /></IconButton>
+                    </Tooltip>
                 </div>);
             }
         }
     ];
-
-    // start date of project
-    const [startData, setStartData] = useState(new Date());
-    // end date of project
-    const [endData, setEndData] = useState(new Date());
 
     const [projectName, setProjectName] = useState();  // Project name for project to be created
     const [numberOfParticipants, setNumberOfParticipants] = useState();  // Number of participants for project to be created
@@ -256,7 +239,9 @@ const Projects = () => {
                             ),
                             Toolbar: () => (
                                 <GridToolbarContainer>
-                                    <IconButton onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton>
+                                    <Tooltip title="Delete selected projects.">
+                                        <IconButton onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton>
+                                    </Tooltip>
                                 </GridToolbarContainer>
                             )
                         }}
