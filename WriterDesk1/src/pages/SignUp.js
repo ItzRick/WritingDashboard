@@ -217,8 +217,8 @@ const SignUp = () => {
                             <Typography sx={{alignSelf: 'center', alignContent:'inline'}}>
                             I allow the storage and execution of <a className='userDataLinkPopup' onClick={() => {setShowNeceDataPopup(true)}} >necessary application data</a>.
                             </Typography>
-                            {showNeceDataPopup && <AlertDialog title = "Necessary Data" 
-                                text = "We store uploaded files, its meta data and generated feedback. You can always delete these files and generated data on the Documents page. It is possible to delete you account on the Settings page."
+                            {showNeceDataPopup && <AlertDialog title = "Storing necessary data" 
+                                text = "The application needs to store certain data to allow the user to use the application. If the user makes an account, the application will store their sign up information in the database. This data includes their username and (hashed) password. If the user uploads a document, the application will store the document and its inserted meta data in the database. When the document has been uploaded, the application will generate feedback based on that document, which will also be stored in the database. The user can delete uploaded files and their corresponding feedback on the Documents page. The user can change their username and password in the Settings page. Finally, the user can delete their account, including all sign up information and documents, on the Settings page."
                                 buttonAgree={<Button onClick={() => {setShowNeceDataPopup(false)}}>I understand</Button>}
                             />}
                         </div>
