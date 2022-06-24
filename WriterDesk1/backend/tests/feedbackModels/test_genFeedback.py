@@ -1,6 +1,5 @@
 from app.feedback.feedback import genFeedback
 from app.models import Files, Explanations, User, Scores
-from app.scoreapi.scores import setScoreDB, getCurrentExplanationVersion
 from datetime import date
 import os
 import fitz
@@ -57,29 +56,6 @@ def testGenFeedbackNoFile(testClient, initDatabase):
     assert not isSuccessful
     assert 'no such file' in message
 
-def testGenFeedbackAlreadyUploaded(testClient, initDatabase):
-    '''
-        Test the genFeedback method, for if we have already generated feedback for this file.
-        That is, if we have generated feedback with a more recent version or the current version 
-        of the feedback model.
-        Arguments:
-            testClient:  The test client we test this for.
-            initDatabase: the database instance we test this for. 
-        Attributes:     
-            file: A file instance of the database, as previously uploaded to said database.
-            isSuccesful: True if the feedback has been correctly generated, False otherwise.
-            message: Message if we get an exception during execution of the method.
-    '''
-    del initDatabase
-    # Get a file instance from the database:
-    file = uploadFile('testfeedback.pdf', testClient)
-    setScoreDB(file.id, 0, 0, 0, 0, 2)
-
-    # Call the genFeedback method and check if we get the correct info returned:
-    isSuccessful, message = genFeedback(file)
-    assert not isSuccessful
-    assert 'Feedback has already been generated!' in message
-
 def testGenFeedbackDocxFile(testClient, initDatabase):
     ''' 
         Test the genFeedback method for a docx file.
@@ -105,7 +81,7 @@ def testGenFeedbackDocxFile(testClient, initDatabase):
     file = uploadFile('testfeedbackdocx.docx', testClient)
     # Generate the feedback:
     isSuccessful = genFeedback(file)
-    assert isSuccessful[0]
+    assert isSuccessful
     # Check if we have added the correct score to the database:
     score = Scores.query.filter_by(fileId=file.id).first()
     assert float(score.scoreStyle) == 8.40
@@ -203,7 +179,7 @@ def testGenFeedbackPdfFile(testClient, initDatabase):
     file = uploadFile('testfeedback.pdf', testClient)
     # Generate the feedback:
     isSuccessful = genFeedback(file)
-    assert isSuccessful[0]
+    assert isSuccessful
     # Check if we have added the correct score to the database:
     score = Scores.query.filter_by(fileId=file.id).first()
     assert float(score.scoreStyle) == 8.40
@@ -302,7 +278,7 @@ def testGenFeedbackTxtFile(testClient, initDatabase):
     file = uploadFile('testfeedbacktxt.txt', testClient)
     # Generate the feedback:
     isSuccessful = genFeedback(file)
-    assert isSuccessful[0]
+    assert isSuccessful
     # Check if we have added the correct score to the database:
     score = Scores.query.filter_by(fileId=file.id).first()
     assert float(score.scoreStyle) == 8.40

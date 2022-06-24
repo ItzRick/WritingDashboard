@@ -26,8 +26,8 @@ import {
   Person,
   Settings,
   ListAlt,
-  Home,
 } from '@mui/icons-material';
+import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 
 // routing
 import { Link, Outlet, useNavigate } from 'react-router-dom';
@@ -208,27 +208,25 @@ const Base = ({
         }}>
           <Settings style={{ opacity: '0', margin: '8' }} />
           <Typography variant="h6" component="div" sx={{ color: "appBar.text", }}> {title} </Typography>
-          <Tooltip title="Settings">
-            <IconButton
-              sx={{
-                justifySelf: "flex-end",
-                color: "appBar.icon",
-              }}
-              onClick={() => {
-                // handle tracking when the link is activated
-                if (tc.hasProvider) {
-                  tc.trigger({
-                    eventType: 'click.link', //send eventType
-                    buttonId: 'Settings', //send buttonId
-                    linkPath: '/Settings' //send linkPath
-                  })
-                }
-              }}
-              component={Link} to='/Settings'
-            >
-              <Person />
-            </IconButton>
-          </Tooltip>
+          <IconButton
+            sx={{
+              justifySelf: "flex-end",
+              color: "appBar.icon",
+            }}
+            onClick={() => {
+              // handle tracking when the link is activated
+              if (tc.hasProvider) {
+                tc.trigger({
+                  eventType: 'click.link', //send eventType
+                  buttonId: 'Settings', //send buttonId
+                  linkPath: '/Settings' //send linkPath
+                })
+              }
+            }}
+            component={Link} to='/Settings'
+          >
+            <Person />
+          </IconButton>
         </Toolbar>
       </CustomAppBar>
 
@@ -267,7 +265,7 @@ const Base = ({
             bgcolor: 'drawer.background',
             height: '100%',
           }}>
-          <NavigationLink open={open} text="Main" Icon={Home} allowed={enableNav} pageLink='Main' />
+          <NavigationLink open={open} text="Main" Icon={LogoDevIcon} allowed={enableNav} pageLink='Main' />
           <NavigationLink open={open} text="Upload" Icon={FileUpload} allowed={enableNav} pageLink='Upload' />
           <NavigationLink open={open} text="Progress" Icon={Timeline} allowed={enableNav} pageLink='Progress' />
           <NavigationLink open={open} text="Documents" Icon={Article} allowed={enableNav} pageLink='Documents' />

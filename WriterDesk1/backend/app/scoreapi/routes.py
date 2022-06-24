@@ -26,9 +26,8 @@ def setScore():
     scoreCohesion = request.form.get('scoreCohesion')
     scoreStructure = request.form.get('scoreStructure')
     scoreIntegration = request.form.get('scoreIntegration')
-    feedbackVersion = request.form.get('feedbackVersion')
     
-    return setScoreDB(fid, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration, feedbackVersion)
+    return setScoreDB(fid, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
 
 
 

@@ -26,7 +26,7 @@ import { authHeader } from '../helpers/auth-header';
  * @param {function} setUploadSingleFiles function in parent to change the list of UploadSingleFile objects
  * @returns Single File Upload Object
  */
-const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUploadSingleFiles, thisIndex }, ref) => {
+const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) => {
 
     // context as given by the Tracking Provider
     const tc = useContext(TrackingContext);
@@ -51,11 +51,10 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
      */
     useImperativeHandle(ref, () => ({
         uploadFile() {
-            if (file !== 'or drag it here.') {            
-                // url of the file api's upload function
-                const url = 'https://localhost:5000/fileapi/upload';
-                // id of current user
-                const userId = AuthenticationService.getCurrentUserId();
+            // url of the file api's upload function
+            const url = 'https://localhost:5000/fileapi/upload';
+            // id of current user
+            const userId = AuthenticationService.getCurrentUserId();
 
             // create form with all the file information
             const formData = new FormData();
@@ -75,7 +74,6 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
             //post the file
             axios.post(url, formData, headers)
             .then((response) => {
-                setSucc((v) => (v+1))
                 // Make the backend call to generate feedback:
                 // Get the ids of the uploaded files from the backend:
                 let message = response.data
@@ -100,11 +98,7 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
             .catch((error) => {
                 console.log(error.response.data);
             });
-            } else {
-                // there is no file selected
-                setFail((v) => (v+1))
-                setFailedFiles((l) => l.concat([{'content':'Missing File','id':thisIndex}]))
-            }
+
             //post-update
             //empty file, date and course
             setFile('or drag it here.');

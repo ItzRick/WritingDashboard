@@ -54,15 +54,6 @@ const Login = () => {
             setFormError(true);
         });
     }
-
-    /**
-     * Try to login when pressing the enter key
-     */
-    const handleKeyPress = (event) => {
-      if(event.key === 'Enter'){
-        handleClick();
-      }
-    }
     
     return (
         <>
@@ -78,7 +69,7 @@ const Login = () => {
                         <TextField id='username' label='Username' variant='outlined' value={username} onChange={(e) => setUsername(e.target.value)} />
                         <br />
                         <Typography>Password:</Typography>
-                        <TextField id='password' label='Password' variant='outlined' type='password' onKeyPress={(e) => handleKeyPress(e)} value={password} onChange={(e) => setPassword(e.target.value)}/>
+                        <TextField id='password' label='Password' variant='outlined' type='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
                     </div>
                     <br />
                     {formError && <Typography color="red">Invalid username and/or password</Typography>}
