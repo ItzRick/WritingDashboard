@@ -9,6 +9,7 @@ import { AuthenticationService } from "./authenticationService";
  */
 const getRole = () => {
     AuthenticationService.checkAuth().catch(() => {
+        AuthenticationService.logout();
         history.push("/Login");
     });
     return AuthenticationService.getRole();
