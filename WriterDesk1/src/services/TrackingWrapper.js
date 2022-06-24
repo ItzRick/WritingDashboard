@@ -25,6 +25,7 @@ const TrackingWrapper = ({children}) => {
         url,
         eventType,
         buttonId,
+        documentId,
         documentName,
     }) => {
         //url for request
@@ -38,7 +39,7 @@ const TrackingWrapper = ({children}) => {
         if (buttonId != null) {
             formData.append('actionId', buttonId)
         } else {
-            formData.append('actionId', documentName);
+            formData.append('actionId', 'name: '+ documentName + ', id: '+ documentId.toString());
         }
         
         //post the file
@@ -55,6 +56,7 @@ const TrackingWrapper = ({children}) => {
             url: window.location.href,
             eventType: event.eventType,
             buttonId: event.buttonId,
+            documentId: event.documentId,
             documentName: event.documentName,
         })
     }
