@@ -26,8 +26,8 @@ import {
   Person,
   Settings,
   ListAlt,
+  Home,
 } from '@mui/icons-material';
-import LogoDevIcon from '@mui/icons-material/LogoDev'; //replace with logo?;
 
 // routing
 import { Link, Outlet, useNavigate } from 'react-router-dom';
@@ -265,7 +265,7 @@ const Base = ({
             bgcolor: 'drawer.background',
             height: '100%',
           }}>
-          <NavigationLink open={open} text="Main" Icon={LogoDevIcon} allowed={enableNav} pageLink='Main' />
+          <NavigationLink open={open} text="Main" Icon={Home} allowed={enableNav} pageLink='Main' />
           <NavigationLink open={open} text="Upload" Icon={FileUpload} allowed={enableNav} pageLink='Upload' />
           <NavigationLink open={open} text="Progress" Icon={Timeline} allowed={enableNav} pageLink='Progress' />
           <NavigationLink open={open} text="Documents" Icon={Article} allowed={enableNav} pageLink='Documents' />
