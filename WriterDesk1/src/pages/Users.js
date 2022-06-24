@@ -2,17 +2,17 @@
 import {
   IconButton,
   Stack,
+  Tooltip,
 } from "@mui/material";
 import {
   DeleteOutline,
-  PersonOutline,
 } from "@mui/icons-material";
 
 // routing
 import { useOutletContext } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { DataGrid, GridApi, GridCellValue, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 import RoleDialog from "./../components/RoleDialog";
 import BlueButton from './../components/BlueButton';
@@ -69,8 +69,9 @@ const Users = () => {
       sortable: false,
       renderCell: (params) => {
         return (<div>
-          <IconButton onClick={(e) => { deleteUser(params.row.id) }}><DeleteOutline /></IconButton>
-          <IconButton><PersonOutline /></IconButton>
+          <Tooltip title="Delete this user.">
+            <IconButton onClick={(e) => { deleteUser(params.row.id) }}><DeleteOutline /></IconButton>
+          </Tooltip>
         </div>);
       }
     }
