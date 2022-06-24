@@ -33,6 +33,7 @@ import Document from './pages/Document';
 // pages for researchers (and admin)
 import Participants from './pages/Participants';
 import FeedbackModels from './pages/FeedbackModels';
+import ParticipantDocuments from './pages/ParticipantDocuments';
 // page just for admin
 import Users from './pages/Users';
 
@@ -127,6 +128,7 @@ root.render(
               <Route name='Participants' path='Participants' element={<Participants />} />
               <Route name='Projects' path='Projects' element={<Projects />} />
               <Route name='FeedbackModels' path='FeedbackModels' element={<FeedbackModels />} />
+              <Route name='ParticipantDocuments' path='ParticipantDocuments'  element={<ParticipantDocuments />}  />
             </Route>
 
             {/* For admin users */}
