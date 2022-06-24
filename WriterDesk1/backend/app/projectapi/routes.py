@@ -171,24 +171,24 @@ def viewParticipantsOfUser():
     return jsonify(participants)
 
 @bp.route('/viewProjectsOfUser', methods=["GET"])
+@jwt_required()
 def viewProjectsOfUser():
     '''
-    This function handles the showing the projects that
-    this specific user created to that user, using that user id.
+    This function handles the showing the projects of the current user 
+    if the current user is an admin or researcher
     Attributes:
-        userId: user id as given by the frontend
         projects: the projects that this user has created
+    returns:
+        if success, the projectData and the number of participants related to the project
+            in an array
+        if error:
+            403, if the current user is not a researcher or admin
     '''
-    # Get the user id as sent by the react frontend
-    userId = request.args.get('userId')
+    if current_user.role != 'researcher' and current_user.role != 'admin':
+        return 'Method only accessible for researcher and admin users', 403
 
     # Retrieve the information from the projects corresponding to the projects of the user
-    projects = getProjectsByResearcher(userId)
-
-    # Throw an error if the project variable is empty
-    # in other words, if the user has no projects
-    if projects == []:
-        return 'researcher has no projects', 404
+    projects = getProjectsByResearcher(current_user.id)
 
     return jsonify(projects)
     
