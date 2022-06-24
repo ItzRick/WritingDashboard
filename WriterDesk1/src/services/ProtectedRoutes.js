@@ -11,6 +11,7 @@ import { AuthenticationService } from "./authenticationService";
 const getRole = () => {
     AuthenticationService.checkAuth().catch(() => {
         if (AuthenticationService.getRole() != null){
+            AuthenticationService.logout();
             history.push("/Login");
             window.location.reload();
         }
