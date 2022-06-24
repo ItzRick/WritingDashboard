@@ -136,9 +136,9 @@ const Upload = () => {
                         {succ > 1 && <>{succ} documents were successfully uploaded. </>}
                         <br/>
                         {fail <= 0 && <>No documents failed to upload</>}
-                        {fail == 1 && <>1 document failed to upload</>}
-                        {fail > 1 && <>{fail} documents failed to upload</>}
-                        , because:<br/>
+                        {fail == 1 && <>1 document failed to upload, because:</>}
+                        {fail > 1 && <>{fail} documents failed to upload, because:</>}
+                        <br/>
                         {failedFiles.map((item) =><Typography component={'span'} key={item.id}>{item.content}<br/></Typography>)}
                         What would you like to do next?
                     </DialogContentText>
