@@ -193,6 +193,7 @@ def getFilesAndScoresByUser():
 
 
 @bp.route('/getExplanationForFile', methods = ['GET'])
+@jwt_required()
 def getExplanationForFile(): 
     '''
         This function handles returning all explanations of some file
