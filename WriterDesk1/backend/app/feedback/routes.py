@@ -20,13 +20,13 @@ def generateFeedback():
     '''
     # Get the fileIds 
     fileIds = request.args.getlist('fileId')
+    message = 'No files selected'
     for fileId in fileIds:
         # For each fileId, retrieve this file from the database and generate feedback:
         file = Files.query.filter_by(id=fileId).first()
         # Return error message if necessary:
         if file == None: 
             return f'The file with id {fileId} can not be found in the database.', 400
-        # Call the genFeedback method:
         isSuccessful, message = genFeedback(file)
         # Return error message if necessary:
         if not isSuccessful:

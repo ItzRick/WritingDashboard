@@ -3,11 +3,13 @@ import {
   Button,
   IconButton,
   Stack,
+  Tooltip
 } from "@mui/material";
 import {
   DeleteOutline,
   Grading,
   Refresh,
+  Cached
 } from "@mui/icons-material";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
@@ -111,7 +113,14 @@ const Documents = () => {
       sortable: false,
       flex: 1,
       renderCell: (params) => {
-        return <div><IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton><IconButton onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton></div>;
+        return <div>
+            <Tooltip title="View the feedback of this document.">
+                <IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
+            </Tooltip>
+            <Tooltip title="Delete this file.">
+                <IconButton onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton>
+            </Tooltip>
+            </div>;
       }
     }
   ];
@@ -173,6 +182,27 @@ const Documents = () => {
     axios.delete(url, { data: formData })
       .then(() => { setData() });
   }
+
+  /**
+  * Re generate the feedback for the files which are selected, so which are in selectedInstances.
+  * 
+  */
+   const generateFeedback = () => {
+    let params = new URLSearchParams();
+    selectedInstances.forEach(id => params.append("fileId", id));
+    let generateUrl = 'https://localhost:5000/feedback/generate';
+    const config = {
+        params: params,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        }
+    axios.post(generateUrl, {}, config)
+    .catch((error) => {
+        console.log(error.response.data);
+    });
+  }
+
   /**
    * Make the backend call, to et the data in the tableData state.
    * 
@@ -227,8 +257,15 @@ const Documents = () => {
           ),
           Toolbar: () => (
             <GridToolbarContainer>
-              <IconButton onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton>
-              <IconButton onClick={setData} ><Refresh /></IconButton>
+              <Tooltip title="Remove selected files.">
+                <IconButton onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton>
+              </Tooltip>
+              <Tooltip title="Refresh the documents overview.">
+                <IconButton onClick={setData} ><Refresh /></IconButton>
+              </Tooltip>
+              <Tooltip title="Regenerate feedback for selected files.">
+                <IconButton onClick={generateFeedback} ><Cached /></IconButton>
+              </Tooltip>
             </GridToolbarContainer>
           )
         }}
