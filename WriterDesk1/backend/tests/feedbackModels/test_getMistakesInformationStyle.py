@@ -205,7 +205,7 @@ def testTwoPagesTwoMistakes(testClient):
     assert output[1][6] == 'must try'
     assert output[1][7] == ['must-try']
 
-def testTeXFile():
+def testTeXFile(testClient):
     '''
         Tests if a TeX document containing one mistake on the second page of the
         document returns a list containing one element that provides information
@@ -218,7 +218,10 @@ def testTeXFile():
             doc: the document opened through the fitz module for reading text.
             page: the first page in the document.
             feedbackObject: Object of the class that generates the feedback for this language and style category.
+        Arguments:
+            testClient:  The test client we test this for.
     '''
+    del testClient
     mistakes = [
         ['a', 'tor into thinking it is conversing with a another human, like with the Google Dup',
          0, 'Use "an" instead of "a" if the following word starts with a vowel sound, e.g. "an article", "an hour".',

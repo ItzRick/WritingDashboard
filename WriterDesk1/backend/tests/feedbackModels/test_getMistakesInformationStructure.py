@@ -367,7 +367,7 @@ def testTwoPagesTwoMistakesTwoLines(testClient):
     assert output[1][5] == 'This paragraph is too short, try to make paragraphs with approximately 200 words.'
     assert output[1][6] == 'Short 2'
 
-def testTeXFile():
+def testTeXFile(testClient):
     '''
         Tests if a TeX document with one mistake that covers one line on the 
         second page of the document returns a list with one element. That 
@@ -382,7 +382,10 @@ def testTeXFile():
             doc: the document opened through the fitz module for reading text.
             page: the second page in the document.
             feedbackObject: Object of the class that generates the feedback for this structure category.
+        Arguments:
+            testClient:  The test client we test this for.
     '''
+    del testClient
     mistakes = {
         'Short 1' : 'This paragraph is too short, try to make paragraphs with approximately 200 words.'
     }
