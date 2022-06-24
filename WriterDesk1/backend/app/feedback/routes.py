@@ -1,5 +1,5 @@
 from app.feedback import bp
-from flask import request
+from flask import request, current_app
 from app.models import Files
 from app.feedback.feedback import genFeedback
 
@@ -32,3 +32,13 @@ def generateFeedback():
         if not isSuccessful:
             return str(message), 400
     return str(message), 200
+
+@bp.route('/getCurrentVersion', methods = ['GET'])
+def getCurrentFeedbackVersion():
+    '''
+        Retrieve the current feedback version as saved into the FEEDBACKVERSION variable
+        in the config of the application.
+        Returns: 
+            The current FEEDBACKVERSION as saved into the config and a 200 status code.
+    '''
+    return current_app.config['FEEDBACKVERSION'], 200

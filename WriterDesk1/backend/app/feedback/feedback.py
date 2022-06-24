@@ -36,7 +36,7 @@ def genFeedback(file):
     # Call the genFeedback method:
     try:
         # Check if the feedback has already been generated:
-        if getCurrentExplanationVersion(fileId) >= current_app.config['FEEDBACKVERSION']:
+        if getCurrentExplanationVersion(fileId) >= int(current_app.config['FEEDBACKVERSION']):
             return False, 'Feedback has already been generated!'
         # If feedback has already been generated, remove the current explanations and scores if required:
         else:
