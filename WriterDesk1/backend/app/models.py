@@ -55,7 +55,7 @@ class User(db.Model):
     # relationships
     file = db.relationship('Files', backref='owner', lazy='dynamic', cascade='all,delete')
     project = db.relationship('Projects', backref='projectCreator', lazy='dynamic', cascade='all,delete')
-    participantToProject = db.relationship('ParticipantToProject', backref='linkedParticipant', cascade='all,delete')
+    participantToProject = db.relationship('ParticipantToProject', backref='linkedParticipant', lazy=True, cascade='all,delete', overlaps="linkedParticipant,ptp")
     click = db.relationship('Clicks', backref='clicker', lazy='dynamic', cascade='all,delete')
 
     def __repr__(self):
@@ -126,7 +126,7 @@ class ParticipantToProject(db.Model):
     projectId = db.Column(db.Integer, db.ForeignKey('projects.id'))
 
     # relationships
-    participant = db.relationship('User', backref='participanttoproject', lazy=True, cascade='all,delete')
+    participant = db.relationship('User', backref='ptp', lazy=True, overlaps="linkedParticipant,ptp", cascade='all,delete')
 
     def __init__(self, userId: int, projectId: int):
         '''
