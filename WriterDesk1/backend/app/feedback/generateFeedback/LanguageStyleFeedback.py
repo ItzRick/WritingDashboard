@@ -161,7 +161,7 @@ class LanguageStyleFeedback(BaseFeedback):
                     if 'TeX' in doc.metadata['creator']:
                         pageHeight += page.rect.y1 * 0.999
                     else:
-                        pageHeight += page.rect.y1 * 0.999
+                        pageHeight += page.rect.y1
 
                 # check if the word found is in the sentence, if this is the case
                 # it gets added to a list that contains all specific words found in
