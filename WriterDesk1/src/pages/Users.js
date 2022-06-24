@@ -68,7 +68,10 @@ const Users = () => {
       headerName: "Actions",
       sortable: false,
       renderCell: (params) => {
-        return <div><IconButton onClick={(e) => { deleteUser(params.row.id) }}><DeleteOutline /></IconButton><IconButton><PersonOutline /></IconButton></div>;
+        return (<div>
+          <IconButton onClick={(e) => { deleteUser(params.row.id) }}><DeleteOutline /></IconButton>
+          <IconButton><PersonOutline /></IconButton>
+        </div>);
       }
     }
   ];

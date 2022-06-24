@@ -7,7 +7,8 @@ import {
   MenuItem,
   Select,
   Button,
-  Stack
+  Stack,
+  Tooltip,
 } from "@mui/material";
 import {
   DeleteOutline,
@@ -54,7 +55,11 @@ const Participants = () => {
       sortable: false,
       renderCell: (params) => {
         // action buttons
-        return <div><IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton></div>;
+        return (<div>
+          <Tooltip title="Delete this participant.">
+            <IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton>
+          </Tooltip>
+          </div>);
       }
     }
   ];
@@ -283,7 +288,9 @@ const Participants = () => {
               ),
               Toolbar: () => (
                 <GridToolbarContainer>
-                  <IconButton onClick={(e) => { setShowDeleteDialogMultiple(true) }}><DeleteOutline /></IconButton>
+                  <Tooltip title="Delete selected participants.">
+                    <IconButton onClick={(e) => { setShowDeleteDialogMultiple(true) }}><DeleteOutline /></IconButton>
+                  </Tooltip>
                 </GridToolbarContainer>
               )
             }}

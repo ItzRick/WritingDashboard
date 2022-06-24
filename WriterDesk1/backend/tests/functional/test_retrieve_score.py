@@ -3,6 +3,7 @@ from datetime import date
 from app.models import Scores, Files
 from werkzeug.utils import secure_filename
 import json
+from decimal import Decimal
 
 def uploadFile(testClient):
     '''
@@ -29,7 +30,8 @@ def uploadFile(testClient):
         'fileName': fileName,
         'courseCode': courseCode,
         'userId': 256,
-        'date': date(1998, 10, 30)
+        'date': date(1998, 10, 30),
+        'feedbackVersion': 0.01
     }
     # Create the response by means of the post request:
     response = testClient.post('/fileapi/upload', data=data)
@@ -38,7 +40,7 @@ def uploadFile(testClient):
     assert file.courseCode == courseCode
     return response, file
 
-def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegration):
+def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegration, feedbackVersion):
     '''
         A general method to test uploading a score
         Attributes: 
@@ -52,6 +54,7 @@ def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegrat
             sCohesion: cohesion score
             sStructure: structure score
             sIntegration: source integration and content score
+            feedbackVersion: feedbackVersion associated to the current uploaded score.
     '''
     # Create the data packet:
     data = {
@@ -60,6 +63,7 @@ def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegrat
         'scoreCohesion': sCohesion,
         'scoreStructure': sStructure,
         'scoreIntegration' : sIntegration,
+        'feedbackVersion': feedbackVersion
     }
     # Corresponding file exists?
     assert Files.query.filter_by(id=fileId).first() is not None
@@ -75,6 +79,8 @@ def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegrat
     assert score.scoreCohesion == sCohesion
     assert score.scoreStructure == sStructure
     assert score.scoreIntegration == sIntegration
+    # Test if the feedbackVersion has been correctly uploaded:
+    assert score.feedbackVersion == feedbackVersion
 
 def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
     '''
@@ -134,8 +140,9 @@ def testSpecificScores(testClient, initDatabase):
     scoreCohesion=0
     scoreStructure=0
     scoreIntegration=0
+    feedbackVersion=0.01
     # test if we can set a file
-    generalSetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
+    generalSetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration, feedbackVersion)
     # test if we can then also retrieve that file
     generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
 
@@ -152,6 +159,7 @@ def testInvalidScore(testClient, initDatabase):
             scoreCohesion: cohesion score
             scoreStructure: structure score
             scoreIntegration: source integration and content score
+            feedbackVersion: feedbackVersion associated to the current uploaded score.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -166,12 +174,14 @@ def testInvalidScore(testClient, initDatabase):
     scoreCohesion = 11
     scoreStructure = 1
     scoreIntegration = 1
+    feedbackVersion = 0.01
     data = {
         'fileId': fileId,
         'scoreStyle': scoreStyle,
         'scoreCohesion': scoreCohesion,
         'scoreStructure': scoreStructure,
         'scoreIntegration' : scoreIntegration,
+        'feedbackVersion': feedbackVersion
     }
     response = testClient.post('/scoreapi/setScore', data=data)
     # See if we indeed get code 200 and the correct message from this request:
@@ -183,6 +193,8 @@ def testInvalidScore(testClient, initDatabase):
     assert score.scoreCohesion == -2
     assert score.scoreStructure == scoreStructure
     assert score.scoreIntegration == scoreIntegration
+    # Check for the uploaded feedback version:
+    assert score.feedbackVersion == feedbackVersion
 
     # next we test whether invalid values are overwritten, and valid are not
     scoreStyle1 = 1
@@ -206,3 +218,5 @@ def testInvalidScore(testClient, initDatabase):
     assert score.scoreCohesion == -2 # if -1, take prev value
     assert score.scoreStructure == scoreStructure # if -1, take prev value
     assert score.scoreIntegration == -2 # if invalid, take -2
+    # No feedbackVersion uploaded:
+    assert score.feedbackVersion == None
