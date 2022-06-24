@@ -3,6 +3,7 @@ import {
     IconButton,
     Stack,
     Button,
+    Tooltip,
 } from "@mui/material";
 import {
     DeleteOutline,
@@ -59,7 +60,6 @@ const Projects = () => {
     const [tableData, setTableData] = useState([])
     //list of selected items
     const [selectedInstances, setSelectedInstances] = useState([])
-
     // columns in data-grid
     const columns = [
         {
@@ -82,9 +82,9 @@ const Projects = () => {
             flex: 1,
             renderCell: (params) => {
                 return (<div>
-                    <IconButton onClick={(e) => { }}  ><PersonSearch /></IconButton>
-                    <IconButton onClick={(e) => { }}  ><Storage /></IconButton>
-                    <IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}  ><DeleteOutline /></IconButton>
+                    <Tooltip title="Delete this project.">
+                        <IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}  ><DeleteOutline /></IconButton>
+                    </Tooltip>
                 </div>);
             }
         }
@@ -237,7 +237,9 @@ const Projects = () => {
                             ),
                             Toolbar: () => (
                                 <GridToolbarContainer>
-                                    <IconButton onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton>
+                                    <Tooltip title="Delete selected projects.">
+                                        <IconButton onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton>
+                                    </Tooltip>
                                 </GridToolbarContainer>
                             )
                         }}
