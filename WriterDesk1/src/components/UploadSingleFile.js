@@ -72,6 +72,7 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                 //post the file
             axios.post(url, formData, headers)
             .then((response) => {
+                setSucc((v) => (v+1))
                 // Make the backend call to generate feedback:
                 // Get the ids of the uploaded files from the backend:
                 let message = response.data
