@@ -9,7 +9,7 @@ import {
   DeleteOutline,
   Grading,
   Refresh,
-  Autorenew
+  Cached
 } from "@mui/icons-material";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
@@ -264,7 +264,7 @@ const Documents = () => {
                 <IconButton onClick={setData} ><Refresh /></IconButton>
               </Tooltip>
               <Tooltip title="Regenerate feedback for selected files.">
-                <IconButton onClick={generateFeedback} ><Autorenew /></IconButton>
+                <IconButton onClick={generateFeedback} ><Cached /></IconButton>
               </Tooltip>
             </GridToolbarContainer>
           )
