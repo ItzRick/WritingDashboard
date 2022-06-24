@@ -1,4 +1,3 @@
-from this import d
 from app.feedback.generateFeedback.BaseFeedback import BaseFeedback
 from decimal import ROUND_HALF_UP, Decimal
 import fitz

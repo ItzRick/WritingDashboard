@@ -39,7 +39,7 @@ class User(db.Model):
 
     # list of columns and relationships that should not get serialized
 
-    nonSerializable = ['file', 'passwordHash', 'project', 'participantToProject', 'click']
+    nonSerializable = ['file', 'passwordHash', 'project', 'ParticipantToProject', 'participantToProject', 'participanttoproject','click']
 
     def serializeUser(self):
         dict = {}
@@ -160,6 +160,7 @@ class Scores(db.Model):
             scoreCohesion: Score for Cohesion
             scoreStructure: Score for Structure
             scoreIntegration: Score for Source Integration and Content
+            feedbackVersion: Version of the feedback model with which this score has been created.
     '''
     fileId = db.Column(db.Integer, db.ForeignKey('files.id'), primary_key=True)
     # Scores are numeric values with 2 decimals before and 2 decimals after the point. 
@@ -168,6 +169,8 @@ class Scores(db.Model):
     scoreCohesion    = db.Column(db.Numeric(4,2), unique=False, default=None)
     scoreStructure   = db.Column(db.Numeric(4,2), unique=False, default=None)
     scoreIntegration = db.Column(db.Numeric(4,2), unique=False, default=None)
+    # Feedbackversion is a numeric value, with 2 decimal numbers and 5 numbers in total. 
+    feedbackVersion  = db.Column(db.Float, unique=False, default=None)
 
     def __repr__(self):
         return '<Scores {}>'.format(self.fileId)
@@ -187,31 +190,33 @@ class Explanations(db.Model):
             Y1: Y of the top right corner of the boxing rectangle
             Y2: Y of the bottom left corner of the boxing rectangle
             replacement1..3: Three possible replacements for the mistakeText
+            feedbackVersion: Version of the feedback model with which this score has been created.
     '''
-    fileId      = db.Column(db.Integer, db.ForeignKey('files.id'), index=True)
-    explId      = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    type        = db.Column(db.Integer, default=-1)
-    explanation = db.Column(db.String, default='')
-    mistakeText = db.Column(db.String, default='')
-    X1          = db.Column(db.Float, default=-1)
-    X2          = db.Column(db.Float, default=-1)
-    Y1          = db.Column(db.Float, default=-1)
-    Y2          = db.Column(db.Float, default=-1)
-    replacement1= db.Column(db.String, default='')
-    replacement2= db.Column(db.String, default='')
-    replacement3= db.Column(db.String, default='')
+    fileId          = db.Column(db.Integer, db.ForeignKey('files.id'), index=True)
+    explId          = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    type            = db.Column(db.Integer, default=-1)
+    explanation     = db.Column(db.String, default='')
+    mistakeText     = db.Column(db.String, default='')
+    X1              = db.Column(db.Float, default=-1)
+    X2              = db.Column(db.Float, default=-1)
+    Y1              = db.Column(db.Float, default=-1)
+    Y2              = db.Column(db.Float, default=-1)
+    replacement1    = db.Column(db.String, default='')
+    replacement2    = db.Column(db.String, default='')
+    replacement3    = db.Column(db.String, default='')
+    feedbackVersion = db.Column(db.Numeric(5,2), unique=False, default=None)
 
     def __repr__(self):
-        return '<Explanations {}>'.format(self.fileId, self.explId)
+        return '<Explanations {} {}>'.format(self.fileId, self.explId)
 
     @property
     def serialize(self):
-        dict = {}
+        dictToReturn = {}
         for c in inspect(self).attrs.keys():
             #skip related file
-            if not c == 'explainedFile':
-                dict[c] = getattr(self, c)
-        return dict
+            if c != 'explainedFile':
+                dictToReturn[c] = getattr(self, c)
+        return dictToReturn
 
 class Projects(db.Model):
     '''

@@ -5,6 +5,8 @@ from app.feedback.generateFeedback.IntegrationContentFeedback import Integration
 from app.feedback.generateFeedback.LanguageStyleFeedback import LanguageStyleFeedback
 from app.feedback.generateFeedback.StructureFeedback import StructureFeedback
 from app.fileapi.convert import convertDocx, convertTxt
+from app.scoreapi.scores import getCurrentExplanationVersion, removeExplanationsAndScores
+from flask import current_app
 
 def genFeedback(file):
     '''
@@ -31,7 +33,14 @@ def genFeedback(file):
     fileType = file.fileType
     path = file.path
     userId = file.userId
+    # Call the genFeedback method:
     try:
+        # Check if the feedback has already been generated:
+        if getCurrentExplanationVersion(fileId) >= current_app.config['FEEDBACKVERSION']:
+            return False, 'Feedback has already been generated!'
+        # If feedback has already been generated, remove the current explanations and scores if required:
+        else:
+            removeExplanationsAndScores(fileId)
         # Initialize empty string for the references:
         references = ''
         # Retrieve the text from each fileType, and convert this file if required:
