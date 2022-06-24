@@ -1,5 +1,6 @@
 from app.scoreapi.scores import setScoreDB, setExplanationDB, getExplanationsFileType, removeExplanationsFileType
 from flask import current_app
+from decimal import Decimal
 
 class BaseFeedback:
     '''
@@ -72,7 +73,7 @@ class BaseFeedback:
                 replacements: The replacements for the current explanation.
         '''
         # Upload the scores:
-        setScoreDB(self.fileId, self.scoreStyle, self.scoreCohesion, self.scoreStructure, self.scoreIntegration, float(current_app.config['FEEDBACKVERSION']))
+        setScoreDB(self.fileId, self.scoreStyle, self.scoreCohesion, self.scoreStructure, self.scoreIntegration, Decimal(current_app.config['FEEDBACKVERSION']))
         # If there are any explanations upload them:
         if len(self.explanations) > 0:
             # See if there are any previously uploaded explanations for the current file:
@@ -80,7 +81,7 @@ class BaseFeedback:
             # If there are as much previously uploaded explanations as new explanations, we use the existing explanationIds:
             if len(explanationIds) == len(self.explanations):
                 for idexp, (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in enumerate(self.explanations):
-                    self.uploadExplanation(X1, Y1, X2, Y2, explanationIds[idexp], explType, expl, mistake, replacements, float(current_app.config['FEEDBACKVERSION']))
+                    self.uploadExplanation(X1, Y1, X2, Y2, explanationIds[idexp], explType, expl, mistake, replacements, Decimal(current_app.config['FEEDBACKVERSION']))
             else:
                 # If there are not as much currently existing explanations, we remove all explanations 
                 # for the current file from the database:
@@ -88,7 +89,7 @@ class BaseFeedback:
                     removeExplanationsFileType(self.fileId, self.explanationType)
                 # Upload all new explanations to the database:
                 for (X1, Y1, X2, Y2, explType, expl, mistake, replacements) in self.explanations:
-                    self.uploadExplanation(X1, Y1, X2, Y2, -1, explType, expl, mistake, replacements, float(current_app.config['FEEDBACKVERSION']))
+                    self.uploadExplanation(X1, Y1, X2, Y2, -1, explType, expl, mistake, replacements, Decimal(current_app.config['FEEDBACKVERSION']))
     
     def uploadExplanation(self, X1, Y1, X2, Y2, explId, explanationType, explanation, mistake, replacements, feedbackVersion):
         '''

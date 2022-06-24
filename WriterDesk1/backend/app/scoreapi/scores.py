@@ -210,7 +210,7 @@ def getCurrentExplanationVersion(fileId):
                     removeFromDatabase(score)
                 for explanation in explanations:
                     removeFromDatabase(explanation)
-            return -1
+                return -1
     return scores[0].feedbackVersion
 
 def removeExplanationsAndScores(fileId):
