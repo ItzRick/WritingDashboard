@@ -166,7 +166,7 @@ const SignUp = () => {
     // Set the acceptance of collecting user data from checkbox
     const [acceptUserData, setAcceptUserData] = useState(true);
     // Set the acceptance of collecting necessary data from checkbox
-    const [acceptNeceData, setAcceptNeceData] = useState(true);
+    const [acceptNeceData, setAcceptNeceData] = useState(false);
 
     return (
         <>
