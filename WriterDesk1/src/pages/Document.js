@@ -1,5 +1,8 @@
 // materials
-import { Typography } from "@mui/material";
+import {
+  Typography,
+  Tooltip,
+} from "@mui/material";
 
 // routing
 import { useOutletContext, useLocation } from 'react-router-dom';
@@ -142,8 +145,8 @@ function Document() {
       if (tc.hasProvider && hasBeenClicked) {
         // set trigger with explanations type
         tc.trigger({
-            eventType: 'click.highlight',
-            buttonId: explanations[i].type, 
+          eventType: 'click.highlight',
+          buttonId: explanations[i].type,
         })
       }
     }
@@ -151,26 +154,54 @@ function Document() {
   }
 
   /**
+   * Function to get all unique rows of an object by the given keys.
+   * @param {Object} arr - Array of dictionary rows to get only unique rows.
+   * @param {Object} keyProps - Array of keys to base the unique rows on.
+   * @return Modified array that only has all unique rows based on the given keys.
+   */
+  const unique = (arr, keyProps) => {
+   const kvArray = arr.map(entry => {
+     const key = keyProps.map(k => entry[k]).join('|');
+     return [key, entry];
+   });
+   const map = new Map(kvArray);
+   return Array.from(map.values());
+  }
+
+
+  /**
    * Function to show or hide all the explanations of one type. Call this function when clicking on the bar chart.
    * @param {number} type - Number for type of mistake
    */
   const showAllExplanationsOfType = (type) => {
+    // Copy explanations array to newExpl
+    const newExpl = explanations.map(obj => ({...obj}));
+
+    // Add number to new array to distinguish after removing rows
+    for (let i = 0; i < newExpl.length; i++) {
+      newExpl[i].number = i;
+    }
+
+    const keys = ['explanation', 'mistakeText', 'type', 'replacement1', 'replacement2', 'replacement3'];
+    const uniqueExpl = unique(newExpl, keys);  // Get all unique explanations to prevent showing duplicates
+
     let allOpenOfType = true; // Boolean that indicate if all explanations of given type are shown
 
-    for (let i = 0; i < explanations.length; i++) {
+    // Loop over all unique explanations
+    for (const expl of uniqueExpl) {
       // Check if explanation of mistake is shown
-      if (explanations[i].type === type && !showTextbox[i]) {
+      if (expl.type === type && !showTextbox[expl.number]) {
         allOpenOfType = false; // Not all explanations of the given type are shown
       }
     }
 
     let newArrShowTextbox = []; // Create new array to overwrite showTextbox
 
-    for (let i = 0; i < explanations.length; i++) {
-      if (explanations[i].type === type) {
+    for (const expl of uniqueExpl) {
+      if (expl.type === type) {
         // Show all explanations of the given type
         // If this is already the case, hide them all
-        newArrShowTextbox[i] = !allOpenOfType;
+        newArrShowTextbox[expl.number] = !allOpenOfType;
       }
     }
     setShowTextbox(newArrShowTextbox); // Overwrite showTextbox
@@ -206,11 +237,11 @@ function Document() {
           <Typography variant='body2' sx={{ marginTop: '5px', marginBottom: '10px', fontSize: 'calc(12px + 0.2vw)' }}>
             {props.expl}
           </Typography>
-          <Typography className={props.replacements.length > 0 ? 'replacementsText' : 'hidden'}
+          <Typography className={props.replacements.length > 0 && props.replacements[0] !== '' ? 'replacementsText' : 'hidden'}
             style={{ fontSize: 'calc(11px + 0.2vw)' }} variant='body2'>
             Possible replacements:
           </Typography>
-          <Typography className={props.replacements.length > 0 ? 'textBoxReplacements' : 'hidden'}
+          <Typography className={props.replacements.length > 0 && props.replacements[0] !== '' ? 'textBoxReplacements' : 'hidden'}
             variant='body1'
             style={{
               borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
@@ -218,7 +249,7 @@ function Document() {
             }}>
             {props.replacements[0]}
           </Typography>
-          <Typography className={props.replacements.length > 1 ? 'textBoxReplacements' : 'hidden'}
+          <Typography className={props.replacements.length > 1 && props.replacements[1] !== '' ? 'textBoxReplacements' : 'hidden'}
             variant='body1'
             style={{
               borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
@@ -226,7 +257,7 @@ function Document() {
             }}>
             {props.replacements[1]}
           </Typography>
-          <Typography className={props.replacements.length > 2 ? 'textBoxReplacements' : 'hidden'}
+          <Typography className={props.replacements.length > 2 && props.replacements[2] !== '' ? 'textBoxReplacements' : 'hidden'}
             variant='body1'
             style={{
               borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
@@ -300,8 +331,8 @@ function Document() {
     <>
       <div className="all-page-container" id="all-page-container" style={{ width: '50%' }}>
         {/** potentially convert document to pdf and show document on page */}
-        <AllPagesPDFViewer 
-          pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`} 
+        <AllPagesPDFViewer
+          pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`}
           docId={location.state.fileId}
           docName={location.state.fileName}
         />
@@ -327,7 +358,7 @@ function Document() {
           // The title of the char is 'scores':
           layout={{
             // title: 'Scores',
-            margin: {l: 50, r: 50, b: 40, t: 30, pad: 4},
+            margin: { l: 50, r: 50, b: 40, t: 30, pad: 4 },
             // Scores can be between 0 and 10, so the y-axis range is set accordingly:
             yaxis: {
               range: [0, 10],
@@ -335,7 +366,7 @@ function Document() {
               type: 'linear'
             },
             xaxis: {
-                fixedrange: true,
+              fixedrange: true,
             }
           }}
           // Do not display the plotly modebar:
@@ -357,13 +388,21 @@ function Document() {
           }}
         />
 
-        <hr className="horizontalline"/>
+        <hr className="horizontalline" />
 
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-         <button className="buttonShowExplanationsStyle" onClick={e => showAllExplanationsOfType(0)}>Language & Style</button>
-        <button className="buttonShowExplanationsCohesion" onClick={e => showAllExplanationsOfType(1)}>Cohesion</button>
-        <button className="buttonShowExplanationsStructure" onClick={e => showAllExplanationsOfType(2)}>Structure</button>
-        <button className="buttonShowExplanationsIntegration" onClick={e => showAllExplanationsOfType(3)}>Source Integration & Content</button>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Tooltip title="Display feedback Language and Style.">
+            <button className="buttonShowExplanationsStyle" onClick={e => showAllExplanationsOfType(0)}>Language & Style</button>
+          </Tooltip>
+          <Tooltip title="Display feedback Cohesion.">
+            <button className="buttonShowExplanationsCohesion" onClick={e => showAllExplanationsOfType(1)}>Cohesion</button>
+          </Tooltip>
+          <Tooltip title="Display feedback Structure.">
+            <button className="buttonShowExplanationsStructure" onClick={e => showAllExplanationsOfType(2)}>Structure</button>
+          </Tooltip>
+          <Tooltip title="Display feedback Source Integration and Content.">
+            <button className="buttonShowExplanationsIntegration" onClick={e => showAllExplanationsOfType(3)}>Source Integration & Content</button>
+          </Tooltip>
         </div>
 
         <br />

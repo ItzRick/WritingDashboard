@@ -85,6 +85,7 @@ def deleteUserResearcher():
     if current_user.role != 'researcher' and current_user.role != 'admin':
         return 'Method only accessible for researcher and admin users', 403
     userID = request.json.get("userID", None)
+
     if User.query.filter_by(id=userID).first() is None:
         return 'User does not exist', 404
     user = User.query.filter_by(id=userID).first()

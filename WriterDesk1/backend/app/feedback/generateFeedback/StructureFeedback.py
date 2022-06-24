@@ -1,4 +1,3 @@
-from this import d
 from app.feedback.generateFeedback.BaseFeedback import BaseFeedback
 from decimal import ROUND_HALF_UP, Decimal
 import fitz
@@ -182,7 +181,11 @@ class StructureFeedback(BaseFeedback):
                 textInstances = page.search_for(mistake)
                 # add the height of the page to the coordinates for returning
                 if page.number != 0:
-                    pageHeight += page.rect.y1
+                    # if document is created through LaTeX or something similar
+                    if 'TeX' in doc.metadata['creator']:
+                        pageHeight += page.rect.y1 * 0.999
+                    else:
+                        pageHeight += page.rect.y1
                 # go over all occurences of the mistake
                 for inst in textInstances:
                     # list contains coordinates, type number, explanation and 

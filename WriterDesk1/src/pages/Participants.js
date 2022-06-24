@@ -7,7 +7,8 @@ import {
   MenuItem,
   Select,
   Button,
-  Stack
+  Stack,
+  Tooltip,
 } from "@mui/material";
 import {
   DeleteOutline,
@@ -27,6 +28,8 @@ import { authHeader } from "../helpers/auth-header";
 import fileDownload from 'js-file-download';
 
 const BASE_URL = "https://localhost:5000/projectapi";
+
+
 /**
  *
  * @returns Participants Page
@@ -54,7 +57,11 @@ const Participants = () => {
       sortable: false,
       renderCell: (params) => {
         // action buttons
-        return <div><IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton></div>;
+        return (<div>
+          <Tooltip title="Delete this participant.">
+            <IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton>
+          </Tooltip>
+          </div>);
       }
     }
   ];
@@ -82,6 +89,11 @@ const Participants = () => {
    * When successful, download response csv file.
    */
   const handleAddToProject = () => {
+    if (!(participantCount !== '' && participantCount >= 0 && participantCount <= 1000)) {
+            setShowNrOfParticipantsDialog(true);
+            return null;  // Return null to skip rest of function
+        }
+
     // If input is valid, do post request
     const data = {
       "nrOfParticipants": participantCount,
@@ -92,7 +104,8 @@ const Participants = () => {
     }
     axios.post(`${BASE_URL}/addParticipants`, data, { headers: authHeader() }).then(response => {
       // Post request is successful, participants are registered
-      // TODO: reload participant list 
+
+      getParticpantsAndProjects();
       const fileName = response.headers["custom-filename"];
       fileDownload(response.data, fileName);
     }).catch(error => {
@@ -168,7 +181,7 @@ const Participants = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);  // Show dialog when deleting single participant
   const [showDeleteDialogMultiple, setShowDeleteDialogMultiple] = useState(false);  // Show dialog when deleting multiple participants
   const [deleteId, setDeleteId] = useState();  // Id of user that is going to be deleted when pressing delete button
-
+  const [showNrOfParticipantsDialog, setShowNrOfParticipantsDialog] = useState(false);  // Show dialog when trying to add invalid number of participants
 
   /**
     * Delete the participant with the given id from the database. Also delete all corresponding data to the user.
@@ -177,16 +190,18 @@ const Participants = () => {
     */
   const deleteParticipant = (e, userId) => {
     setShowDeleteDialog(false);  // Don't show dialog anymore
-    // TODO: future feature for Bas or Jordy
     // Url of the server:
-    //const url = 'https://127.0.0.1:5000/...'
+    const url = 'https://127.0.0.1:5000/usersapi/deleteUserResearcher'
     // Formdata for the backend call, to which the id has been added:
-    //     const formData = new FormData();
-    //     formData.append('id', userId);
-    //     // Make the call to the backend:
-    //     axios.delete(url, { data: formData }).then(response => {
-    //         //TODO: Set table data
-    //     });
+        const formData = new FormData();
+        formData.append('userID', userId);
+        const data = {
+          "userID": userId,  // Add input of numberOfParticipants
+        }
+        // Make the call to the backend:
+        axios.post(url, data, {headers: authHeader()}).then(response => {
+          getParticpantsAndProjects();
+        });
 
   }
 
@@ -207,30 +222,35 @@ const Participants = () => {
     */
   const deleteSelectedParticipants = (e) => {
     setShowDeleteDialogMultiple(false);  // Don't show dialog anymore
-    // TODO: future feature for Bas or Jordy
     // // Url of the server:
-    // const url = 'https://127.0.0.1:5000/...'
-    // // Create a new formdata:
-    // const formData = new FormData();
-    // // For each of the selected instances, add this id to the formdata:
-    // selectedInstances.forEach(id => formData.append('id', id));
-    // // Make the backend call:
-    // axios.delete(url, { data: formData }).then(response => {
-    //   //TODO: Set table data
-    // });
+    const url = 'https://127.0.0.1:5000/usersapi/deleteUserResearcher'
+    // Create a new formdata:
+    const formData = new FormData();
+    // For each of the selected instances, add this id to the formdata:
+    selectedInstances.forEach(id => {
+      const data = {
+          "userID": id
+      }
+      axios.post(url, data, {headers: authHeader()}).then(r => {getParticpantsAndProjects()})
+    });
+
   }
 
   return (
     <>
       {showDeleteDialog &&
         <AlertDialog title="Delete participant" text="Are you sure you want to delete this participant?"
-          buttonAgree={<Button onClick={(e) => { deleteParticipant(e, deleteId) }}>Yes</Button>}
-          buttonCancel={<Button style={{ color: "red" }} onClick={(e) => { setShowDeleteDialog(false) }}>Cancel</Button>}
+          buttonAgree={<Button style={{ color: "red" }} onClick={(e) => { deleteParticipant(e, deleteId) }}>Yes</Button>}
+          buttonCancel={<Button onClick={(e) => { setShowDeleteDialog(false) }}>Cancel</Button>}
         />}
       {showDeleteDialogMultiple &&
         <AlertDialog title="Delete participants" text="Are you sure you want to delete the selected participants?"
-          buttonAgree={<Button onClick={(e) => { deleteSelectedParticipants(e) }}>Yes</Button>}
-          buttonCancel={<Button style={{ color: "red" }} onClick={(e) => { setShowDeleteDialogMultiple(false) }}>Cancel</Button>}
+          buttonAgree={<Button style={{color: "red"}} onClick={(e) => { deleteSelectedParticipants(e) }}>Yes</Button>}
+          buttonCancel={<Button onClick={(e) => { setShowDeleteDialogMultiple(false) }}>Cancel</Button>}
+        />}
+      {showNrOfParticipantsDialog &&
+        <AlertDialog title = "Number of participants" text = "Make sure the number of participants is a valid number between 0 and 1000!"
+                     buttonAgree={<Button onClick={(e) => {setShowNrOfParticipantsDialog(false)}}>Ok</Button>}
         />}
       <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
         <TextField
@@ -283,7 +303,9 @@ const Participants = () => {
               ),
               Toolbar: () => (
                 <GridToolbarContainer>
-                  <IconButton onClick={(e) => { setShowDeleteDialogMultiple(true) }}><DeleteOutline /></IconButton>
+                  <Tooltip title="Delete selected participants.">
+                    <IconButton onClick={(e) => { setShowDeleteDialogMultiple(true) }}><DeleteOutline /></IconButton>
+                  </Tooltip>
                 </GridToolbarContainer>
               )
             }}

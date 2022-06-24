@@ -33,7 +33,7 @@ def testRetrieveFilesAndScoresSingle(testClient, initDatabase):
     db.session.commit()
 
     # Add scores to database
-    setScoreDB(file.id, 1.00, 1.00, 1.00, 1.00)
+    setScoreDB(file.id, 1.00, 1.00, 1.00, 1.00, 0.01)
 
     # Run function
     response = testClient.get('/scoreapi/getFilesAndScoresByUser', headers={"Authorization": "Bearer " + access_token})
@@ -83,8 +83,8 @@ def testRetrieveFilesAndScoresMultiple(testClient, initDatabase):
     db.session.commit()
 
     # Add scores to database
-    setScoreDB(file1.id, 1.80, 9.00, 6.70, 7.80)
-    setScoreDB(file2.id, 8.60, 5.40, 3.20, 1.90)
+    setScoreDB(file1.id, 1.80, 9.00, 6.70, 7.80, 0.01)
+    setScoreDB(file2.id, 8.60, 5.40, 3.20, 1.90, 100.00)
 
     # Run function
     response = testClient.get('/scoreapi/getFilesAndScoresByUser', headers={"Authorization": "Bearer " + access_token})
@@ -202,7 +202,7 @@ def testRetrieveFilesAndScoresNoFile(testClient, initDatabase):
     # get access token for ad min
     access_token = loginHelper(testClient, 'ad', 'min')
 
-    setScoreDB(12, 5.80, 4.60, 4.70, 6.80)
+    setScoreDB(12, 5.80, 4.60, 4.70, 6.80, 0.01)
 
     # Run function
     response = testClient.get('/scoreapi/getFilesAndScoresByUser', headers={"Authorization": "Bearer " + access_token})
@@ -249,7 +249,7 @@ def testRetrieveFilesAndScoresDifferentUser(testClient, initDatabase):
     db.session.commit()
 
     # Add scores to database
-    setScoreDB(file.id, 1.00, 1.00, 1.00, 1.00)
+    setScoreDB(file.id, 1.00, 1.00, 1.00, 1.00, 0.01)
 
     # Run function
     response = testClient.get('/scoreapi/getFilesAndScoresByUser', headers={"Authorization": "Bearer " + access_token})

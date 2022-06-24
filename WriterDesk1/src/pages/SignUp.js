@@ -42,6 +42,8 @@ const SignUp = () => {
 
     // whether or not the information about the user data is shown.
     const [showUserDataPopup, setShowUserDataPopup] = useState(false)
+    // whether or not the information about the user data is shown.
+    const [showNeceDataPopup, setShowNeceDataPopup] = useState(false)
 
     /** 
      * Check if username input is valid.
@@ -112,6 +114,11 @@ const SignUp = () => {
             setFormError("One or more fields are not complete!");
             return;
         }
+        // check if the user accepted the necessary data agreement
+        if (!acceptNeceData) {
+            setFormError('You must allow the storage and execution of necessary application data!')
+            return;
+        }
 
         // If input is valid, do post request
         const data = {
@@ -158,6 +165,8 @@ const SignUp = () => {
 
     // Set the acceptance of collecting user data from checkbox
     const [acceptUserData, setAcceptUserData] = useState(true);
+    // Set the acceptance of collecting necessary data from checkbox
+    const [acceptNeceData, setAcceptNeceData] = useState(true);
 
     return (
         <>
@@ -201,6 +210,16 @@ const SignUp = () => {
                             {showUserDataPopup && <AlertDialog title = "User data" 
                                 text = "The data conditions allow the application to record user data. The user data includes the URL of the page, the location on the screen, and the timestamp of each click from the user.  The user data is only used to improve the automatic feedback generated within the application. If the purpose of the data changes, the application will ask the user again for permission to save their user data. This data does not include necessary sign-up information, such as the university email address and the password, since that is saved to ensure the functionalities of the application. The sign-up information is not used for any other purposes than logging into the application. The application is still fully available when refusing the data conditions. If the user refuses permission, no user data will be recorded of this user until the moment that they accept the data settings in the future. If the user accepts the permission at first but later revokes the permission, their recorded user data is deleted and no user data will be recorded of this user, until the moment that they accept the data settings in the future. Users can retrieve the recorded user data so far at any time. Users can ask questions regarding their data by sending a mail to i.l.h.rutten@student.tue.nl; a response will be provided within a month."
                                 buttonAgree={<Button onClick={() => {setShowUserDataPopup(false)}}>I understand</Button>}
+                            />}
+                        </div>
+                        <div style={{display: 'flex', alignSelf: 'flex-end', verticalAlign: 'middle'}}>
+                            <Checkbox sx={{alignSelf: 'center'}} onChange={(e) => {setAcceptNeceData(e.target.checked)}} />
+                            <Typography sx={{alignSelf: 'center', alignContent:'inline'}}>
+                            I allow the storage and execution of <a className='userDataLinkPopup' onClick={() => {setShowNeceDataPopup(true)}} >necessary application data</a>.
+                            </Typography>
+                            {showNeceDataPopup && <AlertDialog title = "Storing necessary data" 
+                                text = "The application needs to store certain data to allow the user to use the application. If the user makes an account, the application will store their sign up information in the database. This data includes their username and hashed password. If the user uploads a document, the application will store the document and its inserted meta data in the database. When the document has been uploaded, the application will generate feedback based on that document, which will also be stored in the database. The user can delete uploaded files and their corresponding feedback on the Documents page. The user can change their username and password in the Settings page. Finally, the user can delete their account, including all sign up information and documents, on the Settings page."
+                                buttonAgree={<Button onClick={() => {setShowNeceDataPopup(false)}}>I understand</Button>}
                             />}
                         </div>
                     </div>

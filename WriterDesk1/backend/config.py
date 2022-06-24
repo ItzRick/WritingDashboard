@@ -7,6 +7,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CACHE_TYPE = "SimpleCache"
     CACHE_DEFAULT_TIMEOUT = 300
+    FEEDBACKVERSION = str(0.01)
 
     # Set the upload folder:
     if not os.path.isdir(os.path.join(basedir, "saved_documents")):
