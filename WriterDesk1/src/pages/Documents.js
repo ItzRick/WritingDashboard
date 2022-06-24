@@ -3,6 +3,7 @@ import {
   Button,
   IconButton,
   Stack,
+  Tooltip,
 } from "@mui/material";
 import {
   DeleteOutline,
@@ -111,7 +112,10 @@ const Documents = () => {
       sortable: false,
       flex: 1,
       renderCell: (params) => {
-        return <div><IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton><IconButton onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton></div>;
+        return (<div>
+          <Tooltip title="See document score"><IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton></Tooltip>
+          <Tooltip title="Delete document"><IconButton onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton></Tooltip>
+          </div>);
       }
     }
   ];
@@ -227,8 +231,8 @@ const Documents = () => {
           ),
           Toolbar: () => (
             <GridToolbarContainer>
-              <IconButton onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton>
-              <IconButton onClick={setData} ><Refresh /></IconButton>
+              <Tooltip title="Delete selected documents"><IconButton onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton></Tooltip>
+              <Tooltip title="Reload table"><IconButton onClick={setData} ><Refresh /></IconButton></Tooltip>
             </GridToolbarContainer>
           )
         }}
