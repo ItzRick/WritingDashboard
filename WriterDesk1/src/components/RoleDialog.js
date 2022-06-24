@@ -32,7 +32,7 @@ import AlertDialog from "./AlertDialog";
  */
 const ChangeRole = (userId, newRole) => {
     // url for request
-    const url = 'https://127.0.0.1:5000/loginapi/setRole';
+    const url = '/api/loginapi/setRole';
 
     // data for request
     const formData = new FormData();

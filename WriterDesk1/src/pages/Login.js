@@ -8,17 +8,13 @@ import {
     Button
 } from "@mui/material";
 import logo from '../images/logo.png'
-import BlueButton from "./../components/BlueButton";
 
 // routing
 import { Link,useOutletContext, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { history } from '../helpers/history';
 
 // Login request setup
-import axios from 'axios';
 import { AuthenticationService } from '../services/authenticationService';
-const BASE_URL = "https://localhost:5000/loginapi";
 
 /**
  * Request login to server based on form on page

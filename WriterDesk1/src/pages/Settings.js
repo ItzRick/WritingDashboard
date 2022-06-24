@@ -22,7 +22,7 @@ import AlertDialog from "../components/AlertDialog";
 
 import fileDownload from 'js-file-download';
 
-const BASE_URL = "https://localhost:5000/";
+const BASE_URL = "/api/";
 const PASSWORD_LENGTH = 8;
 const USERNAME_END = "tue.nl";
 
@@ -103,7 +103,7 @@ const Settings = () => {
 	 */
     const deleteUser = () => {
         //   The backend url:
-        const url = 'https://127.0.0.1:5000/usersapi/deleteUserSelf';
+        const url = '/api/usersapi/deleteUserSelf';
         // Make the backend call and set the table data from the response data:
         axios.post(url,{},{headers: authHeader()}).then((response) => {
         })
@@ -118,14 +118,14 @@ const Settings = () => {
     const changeTrackable = (newTrackable) => {
         const formData = new FormData();
         formData.append('newTrackable', newTrackable);
-        axios.post('https://localhost:5000/loginapi/setTrackable', formData, {headers: authHeader()})
+        axios.post('/api/loginapi/setTrackable', formData, {headers: authHeader()})
     }
 
     /**
      * Function to make the backend call to get the trackable value for the current user.
      */
     const getTrackable = () => {
-        axios.get('https://localhost:5000/loginapi/getTrackable', {headers: authHeader()}).then(
+        axios.get('/api/loginapi/getTrackable', {headers: authHeader()}).then(
           response => {
               setTrackableValue(response.data)
           })
@@ -163,7 +163,7 @@ const Settings = () => {
     }
 
     const handleOwnUserData = () => {
-        const url = 'https://127.0.0.1:5000/clickapi/getOwnUserData';
+        const url = '/api/clickapi/getOwnUserData';
         axios.get(url, { headers: authHeader()})
           .then((response) => {
             const fileName = response.headers["custom-filename"];
