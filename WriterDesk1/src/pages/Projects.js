@@ -2,10 +2,7 @@ import {
     TextField,
     IconButton,
     Stack,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select, Button,
+    Button,
 } from "@mui/material";
 import {
     DeleteOutline,
@@ -15,8 +12,6 @@ import {
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import BlueButton from './../components/BlueButton';
 import AlertDialog from "../components/AlertDialog";
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import fileDownload from 'js-file-download';
 
 // routing
@@ -38,24 +33,25 @@ const Projects = () => {
         setTitle('Projects');
     });
 
-    // TODO replace with real projects
-    const projects = [{
-        id: '0',
-        projectName: 'toyProject',
-        partCount: '12'
-    },
-    {
-        id: '1',
-        projectName: 'toyProject2',
-        partCount: '120'
-    }
+    /**
+     * retrieve projects
+     * @param {*} e 
+     * @param {*} projId 
+     */
+    const setProjects = () => {
 
-    ]
+        // Delete project from all tables in database and delete files from the server:
+        axios.get('https://127.0.0.1:5000/projectapi/viewProjectsOfUser', {headers:authHeader()} ).then(response => {
+            //TODO: Set table data
+            console.log(response.data)
+            setTableData(response.data);
+        });
+    }
 
     // upon first render, set the table data
     useEffect(() => {
         // TODO: replace table data with real data
-        setTableData(projects);
+        setProjects()
     }, []);
 
 
@@ -63,13 +59,6 @@ const Projects = () => {
     const [tableData, setTableData] = useState([])
     //list of selected items
     const [selectedInstances, setSelectedInstances] = useState([])
-    // project selected in download user data
-    const [projectDown, setProjectDown] = useState('');
-
-    // dropdown handler for project add
-    const handleProjDown = (event) => {
-        setProjectDown(event.target.value);
-    };
 
     // columns in data-grid
     const columns = [
@@ -101,11 +90,6 @@ const Projects = () => {
         }
     ];
 
-    // start date of project
-    const [startData, setStartData] = useState(new Date());
-    // end date of project
-    const [endData, setEndData] = useState(new Date());
-
     const [projectName, setProjectName] = useState();  // Project name for project to be created
     const [numberOfParticipants, setNumberOfParticipants] = useState();  // Number of participants for project to be created
 
@@ -128,7 +112,6 @@ const Projects = () => {
 
         const formData = new FormData();
         formData.append('projectName', projectName);  // Add input name to form
-
         // Create project request
         axios.post(`https://localhost:5000/projectapi/setProject`, formData, {headers: authHeader()}).then(response => {
             const data = {
@@ -139,11 +122,9 @@ const Projects = () => {
             axios.post(`https://localhost:5000/projectapi/addParticipants`, data, {headers: authHeader()}).then(response => {
                 const fileName = response.headers["custom-filename"];
                 fileDownload(response.data, fileName);
-                //TODO: Set table data
+                setProjects()
             });
         });
-
-
     }
 
     /**
@@ -162,7 +143,7 @@ const Projects = () => {
 
         // Delete project from all tables in database and delete files from the server:
         axios.delete('https://127.0.0.1:5000/projectapi/deleteProject',  {headers, data: formData} ).then(response => {
-            //TODO: Set table data
+            setProjects()
         });
     }
 
@@ -189,13 +170,13 @@ const Projects = () => {
         // For each of the selected instances, add this id to the formdata:
         selectedInstances.forEach(id => formData.append('projectId', id));
 
+        const headers = authHeader() // Authentication header of current user
+
         // Delete projects from all tables in database and delete files from the server:
-        axios.delete('https://127.0.0.1:5000/projectapi/deleteProject', { data: formData }).then(response => {
-            //TODO: Set table data
+        axios.delete('https://127.0.0.1:5000/projectapi/deleteProject', {headers, data: formData }).then(response => {
+            setProjects()
         });
-
     }
-
 
     return (
         <>
@@ -238,7 +219,7 @@ const Projects = () => {
             </div>
             {/* displaying projects */}
             <div style={{ justifyContent: 'center', display: 'flex' }}>
-                <div style={{ height: '80vh', maxHeight: '400px', width: '70vw' }} >
+                <div style={{ height: '80vh', minHeight: '400px', width: '70vw' }} >
                     <DataGrid
                         style={{ height: '70%' }}
                         rows={tableData}
