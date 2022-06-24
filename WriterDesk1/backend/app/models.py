@@ -127,7 +127,6 @@ class ParticipantToProject(db.Model):
 
     # relationships
     participant = db.relationship('User', backref='participanttoproject', lazy=True, cascade='all,delete')
-    project = db.relationship('Projects', backref='participanttoproject', lazy=True, cascade='all,delete')
 
     def __init__(self, userId: int, projectId: int):
         '''
@@ -169,7 +168,7 @@ class Scores(db.Model):
     scoreCohesion    = db.Column(db.Numeric(4,2), unique=False, default=None)
     scoreStructure   = db.Column(db.Numeric(4,2), unique=False, default=None)
     scoreIntegration = db.Column(db.Numeric(4,2), unique=False, default=None)
-    # Feedbackversion is a numeric value, with 2 decimal numbers and 5 numbers in total. 
+    # Feedbackversion is a numeric value, with 2 decimal numbers and 5 numbers in total.
     feedbackVersion  = db.Column(db.Float, unique=False, default=None)
 
     def __repr__(self):
