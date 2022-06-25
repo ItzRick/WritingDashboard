@@ -76,9 +76,9 @@ const Participants = () => {
   const { setTitle } = useOutletContext();
 
   /**
-   * Navigate to the Document page and add the file id as state parameter.
+   * Navigate to the ParticipantDocuments page and add the user id as state parameter.
    * @param {event} _event: event data pushed with the call, not required
-   * @param {params} params: params of the row where the current file is that needs to be navigated to.
+   * @param {params} params: params of the row where the current user is that needs to be navigated to.
    */
   const navigateToPartDoc = (_event, params) => {
     navigate('/ParticipantDocuments', { state: { userId: params.id } });
