@@ -24,7 +24,7 @@ const ListFiles = () => {
     // Perform GET request to retrieve files of current user from backend
     // Puts response in variable 'files'
     const getFiles = () => {
-        const url = 'https://localhost:5000/fileapi/fileretrieve';
+        const url = '/api/fileapi/fileretrieve';
         const data = {
             params: {sortingAttribute: sortingAttribute}
         }

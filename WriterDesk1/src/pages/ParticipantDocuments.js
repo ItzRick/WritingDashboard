@@ -14,7 +14,7 @@ import {
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
 // routing
-import { useOutletContext, useNavigate } from 'react-router-dom';
+import { useOutletContext, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -23,7 +23,6 @@ import React from 'react';
 import "../css/styles.css";
 import "../css/main.css";
 
-import { AuthenticationService } from "../services/authenticationService";
 import AlertDialog from "../components/AlertDialog";
 
 
@@ -31,9 +30,9 @@ import AlertDialog from "../components/AlertDialog";
  * 
  * @returns Documents Page
  */
-const Documents = () => {
+const ParticipantDocuments = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-
 
   // State to keep track of the data inside the table:
   const [tableData, setTableData] = useState([])
@@ -49,7 +48,7 @@ const Documents = () => {
   //set title in parent 'base': 
   const { setTitle } = useOutletContext();
   useEffect(() => {
-    setTitle('Documents');
+    setTitle('Documents of Participant');
   });
 
   //   Name of the columns as set inside the datagrid:
@@ -113,6 +112,7 @@ const Documents = () => {
       sortable: false,
       flex: 1,
       renderCell: (params) => {
+        // actions
         return <div>
           <Tooltip title="View the feedback of this document.">
             <IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
@@ -162,7 +162,8 @@ const Documents = () => {
     formData.append('id', fileId);
     // Make the call to the backend:
     axios.delete(url, { data: formData })
-      .then(() => { setData() });
+      .then(() => { setData() 
+    });
   }
 
   /**
@@ -211,7 +212,8 @@ const Documents = () => {
     //   The backend url:
     const url = '/api/fileapi/fileretrieve';
     // id of current user
-    const userId = AuthenticationService.getCurrentUserId();
+    const userId = location.state.userId;
+    console.log(userId)
     // The parameter, sortingAttribute need to be changed later:
     const params = {
       userId: userId,
@@ -274,4 +276,4 @@ const Documents = () => {
   );
 }
 
-export default Documents;
+export default ParticipantDocuments;

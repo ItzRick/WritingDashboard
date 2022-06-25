@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { authHeader } from '../helpers/auth-header';
-const BASE_URL = "https://localhost:5000/loginapi";
 
 
 export const AuthenticationService = {
@@ -20,7 +19,7 @@ export const AuthenticationService = {
  * @returns login page
  */
 function login(username, password) {
-    return axios.post(`${BASE_URL}/login`, {
+    return axios.post(`/api/loginapi/login`, {
         "username": username,
         "password": password,
     }).then(response => {
@@ -68,7 +67,7 @@ function getCurrentUserId() {
  * @returns axios response, status 200 when user is authenticated
  */
 function checkAuth () {
-    return axios.get(`${BASE_URL}/protected`, {headers: authHeader()});
+    return axios.get(`/api/loginapi/protected`, {headers: authHeader()});
 }
 
 /**

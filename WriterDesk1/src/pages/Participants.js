@@ -11,13 +11,14 @@ import {
   Tooltip,
 } from "@mui/material";
 import {
+  FormatAlignJustify,
   DeleteOutline,
 } from "@mui/icons-material";
-import { DataGrid, GridApi, GridCellValue, GridColDef, GridToolbarContainer } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbarContainer } from "@mui/x-data-grid";
 import BlueButton from './../components/BlueButton';
 
 // routing
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 // Signup request setup
@@ -27,7 +28,7 @@ import { authHeader } from "../helpers/auth-header";
 
 import fileDownload from 'js-file-download';
 
-const BASE_URL = "https://localhost:5000/projectapi";
+const BASE_URL = "/api/projectapi";
 
 
 /**
@@ -35,11 +36,14 @@ const BASE_URL = "https://localhost:5000/projectapi";
  * @returns Participants Page
  */
 const Participants = () => {
+  const navigate = useNavigate();
+
   const columns: GridColDef[] = [
     {
       field: 'username',
       headerName: 'Username',
       editable: false,
+      flex: 1,
     },
     {
       field: 'projectid',
@@ -58,6 +62,9 @@ const Participants = () => {
       renderCell: (params) => {
         // action buttons
         return (<div>
+          <Tooltip title="View the documents of this participant.">
+            <IconButton onClick={(e) => { navigateToPartDoc(e, params) }} ><FormatAlignJustify /></IconButton>
+          </Tooltip>
           <Tooltip title="Delete this participant.">
             <IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton>
           </Tooltip>
@@ -67,6 +74,15 @@ const Participants = () => {
   ];
   //set title in parent 'base'
   const { setTitle } = useOutletContext();
+
+  /**
+   * Navigate to the ParticipantDocuments page and add the user id as state parameter.
+   * @param {event} _event: event data pushed with the call, not required
+   * @param {params} params: params of the row where the current user is that needs to be navigated to.
+   */
+  const navigateToPartDoc = (_event, params) => {
+    navigate('/ParticipantDocuments', { state: { userId: params.id } });
+  }
 
   // initialize participants and projects states
   const [participants, setParticipants] = useState([]);
@@ -121,7 +137,7 @@ const Participants = () => {
    * participants.
    */
   const handleUserDataParticipants = () => {
-    const url = 'https://127.0.0.1:5000/clickapi/getParticipantsUserData';
+    const url = '/api/clickapi/getParticipantsUserData';
     const params = new URLSearchParams();
     // add all selected participant user ids to the params list
     for (let index in selectedInstances) {
@@ -147,7 +163,7 @@ const Participants = () => {
    * Puts response in variable 'participants'
    */
   const getParticpantsAndProjects = () => {
-    const url = 'https://127.0.0.1:5000/usersapi/getParticipantsProjects';
+    const url = '/api/usersapi/getParticipantsProjects';
     //Perform GET request
     axios.get(url, { headers: authHeader() })
       .then((response) => {
@@ -191,7 +207,7 @@ const Participants = () => {
   const deleteParticipant = (e, userId) => {
     setShowDeleteDialog(false);  // Don't show dialog anymore
     // Url of the server:
-    const url = 'https://127.0.0.1:5000/usersapi/deleteUserResearcher'
+    const url = '/api/userapi/deleteUserResearcher'
     // Formdata for the backend call, to which the id has been added:
         const formData = new FormData();
         formData.append('userID', userId);
@@ -223,7 +239,7 @@ const Participants = () => {
   const deleteSelectedParticipants = (e) => {
     setShowDeleteDialogMultiple(false);  // Don't show dialog anymore
     // // Url of the server:
-    const url = 'https://127.0.0.1:5000/usersapi/deleteUserResearcher'
+    const url = '/api/usersapi/deleteUserResearcher'
     // Create a new formdata:
     const formData = new FormData();
     // For each of the selected instances, add this id to the formdata:
