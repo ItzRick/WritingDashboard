@@ -22,7 +22,6 @@ import AlertDialog from "../components/AlertDialog";
 
 import fileDownload from 'js-file-download';
 
-const BASE_URL = "/api/";
 const PASSWORD_LENGTH = 8;
 const USERNAME_END = "tue.nl";
 
@@ -149,7 +148,7 @@ const Settings = () => {
             "oldPassword": oldPassword,
             "newPassword": newPassword,
         }
-        axios.post(`${BASE_URL}loginapi/setPassword`, data, {headers: authHeader()}).then(response =>{
+        axios.post(`/api/loginapi/setPassword`, data, {headers: authHeader()}).then(response =>{
             // Set a success message, reset the field.
             setSuccessMessage(response.data);
             // Reset all the fields:
@@ -226,7 +225,7 @@ const Settings = () => {
             "currentPassword": passwordForEmail,
             "newUsername": username,
         }
-        axios.post(`${BASE_URL}loginapi/setUsername`, data, {headers: authHeader()})
+        axios.post(`/api/loginapi/setUsername`, data, {headers: authHeader()})
         .then(response =>{
             // Set a success message, reset the field.
             setSuccessMailMessage(response.data);

@@ -191,7 +191,7 @@ const Participants = () => {
   const deleteParticipant = (e, userId) => {
     setShowDeleteDialog(false);  // Don't show dialog anymore
     // Url of the server:
-    const url = '/apierResearcher'
+    const url = '/api/userapi/deleteUserResearcher'
     // Formdata for the backend call, to which the id has been added:
         const formData = new FormData();
         formData.append('userID', userId);
