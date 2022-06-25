@@ -194,11 +194,11 @@ function Document() {
           <Typography variant='body2' sx={{ marginTop: '5px', marginBottom: '10px', fontSize: 'calc(12px + 0.2vw)' }}>
             {props.expl}
           </Typography>
-          <Typography className={props.replacements.length > 0 && props.replacements[0] !== '' ? 'replacementsText' : 'hidden'}
+          <Typography className={props.replacements.length > 0 && props.replacements[0].replace(/\s+/g, '') !== '' ? 'replacementsText' : 'hidden'}
             style={{ fontSize: 'calc(11px + 0.2vw)' }} variant='body2'>
             Possible replacements:
           </Typography>
-          <Typography className={props.replacements.length > 0 && props.replacements[0] !== '' ? 'textBoxReplacements' : 'hidden'}
+          <Typography className={props.replacements.length > 0 && props.replacements[0].replace(/\s+/g, '') !== '' ? 'textBoxReplacements' : 'hidden'}
             variant='body1'
             style={{
               borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
@@ -206,7 +206,7 @@ function Document() {
             }}>
             {props.replacements[0]}
           </Typography>
-          <Typography className={props.replacements.length > 1 && props.replacements[1] !== '' ? 'textBoxReplacements' : 'hidden'}
+          <Typography className={props.replacements.length > 1 && props.replacements[1].replace(/\s+/g, '') !== '' ? 'textBoxReplacements' : 'hidden'}
             variant='body1'
             style={{
               borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
@@ -214,7 +214,7 @@ function Document() {
             }}>
             {props.replacements[1]}
           </Typography>
-          <Typography className={props.replacements.length > 2 && props.replacements[2] !== '' ? 'textBoxReplacements' : 'hidden'}
+          <Typography className={props.replacements.length > 2 && props.replacements[2].replace(/\s+/g, '') !== '' ? 'textBoxReplacements' : 'hidden'}
             variant='body1'
             style={{
               borderColor: typeToColor(props.type), fontSize: 'calc(11px + 0.2vw)',
