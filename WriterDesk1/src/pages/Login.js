@@ -47,6 +47,7 @@ const Login = () => {
         AuthenticationService.login(username, password).then(() => {
             navigate("../Main", { replace: true });
         }).catch( error => {
+            console.log(error.response.data);
             setFormError(true);
         });
     }

@@ -29,7 +29,8 @@ function login(username, password) {
             return Promise.reject();
         }
     })
-        .catch(error => {        
+        .catch(error => {  
+            console.log(error.response.data);      
             return Promise.reject();   
         });
 }
