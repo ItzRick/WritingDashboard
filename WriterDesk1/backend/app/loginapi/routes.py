@@ -264,9 +264,12 @@ def setUsername():
     db.session.commit()
     return 'Successfully changed username!', 200
 
-from app.ATP.initialiseATP import initialiseATP
+from app.ATP.initialiseATP import initialiseATPNoFiles
 
 @bp.route("/initialize", methods=["POST"])
 def initalize():
-    initialiseATP()
+    try:
+        initialiseATPNoFiles()
+    except Exception as e:
+        return str(e)
     return " initalizaition succesful", 200

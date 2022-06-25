@@ -1,6 +1,9 @@
 dispatch:
   # Send all api traffic to the backend service.
-  - url: "api.writingdashboard.xyz/.xyz/*"
+  - url: "api.writingdashboard.xyz/*"
+    service: backend
+
+  - url: "*/api/*"
     service: backend
 
   # Send all other traffic to the default (frontend).
