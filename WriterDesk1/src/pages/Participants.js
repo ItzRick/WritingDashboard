@@ -27,7 +27,7 @@ import { authHeader } from "../helpers/auth-header";
 
 import fileDownload from 'js-file-download';
 
-const BASE_URL = "https://localhost:5000/projectapi";
+const BASE_URL = "/api/projectapi";
 
 
 /**
@@ -121,7 +121,7 @@ const Participants = () => {
    * participants.
    */
   const handleUserDataParticipants = () => {
-    const url = 'https://127.0.0.1:5000/clickapi/getParticipantsUserData';
+    const url = '/api/clickapi/getParticipantsUserData';
     const params = new URLSearchParams();
     // add all selected participant user ids to the params list
     for (let index in selectedInstances) {
@@ -147,7 +147,7 @@ const Participants = () => {
    * Puts response in variable 'participants'
    */
   const getParticpantsAndProjects = () => {
-    const url = 'https://127.0.0.1:5000/usersapi/getParticipantsProjects';
+    const url = '/api/usersapi/getParticipantsProjects';
     //Perform GET request
     axios.get(url, { headers: authHeader() })
       .then((response) => {
@@ -191,7 +191,7 @@ const Participants = () => {
   const deleteParticipant = (e, userId) => {
     setShowDeleteDialog(false);  // Don't show dialog anymore
     // Url of the server:
-    const url = 'https://127.0.0.1:5000/usersapi/deleteUserResearcher'
+    const url = '/api/userapi/deleteUserResearcher'
     // Formdata for the backend call, to which the id has been added:
         const formData = new FormData();
         formData.append('userID', userId);
@@ -223,7 +223,7 @@ const Participants = () => {
   const deleteSelectedParticipants = (e) => {
     setShowDeleteDialogMultiple(false);  // Don't show dialog anymore
     // // Url of the server:
-    const url = 'https://127.0.0.1:5000/usersapi/deleteUserResearcher'
+    const url = '/api/usersapi/deleteUserResearcher'
     // Create a new formdata:
     const formData = new FormData();
     // For each of the selected instances, add this id to the formdata:

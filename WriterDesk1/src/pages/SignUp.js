@@ -20,7 +20,6 @@ import { history } from '../helpers/history';
 
 // Signup request setup
 import axios from 'axios';
-const BASE_URL = "https://localhost:5000/loginapi";
 const NAVIGATE_TO_URL = "../../Login"
 
 const USERNAME_END = "tue.nl";
@@ -129,7 +128,7 @@ const SignUp = () => {
         const headers = {
             "Content-Type": "application/json"
         }
-        axios.post(`${BASE_URL}/signup`, data, headers).then(response =>{
+        axios.post(`/api/loginapi/signup`, data, headers).then(response =>{
             // Post request is successful, user is registered
             // Loads login page
             setLoginAllowed(true);           

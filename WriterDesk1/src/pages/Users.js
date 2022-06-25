@@ -34,7 +34,7 @@ const Users = () => {
   function deleteUser(userID) {
       setShowDeleteDialog(false);
       //   The backend url:
-      const url = 'https://127.0.0.1:5000/usersapi/deleteUserAdmin';
+      const url = '/api/usersapi/deleteUserAdmin';
       // Make the backend call and set the table data from the response data:
       axios.post(url,{userID: userID},{headers: authHeader()}).then((response) => {
         setData();
@@ -84,7 +84,7 @@ const Users = () => {
 
   const setData = () => {
     //   The backend url:
-    const url = 'https://127.0.0.1:5000/usersapi/users';
+    const url = '/api/usersapi/users';
     // Make the backend call and set the table data from the response data:
     axios.get(url,{headers: authHeader() })
       .then((response) => {
@@ -102,7 +102,7 @@ const Users = () => {
   const [selectedInstances, setSelectedInstances] = useState([]) // list of user ids of selected users
 
   const handleUserData = () => {
-    const url = 'https://127.0.0.1:5000/clickapi/getUserData';
+    const url = '/api/clickapi/getUserData';
     const params = new URLSearchParams();
     // add all selected users user ids to the params list
     for (let index in selectedInstances) {
