@@ -334,7 +334,9 @@ def getExplanationForFileAndCoordinates():
         return 'No explanations found with matching fileId and coordinates', 400
 
     # Get explanations
-    explanations = explanationsFiltered.all()
+    explanations = explanationsFiltered\
+        .distinct(Explanations.type, Explanations.mistakeText, Explanations.explanation, Explanations.replacement1,
+                  Explanations.replacement2, Explanations.replacement3).all()
 
     # Return Explanations
     return jsonify([i.serialize for i in explanations]), 200

@@ -185,7 +185,7 @@ function Document() {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div className={'textBoxExpl'} id={'textBoxExpl' + props.number}
           style={{ backgroundColor: typeToColor(props.type), borderColor: typeToColor(props.type) }}>
-          <Typography className='textBoxType' style={{ color: typeToColor(props.type), fontSize: 'calc(8px + 0.5vw)' }}>
+          <Typography className={props.text !== ''  ? 'textBoxType' : 'hidden'} style={{ color: typeToColor(props.type), fontSize: 'calc(8px + 0.5vw)' }}>
             <b>{typeToName(props.type)}</b>
           </Typography>
           <Typography variant='body1' className='textBoxWord' style={{ fontSize: 'calc(12px + 0.3vw)' }}>
