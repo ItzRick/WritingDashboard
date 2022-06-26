@@ -19,7 +19,7 @@ function FeedbackModels() {
   const [feedbackModelVersion, setFeedbackModelVersion] = useState('');
 
   useEffect(() => {
-    const url = 'https://127.0.0.1:5000/feedback/getCurrentVersion';
+    const url = 'https://api.writingdashboard.xyz/feedback/getCurrentVersion';
     axios.get(url)
       .then((response) => {
         setFeedbackModelVersion(response.data)

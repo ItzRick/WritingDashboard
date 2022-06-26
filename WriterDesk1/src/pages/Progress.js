@@ -41,7 +41,7 @@ function Progress() {
         // The userId of the current user:
         const userId = AuthenticationService.getCurrentUserId();
         // Url of the server:
-        const url = 'https://127.0.0.1:5000/scoreapi//getAvgScores';
+        const url = 'https://api.writingdashboard.xyz/scoreapi/getAvgScores';
 
         // Make the call to the backend:
         axios.get(url, {params: {userId: userId}})

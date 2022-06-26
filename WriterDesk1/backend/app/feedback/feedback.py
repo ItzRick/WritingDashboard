@@ -7,6 +7,7 @@ from app.feedback.generateFeedback.StructureFeedback import StructureFeedback
 from app.fileapi.convert import convertDocx, convertTxt
 from app.scoreapi.scores import getCurrentExplanationVersion, removeExplanationsAndScores
 from flask import current_app
+from decimal import Decimal
 
 def genFeedback(file):
     '''
@@ -36,7 +37,7 @@ def genFeedback(file):
     # Call the genFeedback method:
     try:
         # Check if the feedback has already been generated:
-        if getCurrentExplanationVersion(fileId) >= float(current_app.config['FEEDBACKVERSION']):
+        if getCurrentExplanationVersion(fileId) >= Decimal(current_app.config['FEEDBACKVERSION']):
             return False, 'Feedback has already been generated!'
         # If feedback has already been generated, remove the current explanations and scores if required:
         else:

@@ -207,7 +207,12 @@ def getProjectsByResearcher(user):
     '''
     # Retrieve the projects of the user
     projectList = Projects.query.filter_by(userId=user).all()
-    return [dict(userId = proj.userId, projectName = proj.projectName, id = proj.id) for proj in projectList]
+    return [dict(
+        userId = proj.userId, 
+        projectName = proj.projectName, 
+        id = proj.id, 
+        partCount=ParticipantToProject.query.filter_by(projectId=proj.id).count()
+    ) for proj in projectList]
 
 def getParticipantsByResearcher(user):
     '''
