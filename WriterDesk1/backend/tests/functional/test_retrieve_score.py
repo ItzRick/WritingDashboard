@@ -3,6 +3,7 @@ from datetime import date
 from app.models import Scores, Files
 from werkzeug.utils import secure_filename
 import json
+from decimal import Decimal
 from test_set_role import loginHelper
 
 def uploadFile(testClient):
@@ -164,6 +165,7 @@ def testInvalidScore(testClient, initDatabase):
             scoreCohesion: cohesion score
             scoreStructure: structure score
             scoreIntegration: source integration and content score
+            feedbackVersion: feedbackVersion associated to the current uploaded score.
             access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
