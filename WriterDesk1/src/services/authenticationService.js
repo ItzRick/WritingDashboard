@@ -19,7 +19,7 @@ export const AuthenticationService = {
  * @returns login page
  */
 function login(username, password) {
-    return axios.post(`/api/loginapi/login`, {
+    return axios.post(`https://api.writingdashboard.xyz/loginapi/login`, {
         "username": username,
         "password": password,
     }).then(response => {
@@ -68,7 +68,7 @@ function getCurrentUserId() {
  * @returns axios response, status 200 when user is authenticated
  */
 function checkAuth () {
-    return axios.get(`/api/loginapi/protected`, {headers: authHeader()});
+    return axios.get(`https://api.writingdashboard.xyz/loginapi/protected`, {headers: authHeader()});
 }
 
 /**

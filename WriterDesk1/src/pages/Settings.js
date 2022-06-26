@@ -102,7 +102,7 @@ const Settings = () => {
 	 */
     const deleteUser = () => {
         //   The backend url:
-        const url = '/api/usersapi/deleteUserSelf';
+        const url = 'https://api.writingdashboard.xyz/usersapi/deleteUserSelf';
         // Make the backend call and set the table data from the response data:
         axios.post(url,{},{headers: authHeader()}).then((response) => {
         })
@@ -117,14 +117,14 @@ const Settings = () => {
     const changeTrackable = (newTrackable) => {
         const formData = new FormData();
         formData.append('newTrackable', newTrackable);
-        axios.post('/api/loginapi/setTrackable', formData, {headers: authHeader()})
+        axios.post('https://api.writingdashboard.xyz/loginapi/setTrackable', formData, {headers: authHeader()})
     }
 
     /**
      * Function to make the backend call to get the trackable value for the current user.
      */
     const getTrackable = () => {
-        axios.get('/api/loginapi/getTrackable', {headers: authHeader()}).then(
+        axios.get('https://api.writingdashboard.xyz/loginapi/getTrackable', {headers: authHeader()}).then(
           response => {
               setTrackableValue(response.data)
           })
@@ -148,7 +148,7 @@ const Settings = () => {
             "oldPassword": oldPassword,
             "newPassword": newPassword,
         }
-        axios.post(`/api/loginapi/setPassword`, data, {headers: authHeader()}).then(response =>{
+        axios.post(`https://api.writingdashboard.xyz/loginapi/setPassword`, data, {headers: authHeader()}).then(response =>{
             // Set a success message, reset the field.
             setSuccessMessage(response.data);
             // Reset all the fields:
@@ -162,7 +162,7 @@ const Settings = () => {
     }
 
     const handleOwnUserData = () => {
-        const url = '/api/clickapi/getOwnUserData';
+        const url = 'https://api.writingdashboard.xyz/clickapi/getOwnUserData';
         axios.get(url, { headers: authHeader()})
           .then((response) => {
             const fileName = response.headers["custom-filename"];
@@ -225,7 +225,7 @@ const Settings = () => {
             "currentPassword": passwordForEmail,
             "newUsername": username,
         }
-        axios.post(`/api/loginapi/setUsername`, data, {headers: authHeader()})
+        axios.post(`https://api.writingdashboard.xyz/loginapi/setUsername`, data, {headers: authHeader()})
         .then(response =>{
             // Set a success message, reset the field.
             setSuccessMailMessage(response.data);

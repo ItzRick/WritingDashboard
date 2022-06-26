@@ -4,6 +4,9 @@ from app import db
 from app.models import User, Projects, Clicks, Files, Scores, Explanations
 from app.generateParticipants import generateParticipants
 from app.database import uploadToDatabase
+from flask import current_app
+import shutil
+import os
 
 from app.feedback.feedback import genFeedback
 
@@ -52,6 +55,9 @@ def initialiseATP():
     db.session.close()
     db.drop_all()
     db.create_all()
+
+    shutil.rmtree(current_app.config['UPLOAD_FOLDER'])
+    os.mkdir(current_app.config['UPLOAD_FOLDER'])
 
     # A user with username ’student@tue.nl’, password ’StudentPass1’ and the student role.
     uname = 'student@tue.nl'
@@ -164,6 +170,9 @@ def initialiseATPNoFiles():
     db.drop_all()
     db.create_all()
 
+    shutil.rmtree(current_app.config['UPLOAD_FOLDER'])
+    os.mkdir(current_app.config['UPLOAD_FOLDER'])
+    
     # A user with username ’student@tue.nl’, password ’StudentPass1’ and the student role.
     uname = 'student@tue.nl'
     u = User(username=uname, password_plaintext='StudentPass1', role='student')

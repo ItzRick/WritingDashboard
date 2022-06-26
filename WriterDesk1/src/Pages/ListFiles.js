@@ -24,7 +24,7 @@ const ListFiles = () => {
     // Perform GET request to retrieve files of current user from backend
     // Puts response in variable 'files'
     const getFiles = () => {
-        const url = '/api/fileapi/fileretrieve';
+        const url = 'https://api.writingdashboard.xyz/fileapi/fileretrieve';
         const data = {
             params: {sortingAttribute: sortingAttribute}
         }

@@ -29,7 +29,7 @@ const TrackingWrapper = ({children}) => {
         documentName,
     }) => {
         //url for request
-        const requestUrl = '/api/clickapi/addClick';
+        const requestUrl = 'https://api.writingdashboard.xyz/clickapi/addClick';
 
         // create form with all the file information
         const formData = new FormData();
