@@ -4,6 +4,9 @@ from app import db
 from app.models import User, Projects, Clicks, Files, Scores, Explanations
 from app.generateParticipants import generateParticipants
 from app.database import uploadToDatabase
+from flask import current_app
+import shutil
+import os
 
 from app.feedback.feedback import genFeedback
 
@@ -52,6 +55,10 @@ def initialiseATP():
     db.session.close()
     db.drop_all()
     db.create_all()
+
+    # Delete current files and recreate the upload directory:   
+    shutil.rmtree(current_app.config['UPLOAD_FOLDER'])
+    os.mkdir(current_app.config['UPLOAD_FOLDER'])
 
     # A user with username ’student@tue.nl’, password ’StudentPass1’ and the student role.
     uname = 'student@tue.nl'
@@ -158,3 +165,56 @@ def initialiseATP():
 
     print('participants')
     print(participants) # keep this print here, and read it 
+
+def initialiseATPNoFiles():
+    '''
+        Initialise the database for the ATP in accordance with the specs as given on 20:00, 22-6-2022 
+
+        IMPORTANT: prints 2 participant's username and password
+    '''
+    # clear the database
+    db.session.close()
+    db.drop_all()
+    db.create_all()
+
+    # Delete current files and recreate the upload directory:
+    shutil.rmtree(current_app.config['UPLOAD_FOLDER'])
+    os.mkdir(current_app.config['UPLOAD_FOLDER'])
+    
+    # A user with username ’student@tue.nl’, password ’StudentPass1’ and the student role.
+    uname = 'student@tue.nl'
+    u = User(username=uname, password_plaintext='StudentPass1', role='student')
+    uid = u.id
+    uploadToDatabase(u)
+    assert User.query.filter_by(username=uname).first() is not None
+
+    # A user with username ’researcher@tue.nl’, password ’ResearcherPass1’ and the researcher role.
+    uname='researcher@tue.nl'
+    u = User(username=uname, password_plaintext='ResearcherPass1', role='researcher')
+    uploadToDatabase(u)
+    res = User.query.filter_by(username=uname).first()
+    researcherId = res.id #save id for later
+    assert res is not None
+
+    # A project with projectName ’DeleteMe’ and as userId the id of ’researcher@tue.nl’.
+    p = Projects(userId=researcherId, projectName='DeleteMe')
+    uploadToDatabase(p)
+    pro = Projects.query.filter_by(userId=researcherId).first()
+    projectId = pro.id #save id for later
+    assert pro is not None
+
+    # Two users with usernames ’par ’ and ’par ’, passwords ” and ” and the participant role.
+    # Two ParticipantToProject entries with as userId the ids of ’par ’ and ’par ’ and as projectId the id of ’DeleteMe’.
+    participants = generateParticipants(nrOfParticipants=2, projectId=projectId)
+    participantsIds = [User.query.filter_by(username=x['username']).first().id for x in participants]
+
+    # At least two Clickdata entries with as userId the id of ’par ’, one containing the url of the Document page, one containing another url.
+    idParOne = participantsIds[0]
+    c = Clicks(idParOne, 'Document', 'test1.test1')
+    uploadToDatabase(c)
+    c = Clicks(idParOne, 'Main', 'test2.test2')
+    uploadToDatabase(c)
+
+    # A user with username ’admin@tue.nl’, password ’AdminPass1’ and administrator role.
+    u = User(username='admin@tue.nl', password_plaintext='AdminPass1', role='admin')
+    uploadToDatabase(u)
