@@ -124,8 +124,8 @@ def fileRetrieve():
         # now, some researcher or admin tries to access other userFiles, check if this is its participant
 
         # get projectId of this participant
-        parts = ParticipantToProject.query.filter_by(userId=userId).first()
-        if parts is None or Projects.query.filter_by(id=parts.projectId).first() is None:
+        ptp = ParticipantToProject.query.filter_by(userId=userId).first()
+        if ptp is None or ptp.projectId is None or Projects.query.filter_by(id=ptp.projectId).first() is None:
             return 'You can only retrieve data from your participants or yourself', 403
     sortingAttribute = request.args.get('sortingAttribute')
     files = getFilesByUser(userId, sortingAttribute)
