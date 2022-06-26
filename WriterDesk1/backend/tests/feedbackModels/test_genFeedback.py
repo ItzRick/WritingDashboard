@@ -3,6 +3,7 @@ from app.models import Files, Explanations, User, Scores
 from datetime import date
 import os
 import fitz
+import json
 
 def uploadFile(fileName, testClient):
     '''
