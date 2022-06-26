@@ -2,6 +2,7 @@ import os
 from datetime import date
 import io
 from app.models import Files
+from test_set_role import loginHelper
 
 def testDirsCreated(testClient, initDatabase):
     '''
@@ -15,6 +16,7 @@ def testDirsCreated(testClient, initDatabase):
             userId: userId of the user for which to test to upload the current file.
             courseCode: courseCode of the course for which we test to upload the current file.
             date1: date of the file which we are currently testing to upload.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -22,7 +24,7 @@ def testDirsCreated(testClient, initDatabase):
     del initDatabase
     # Create the actual file:
     fileName = 'test.txt'
-    userId = 578900
+    userId = 3
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
     data = {
@@ -35,7 +37,9 @@ def testDirsCreated(testClient, initDatabase):
     # Make sure this subdirectory with this user ID does not exist yet: 
     assert not os.path.isdir(os.path.join(testClient.application.config['UPLOAD_FOLDER'], str(userId)))
     # Upload this data:
-    response = testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/fileapi/upload', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # Check if this data is indeed correctly uploaded:
     file = Files.query.filter_by(filename=fileName).first()
     assert response.data == f'Uploaded file with ids: [{file.id}]'.encode('utf-8')
@@ -53,6 +57,7 @@ def testUploadTextFileIncorrect(testClient, initDatabase):
             fileDir: Location of the file we are testing the upload of.
             data: The data we are trying to test the upload with.
             response: Response of the post request.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -66,7 +71,9 @@ def testUploadTextFileIncorrect(testClient, initDatabase):
         'files': (open(fileDir, 'rb'), fileDir)
     }
     # Create push request:
-    response = testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/fileapi/upload', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # Check if the response is indeed of code 400 and has as text 'incorrect filetype 1':
     assert response.data == b'Incorrect filetype 1'
     assert response.status_code == 400
@@ -77,6 +84,7 @@ def testUploadTextFileNoFile(testClient, initDatabase):
         Attributes:
             data: The data we are trying to test the upload with.
             response: Response of the post request.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -87,7 +95,9 @@ def testUploadTextFileNoFile(testClient, initDatabase):
         'files': '',
     }
     # Do the Post request and get the response:
-    response = testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/fileapi/upload', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # See that we indeed get a code 400 returned and get the correct text retrieved:
     assert response.data == b'No file uploaded'
     assert response.status_code == 400

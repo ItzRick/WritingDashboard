@@ -2,6 +2,8 @@ from app.models import Files
 from app import db
 from datetime import datetime
 import json
+from test_set_role import loginHelper
+
 
 
 def testRetrieveFileSingle(testClient, initDatabaseEmpty):
@@ -10,6 +12,7 @@ def testRetrieveFileSingle(testClient, initDatabaseEmpty):
     Attributes:
         testClient: The test client we test this for.
         initDatabaseEmpty: The database instance we test this for.
+        access_token: the access token
     Arguments:
         data: Data for the getFileById function containing fileId.
         file: File that is uploaded to the database.
@@ -29,7 +32,9 @@ def testRetrieveFileSingle(testClient, initDatabaseEmpty):
         db.session.rollback()
 
     # Retrieve the file with the given file id
-    response = testClient.get('/fileapi/getFileById', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/getFileById', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
@@ -47,6 +52,7 @@ def testRetrieveFileEmpty(testClient, initDatabaseEmpty):
     Attributes:
         testClient: The test client we test this for.
         initDatabaseEmpty: The database instance we test this for.
+        access_token: the access token
     Arguments:
         data: Data for the getFileById function containing fileId.
         response: Response of the getFileById function.
@@ -56,7 +62,9 @@ def testRetrieveFileEmpty(testClient, initDatabaseEmpty):
     data = {'fileId': 200}  # Define file id
 
     # Retrieve the file with the given file id
-    response = testClient.get('/fileapi/getFileById', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/getFileById', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code:
     assert response.status_code == 400
@@ -73,6 +81,7 @@ def testRetrieveFileMultiple(testClient, initDatabaseEmpty):
     Attributes:
         testClient: The test client we test this for.
         initDatabaseEmpty: The database instance we test this for.
+        access_token: the access token
     Arguments:
         data: Data for the getFileById function containing fileId.
         file1, file2: Files that are uploaded to the database.
@@ -95,7 +104,9 @@ def testRetrieveFileMultiple(testClient, initDatabaseEmpty):
         db.session.rollback()
 
     # Retrieve the file with the given file id
-    response = testClient.get('/fileapi/getFileById', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/getFileById', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
@@ -113,6 +124,7 @@ def testRetrieveFileNonExistent(testClient, initDatabaseEmpty):
     Attributes:
         testClient: The test client we test this for.
         initDatabaseEmpty: The database instance we test this for.
+        access_token: the access token
     Arguments:
         data: Data for the getFileById function containing fileId.
         file1, file2: Files that are uploaded to the database.
@@ -135,7 +147,9 @@ def testRetrieveFileNonExistent(testClient, initDatabaseEmpty):
         db.session.rollback()
 
     # Retrieve the file with the given file id
-    response = testClient.get('/fileapi/getFileById', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/getFileById', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code:
     assert response.status_code == 400
@@ -152,6 +166,7 @@ def testRetrieveFileDocx(testClient, initDatabaseEmpty):
     Attributes:
         testClient: The test client we test this for.
         initDatabaseEmpty: The database instance we test this for.
+        access_token: the access token
     Arguments:
         data: Data for the getFileById function containing fileId.
         file: File that is uploaded to the database.
@@ -171,7 +186,9 @@ def testRetrieveFileDocx(testClient, initDatabaseEmpty):
         db.session.rollback()
 
     # Retrieve the file with the given file id
-    response = testClient.get('/fileapi/getFileById', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/getFileById', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
@@ -189,6 +206,7 @@ def testRetrieveFileTxt(testClient, initDatabaseEmpty):
     Attributes:
         testClient: The test client we test this for.
         initDatabaseEmpty: The database instance we test this for.
+        access_token: the access token
     Arguments:
         data: Data for the getFileById function containing fileId.
         file: File that is uploaded to the database.
@@ -208,7 +226,9 @@ def testRetrieveFileTxt(testClient, initDatabaseEmpty):
         db.session.rollback()
 
     # Retrieve the file with the given file id
-    response = testClient.get('/fileapi/getFileById', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/getFileById', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code:
     assert response.status_code == 200

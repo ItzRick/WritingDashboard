@@ -17,8 +17,9 @@ def uploadFile(fileName, testClient):
             data: Data to upload this file with. 
             response: Response after the ai call.
             file: Database instance of the file we have uploaded. 
+            access_token: the access token
     '''
-    user = User.query.first()
+    user = User.query.filter_by(username='ad').first()
     # Get the BASEDIR and set the fileDir with that:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, fileName)
@@ -31,7 +32,9 @@ def uploadFile(fileName, testClient):
         'date': date(2022, 5, 11)
     }
     # Create the response by means of the post request:
-    response = testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/fileapi/upload', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
     file = Files.query.filter_by(filename=fileName).first()
     return file
@@ -366,3 +369,36 @@ def testGenFeedbackTxtFile(testClient, initDatabase):
     assert explanations[10].explanation == ('Your score for source integration and content is 0. You only used 0 sources in 2 paragraphs of text.' +
     ' Try adding more sources. Writing Dashboard Could not check if text from the sources are actually used in the text.')
     assert explanations[10].type == 3
+
+def loginHelper(testClient, username, password):
+    '''
+    Support function to log into the server as user with username and password
+    and get the access_token
+    Arguments:
+        testClient:   The test client we test this for.
+        username: username of the user we want the access_token from
+        password: password of the user we want the access_token from
+    Attributes:
+        data: data for login
+        responseLogin: response from logging in
+        access_token: the access token
+        responseAccess: response from checking if token is correct
+    return:
+        access_token: token needed to run locked jwt functions
+    '''
+    data = {
+        'username':username,
+        'password':password,
+    }
+    # Login request
+    responseLogin = testClient.post('/loginapi/login', json=data, headers={"Content-Type": "application/json"})
+    # Check if we got the correct status code -> login was successfull
+    assert responseLogin.status_code == 200
+    # Get access token, which we got from login request
+    access_token = json.loads(responseLogin.data)['access_token']
+    # Request with authorization header containing access token
+    responseAccess = testClient.get('/loginapi/protected', headers = {"Authorization": "Bearer " + access_token})
+    # Check if we got the correct status code
+    assert responseAccess.status_code == 200
+    
+    return access_token
