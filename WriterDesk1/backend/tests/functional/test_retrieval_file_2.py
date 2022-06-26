@@ -10,13 +10,15 @@ def testRetrieveFilesOfUserCourseAsc(testClient, initDatabase):
     '''
         This test checks the retrieval of of files in a specified order, namely
         course name ascending, of a certain user, here with user id 200, in a json file.
-        Attributes: 
-            file, file2, file1, file3, file4: File to be added to the database.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
+        Attributes: 
+            file, file2, file1, file3, file4: File to be added to the database.
             userId: the user for which the files are retrieved
             sortingAttribute: the specified order of the retrieved files
+            access_token: access token
+            data: data intended for the api
             response: the result fo retrieving the files in the specified order
             expected_response: the response we expect when we run the function.
     '''
@@ -92,13 +94,15 @@ def testRetrieveFilesOfUserCourseDesc(testClient, initDatabase):
     '''
         This test checks the retrieval of of files in a specified order, namely
         course name descending, of a certain user, here with user id 200, in a json file.
-        Attributes: 
-            file, file2, file1, file3, file4: File to be added to the database.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
+        Attributes: 
+            file, file2, file1, file3, file4: File to be added to the database.
             userId: the user for which the files are retrieved
             sortingAttribute: the specified order of the retrieved files
+            access_token: access token
+            data: data intended for the api
             response: the result fo retrieving the files in the specified order
             expected_response: the response we expect when we run the function.
     '''
@@ -174,13 +178,15 @@ def testRetrieveFilesOfUserWithoutFiles(testClient, initDatabase):
     '''
         This test checks the retrieval of files in a specified order, namely date ascending, 
         of a certain user that has not uploaded any files, here with user id 202, in a json file.
-        Attributes: 
-            file, file2, file1, file3, file4: File to be added to the database.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
+        Attributes: 
+            file, file2, file1, file3, file4: File to be added to the database.
             userId: the user for which the files are retrieved
             sortingAttribute: the specified order of the retrieved files
+            access_token: access token
+            data: data intended for the api
             response: the result fo retrieving the files in the specified order
     '''
     del initDatabase

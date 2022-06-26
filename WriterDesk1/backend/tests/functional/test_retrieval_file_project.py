@@ -75,13 +75,16 @@ def testRetrieveFilesOtherNoPartOf(testClient, initDatabase):
 
 def testRetrieveFilesOfPart(testClient, initDatabase):
     '''
-        This test checks the retrieval of files from another user that is not a participant of the current_user
+        This test checks the retrieval of files from another user that IS a participant of the current_user
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
         Atributes:
+            file, file2, file1, file3, file4: File to be added to the database.
             userId: the user for which the files are retrieved
             sortingAttribute: the specified order of the retrieved files
+            proj: project of ad
+            ptp: ParticipantToProject instance related to proj and user Pietje
             access_token: access token
             data: data to be sent to the api
             response: the result fo retrieving the files in the specified order
