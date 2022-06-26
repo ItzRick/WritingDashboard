@@ -65,7 +65,7 @@ function Document() {
    */
   const fetchFilePath = (fileId) => {
     // Url of the server:
-    const url = 'https://127.0.0.1:5000/fileapi/getFileById';
+    const url = 'https://api.writingdashboard.xyz/fileapi/getFileById';
 
     // Make the call to the backend:
     axios.get(url, { params: { fileId: fileId }, headers: authHeader() })
@@ -82,7 +82,7 @@ function Document() {
    */
   const fetchScores = (fileId) => {
     // // Url of the server:
-    const url = 'https://127.0.0.1:5000/scoreapi/getScores';
+    const url = 'https://api.writingdashboard.xyz/scoreapi/getScores';
 
     // Make the call to the backend:
     axios.get(url, { params: { fileId: fileId }, headers: authHeader() })
@@ -100,7 +100,7 @@ function Document() {
    */
   const fetchExplanations = (fileId) => {
     // Url of the server:
-    const url = 'https://127.0.0.1:5000/scoreapi/getExplanationForFile';
+    const url = 'https://api.writingdashboard.xyz/scoreapi/getExplanationForFile';
 
     // Make the call to the backend:
     axios.get(url, { params: { fileId: fileId }, headers: authHeader() })
@@ -300,8 +300,8 @@ function Document() {
     <>
       <div className="all-page-container" id="all-page-container" style={{ width: '50%' }}>
         {/** potentially convert document to pdf and show document on page */}
-        <AllPagesPDFViewer 
-          pdf={`https://127.0.0.1:5000/fileapi/display?filepath=${path}&filetype=${type}`} 
+        <AllPagesPDFViewer
+          pdf={`https://api.writingdashboard.xyz/fileapi/display?filepath=${path}&filetype=${type}`}
           docId={location.state.fileId}
           docName={location.state.fileName}
         />

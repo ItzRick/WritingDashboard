@@ -109,8 +109,9 @@ class StructureFeedback(BaseFeedback):
 
         # Split the text on white space to get each paragraph.
         for paragraph in text.splitlines():
-            # If there are multiple white spaces in a row, continue.
-            if len(paragraph.split()) == 0:
+            # If there are multiple white spaces in a row, or very short
+            # sentences, continue.
+            if len(paragraph.split()) <= 10:
                 continue
             # If the paragraph is more than 300 words.
             elif len(paragraph.split()) > 300:

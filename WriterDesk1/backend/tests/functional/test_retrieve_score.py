@@ -82,6 +82,8 @@ def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegrat
     assert score.scoreCohesion == sCohesion
     assert score.scoreStructure == sStructure
     assert score.scoreIntegration == sIntegration
+    # Test if the feedbackVersion has been correctly uploaded:
+    assert score.feedbackVersion == round(Decimal(feedbackVersion), 2)
 
 def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
     '''
@@ -196,7 +198,9 @@ def testInvalidScore(testClient, initDatabase):
     assert score.scoreCohesion == -2
     assert score.scoreStructure == scoreStructure
     assert score.scoreIntegration == scoreIntegration
-
+    # Check for the uploaded feedback version:
+    assert score.feedbackVersion == round(Decimal(feedbackVersion), 2)
+    
     # next we test whether invalid values are overwritten, and valid are not
     scoreStyle1 = 1
     scoreCohesion1 = -1

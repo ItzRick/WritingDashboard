@@ -14,6 +14,17 @@ import { useEffect } from 'react';
 function FeedbackModels() {
   //set title in parent 'base' 
   const { setTitle } = useOutletContext();
+
+  const [feedbackModelVersion, setFeedbackModelVersion] = useState('');
+
+  useEffect(() => {
+    const url = 'https://api.writingdashboard.xyz/feedback/getCurrentVersion';
+    axios.get(url)
+      .then((response) => {
+        setFeedbackModelVersion(response.data)
+      })
+  }, []);
+
   useEffect(() => {
       setTitle('Feedback Models');
   });

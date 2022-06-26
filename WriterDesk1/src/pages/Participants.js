@@ -10,13 +10,14 @@ import {
   Stack
 } from "@mui/material";
 import {
+  FormatAlignJustify,
   DeleteOutline,
 } from "@mui/icons-material";
-import { DataGrid, GridApi, GridCellValue, GridColDef, GridToolbarContainer } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbarContainer } from "@mui/x-data-grid";
 import BlueButton from './../components/BlueButton';
 
 // routing
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 // Signup request setup
@@ -26,17 +27,22 @@ import { authHeader } from "../helpers/auth-header";
 
 import fileDownload from 'js-file-download';
 
-const BASE_URL = "https://localhost:5000/projectapi";
+const BASE_URL = "https://api.writingdashboard.xyz/projectapi";
+
+
 /**
  *
  * @returns Participants Page
  */
 const Participants = () => {
-  const columns: GridColDef[] = [
+  const navigate = useNavigate();
+
+  const columns = [
     {
       field: 'username',
       headerName: 'Username',
       editable: false,
+      flex: 1,
     },
     {
       field: 'projectid',
@@ -54,12 +60,28 @@ const Participants = () => {
       sortable: false,
       renderCell: (params) => {
         // action buttons
-        return <div><IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton></div>;
+        return (<div>
+          <Tooltip title="View the documents of this participant.">
+            <IconButton onClick={(e) => { navigateToPartDoc(e, params) }} ><FormatAlignJustify /></IconButton>
+          </Tooltip>
+          <Tooltip title="Delete this participant.">
+            <IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton>
+          </Tooltip>
+          </div>);
       }
     }
   ];
   //set title in parent 'base'
   const { setTitle } = useOutletContext();
+
+  /**
+   * Navigate to the ParticipantDocuments page and add the user id as state parameter.
+   * @param {event} _event: event data pushed with the call, not required
+   * @param {params} params: params of the row where the current user is that needs to be navigated to.
+   */
+  const navigateToPartDoc = (_event, params) => {
+    navigate('/ParticipantDocuments', { state: { userId: params.id } });
+  }
 
   // initialize participants and projects states
   const [participants, setParticipants] = useState([]);
@@ -108,7 +130,7 @@ const Participants = () => {
    * participants.
    */
   const handleUserDataParticipants = () => {
-    const url = 'https://127.0.0.1:5000/clickapi/getParticipantsUserData';
+    const url = 'https://api.writingdashboard.xyz/clickapi/getParticipantsUserData';
     const params = new URLSearchParams();
     // add all selected participant user ids to the params list
     for (let index in selectedInstances) {
@@ -134,7 +156,7 @@ const Participants = () => {
    * Puts response in variable 'participants'
    */
   const getParticpantsAndProjects = () => {
-    const url = 'https://127.0.0.1:5000/usersapi/getParticipantsProjects';
+    const url = 'https://api.writingdashboard.xyz/usersapi/getParticipantsProjects';
     //Perform GET request
     axios.get(url, { headers: authHeader() })
       .then((response) => {
@@ -175,18 +197,20 @@ const Participants = () => {
     * @param {event} e: event data pushed with the call, not required
     * @param {number} userId: userId of the participant that needs to be removed.
     */
-  const deleteParticipant = (e, userId) => {
+   const deleteParticipant = (e, userId) => {
     setShowDeleteDialog(false);  // Don't show dialog anymore
-    // TODO: future feature for Bas or Jordy
     // Url of the server:
-    //const url = 'https://127.0.0.1:5000/...'
+    const url = 'https://api.writingdashboard.xyz/usersapi/deleteUserResearcher'
     // Formdata for the backend call, to which the id has been added:
-    //     const formData = new FormData();
-    //     formData.append('id', userId);
-    //     // Make the call to the backend:
-    //     axios.delete(url, { data: formData }).then(response => {
-    //         //TODO: Set table data
-    //     });
+        const formData = new FormData();
+        formData.append('userID', userId);
+        const data = {
+          "userID": userId,  // Add input of numberOfParticipants
+        }
+        // Make the call to the backend:
+        axios.post(url, data, {headers: authHeader()}).then(response => {
+          getParticpantsAndProjects();
+        });
 
   }
 
@@ -207,17 +231,18 @@ const Participants = () => {
     */
   const deleteSelectedParticipants = (e) => {
     setShowDeleteDialogMultiple(false);  // Don't show dialog anymore
-    // TODO: future feature for Bas or Jordy
     // // Url of the server:
-    // const url = 'https://127.0.0.1:5000/...'
-    // // Create a new formdata:
-    // const formData = new FormData();
-    // // For each of the selected instances, add this id to the formdata:
-    // selectedInstances.forEach(id => formData.append('id', id));
-    // // Make the backend call:
-    // axios.delete(url, { data: formData }).then(response => {
-    //   //TODO: Set table data
-    // });
+    const url = 'https://api.writingdashboard.xyz/usersapi/deleteUserResearcher'
+    // Create a new formdata:
+    const formData = new FormData();
+    // For each of the selected instances, add this id to the formdata:
+    selectedInstances.forEach(id => {
+      const data = {
+          "userID": id
+      }
+      axios.post(url, data, {headers: authHeader()}).then(r => {getParticpantsAndProjects()})
+    });
+
   }
 
   return (

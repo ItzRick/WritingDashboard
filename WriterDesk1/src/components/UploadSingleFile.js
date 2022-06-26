@@ -51,10 +51,11 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
      */
     useImperativeHandle(ref, () => ({
         uploadFile() {
-            // url of the file api's upload function
-            const url = 'https://localhost:5000/fileapi/upload';
-            // id of current user
-            const userId = AuthenticationService.getCurrentUserId();
+            if (file !== 'or drag it here.') {            
+                // url of the file api's upload function
+                const url = 'https://api.writingdashboard.xyz/fileapi/upload';
+                // id of current user
+                const userId = AuthenticationService.getCurrentUserId();
 
             // create form with all the file information
             const formData = new FormData();
@@ -83,7 +84,7 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
                 // Make a post request with the correct parameters:
                 let params = new URLSearchParams();
                 ids.forEach(element => params.append("fileId", element));
-                let generateUrl = 'https://localhost:5000/feedback/generate';
+                let generateUrl = 'https://api.writingdashboard.xyz/feedback/generate';
                 const config = {
                     params: params,
                     headers: {
