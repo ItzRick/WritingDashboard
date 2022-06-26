@@ -7,6 +7,7 @@ from app.database import uploadToDatabase
 
 from app.feedback.feedback import genFeedback
 
+from datetime import datetime
 '''
 TO RUN THE INITIALIZATION
 simply run:
@@ -21,7 +22,7 @@ initialiseATP()
 '''
 
 
-def helperFiles(fileName, uid, courseCode, extension):
+def helperFiles(fileName, uid, courseCode, extension, date=datetime.now()):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, fileName)
     f = Files(
@@ -29,7 +30,8 @@ def helperFiles(fileName, uid, courseCode, extension):
         filename=fileName, 
         userId=uid, 
         courseCode=courseCode,
-        fileType=extension
+        fileType=extension,
+        date=date
     )
     uploadToDatabase(f)
     return f
@@ -66,30 +68,35 @@ def initialiseATP():
         extension='.pdf',
         uid=uid,
         courseCode='c1',
+        date=datetime(2010,1,1),
     )
     f2 = helperFiles(
         fileName='file_2.docx',
         extension='.docx',
         uid=uid,
         courseCode='c2',
+        date=datetime(2011,1,1),
     )
     f3 = helperFiles(
         fileName='file_3.txt',
         extension='.txt',
         uid=uid,
         courseCode='c3',
+        date=datetime(2012,1,1),
     )
     f4 = helperFiles(
         fileName='file_4.pdf',
         extension='.pdf',
         uid=uid,
         courseCode='c4',
+        date=datetime(2013,1,1)
     )
     f5 = helperFiles(
         fileName='file_5.pdf',
         extension='.pdf',
         uid=uid,
         courseCode='c5',
+        date=datetime(2014,1,1)
     )
 
     # Language and style scores ’scoreStyle 1-5’ for files ’file 1-5’.
