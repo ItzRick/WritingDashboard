@@ -252,14 +252,14 @@ class Clicks(db.Model):
             url: end of the url of the page where the click happened
             eventType: type of event, can be one of [click.button, click.link, view.document, click.highlight]
             actionId: in case of a click: name of the button
-                      in case of a view: name of the document
+                      in case of a view: name of the document and its id
     '''
     clickId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
     timestamp = db.Column(db.DateTime, unique=False, default=datetime.utcnow())
     url = db.Column(db.String(64), unique=False)
     eventType = db.Column(db.String(32), unique=False)
-    actionId = db.Column(db.String(64), unique=False)
+    actionId = db.Column(db.String(384), unique=False) # document name is at most 256, document id can be big too
 
     def __init__(self, userId, url, eventType, actionId=None):
         '''create new instance'''
