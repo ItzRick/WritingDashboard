@@ -326,8 +326,8 @@ def getExplanationForFileAndCoordinates():
     y = request.args.get('y')
 
     # Filter on fileId and coordinates
-    explanationsFiltered = Explanations.query.filter_by(fileId=fileId).filter(x >= Explanations.X1 - 3, x <= Explanations.X2 + 3,
-                                                                              y >= Explanations.Y1 - 1, y <= Explanations.Y2 + 1)
+    explanationsFiltered = Explanations.query.filter_by(fileId=fileId).filter(x >= Explanations.X1, x <= Explanations.X2,
+                                                                              y >= Explanations.Y1, y <= Explanations.Y2)
 
     # Check if there exists explanations for this fileid and coordinates
     if explanationsFiltered.first() is None:

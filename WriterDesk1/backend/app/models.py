@@ -207,8 +207,8 @@ class Explanations(db.Model):
     feedbackVersion = db.Column(db.Numeric(5,2), unique=False, default=None)
 
     # Create indices for table
-    __table_args__ = (Index('idx_fileId_Type', "fileId", "type"),
-                      Index('idx_fileId_coordinates', "fileId", "X1", "X2", "Y1", "Y2"))
+    __table_args__ = (Index('idx_fileId_Type', "fileId", "type"),  # Index on file ID and explanation type
+                      Index('idx_fileId_coordinates', "fileId", "X1", "X2", "Y1", "Y2"))  # Index on file ID and explanation coordinates
 
     def __repr__(self):
         return '<Explanations {} {}>'.format(self.fileId, self.explId)

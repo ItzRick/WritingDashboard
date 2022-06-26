@@ -41,13 +41,13 @@ function Document() {
   const [scoreCohesion, setScoreCohesion] = useState();
   const [scoreIntegration, setScoreIntegration] = useState();
 
-  const [highlights, setHighlights] = useState([]);
-  const [explanations, setExplanations] = useState([]);
+  const [highlights, setHighlights] = useState([]);  // Highlights of current file, set when loading document
+  const [explanations, setExplanations] = useState([]);  // Explanations that are open, set when clicking highlight
 
   // context as given by the Tracking Provider
   const tc = useContext(TrackingContext);
 
-  const [fileID, setFileID] = useState();
+  const [fileID, setFileID] = useState();  // File ID of current document, set when loading page
 
   useEffect(() => {
     setTitle('Document');
@@ -131,7 +131,7 @@ function Document() {
     let y = coords[1] + e.clientY - rect.top; // y-coordinate of click in document
 
     // Make the call to the backend:
-    axios.get('https://127.0.0.1:5000/scoreapi/getExplanationForFileAndCoordinates', { params: { fileId: fileID, x: x, y: y } })
+    axios.get('https://api.writingdashboard.xyz/scoreapi/getExplanationForFileAndCoordinates', { params: { fileId: fileID, x: x, y: y } })
       .then((response) => {
         // Set explanations to show explanation boxes
         setExplanations(response.data);
@@ -157,7 +157,7 @@ function Document() {
    */
   const showAllExplanationsOfType = (type) => {
     // Make the call to the backend
-    axios.get('https://127.0.0.1:5000/scoreapi/getExplanationForFileAndType', { params: { fileId: fileID, type: type } })
+    axios.get('https://api.writingdashboard.xyz/scoreapi/getExplanationForFileAndType', { params: { fileId: fileID, type: type } })
       .then((response) => {
         // Set explanations to show explanation boxes
         setExplanations(response.data);
