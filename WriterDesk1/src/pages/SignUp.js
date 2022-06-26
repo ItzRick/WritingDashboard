@@ -128,7 +128,7 @@ const SignUp = () => {
         const headers = {
             "Content-Type": "application/json"
         }
-        axios.post(`/api/loginapi/signup`, data, headers).then(response =>{
+        axios.post(`https://api.writingdashboard.xyz/loginapi/signup`, data, headers).then(response =>{
             // Post request is successful, user is registered
             // Loads login page
             setLoginAllowed(true);           

@@ -69,7 +69,7 @@ function Document() {
    */
   const fetchFilePath = (fileId) => {
     // Url of the server:
-    const url = '/api/fileapi/getFileById';
+    const url = 'https://api.writingdashboard.xyz/fileapi/getFileById';
 
     // Make the call to the backend:
     axios.get(url, { params: { fileId: fileId } })
@@ -86,7 +86,7 @@ function Document() {
    */
   const fetchScores = (fileId) => {
     // // Url of the server:
-    const url = '/api/scoreapi/getScores';
+    const url = 'https://api.writingdashboard.xyz/scoreapi/getScores';
 
     // Make the call to the backend:
     axios.get(url, { params: { fileId: fileId } })
@@ -104,7 +104,7 @@ function Document() {
    */
   const fetchExplanations = (fileId) => {
     // Url of the server:
-    const url = '/api/scoreapi/getExplanationForFile';
+    const url = 'https://api.writingdashboard.xyz/scoreapi/getExplanationForFile';
 
     // Make the call to the backend:
     axios.get(url, { params: { fileId: fileId } })
@@ -289,7 +289,7 @@ function Document() {
       <div className="all-page-container" id="all-page-container" style={{ width: '50%' }}>
         {/** potentially convert document to pdf and show document on page */}
         <AllPagesPDFViewer
-          pdf={`/api/fileapi/display?filepath=${path}&filetype=${type}`}
+          pdf={`https://api.writingdashboard.xyz/fileapi/display?filepath=${path}&filetype=${type}`}
           docId={location.state.fileId}
           docName={location.state.fileName}
         />
