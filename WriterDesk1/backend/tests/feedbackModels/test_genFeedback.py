@@ -4,6 +4,7 @@ from app.scoreapi.scores import setScoreDB, getCurrentExplanationVersion
 from datetime import date
 import os
 import fitz
+import json
 
 def uploadFile(fileName, testClient):
     '''
