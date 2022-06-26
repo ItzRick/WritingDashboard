@@ -4,6 +4,7 @@ from app.models import Scores, Files
 from werkzeug.utils import secure_filename
 import json
 from decimal import Decimal
+from test_set_role import loginHelper
 
 def uploadFile(testClient):
     '''
@@ -15,6 +16,7 @@ def uploadFile(testClient):
             fileDir: Location of the file we are testing the upload of.
             response: the result fo retrieving the scores in the specified order
             file: file instance 
+            access_token: the access token
         Arguments: 
             testClient: The test client we test this for.
         Returns:
@@ -34,7 +36,9 @@ def uploadFile(testClient):
         'feedbackVersion': 0.01
     }
     # Create the response by means of the post request:
-    response = testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/fileapi/upload', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     file = Files.query.filter_by(filename=fileName).first()
     assert response.data == f'Uploaded file with ids: [{file.id}]'.encode('utf-8')
     assert file.courseCode == courseCode
@@ -47,6 +51,7 @@ def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegrat
             data: The data we are trying to test the setScore with.
             response: Response of the post request.
             score: Score that should be set in the database
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             fileId: fileId of file related to this test
@@ -68,7 +73,9 @@ def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegrat
     # Corresponding file exists?
     assert Files.query.filter_by(id=fileId).first() is not None
     # Create the response by means of the post request:
-    response = testClient.post('/scoreapi/setScore', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/scoreapi/setScore', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # See if we indeed get code 200 and the correct message from this request:
     assert response.data == b'successfully uploaded Scores'
     assert response.status_code == 200
@@ -90,6 +97,7 @@ def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructur
             data: The data we are trying to test the getScore with.
             response: Response of the get request.
             dataResponse: response data, i.e. the score
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             fileId: fileId of file related to this test
@@ -104,7 +112,9 @@ def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructur
     }
 
     # Retrieve the files from the specified user
-    response = testClient.get('/scoreapi/getScores', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/scoreapi/getScores', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # Check if we get the correct status_code:
     assert response.status_code == 200
     # Check response
@@ -160,6 +170,7 @@ def testInvalidScore(testClient, initDatabase):
             scoreStructure: structure score
             scoreIntegration: source integration and content score
             feedbackVersion: feedbackVersion associated to the current uploaded score.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -183,7 +194,9 @@ def testInvalidScore(testClient, initDatabase):
         'scoreIntegration' : scoreIntegration,
         'feedbackVersion': feedbackVersion
     }
-    response = testClient.post('/scoreapi/setScore', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/scoreapi/setScore', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # See if we indeed get code 200 and the correct message from this request:
     assert response.data == b'successfully uploaded Scores'
     assert response.status_code == 200
@@ -208,7 +221,8 @@ def testInvalidScore(testClient, initDatabase):
         'scoreStructure': scoreStructure1,
         'scoreIntegration' : scoreIntegration1,
     }
-    response = testClient.post('/scoreapi/setScore', data=data)
+    response = testClient.post('/scoreapi/setScore', data=data,
+                                 headers={"Authorization": "Bearer " + access_token})
     # See if we indeed get code 200 and the correct message from this request:
     assert response.data == b'successfully uploaded Scores'
     assert response.status_code == 200

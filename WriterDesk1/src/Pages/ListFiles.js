@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+
+import { authHeader } from '../helpers/auth-header';
 // import '../App.css';
 
 const ListFiles = () => {
@@ -28,10 +30,13 @@ const ListFiles = () => {
         const data = {
             params: {sortingAttribute: sortingAttribute}
         }
-        const headers = {
+        const authheader = authHeader();
+        const fileheader = {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-        }
+        };
+
+        const headers = {headers: Object.assign(fileheader, authheader)};
         //Perform GET request
         axios.get(url, data, headers).then((response) => {
             setFiles(response.data);

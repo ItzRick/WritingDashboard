@@ -2,6 +2,7 @@ from app import db
 from app.models import User, Scores, Files
 from datetime import datetime
 import json
+from test_set_role import loginHelper
 
 def generalGetAvgScore(testClient, userId, avgscoreStyle, avgscoreCohesion, avgscoreStructure, avgscoreIntegration):
     '''
@@ -11,6 +12,7 @@ def generalGetAvgScore(testClient, userId, avgscoreStyle, avgscoreCohesion, avgs
             data: The data we are trying to test the getAvgScore with.
             response: Response of the get request.
             dataResponse: response data, i.e. the average scores
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             userId: userId of user related to this test
@@ -24,7 +26,9 @@ def generalGetAvgScore(testClient, userId, avgscoreStyle, avgscoreCohesion, avgs
     }
 
     # Retrieve the average scores from the specified user
-    response = testClient.get('/scoreapi/getAvgScores', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/scoreapi/getAvgScores', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code
     assert response.status_code == 200
@@ -107,6 +111,7 @@ def testAvgEmptyUser(testClient, initDatabaseEmpty):
         Attributes: 
             data: The data we are trying to test the getAvgScore with.
             response: Response of the get request.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabaseEmpty: the database instance we test this for. 
@@ -114,12 +119,14 @@ def testAvgEmptyUser(testClient, initDatabaseEmpty):
     del initDatabaseEmpty
 
     data = {
-        'userId' : 1,
+        'userId' : 2,
     }
-    assert User.query.get(1) is None
+    assert User.query.get(2) is None
 
     # Retrieve average scores for user which don't have any scores
-    response = testClient.get('/scoreapi/getAvgScores', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/scoreapi/getAvgScores', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status code
     assert response.status_code == 400

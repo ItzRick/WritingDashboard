@@ -1,8 +1,10 @@
+# TODO HOE ERG IS HET ALS IK HIER USER ID OP 3 ZET OVERAL OM MET ADMIN JWT TE WERKEN?
 import io
 import os
 from datetime import date, datetime
 from app.models import Files
 from werkzeug.utils import secure_filename
+from test_set_role import loginHelper
 
 def generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype):
     '''
@@ -13,6 +15,7 @@ def generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype):
             fileDir: Location of the file we are testing the upload of.
             data: The data we are trying to test the upload with.
             response: Response of the post request.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             fileName: fileName of the file to be uploaded (which needs to be put in the correct location, so in the same folder as the conftest.py file).
@@ -33,7 +36,9 @@ def generalTestStuff(testClient, fileName, userId, courseCode, date1, filetype):
         'date': date1
     }
     # Create the response by means of the post request:
-    response = testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/fileapi/upload', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # See if we indeed get code 200:
     assert response.status_code == 200
     # See if the correct data has been added to the database which we retrieve by the filename:
@@ -60,6 +65,7 @@ def testUploadTextStream(testClient, initDatabase):
             userId: userId of the user for which to test to upload the current file.
             courseCode: courseCode of the course for which we test to upload the current file.
             date1: date of the file which we are currently testing to upload.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -67,7 +73,7 @@ def testUploadTextStream(testClient, initDatabase):
     del initDatabase
     # Create the attributes for the fileName, userId, courseCode and date:
     fileName = 'fake-text-stream.txt'
-    userId = 123
+    userId = 3
     courseCode = '2IPE0'
     date1 = date(2022, 5, 11)
     filetype = '.txt'
@@ -80,7 +86,9 @@ def testUploadTextStream(testClient, initDatabase):
         'date': date1
     }
     # Create the response by means of the post request:
-    response = testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/fileapi/upload', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # See if we indeed get code 200:
     assert response.status_code == 200
     # See if the correct data has been added to the database which we retrieve by the filename:
@@ -111,7 +119,7 @@ def testUploadTextFile(testClient, initDatabase):
     '''
     del initDatabase
     fileName = 'test.txt'
-    userId = 256
+    userId = 3
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
     filetype = '.txt'
@@ -134,7 +142,7 @@ def testUploadTxtMultiple(testClient, initDatabase):
     del initDatabase
     # Upload the first file:
     fileName1 = 'test.txt'
-    userId = 256
+    userId = 3
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
     filetype = '.txt'
@@ -158,7 +166,7 @@ def testUploadTxtAgain(testClient, initDatabase):
             initDatabase: the database instance we test this for.
     '''
     fileName = 'test.txt'
-    userId = 256
+    userId = 3
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
     filetype = '.txt'
@@ -180,7 +188,7 @@ def testUploadPDFFile(testClient, initDatabase):
     '''
     del initDatabase
     fileName = 'SEP Intro.pdf'
-    userId = 789
+    userId = 3
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
     filetype = '.pdf'
@@ -199,7 +207,7 @@ def testUploadPDFFileExtra(testClient, initDatabase):
             initDatabase: the database instance we test this for.
     '''
     fileName = 'Air_Pollution_Sources_Identification_Precisely_Based_on_Remotely_Sensed_Aerosol_and_Glowworm_Swarm_Optimization.pdf'
-    userId = 564527
+    userId = 3
     courseCode = '5ABCBDHEH8'
     date1 = date(2005, 2, 27)
     filetype = '.pdf'
@@ -222,7 +230,7 @@ def testUploadPDFMultiple(testClient, initDatabase):
     del initDatabase
     # Upload the first file:
     fileName1 = 'SEP Intro.pdf'
-    userId = 789
+    userId = 3
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
     filetype = '.pdf'
@@ -248,7 +256,7 @@ def testUploadPDFAgain(testClient, initDatabase):
     '''
     # Upload the file the first time:
     fileName = 'SEP Intro.pdf'
-    userId = 789
+    userId = 3
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
     filetype = '.pdf'
@@ -271,7 +279,7 @@ def testUploadDOCXFile(testClient, initDatabase):
     '''
     del initDatabase
     fileName = 'test.docx'
-    userId = 78267
+    userId = 3
     courseCode = '9ABCEHJDHD20'
     date1 = date(2016, 11, 8)
     filetype = '.docx'
@@ -293,7 +301,7 @@ def testUploadDOCXFileMultiple(testClient, initDatabase):
     '''
     # Upload the first file:
     fileName1 = 'test.docx'
-    userId = 78267
+    userId = 3
     courseCode = '9ABCEHJDHD20'
     date1 = date(2016, 11, 8)
     filetype = '.docx'
@@ -319,7 +327,7 @@ def testUploadDOCXFileAgain(testClient, initDatabase):
     del initDatabase
     # Upload the file for the first time:
     fileName = 'test.docx'
-    userId = 78267
+    userId = 3  
     courseCode = '9ABCEHJDHD20'
     date1 = date(2016, 11, 8)
     filetype = '.docx'
