@@ -19,3 +19,4 @@ src/
 ssl/
 .vscode/
 backend/
+public/
