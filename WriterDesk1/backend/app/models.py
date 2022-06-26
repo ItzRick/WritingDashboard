@@ -168,6 +168,8 @@ class Scores(db.Model):
     scoreCohesion    = db.Column(db.Numeric(4,2), unique=False, default=None)
     scoreStructure   = db.Column(db.Numeric(4,2), unique=False, default=None)
     scoreIntegration = db.Column(db.Numeric(4,2), unique=False, default=None)
+    # Feedbackversion is a numeric value, with 2 decimal numbers and 5 numbers in total.
+    feedbackVersion  = db.Column(db.Numeric(5,2), unique=False, default=None)
 
     def __repr__(self):
         return '<Scores {}>'.format(self.fileId)

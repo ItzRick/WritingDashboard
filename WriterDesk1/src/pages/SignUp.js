@@ -20,7 +20,6 @@ import { history } from '../helpers/history';
 
 // Signup request setup
 import axios from 'axios';
-const BASE_URL = "https://localhost:5000/loginapi";
 const NAVIGATE_TO_URL = "../../Login"
 
 const USERNAME_END = "tue.nl";
@@ -122,7 +121,7 @@ const SignUp = () => {
         const headers = {
             "Content-Type": "application/json"
         }
-        axios.post(`${BASE_URL}/signup`, data, headers).then(response =>{
+        axios.post(`https://api.writingdashboard.xyz/loginapi/signup`, data, headers).then(response =>{
             // Post request is successful, user is registered
             // Loads login page
             setLoginAllowed(true);           
@@ -158,6 +157,8 @@ const SignUp = () => {
 
     // Set the acceptance of collecting user data from checkbox
     const [acceptUserData, setAcceptUserData] = useState(true);
+    // Set the acceptance of collecting necessary data from checkbox
+    const [acceptNeceData, setAcceptNeceData] = useState(false);
 
     return (
         <>

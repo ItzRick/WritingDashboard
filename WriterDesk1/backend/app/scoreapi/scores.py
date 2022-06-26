@@ -179,3 +179,50 @@ def removeExplanationsFileType(fileId, explType):
     explanations = Explanations.query.filter_by(fileId=fileId, type=explType).all()
     for explanation in explanations:
         removeFromDatabase(explanation)
+
+def getCurrentExplanationVersion(fileId):
+    '''
+        Retrieves the most current explanation type for which scores (and explanations) have been generated 
+        for the file associated with this fileId. 
+        Arguments: 
+            fileId: File id we need to find the most recent explanation version for which feedback has been generated.
+        Attributes:
+            scores: All scores in the database for the current file:
+            explanations: All explanations for the current file in the database.
+            feedbackVersion: The most recent feedback version that has been found in the scores.
+        Returns:
+            -1 if there is no feedback added for this file yet, or if there is an error in the database,
+                that is if there is a explanation with a different feedbackversion than the score. In this case
+                the method also removes all scores and explanations associated to this file.
+            The most recent feedback version of this file otherwise.
+    '''
+    scores = Scores.query.filter_by(fileId=fileId).all()
+    explanations = Explanations.query.filter_by(fileId=fileId).all()
+    if len(scores) == 0:
+        return -1
+    feedbackVersion = scores[0].feedbackVersion
+    if len(explanations) > 0:
+        for explanation in explanations:
+            if explanation.feedbackVersion != feedbackVersion:
+                for score in scores:
+                    removeFromDatabase(score)
+                for explanation in explanations:
+                    removeFromDatabase(explanation)
+                return -1
+    return scores[0].feedbackVersion
+
+def removeExplanationsAndScores(fileId):
+    '''
+        Removes all explanations and scores associated to the file given by fileId.
+        Arguments: 
+            fileId: File id we need to remove all explanations and scores for.
+        Attributes:
+            scores: All scores in the database for the current file:
+            explanations: All explanations for the current file in the database.
+    '''
+    scores = Scores.query.filter_by(fileId=fileId).all()
+    explanations = Explanations.query.filter_by(fileId=fileId).all()
+    for score in scores:
+        removeFromDatabase(score)
+    for explanation in explanations: 
+        removeFromDatabase(explanation)
