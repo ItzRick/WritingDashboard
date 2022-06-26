@@ -6,6 +6,7 @@ from datetime import datetime, date
 import os
 from werkzeug.utils import secure_filename
 import json
+from test_set_role import loginHelper
 
 def testRetrieveFilesOfUserDateAsc(testClient, initDatabaseEmpty):
     '''
@@ -13,6 +14,7 @@ def testRetrieveFilesOfUserDateAsc(testClient, initDatabaseEmpty):
         date ascending, of a certain user, here with user id 200, in a json file.
         Attributes: 
             file, file2, file1, file3, file4: File to be added to the database.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -52,7 +54,9 @@ def testRetrieveFilesOfUserDateAsc(testClient, initDatabaseEmpty):
         db.session.rollback()
         
     # Retrieve the files from the specified user
-    response = testClient.get('/fileapi/fileretrieve', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/fileretrieve', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
@@ -99,6 +103,7 @@ def testRetrieveFilesOfUserDateDesc(testClient, initDatabaseEmpty):
         date descending, of a certain user, here with user id 200, in a json file.
         Attributes: 
             file, file2, file1, file3, file4: File to be added to the database.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -138,7 +143,9 @@ def testRetrieveFilesOfUserDateDesc(testClient, initDatabaseEmpty):
         db.session.rollback()
         
     # Retrieve the files from the specified user
-    response = testClient.get('/fileapi/fileretrieve', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/fileretrieve', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
@@ -185,6 +192,7 @@ def testRetrieveFilesOfUserFilenameAsc(testClient, initDatabaseEmpty):
         file name ascending, of a certain user, here with user id 200, in a json file.
         Attributes: 
             file, file2, file1, file3, file4: File to be added to the database.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -224,7 +232,9 @@ def testRetrieveFilesOfUserFilenameAsc(testClient, initDatabaseEmpty):
         db.session.rollback()
         
     # Retrieve the files from the specified user
-    response = testClient.get('/fileapi/fileretrieve', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/fileretrieve', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code:
     assert response.status_code == 200
@@ -271,6 +281,7 @@ def testRetrieveFilesOfUserFilenameDesc(testClient, initDatabaseEmpty):
         filename descending, of a certain user, here with user id 200, in a json file.
         Attributes: 
             file, file2, file1, file3, file4: File to be added to the database.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -310,7 +321,9 @@ def testRetrieveFilesOfUserFilenameDesc(testClient, initDatabaseEmpty):
         db.session.rollback()
         
     # Retrieve the files from the specified user
-    response = testClient.get('/fileapi/fileretrieve', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/fileretrieve', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
 
     # Check if we get the correct status_code:
     assert response.status_code == 200

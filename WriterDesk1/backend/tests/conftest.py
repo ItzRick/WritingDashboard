@@ -129,6 +129,12 @@ def initDatabaseEmpty(testClient):
     # Create the database:
     db.create_all()
 
+    admin = User('ad', 'min')
+    db.session.add(admin)
+    admin.role = 'admin'
+
+    db.session.commit()
+    
     yield   # This is where the testing happens!
     
     # Empties the database after the application has finished testing:

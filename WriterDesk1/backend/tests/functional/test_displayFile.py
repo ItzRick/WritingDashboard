@@ -1,7 +1,9 @@
 import os
 from io import BytesIO
 
-def test_docx(testClient):
+from test_set_role import loginHelper
+
+def test_docx(testClient, initDatabase):
     '''
         Tests if a file that is of type docx gets converted to a pdf file.
         Attributes:
@@ -17,6 +19,9 @@ def test_docx(testClient):
         Arguments:
             testClient: The test client we test this for.
     '''
+
+    del initDatabase
+
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileName = 'test_docx.docx'
     fileDir = os.path.join(BASEDIR, fileName)
@@ -32,7 +37,10 @@ def test_docx(testClient):
         'filetype': 'docx'
     }    
     # run the display function with the provided data
-    response = testClient.get('/fileapi/display', query_string=data)   
+    access_token = loginHelper(testClient, 'ad', 'min')
+
+    response = testClient.get('/fileapi/display', query_string=data,
+                            headers={"Authorization": "Bearer " + access_token})   
     assert response.status_code == 200
     assert response.headers['Content-Disposition'] == 'inline; filename=test_docx.pdf'
     # read the newly converted file as a pdf
@@ -40,7 +48,7 @@ def test_docx(testClient):
         pdfFile = BytesIO(file.read())
     assert response.data == pdfFile.read() 
 
-def test_txt(testClient):
+def test_txt(testClient, initDatabase):
     '''
         Tests if a file that is of type txt gets converted to a pdf file.
         Attributes:
@@ -53,9 +61,12 @@ def test_txt(testClient):
             convertedFileLoc: pointer to the pdf file that has been created by having converted the txt file.
             head: The head of the filePath of the file that is converted.
             tail: The tail of the filepath of the file that is converted.
+            access_token: the access token
         Arguments:
             testClient: The test client we test this for.
     '''
+    del initDatabase
+    
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileName = 'test_txt.txt'
     fileDir = os.path.join(BASEDIR, fileName)
@@ -71,7 +82,9 @@ def test_txt(testClient):
         'filetype': 'txt'
     }    
     # run the display function with the provided data
-    response = testClient.get('/fileapi/display', query_string=data)   
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/display', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})   
     assert response.status_code == 200
     assert response.headers['Content-Disposition'] == 'inline; filename=test_txt.pdf'
     # read the newly converted file as a pdf
@@ -79,7 +92,7 @@ def test_txt(testClient):
         pdfFile = BytesIO(file.read())
     assert response.data == pdfFile.read()
 
-def test_pdf(testClient):
+def test_pdf(testClient, initDatabase):
     '''
         Tests if a file that is of type pdf does not get converted.
         Attributes:
@@ -89,9 +102,12 @@ def test_pdf(testClient):
             data: the data needed by the display function.
             response: the result fo retrieving the file.
             pdfFile: the converted pdf file.
+            access_token: the access token
         Arguments:
             testClient: The test client we test this for.
     '''
+    del initDatabase
+
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileName = 'test_pdf.pdf'
     fileDir = os.path.join(BASEDIR, fileName)
@@ -101,7 +117,9 @@ def test_pdf(testClient):
         'filetype': 'pdf'
     }    
     # run the display function with the provided data
-    response = testClient.get('/fileapi/display', query_string=data)   
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/fileapi/display', query_string=data,
+                            headers={"Authorization": "Bearer " + access_token})   
     assert response.status_code == 200
     assert response.headers['Content-Disposition'] == 'inline; filename=test_pdf.pdf'
     # read the newly converted file as a pdf
