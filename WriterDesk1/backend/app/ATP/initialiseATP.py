@@ -56,6 +56,7 @@ def initialiseATP():
     db.drop_all()
     db.create_all()
 
+    # Delete current files and recreate the upload directory:   
     shutil.rmtree(current_app.config['UPLOAD_FOLDER'])
     os.mkdir(current_app.config['UPLOAD_FOLDER'])
 
@@ -170,6 +171,7 @@ def initialiseATPNoFiles():
     db.drop_all()
     db.create_all()
 
+    # Delete current files and recreate the upload directory:
     shutil.rmtree(current_app.config['UPLOAD_FOLDER'])
     os.mkdir(current_app.config['UPLOAD_FOLDER'])
     
