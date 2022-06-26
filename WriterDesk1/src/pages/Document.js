@@ -31,8 +31,6 @@ function Document() {
   //set title in parent 'base'
   const { setTitle } = useOutletContext();
 
-  const [showTextbox, setShowTextbox] = useState([]);
-
   const [path, setPath] = useState([]);
   const [type, setType] = useState([]);
 
