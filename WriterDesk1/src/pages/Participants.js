@@ -207,7 +207,7 @@ const Participants = () => {
   const deleteParticipant = (e, userId) => {
     setShowDeleteDialog(false);  // Don't show dialog anymore
     // Url of the server:
-    const url = 'https://api.writingdashboard.xyz/userapi/deleteUserResearcher'
+    const url = 'https://api.writingdashboard.xyz/usersapi/deleteUserResearcher'
     // Formdata for the backend call, to which the id has been added:
         const formData = new FormData();
         formData.append('userID', userId);
