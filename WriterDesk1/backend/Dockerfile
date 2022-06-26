@@ -24,7 +24,7 @@ RUN rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY . .
 
-ENV DATABASE_URL postgresql+psycopg2://writingdashboard:aghf.4Db9fyX0mh;@/writingdashboard?host=/cloudsql/argon-ability-354313:europe-west1:writingdashboard
+ENV DATABASE_URL postgresql+psycopg2://writingdashboard:6yE-N0vv~?(trP:B@/writingdashboard?host=/cloudsql/writingdesk-354423:europe-west1:writingdashboard
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
