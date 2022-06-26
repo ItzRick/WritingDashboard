@@ -91,6 +91,8 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                   }
                 axios.post(generateUrl, {}, config)
                 .catch((error) => {
+                    setFail((v) => (v+1))
+                    setSucc((v) => (v-1))
                     console.log(error.response.data);
                 });
               })
