@@ -269,17 +269,17 @@ from app.ATP.initialiseATP import initialiseATP
 @bp.route("/initializeNoFiles", methods=["POST"])
 def initalizeNoFiles():
     try:
-        participants = initialiseATP(False)
+        initialiseATP(False)
     except Exception as e:
         return str(e)
-    returnString = "initalizaition succesful" + str(participants)
+    returnString = "initalizaition succesful"
     return returnString, 200
 
 @bp.route("/initialize", methods=["POST"])
 def initalize():
     try:
-        participants = initialiseATP(True)
+        initialiseATP(True)
     except Exception as e:
         return str(e)
-    returnString = "initalizaition succesful" + str(participants)
+    returnString = "initalizaition succesful"
     return returnString, 200

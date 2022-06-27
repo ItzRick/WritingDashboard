@@ -147,9 +147,9 @@ def initialiseATP(uploadFiles):
 
     # At least two Clickdata entries with as userId the id of ’par_3’, one containing the url of the Document page, one containing another url.
     idParOne = participantsIds[0]
-    c = Clicks(idParOne, 'Document', 'view.document', 'name: par_test1.pdf, id: 6')
+    c = Clicks(idParOne, 'https://writingdashboard.xyz/Document', 'view.document', 'name: par_test1.pdf, id: 6')
     uploadToDatabase(c)
-    c = Clicks(idParOne, 'Main', 'click.link', '/Document')
+    c = Clicks(idParOne, 'https://writingdashboard.xyz/Main', 'click.link', 'Settings')
     uploadToDatabase(c)
 
     # A project with project name ’Sidebar’ and as userId the id of ’researcher@tue.nl’.
@@ -170,4 +170,3 @@ def initialiseATP(uploadFiles):
     # Kan je momenteel niet zien, maar goed:
     print('participants')
     print(participants) # keep this print here, and read it 
-    return participants
