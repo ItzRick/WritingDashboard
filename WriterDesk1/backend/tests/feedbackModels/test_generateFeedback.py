@@ -1,6 +1,7 @@
 from test_genFeedback import uploadFile
 from app.models import Files, Scores, Explanations
 import fitz
+from tests.functional.test_set_role import loginHelper
 
 def testGenerateFeedbackNoFile(testClient, initDatabase):
     '''
@@ -8,6 +9,7 @@ def testGenerateFeedbackNoFile(testClient, initDatabase):
         Attributes:
             data: Data we send with the post request.
             response: Response we get from the post request.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -15,8 +17,10 @@ def testGenerateFeedbackNoFile(testClient, initDatabase):
     del initDatabase
     data = {
         'fileId': 3
-    }    
-    response = testClient.post('/feedback/generate', query_string=data)   
+    }
+    access_token = loginHelper(testClient, 'ad', 'min')    
+    response = testClient.post('/feedback/generate', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})   
     assert response.status_code == 400
     assert response.data == b'The file with id 3 can not be found in the database.'
 
@@ -26,6 +30,7 @@ def testGenerateFeedbackNoFileOnDisk(testClient, initDatabase):
         Attributes:
             data: Data we send with the post request.
             response: Response we get from the post request.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -35,7 +40,9 @@ def testGenerateFeedbackNoFileOnDisk(testClient, initDatabase):
     data = {
         'fileId': file.id
     }    
-    response = testClient.post('/feedback/generate', query_string=data)   
+    access_token = loginHelper(testClient, 'ad', 'min')    
+    response = testClient.post('/feedback/generate', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})    
     assert response.status_code == 400
     # Test if the response message contains 'no such file':
     assert 'no such file' in response.data.decode("utf-8")
@@ -55,6 +62,7 @@ def testGenerateFeedbackPdf(testClient, initDatabase):
             fileLoc: Location of the file we test this for.
             explanations: Database for the current file, containing explanations, as retrieved from the database 
                 and created using the genFeedback method.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -64,7 +72,9 @@ def testGenerateFeedbackPdf(testClient, initDatabase):
     data = {
         'fileId': file.id
     }    
-    response = testClient.post('/feedback/generate', query_string=data)   
+    access_token = loginHelper(testClient, 'ad', 'min')    
+    response = testClient.post('/feedback/generate', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})   
     assert response.status_code == 200
     assert response.data == b'Feedback has been generated!'
     # Check if we have added the correct score to the database:

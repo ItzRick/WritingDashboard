@@ -5,6 +5,7 @@ from app import db
 from datetime import datetime, date
 import os
 from werkzeug.utils import secure_filename
+from test_set_role import loginHelper
 
 
 def testRemoveFromDatabase(testClient, initDatabase):
@@ -13,6 +14,7 @@ def testRemoveFromDatabase(testClient, initDatabase):
         After we have removed this file, we check that we can indeed not query on this file. 
         Attributes:
             file: File we create to add and remove in the database.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -79,7 +81,9 @@ def testRouteRemoveFileFromDatabase(testClient, initDatabaseEmpty):
     }
 
     # Create the response by means of the post request:
-    testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    testClient.post('/fileapi/upload', data=data,
+                    headers={"Authorization": "Bearer " + access_token})
 
     # See if the correct data has been added to the database which we retrieve by the filename:
     file = Files.query.filter_by(filename=secure_filename(fileName)).first()
@@ -92,7 +96,8 @@ def testRouteRemoveFileFromDatabase(testClient, initDatabaseEmpty):
     }
 
     # Delete the file
-    testClient.delete('/fileapi/filedelete', data=data1)
+    testClient.delete('/fileapi/filedelete', data=data1,
+                        headers={"Authorization": "Bearer " + access_token})
 
     # Check if the file has been deleted of the disk
     assert not os.path.exists(file.path)
@@ -142,7 +147,9 @@ def testRouteRemoveFileFromDatabaseMultiple(testClient, initDatabaseEmpty):
     }
 
     # Create the response by means of the post request:
-    testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    testClient.post('/fileapi/upload', data=data,
+                    headers={"Authorization": "Bearer " + access_token})
 
     # See if the correct data has been added to the database which we retrieve by the filename:
     file1 = Files.query.filter_by(filename=secure_filename(fileName1)).first()
@@ -168,7 +175,8 @@ def testRouteRemoveFileFromDatabaseMultiple(testClient, initDatabaseEmpty):
     }
 
     # Create the response by means of the post request:
-    testClient.post('/fileapi/upload', data=data)
+    testClient.post('/fileapi/upload', data=data,
+                    headers={"Authorization": "Bearer " + access_token})
 
     # See if the correct data has been added to the database which we retrieve by the filename:
     file2 = Files.query.filter_by(filename=secure_filename(fileName2)).first()
@@ -181,7 +189,8 @@ def testRouteRemoveFileFromDatabaseMultiple(testClient, initDatabaseEmpty):
     }
 
     # Delete the file
-    testClient.delete('/fileapi/filedelete', data=data1)
+    testClient.delete('/fileapi/filedelete', data=data1,
+                        headers={"Authorization": "Bearer " + access_token})
 
     # Check if the file has been deleted of the disk
     assert not os.path.exists(file1.path)
@@ -225,7 +234,9 @@ def testRouteRemoveNonexistingFileFromDatabase(testClient, initDatabaseEmpty):
     assert Files.query.filter_by(filename= secure_filename(fileName)).first() not in Files.query.filter_by(userId=userId).all()
 
     # Delete the file
-    response2 = testClient.delete('/fileapi/filedelete', data=data1)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response2 = testClient.delete('/fileapi/filedelete', data=data1,
+                                    headers={"Authorization": "Bearer " + access_token})
 
     # Check that the correct error message is given 
     assert response2.status_code == 404

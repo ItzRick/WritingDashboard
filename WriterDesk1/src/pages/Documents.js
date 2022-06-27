@@ -25,6 +25,7 @@ import "../css/main.css";
 
 import { AuthenticationService } from "../services/authenticationService";
 import AlertDialog from "../components/AlertDialog";
+import { authHeader } from "../helpers/auth-header";
 
 
 /**
@@ -161,7 +162,7 @@ const Documents = () => {
     const formData = new FormData();
     formData.append('id', fileId);
     // Make the call to the backend:
-    axios.delete(url, { data: formData })
+    axios.delete(url, { data: formData, headers: authHeader() })
       .then(() => { setData() });
   }
 
@@ -179,7 +180,7 @@ const Documents = () => {
     // For each of the selected instances, add this id to the formdata:
     selectedInstances.forEach(id => formData.append('id', id));
     // Make the backend call:
-    axios.delete(url, { data: formData })
+    axios.delete(url, { data: formData, headers: authHeader() })
       .then(() => { setData() });
   }
 
@@ -218,7 +219,7 @@ const Documents = () => {
       sortingAttribute: '',
     }
     // Make the backend call and set the table data from the response data:
-    axios.get(url, { params })
+    axios.get(url, {params, headers: authHeader() })
       .then((response) => {
         setTableData(response.data)
       })

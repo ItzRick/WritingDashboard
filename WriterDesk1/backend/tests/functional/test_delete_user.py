@@ -30,6 +30,7 @@ def testDeleteUser(testClient, initDatabase):
             participantID: id belonging to participant
             participantToProject: participantToProject entry relating participant to project
             scores: scores of file
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for.
@@ -50,8 +51,10 @@ def testDeleteUser(testClient, initDatabase):
         'date': date(2019, 2, 12)
     }
 
+    access_token = loginHelper(testClient, 'John', 'test')
     # Create the response by means of the post request:
-    testClient.post('/fileapi/upload', data=data)
+    testClient.post('/fileapi/upload', data=data,
+                    headers={"Authorization": "Bearer " + access_token})
 
     # See if the correct data has been added to the database which we retrieve by the filename:
     file = Files.query.filter_by(filename=secure_filename('SEP_1.pdf')).first()

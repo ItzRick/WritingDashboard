@@ -23,7 +23,7 @@ def getTXTText(path):
     try: 
         # Define array that will contain the document
         linesDocument = []
-        with open(path, 'rt') as document: 
+        with open(path, "rt", encoding="utf-8") as document: 
             # Split the document into lines
             document = document.read().splitlines()
             for line in document: 
