@@ -1,7 +1,7 @@
 import os
 from datetime import date
 import io
-from app.models import Files
+from app.models import Files, User
 from test_set_role import loginHelper
 
 def testDirsCreated(testClient, initDatabase):
@@ -24,7 +24,7 @@ def testDirsCreated(testClient, initDatabase):
     del initDatabase
     # Create the actual file:
     fileName = 'test.txt'
-    userId = 3
+    userId = User.query.filter_by(username="ad").first().id
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
     data = {

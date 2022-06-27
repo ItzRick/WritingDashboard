@@ -1,8 +1,7 @@
-# TODO HOE ERG IS HET ALS IK HIER USER ID OP 3 ZET OVERAL OM MET ADMIN JWT TE WERKEN?
 import io
 import os
 from datetime import date, datetime
-from app.models import Files
+from app.models import Files, User
 from werkzeug.utils import secure_filename
 from test_set_role import loginHelper
 
@@ -73,7 +72,7 @@ def testUploadTextStream(testClient, initDatabase):
     del initDatabase
     # Create the attributes for the fileName, userId, courseCode and date:
     fileName = 'fake-text-stream.txt'
-    userId = 3
+    userId = User.query.filter_by(username="ad").first().id
     courseCode = '2IPE0'
     date1 = date(2022, 5, 11)
     filetype = '.txt'
@@ -119,7 +118,7 @@ def testUploadTextFile(testClient, initDatabase):
     '''
     del initDatabase
     fileName = 'test.txt'
-    userId = 3
+    userId = User.query.filter_by(username="ad").first().id
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
     filetype = '.txt'
@@ -142,7 +141,7 @@ def testUploadTxtMultiple(testClient, initDatabase):
     del initDatabase
     # Upload the first file:
     fileName1 = 'test.txt'
-    userId = 3
+    userId = User.query.filter_by(username="ad").first().id
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
     filetype = '.txt'
@@ -166,7 +165,7 @@ def testUploadTxtAgain(testClient, initDatabase):
             initDatabase: the database instance we test this for.
     '''
     fileName = 'test.txt'
-    userId = 3
+    userId = User.query.filter_by(username="ad").first().id
     courseCode = '2WBB0'
     date1 = date(1998, 10, 30)
     filetype = '.txt'
@@ -188,7 +187,7 @@ def testUploadPDFFile(testClient, initDatabase):
     '''
     del initDatabase
     fileName = 'SEP Intro.pdf'
-    userId = 3
+    userId = User.query.filter_by(username="ad").first().id
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
     filetype = '.pdf'
@@ -207,7 +206,7 @@ def testUploadPDFFileExtra(testClient, initDatabase):
             initDatabase: the database instance we test this for.
     '''
     fileName = 'Air_Pollution_Sources_Identification_Precisely_Based_on_Remotely_Sensed_Aerosol_and_Glowworm_Swarm_Optimization.pdf'
-    userId = 3
+    userId = User.query.filter_by(username="ad").first().id
     courseCode = '5ABCBDHEH8'
     date1 = date(2005, 2, 27)
     filetype = '.pdf'
@@ -230,7 +229,7 @@ def testUploadPDFMultiple(testClient, initDatabase):
     del initDatabase
     # Upload the first file:
     fileName1 = 'SEP Intro.pdf'
-    userId = 3
+    userId = User.query.filter_by(username="ad").first().id
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
     filetype = '.pdf'
@@ -256,7 +255,7 @@ def testUploadPDFAgain(testClient, initDatabase):
     '''
     # Upload the file the first time:
     fileName = 'SEP Intro.pdf'
-    userId = 3
+    userId = User.query.filter_by(username="ad").first().id
     courseCode = '1ABC2'
     date1 = date(2007, 1, 1)
     filetype = '.pdf'
@@ -279,7 +278,7 @@ def testUploadDOCXFile(testClient, initDatabase):
     '''
     del initDatabase
     fileName = 'test.docx'
-    userId = 3
+    userId = User.query.filter_by(username="ad").first().id
     courseCode = '9ABCEHJDHD20'
     date1 = date(2016, 11, 8)
     filetype = '.docx'
@@ -301,7 +300,7 @@ def testUploadDOCXFileMultiple(testClient, initDatabase):
     '''
     # Upload the first file:
     fileName1 = 'test.docx'
-    userId = 3
+    userId = User.query.filter_by(username="ad").first().id
     courseCode = '9ABCEHJDHD20'
     date1 = date(2016, 11, 8)
     filetype = '.docx'
@@ -327,7 +326,7 @@ def testUploadDOCXFileAgain(testClient, initDatabase):
     del initDatabase
     # Upload the file for the first time:
     fileName = 'test.docx'
-    userId = 3  
+    userId = User.query.filter_by(username="ad").first().id  
     courseCode = '9ABCEHJDHD20'
     date1 = date(2016, 11, 8)
     filetype = '.docx'

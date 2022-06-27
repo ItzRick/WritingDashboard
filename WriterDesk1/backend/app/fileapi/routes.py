@@ -138,6 +138,12 @@ def fileDelete():
         fileToBeRemoved: file that is to be removed, using the given file id
         path: path of the file that is to be removed
         basepath: basepath of the path of the file to be removed
+    Return:
+        response, 200: an http response with the csv file when it was
+            created succesfully.
+        error 403: if the user accessing this method does not have the
+            rights to call it.
+        error 404: if file doesn't exists
     '''
     # Get the data as sent by the react frontend:
     fileIDs = request.form.getlist('id')
