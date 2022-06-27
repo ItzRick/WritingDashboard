@@ -111,7 +111,7 @@ const RoleDialog = ({userRole, userId, userName}) => {
 
         // Send request and handle possible error
         ChangeRole(userId, selectedValue.toLowerCase()).then(r => {
-            if(AuthenticationService.getCurrentUserId() === userId && selectedValue !== 'Admin') {
+            if(AuthenticationService.getCurrentUserId() === userId && selectedValue !== 'admin') {
                 AuthenticationService.logout();  // If admin role is changed to another role, logout
                 navigate("../Login", {replace: true});
             }
@@ -159,7 +159,7 @@ const RoleDialog = ({userRole, userId, userName}) => {
                     {"New role for: " + userName}
                 </DialogTitle>
                 <List sx={{ pt: 0 }}>
-                    <ListItem button onClick={() => handleListItemClick('Student')} selected={selectedValue === 'Student'}>
+                    <ListItem button onClick={() => handleListItemClick('student')} selected={selectedValue === 'student'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <SchoolOutlined />
@@ -167,7 +167,7 @@ const RoleDialog = ({userRole, userId, userName}) => {
                         </ListItemAvatar>
                         <ListItemText primary="Student" />
                     </ListItem>
-                    <ListItem button onClick={() => handleListItemClick('Researcher')} selected={selectedValue === 'Researcher'}>
+                    <ListItem button onClick={() => handleListItemClick('researcher')} selected={selectedValue === 'researcher'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <BiotechOutlined />
@@ -175,7 +175,7 @@ const RoleDialog = ({userRole, userId, userName}) => {
                         </ListItemAvatar>
                         <ListItemText primary="Researcher" />
                     </ListItem>
-                    <ListItem button onClick={() => handleListItemClick('Admin')} selected={selectedValue === 'Admin'}>
+                    <ListItem button onClick={() => handleListItemClick('admin')} selected={selectedValue === 'admin'}>
                         <ListItemAvatar>
                             <Avatar>
                                 <AdminPanelSettingsOutlined />
