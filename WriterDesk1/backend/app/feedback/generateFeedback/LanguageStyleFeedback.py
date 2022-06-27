@@ -60,8 +60,7 @@ class LanguageStyleFeedback(BaseFeedback):
             occurrenceInContext = 0  # Final count of occurrences of a mistake
 
             # Find all occurrences of a mistake in the context
-            for wordMatch in re.finditer(match.matchedText.lower().replace('(', '\(').replace(')', '\)'),
-                                        match.context.lower()):
+            for wordMatch in re.finditer(re.escape(match.matchedText.lower()), match.context.lower()):
                 if (wordMatch.start() > prevMatchEnd):
                     # Mistake overlaps previous mistake and does not count to occurrences
 
