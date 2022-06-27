@@ -14,6 +14,11 @@ import BlueButton from "./BlueButton";
 
 import { AuthenticationService } from "../services/authenticationService";
 
+// tracking
+import { useContext } from 'react';
+import { TrackingContext } from '@vrbo/react-event-tracking';
+import { authHeader } from '../helpers/auth-header';
+
 /**
  * 
  * @param {*} ref reference to the parent Upload.js
@@ -21,13 +26,23 @@ import { AuthenticationService } from "../services/authenticationService";
  * @param {function} setUploadSingleFiles function in parent to change the list of UploadSingleFile objects
  * @returns Single File Upload Object
  */
-const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) => {
+const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUploadSingleFiles, thisIndex }, ref) => {
+
+    // context as given by the Tracking Provider
+    const tc = useContext(TrackingContext);
 
     /**
      * Update uploadSingleFiles in parent Upload.js by removing self
      */
     const removeInstance = () => {
         setUploadSingleFiles((list) => list.filter(item => item.props.thisIndex !== thisIndex));
+        // use Tracking when remove file row has been clicked
+        if (tc.hasProvider) {
+            tc.trigger({
+                eventType: 'click.button', //send eventType
+                buttonId: 'removeFileRow', //send buttonId
+            })
+        }
     }
 
     /**
@@ -36,29 +51,62 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
      */
     useImperativeHandle(ref, () => ({
         uploadFile() {
-            // url of the file api's upload function
-            const url = 'https://localhost:5000/fileapi/upload';
-            // id of current user
-            const userId = AuthenticationService.getCurrentUserId();
+            if (file !== 'or drag it here.') {            
+                // url of the file api's upload function
+                const url = 'https://api.writingdashboard.xyz/fileapi/upload';
+                // id of current user
+                const userId = AuthenticationService.getCurrentUserId();
 
-            // create form with all the file information
-            const formData = new FormData();
-            formData.append('files', file);
-            formData.append('fileName', file.name);
-            formData.append('userId', userId);
-            formData.append('date', date.toISOString().substring(0, 10));
-            formData.append('courseCode', course);
-            //add header
-            const headers = {
-                Accept: 'application/json',
-                'Content-Type': 'multipart/form-data',
-            }
-
-            //post the file
-            axios.post(url, formData, headers).catch((error) => {
+                // create form with all the file information
+                const formData = new FormData();
+                formData.append('files', file);
+                formData.append('fileName', file.name);
+                formData.append('userId', userId);
+                formData.append('date', date.toISOString().substring(0, 10));
+                formData.append('courseCode', course);
+                //add header
+                const authheader = authHeader();
+                const fileheader = {
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                }
+                const headers = {headers: Object.assign(fileheader, authheader)};
+                //post the file
+            axios.post(url, formData, headers)
+            .then((response) => {
+                setSucc((v) => (v+1))
+                // Make the backend call to generate feedback:
+                // Get the ids of the uploaded files from the backend:
+                let message = response.data
+                let ids = /\[(.*?)\]/.exec(message)[0];
+                ids = ids.replace(/[\[\]']+/g,'')
+                ids = ids.split(', ')
+                // Make a post request with the correct parameters:
+                let params = new URLSearchParams();
+                ids.forEach(element => params.append("fileId", element));
+                let generateUrl = 'https://api.writingdashboard.xyz/feedback/generate';
+                const config = {
+                    params: params,
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                  }
+                axios.post(generateUrl, {}, config)
+                .catch((error) => {
+                    setFail((v) => (v+1))
+                    setFailedFiles((l) => l.concat([{'content':'Corrupted File','id':thisIndex}]))
+                    setSucc((v) => (v-1))
+                    console.log(error.response.data);
+                });
+              })
+            .catch((error) => {
                 console.log(error.response.data);
             });
-
+            } else {
+                // there is no file selected
+                setFail((v) => (v+1))
+                setFailedFiles((l) => l.concat([{'content':'Missing File','id':thisIndex}]))
+            }
             //post-update
             //empty file, date and course
             setFile('or drag it here.');
@@ -165,9 +213,7 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
                     onDragEnter={(event) => event.preventDefault()}
                     onDragOver={(event) => event.preventDefault()}
                     onDrop={onFileDrop}>
-                    <BlueButton 
-							idStr='selectFile'
-							onClick={() => fileInput.current.click()} addStyle={{ mr: '8px'}}>Choose a file</BlueButton>
+                    <BlueButton idStr='ChooseAFile' onClick={() => fileInput.current.click()} addStyle={{ mr: '8px'}}>Choose a file</BlueButton>
                     <input
                         ref={fileInput}
                         type="file"
@@ -202,6 +248,8 @@ const UploadSingleFile = forwardRef(({ setUploadSingleFiles, thisIndex }, ref) =
                     sx={{ bgcolor: 'red', color: 'button.text' }}
                     value={thisIndex}
                     onClick={removeInstance}>Remove</Button>
+                <TextField id='course' label='Course ID' inputProps={{ maxLength: 16 }} variant='outlined' value={course} onChange={event => setCourse(event.target.value)} />
+                <Button id='remove' variant='contained' sx={{ bgcolor: 'buttonWarning.main', color: 'buttonWarning.text', ml: '5px',}} value={thisIndex} onClick={removeInstance}>Remove</Button>
             </div>
             {displayAlertType ? <Alert severity="error">Upload a file with a .txt, .pdf or .docx filetype!</Alert> : null}
             {displayAlertSize ? <Alert severity="error">The uploaded file was too big, upload a file that is not larger than 10 MB!</Alert> : null}

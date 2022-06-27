@@ -8,17 +8,13 @@ import {
     Button
 } from "@mui/material";
 import logo from '../images/logo.png'
-import BlueButton from "./../components/BlueButton";
 
 // routing
-import { Link,useOutletContext } from 'react-router-dom';
+import { Link,useOutletContext, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { history } from '../helpers/history';
 
 // Login request setup
-import axios from 'axios';
 import { AuthenticationService } from '../services/authenticationService';
-const BASE_URL = "https://localhost:5000/loginapi";
 
 /**
  * Request login to server based on form on page
@@ -42,16 +38,26 @@ const Login = () => {
     // Change page using formError when we find an error
     const [formError, setFormError] = useState(false);
 
+    let navigate = useNavigate();
+
      /**
      * Do POST request containing username and password variable, go to main page when login succeeds 
      */
     const handleClick = () => {
         AuthenticationService.login(username, password).then(() => {
-            history.push("/Main");
-            window.location.reload();
+            navigate("../Main", { replace: true });
         }).catch( error => {
             setFormError(true);
         });
+    }
+
+    /**
+     * Try to login when pressing the enter key
+     */
+    const handleKeyPress = (event) => {
+      if(event.key === 'Enter'){
+        handleClick();
+      }
     }
     
     return (
@@ -68,7 +74,7 @@ const Login = () => {
                         <TextField id='username' label='Username' variant='outlined' value={username} onChange={(e) => setUsername(e.target.value)} />
                         <br /><br />
                         <Typography>Password:</Typography>
-                        <TextField id='password' label='Password' variant='outlined' type='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
+                        <TextField id='password' label='Password' variant='outlined' type='password' onKeyPress={(e) => handleKeyPress(e)} value={password} onChange={(e) => setPassword(e.target.value)}/>
                     </div>
                     <br />
                     {formError && <Typography color="red">Invalid username and/or password</Typography>}

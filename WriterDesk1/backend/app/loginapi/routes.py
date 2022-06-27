@@ -4,13 +4,13 @@ from flask import jsonify
 from flask import request
 from app.loginapi import bp
 from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt
 from flask_jwt_extended import current_user
-from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
+from app.database import postUser, initialSetup
 from app.extensions import jwt
 from app.models import User
+
 
 @bp.route('/login', methods=['POST'])
 def create_token():
@@ -27,7 +27,8 @@ def create_token():
             Returns access_token used for authentication and user_id from user attribute when username and password corresponds to database
             Otherwise returns Unauthorized response status code
     '''
-    username = request.json.get("username", None) 
+    # initialSetup() # Activate me when there is a problem! (mostly when you change the database) TODO remove before deploy
+    username = request.json.get("username", None)
     password = request.json.get("password", None)
     user = User.query.filter_by(username=username).first() # Get user from database corresponding to username
     if user is None or not user.check_password(password): # When there doesn't exists a user corresponding to username or password doesnt match
@@ -59,6 +60,38 @@ def user_lookup_callback(_jwt_header, jwt_data):
     '''
     identity = jwt_data["sub"] # get user id from token
     return User.query.filter_by(id=identity).one_or_none()
+    
+@bp.route('/signup', methods=["POST"])
+def registerUser():
+    '''
+        This function handles the signup request. When there is no user present in the database with the given username,
+        a new user is registered with the given username.
+        Attributes:
+            username: username as given in frontend
+            password: password as given in frontend
+            trackable: whether the user wants to be tracked or not
+            isCreated: whether a new user has been registered
+        Return:
+            Returns request success status code with a message when a new user has been registered
+            Otherwise returns bad request status code with an error message
+    '''
+
+    # Retrieve data from request
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    trackable = request.json.get("trackable", None)
+
+    # Try to register new user in database
+    isCreated = postUser(username, password, trackable)
+
+    # Send response based on outcome
+    if isCreated:
+        # User successfully created
+        return "User was successfully created!", 200
+    else:
+        # User exists already
+        return "Account with this email already exists!", 400
+    
 
 @bp.route("/protected", methods=["GET"])
 @jwt_required()
@@ -85,16 +118,17 @@ def setRole():
             newRole: intended role of the user
             targetUser: user with id == userId
         Return:
-            Returns success if it succeeded, or an 
+            Returns success if it succeeded, or an
             error message:
                 403, if the current user is not an admin
                 404, if there exists no user with userId
                 404, if the role name is not one of ['admin', 'participant', 'researcher', 'student']
+                404, if the last admin tries to remove its admin role
     '''
     # check if current_user is Admin
     if current_user.role != 'admin':
         return "Method only accessible for admin users", 403 # return Unauthorized response status code
-    
+
 
     # retrieve data from call
     userId = request.form.get('userId')
@@ -102,14 +136,18 @@ def setRole():
     # get targetUser
     targetUser = User.query.filter_by(id=userId).first()
 
+    if current_user == targetUser and newRole != 'admin' and User.query.filter_by(role='admin').count() == 1:
+        # Error when last administrator removes its own administrator role
+        return 'The role of the last administrator can not be changed.', 404
+
     # check if userId exists
     if targetUser is None:
         return 'user with userId not found', 404
     # check if role is valid
     if newRole not in ['admin', 'participant', 'researcher', 'student']:
         return 'Invalid role', 404
-    
-    
+
+
     # update role
     targetUser.role = newRole
     # update the database
@@ -120,25 +158,127 @@ def setRole():
 @jwt_required()
 def setPassword():
     '''
-        This function handles setting the password for the user
+        This function handles setting the password for the user, by first checking if the supplied current password is correct.
         Function requires a user to be logged in, use helpers > auth-header.js
         Attributes:
             newPassword: intended password for the user
+            oldPassword: Current password for the user.
             current_user: the user currently logged in
         Return:
-            Returns success if it succeeded, or an 
+            Returns success if it succeeded, or an
             error message:
-                404, if the current user's id does not exist in User table
+                403, if the current user's password is incorrect
     '''
     # retrieve data from call
-    newPassword = request.form.get('newPassword')
+    newPassword = request.json.get('newPassword')
+    oldPassword = request.json.get('oldPassword')
 
-    # check if current_user is actually in Users
-    if User.query.filter_by(id=current_user.id).first() is None:
-        return 'user not found', 404
-    
-    # set password using user function
-    current_user.set_password(newPassword)
+    # set password using user function if the password is correct, else return error message:
+    if current_user.check_password(oldPassword):
+        current_user.set_password(newPassword)
+    else:
+        return 'Current password is incorrect!', 403
     # update the database
     db.session.commit()
-    return 'success'
+    return 'Successfully changed password!', 200
+
+
+@bp.route("/setTrackable", methods=["POST"])
+@jwt_required()
+def setTrackable():
+    '''
+        This function handles setting the trackable value of the current user.
+        Attributes:
+            newTrackable: id of the user of whom we want to change the role
+        Return:
+            Returns success if it succeeded, or an
+            error message:
+                400, Trackable value sent by front end is not 'yes' or 'no'
+    '''
+    # Retrieve data from front end
+    newTrackable = request.form.get('newTrackable')
+    if newTrackable == 'yes':
+        # Set trackable true
+        current_user.trackable = True
+    elif newTrackable == 'no':
+        # Set trackable false
+        current_user.trackable = False
+    else:
+        return 'newTrackable is not yes or no', 400
+
+    # Update the database
+    db.session.commit()
+
+    return 'success', 200
+
+
+@bp.route("/getTrackable", methods=["GET"])
+@jwt_required()
+def getTrackable():
+    '''
+        This function handles setting the trackable value of the current user.
+        Attributes:
+            newTrackable: id of the user of whom we want to change the role
+        Return:
+            Returns success if it succeeded
+    '''
+
+    query = User.query.filter_by(id=current_user.id).first()
+    if query.trackable:
+        return 'yes', 200
+    elif not query.trackable:
+        return 'no', 200
+
+@bp.route("/setUsername", methods=["POST"])
+@jwt_required()
+def setUsername():
+    '''
+        This function handles setting the username for the user, by first checking if the supplied current password is correct.
+        Function requires a user to be logged in, use helpers > auth-header.js
+        Also check if username isn't already being used
+        Attributes:
+            currentPassword: Current password for the user.
+            newUsername: intended new username
+            current_user: the user currently logged in
+        Return:
+            Returns success if it succeeded, or an
+            error message:
+                403, if the current user's password is incorrect
+                403, username is already being used
+    '''
+    # retrieve data from call
+    currentPassword = request.json.get('currentPassword')
+    newUsername = request.json.get('newUsername')
+
+    # check if userpassword is correct
+    if not current_user.check_password(currentPassword):
+        return 'Current password is incorrect!', 403
+    # check if username is free
+    if len(User.query.filter_by(username=newUsername).all()) > 0:
+        return 'Username is already being used', 403
+
+    # set username 
+    current_user.username = newUsername
+    # update the database
+    db.session.commit()
+    return 'Successfully changed username!', 200
+
+from app.ATP.initialiseATP import initialiseATP
+
+@bp.route("/initializeNoFiles", methods=["POST"])
+def initalizeNoFiles():
+    try:
+        initialiseATP(False)
+    except Exception as e:
+        return str(e)
+    returnString = "initalizaition succesful"
+    return returnString, 200
+
+@bp.route("/initialize", methods=["POST"])
+def initalize():
+    try:
+        initialiseATP(True)
+    except Exception as e:
+        return str(e)
+    returnString = "initalizaition succesful"
+    return returnString, 200

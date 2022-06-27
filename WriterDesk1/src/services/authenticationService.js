@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { authHeader } from '../helpers/auth-header';
-const BASE_URL = "https://localhost:5000/loginapi";
 
 
 export const AuthenticationService = {
@@ -20,19 +19,17 @@ export const AuthenticationService = {
  * @returns login page
  */
 function login(username, password) {
-    return axios.post(`${BASE_URL}/login`, {
+    return axios.post(`https://api.writingdashboard.xyz/loginapi/login`, {
         "username": username,
         "password": password,
     }).then(response => {
         localStorage.setItem('currentUser', JSON.stringify(response.data));
 
-        if (JSON.parse(localStorage.getItem('currentUser')).access_token !== null && JSON.parse(localStorage.getItem('currentUser')).access_token !== "undefined") {
-            console.log("Inloggen gelukt!");
-        } else {
+        if (JSON.parse(localStorage.getItem('currentUser')).access_token == null || JSON.parse(localStorage.getItem('currentUser')).access_token == "undefined") {
             return Promise.reject();
         }
     })
-        .catch(error => {        
+        .catch(error => {   
             return Promise.reject();   
         });
 }
@@ -70,7 +67,7 @@ function getCurrentUserId() {
  * @returns axios response, status 200 when user is authenticated
  */
 function checkAuth () {
-    return axios.get(`${BASE_URL}/protected`, {headers: authHeader()});
+    return axios.get(`https://api.writingdashboard.xyz/loginapi/protected`, {headers: authHeader()});
 }
 
 /**
@@ -78,5 +75,6 @@ function checkAuth () {
  * @returns role of current user
  */
 function getRole (){
-    return JSON.parse(localStorage.getItem('currentUser')).role;
+    const  user = getCurrentUser();
+    return user === null ? null : user.role;
 }

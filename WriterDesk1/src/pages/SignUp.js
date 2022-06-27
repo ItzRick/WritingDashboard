@@ -1,21 +1,25 @@
 import './../css/main.css';
+import './../css/SignUp.css';
 
 // materials
 import {
     Typography,
     IconButton,
-    TextField
+    TextField,
+    Checkbox,
+    Button
 } from "@mui/material";
 import logo from '../images/logo.png';
 import BlueButton from "./../components/BlueButton";
+import AlertDialog from "../components/AlertDialog";
 
 // routing
 import { Link, useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { history } from '../helpers/history';
 
 // Signup request setup
 import axios from 'axios';
-const BASE_URL = "https://localhost:5000/loginapi";
 const NAVIGATE_TO_URL = "../../Login"
 
 const USERNAME_END = "tue.nl";
@@ -32,9 +36,18 @@ const SignUp = () => {
         setTitle('Sign Up');
     });
 
-    const navigate = useNavigate();
+    // whether or not signup was succesful.
+    const [loginAllowed, setLoginAllowed] = useState(false)
 
-    // Check if username input is valid
+    // whether or not the information about the user data is shown.
+    const [showUserDataPopup, setShowUserDataPopup] = useState(false)
+    // whether or not the information about the user data is shown.
+    const [showNeceDataPopup, setShowNeceDataPopup] = useState(false)
+
+    /** 
+     * Check if username input is valid.
+     * @returns helper text for username textfield
+     */
     const checkUsername = () => {
         if(username === "") {
             return "";
@@ -44,7 +57,10 @@ const SignUp = () => {
         return "";
     }
 
-    // Check if repeated username input is valid
+    /**
+     * Check if repeated username input is valid.
+     * @returns helper text for second username textfield
+     */
     const confirmUsername = () => {
         if(username !== "" && username !== usernameConfirm) {
             return "Must match Email";
@@ -52,7 +68,12 @@ const SignUp = () => {
         return "";
     }
 
-    // Check if password input is valid
+    /** 
+     * Check if password input is valid.
+     * According to URC 1.2-1.5, a valid password has at least 8 characters,
+     * with at least 1 lowercase character, uppercase character and number.
+     * @returns helper text for password textfield
+     */
     const checkPassword = () => {
         if(password === "") {
             return "";
@@ -68,7 +89,10 @@ const SignUp = () => {
         return "";
     }
 
-    // Check if repeated password input is valid
+    /** 
+     * Check if repeated password input is valid.
+     * @returns helper text for second password textfield
+     */
     const confirmPassword = () => {
         if(password !== "" && password !== passwordConfirm) {
             return "Must match Password";
@@ -76,7 +100,9 @@ const SignUp = () => {
         return "";
     }
 
-    // Do POST request containing username and password variable, recieve status of response
+    /**
+     * Do POST request containing username and password variable, recieve status of response.
+     */
     const handleClick = () => {
         // Check if input is valid
         if (username === "" || password === "") {
@@ -87,19 +113,25 @@ const SignUp = () => {
             setFormError("One or more fields are not complete!");
             return;
         }
+        // check if the user accepted the necessary data agreement
+        if (!acceptNeceData) {
+            setFormError('You must allow the storage and execution of necessary application data!')
+            return;
+        }
 
         // If input is valid, do post request
         const data = {
             "username": username,
             "password": password,
+            "trackable": acceptUserData,
         }
         const headers = {
             "Content-Type": "application/json"
         }
-        axios.post(`${BASE_URL}/signup`, data, headers).then(response =>{
+        axios.post(`https://api.writingdashboard.xyz/loginapi/signup`, data, headers).then(response =>{
             // Post request is successful, user is registered
             // Loads login page
-            navigate(NAVIGATE_TO_URL, {replace: true});
+            setLoginAllowed(true);           
         }).catch(error =>{
             // Post request failed, user is not created
             console.error("Something went wrong:", error.response.data);
@@ -107,20 +139,33 @@ const SignUp = () => {
         });
     }
 
+    let navigate = useNavigate();
+
+    /** Navigates to the login page */
+    const navig = () => {
+        setLoginAllowed(false)
+        navigate(NAVIGATE_TO_URL, { replace: true });
+    }
+
     // Set username from textfield
     const [username, setUsername] = useState("");
 
-    // Set username from textfield
+    // Set repeated username from textfield
     const [usernameConfirm, setUsernameConfirm] = useState("");
 
     // Set password from textfield
     const [password, setPassword] = useState("");
 
-    // Set password from textfield
+    // Set repeated password from textfield
     const [passwordConfirm, setPasswordConfirm] = useState("");
 
     // Change page using formError when we find an error
     const [formError, setFormError] = useState("");
+
+    // Set the acceptance of collecting user data from checkbox
+    const [acceptUserData, setAcceptUserData] = useState(true);
+    // Set the acceptance of collecting necessary data from checkbox
+    const [acceptNeceData, setAcceptNeceData] = useState(false);
 
     return (
         <>
@@ -133,13 +178,13 @@ const SignUp = () => {
                 <div className='div2'>
                     <div className='text_boxes'>
                         <Typography>Email:</Typography>
-                        <TextField id='email' label='example@mail.com' variant='outlined' 
+                        <TextField id='email' label='example@tue.nl' variant='outlined' 
                             value={username} onChange={(e) => {setUsername(e.target.value); setFormError("")}}
                             error={checkUsername() !== ""} helperText={checkUsername() !== "" ? checkUsername() : " "}
                             fullWidth
                         />
                         <Typography>Repeat email:</Typography>
-                        <TextField id='email2' label='example@mail.com' variant='outlined' 
+                        <TextField id='email2' label='example@tue.nl' variant='outlined' 
                             value={usernameConfirm} onChange={(e) => {setUsernameConfirm(e.target.value); setFormError("")}} 
                             error={confirmUsername() !== ""} helperText={confirmUsername() !== "" ? confirmUsername() : " "}
                             fullWidth
@@ -156,12 +201,36 @@ const SignUp = () => {
                             error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : " "}
                             fullWidth
                         />
+                        <div style={{display: 'flex', alignSelf: 'flex-end', verticalAlign: 'middle'}}>
+                            <Checkbox sx={{alignSelf: 'center'}} onChange={(e) => {setAcceptUserData(!e.target.checked)}} />
+                            <Typography sx={{alignSelf: 'center', alignContent:'inline'}}>
+                                I do not allow the collection of my <a className='userDataLinkPopup' onClick={() => {setShowUserDataPopup(true)}} >user data</a>.
+                            </Typography>
+                            {showUserDataPopup && <AlertDialog title = "User data" 
+                                text = "The data conditions allow the application to record user data. The user data includes the URL of the page, the location on the screen, and the timestamp of each click from the user.  The user data is only used to improve the automatic feedback generated within the application. If the purpose of the data changes, the application will ask the user again for permission to save their user data. This data does not include necessary sign-up information, such as the university email address and the password, since that is saved to ensure the functionalities of the application. The sign-up information is not used for any other purposes than logging into the application. The application is still fully available when refusing the data conditions. If the user refuses permission, no user data will be recorded of this user until the moment that they accept the data settings in the future. If the user accepts the permission at first but later revokes the permission, their recorded user data is deleted and no user data will be recorded of this user, until the moment that they accept the data settings in the future. Users can retrieve the recorded user data so far at any time. Users can ask questions regarding their data by sending a mail to i.l.h.rutten@student.tue.nl; a response will be provided within a month."
+                                buttonAgree={<Button onClick={() => {setShowUserDataPopup(false)}}>I understand</Button>}
+                            />}
+                        </div>
+                        <div style={{display: 'flex', alignSelf: 'flex-end', verticalAlign: 'middle'}}>
+                            <Checkbox sx={{alignSelf: 'center'}} onChange={(e) => {setAcceptNeceData(e.target.checked)}} />
+                            <Typography sx={{alignSelf: 'center', alignContent:'inline'}}>
+                            I allow the storage and execution of <a className='userDataLinkPopup' onClick={() => {setShowNeceDataPopup(true)}} >necessary application data</a>.
+                            </Typography>
+                            {showNeceDataPopup && <AlertDialog title = "Storing necessary data" 
+                                text = "The application needs to store certain data to allow the user to use the application. If the user makes an account, the application will store their sign up information in the database. This data includes their username and hashed password. If the user uploads a document, the application will store the document and its inserted meta data in the database. When the document has been uploaded, the application will generate feedback based on that document, which will also be stored in the database. The user can delete uploaded files and their corresponding feedback on the Documents page. The user can change their username and password in the Settings page. Finally, the user can delete their account, including all sign up information and documents, on the Settings page."
+                                buttonAgree={<Button onClick={() => {setShowNeceDataPopup(false)}}>I understand</Button>}
+                            />}
+                        </div>
                     </div>
                     <br />
                     {formError !== "" && <Typography color="red">{formError}</Typography>}
                     {formError !== "" && <br />}
 
                     <BlueButton idStr='signButton' onClick={handleClick}>Sign Up</BlueButton>
+                    {loginAllowed && <AlertDialog title = "Account created" 
+                        text = "You have successfully created an account. Press 'OK' to be directed to the login page."
+                        buttonAgree={<Button onClick={navig}>OK</Button>}
+                    />}
                 </div>
                 <div className='div3'>
                     <br />

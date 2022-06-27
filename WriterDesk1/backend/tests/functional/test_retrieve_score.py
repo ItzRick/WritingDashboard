@@ -3,6 +3,8 @@ from datetime import date
 from app.models import Scores, Files
 from werkzeug.utils import secure_filename
 import json
+from decimal import Decimal
+from test_set_role import loginHelper
 
 def uploadFile(testClient):
     '''
@@ -14,6 +16,7 @@ def uploadFile(testClient):
             fileDir: Location of the file we are testing the upload of.
             response: the result fo retrieving the scores in the specified order
             file: file instance 
+            access_token: the access token
         Arguments: 
             testClient: The test client we test this for.
         Returns:
@@ -29,22 +32,26 @@ def uploadFile(testClient):
         'fileName': fileName,
         'courseCode': courseCode,
         'userId': 256,
-        'date': date(1998, 10, 30)
+        'date': date(1998, 10, 30),
+        'feedbackVersion': 0.01
     }
     # Create the response by means of the post request:
-    response = testClient.post('/fileapi/upload', data=data)
-    assert response.data == b'success'
-    file = Files.query.filter_by(filename=secure_filename(fileName)).first()
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/fileapi/upload', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
+    file = Files.query.filter_by(filename=fileName).first()
+    assert response.data == f'Uploaded file with ids: [{file.id}]'.encode('utf-8')
     assert file.courseCode == courseCode
     return response, file
 
-def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegration):
+def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegration, feedbackVersion):
     '''
         A general method to test uploading a score
         Attributes: 
             data: The data we are trying to test the setScore with.
             response: Response of the post request.
             score: Score that should be set in the database
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             fileId: fileId of file related to this test
@@ -52,6 +59,7 @@ def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegrat
             sCohesion: cohesion score
             sStructure: structure score
             sIntegration: source integration and content score
+            feedbackVersion: feedbackVersion associated to the current uploaded score.
     '''
     # Create the data packet:
     data = {
@@ -60,11 +68,14 @@ def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegrat
         'scoreCohesion': sCohesion,
         'scoreStructure': sStructure,
         'scoreIntegration' : sIntegration,
+        'feedbackVersion': feedbackVersion
     }
     # Corresponding file exists?
     assert Files.query.filter_by(id=fileId).first() is not None
     # Create the response by means of the post request:
-    response = testClient.post('/scoreapi/setScore', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/scoreapi/setScore', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # See if we indeed get code 200 and the correct message from this request:
     assert response.data == b'successfully uploaded Scores'
     assert response.status_code == 200
@@ -75,6 +86,8 @@ def generalSetScore(testClient, fileId, sStyle, sCohesion, sStructure, sIntegrat
     assert score.scoreCohesion == sCohesion
     assert score.scoreStructure == sStructure
     assert score.scoreIntegration == sIntegration
+    # Test if the feedbackVersion has been correctly uploaded:
+    assert score.feedbackVersion == round(Decimal(feedbackVersion), 2)
 
 def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
     '''
@@ -84,6 +97,7 @@ def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructur
             data: The data we are trying to test the getScore with.
             response: Response of the get request.
             dataResponse: response data, i.e. the score
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             fileId: fileId of file related to this test
@@ -98,7 +112,9 @@ def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructur
     }
 
     # Retrieve the files from the specified user
-    response = testClient.get('/scoreapi/getScores', query_string=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/scoreapi/getScores', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # Check if we get the correct status_code:
     assert response.status_code == 200
     # Check response
@@ -134,8 +150,9 @@ def testSpecificScores(testClient, initDatabase):
     scoreCohesion=0
     scoreStructure=0
     scoreIntegration=0
+    feedbackVersion=0.01
     # test if we can set a file
-    generalSetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
+    generalSetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration, feedbackVersion)
     # test if we can then also retrieve that file
     generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration)
 
@@ -152,6 +169,8 @@ def testInvalidScore(testClient, initDatabase):
             scoreCohesion: cohesion score
             scoreStructure: structure score
             scoreIntegration: source integration and content score
+            feedbackVersion: feedbackVersion associated to the current uploaded score.
+            access_token: the access token
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
@@ -166,14 +185,18 @@ def testInvalidScore(testClient, initDatabase):
     scoreCohesion = 11
     scoreStructure = 1
     scoreIntegration = 1
+    feedbackVersion = 0.01
     data = {
         'fileId': fileId,
         'scoreStyle': scoreStyle,
         'scoreCohesion': scoreCohesion,
         'scoreStructure': scoreStructure,
         'scoreIntegration' : scoreIntegration,
+        'feedbackVersion': feedbackVersion
     }
-    response = testClient.post('/scoreapi/setScore', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/scoreapi/setScore', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # See if we indeed get code 200 and the correct message from this request:
     assert response.data == b'successfully uploaded Scores'
     assert response.status_code == 200
@@ -183,7 +206,9 @@ def testInvalidScore(testClient, initDatabase):
     assert score.scoreCohesion == -2
     assert score.scoreStructure == scoreStructure
     assert score.scoreIntegration == scoreIntegration
-
+    # Check for the uploaded feedback version:
+    assert score.feedbackVersion == round(Decimal(feedbackVersion), 2)
+    
     # next we test whether invalid values are overwritten, and valid are not
     scoreStyle1 = 1
     scoreCohesion1 = -1
@@ -196,7 +221,8 @@ def testInvalidScore(testClient, initDatabase):
         'scoreStructure': scoreStructure1,
         'scoreIntegration' : scoreIntegration1,
     }
-    response = testClient.post('/scoreapi/setScore', data=data)
+    response = testClient.post('/scoreapi/setScore', data=data,
+                                 headers={"Authorization": "Bearer " + access_token})
     # See if we indeed get code 200 and the correct message from this request:
     assert response.data == b'successfully uploaded Scores'
     assert response.status_code == 200
@@ -206,3 +232,5 @@ def testInvalidScore(testClient, initDatabase):
     assert score.scoreCohesion == -2 # if -1, take prev value
     assert score.scoreStructure == scoreStructure # if -1, take prev value
     assert score.scoreIntegration == -2 # if invalid, take -2
+    # No feedbackVersion uploaded:
+    assert score.feedbackVersion == None

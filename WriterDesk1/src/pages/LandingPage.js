@@ -7,12 +7,19 @@ import {
 } from "@mui/material";
 import logo from '../images/logo.png'
 import BlueButton from "./../components/BlueButton";
+import { useOutletContext } from 'react-router-dom';
+import { useEffect } from 'react';
 
 /**
  * 
  * @returns landing page, main page when not logged in
  */
 const LandingPage = () => {
+  //set title in parent 'base' 
+  const { setTitle } = useOutletContext();
+    useEffect(() => {
+        setTitle('');
+    });
 
   return (
     <Box classname='center'>
