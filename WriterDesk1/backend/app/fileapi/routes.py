@@ -1,7 +1,7 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify, send_file
-from app.models import Files, User
+from app.models import Files, User, ParticipantToProject, Projects
 from app.fileapi import bp
 from app.fileapi.convert import convertDocx, convertTxt, removeConvertedFiles
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
@@ -9,15 +9,9 @@ from magic import from_buffer
 from datetime import date
 from mimetypes import guess_extension
 
-# For protecting endpoint using JWT Tokens
-from app.extensions import jwt
-from flask_jwt_extended import jwt_required
+# jwt
 from flask_jwt_extended import current_user
-
-@jwt.user_lookup_loader
-def user_lookup_callback(_jwt_header, jwt_data):
-    identity = jwt_data["sub"]
-    return User.query.filter_by(id=identity).one_or_none()
+from flask_jwt_extended import jwt_required
 
 @bp.route('/upload', methods = ['POST'])
 @jwt_required()
@@ -110,22 +104,39 @@ def fileRetrieve():
         files: the files of the user corresponding to the user id, 
                which are sorted based on the sortingAttribute
         file: one of the files of the list files
+    returns:
+        On success:
+            list of files of the userId
+        On error:
+            403: if not either userId is current_user or user is current_user is researcher or admin
+            403: user is a researcher or admin, but wants to retrieve participants that are not his
     '''
     # Retrieve list of files that were uploaded by the current user,
     # ordered by the sorting attribute in the request
-    if 'user_id' in session or True:
-        userId = request.args.get('userId')
-        sortingAttribute = request.args.get('sortingAttribute')
-        files = getFilesByUser(userId, sortingAttribute)
 
-        # Put dates in format
-        for file in files:
-            file['date'] = file.get('date').strftime('%d/%m/%y')
+    # get userid
+    userId = int(request.args.get('userId'))
 
-        # Return http response with list as json in response body
-        return jsonify(files)
-    else:
-        return 'No user available', 400
+    # check if the userId is of current_user
+    if current_user.id != userId:
+        # or current_user is a researcher or admin
+        if (current_user.role != 'researcher' and current_user.role != 'admin'):
+            return 'You must be researcher or admin, or retrieve your own data', 403
+        # now, some researcher or admin tries to access other userFiles, check if this is its participant
+
+        # get projectId of this participant
+        ptp = ParticipantToProject.query.filter_by(userId=userId).first()
+        if ptp is None or ptp.projectId is None or Projects.query.filter_by(id=ptp.projectId).first() is None:
+            return 'You can only retrieve data from your participants or yourself', 403
+    sortingAttribute = request.args.get('sortingAttribute')
+    files = getFilesByUser(userId, sortingAttribute)
+
+    # Put dates in format
+    for file in files:
+        file['date'] = file.get('date').strftime('%d/%m/%y')
+
+    # Return http response with list as json in response body
+    return jsonify(files)
 
 @bp.route('/filedelete', methods = ['DELETE'])
 @jwt_required()
