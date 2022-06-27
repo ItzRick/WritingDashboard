@@ -27,7 +27,7 @@ def setScore():
     scoreStructure = request.form.get('scoreStructure')
     scoreIntegration = request.form.get('scoreIntegration')
     feedbackVersion = request.form.get('feedbackVersion')
-    
+
     return setScoreDB(fid, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration, feedbackVersion)
 
 
@@ -35,7 +35,7 @@ def setScore():
 
 @bp.route('/getScores', methods = ['GET'])
 @jwt_required()
-def getScores(): 
+def getScores():
     '''
         This function handles returning the score of some file
         Attributes: 
@@ -51,25 +51,25 @@ def getScores():
 
     # get fileId from request
     fileId = request.args.get('fileId')
-    
+
     # Check if the fileId exists in Scores
     if (Scores.query.filter_by(fileId=fileId).first() is None):
         return 'No score found with matching fileId', 400
-    
+
     # Get scores
     scores = Scores.query.filter_by(fileId=fileId).first()
     # return scores
     return {
-        'scoreStyle'       :scores.scoreStyle, 
-        'scoreCohesion'    :scores.scoreCohesion, 
-        'scoreStructure'   :scores.scoreStructure, 
+        'scoreStyle'       :scores.scoreStyle,
+        'scoreCohesion'    :scores.scoreCohesion,
+        'scoreStructure'   :scores.scoreStructure,
         'scoreIntegration' :scores.scoreIntegration
     }, 200
 
 
 @bp.route('/getExplanation', methods = ['GET'])
 @jwt_required()
-def getExplanation(): 
+def getExplanation():
     '''
         This function handles returning a specific explanation of some file
         Attributes: 
@@ -93,14 +93,14 @@ def getExplanation():
     # get fileId from request
     fileId = request.args.get('fileId')
     explId = request.args.get('explId')
-    
+
     # get explanation
     explanation = Explanations.query.filter_by(fileId=fileId, explId=explId).first()
 
     # Check if the fileId and explId exists in Explanation
     if explanation is None:
         return 'No explanation found with matching fileId and explId', 400
-    
+
     # return explanation
     return explanation.serialize, 200
 
@@ -127,7 +127,7 @@ def getAverageScores():
     userId = request.args.get('userId')
 
     # Average scores is based on num:AVGBASEDON files 
-    AVGBASEDON = 5 
+    AVGBASEDON = 5
 
     # Check if user has files
     if (Files.query.filter_by(userId=userId).first() is None) :
@@ -195,7 +195,7 @@ def getFilesAndScoresByUser():
 
 @bp.route('/getExplanationForFile', methods = ['GET'])
 @jwt_required()
-def getExplanationForFile(): 
+def getExplanationForFile():
     '''
         This function handles returning all explanations of some file
         Attributes: 
@@ -218,11 +218,11 @@ def getExplanationForFile():
     '''
     # get fileId from request
     fileId = request.args.get('fileId')
-    
+
     # Check if the fileId exists in Explanation
     if (Explanations.query.filter_by(fileId=fileId).first() is None):
         return 'No explanations found with matching fileId', 400
-    
+
     # Get explanations
     explanations = Explanations.query.filter_by(fileId=fileId).all()
     # return scores
@@ -269,5 +269,78 @@ def setExplanation():
     # Return message and the correct status code:
     if isSuccessful:
         return message, 200
-    else: 
+    else:
         return message, 400
+
+
+@bp.route('/getExplanationForFileAndType', methods=['GET'])
+def getExplanationForFileAndType():
+    '''
+        This function handles returning all explanations of a given file and type. These only include unique explanations.
+        It returns a 400 error when there is no explanation in the database with the given fileId and type.
+        Attributes:
+            fileId: File id as given by the frontend
+            type: Type in number given by the frontend
+            explanationsFiltered: Query containing all explanations with given fileId and type
+            explanations: Unique explanations with given fileId and type.
+        returns:
+            List of unique explanations with the given fileId and type.
+            Function returns 400 error when there does not exist an explanation with these constraints in the database.
+    '''
+    # Get fileId from request
+    fileId = request.args.get('fileId')
+    type = request.args.get('type')
+
+    # Filter on fileId and type
+    explanationsFiltered = Explanations.query.filter_by(fileId=fileId, type=type)
+
+    # Check if the fileId exists in Explanation
+    if explanationsFiltered.first() is None:
+        return 'No explanations found with matching fileId and type', 400
+
+    # Get explanations
+    explanations = explanationsFiltered\
+        .distinct(Explanations.mistakeText, Explanations.explanation, Explanations.replacement1,
+                  Explanations.replacement2, Explanations.replacement3).all()
+
+    # Return Explanations
+    return jsonify([i.serialize for i in explanations]), 200
+
+
+@bp.route('/getExplanationForFileAndCoordinates', methods=['GET'])
+def getExplanationForFileAndCoordinates():
+    '''
+        This function handles returning all explanations of a given file and coordinates. These only include unique explanations.
+        It returns a 400 error when there is no explanation in the database with the given fileId and coordinates.
+        Attributes:
+            fileId: File id as given by the frontend
+            x: X-coordinate of the click as given by the frontend
+            y: Y-coordinate of the click as given by the frontend
+            explanationsFiltered: Query containing all explanations with given fileId and coordinates
+            explanations: Unique explanations with given fileId and coordinates.
+        returns:
+            List of unique explanations with the given fileId and coordinates.
+            Function returns 400 error when there does not exist an explanation with these constraints in the database.
+    '''
+    # Get fileId from request
+    fileId = request.args.get('fileId')
+
+    # Get x and y coordinates of click from request
+    x = request.args.get('x')
+    y = request.args.get('y')
+
+    # Filter on fileId and coordinates
+    explanationsFiltered = Explanations.query.filter_by(fileId=fileId).filter(x >= Explanations.X1, x <= Explanations.X2,
+                                                                              y >= Explanations.Y1, y <= Explanations.Y2)
+
+    # Check if there exists explanations for this fileid and coordinates
+    if explanationsFiltered.first() is None:
+        return 'No explanations found with matching fileId and coordinates', 400
+
+    # Get explanations
+    explanations = explanationsFiltered\
+        .distinct(Explanations.type, Explanations.mistakeText, Explanations.explanation, Explanations.replacement1,
+                  Explanations.replacement2, Explanations.replacement3).all()
+
+    # Return Explanations
+    return jsonify([i.serialize for i in explanations]), 200

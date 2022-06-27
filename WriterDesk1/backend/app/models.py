@@ -1,5 +1,6 @@
 from datetime import datetime
 from app import db
+from sqlalchemy import Index
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from datetime import datetime
@@ -204,6 +205,10 @@ class Explanations(db.Model):
     replacement2    = db.Column(db.String, default='')
     replacement3    = db.Column(db.String, default='')
     feedbackVersion = db.Column(db.Numeric(5,2), unique=False, default=None)
+
+    # Create indices for table
+    __table_args__ = (Index('idx_fileId_Type', "fileId", "type"),  # Index on file ID and explanation type
+                      Index('idx_fileId_coordinates', "fileId", "X1", "X2", "Y1", "Y2"))  # Index on file ID and explanation coordinates
 
     def __repr__(self):
         return '<Explanations {} {}>'.format(self.fileId, self.explId)
