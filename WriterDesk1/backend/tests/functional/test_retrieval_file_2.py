@@ -3,6 +3,7 @@ from app import db
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import json
+from test_set_role import loginHelper
 
 from test_set_role import loginHelper
 

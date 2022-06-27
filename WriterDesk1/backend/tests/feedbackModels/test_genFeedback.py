@@ -1,6 +1,7 @@
 from app.feedback.feedback import genFeedback
 from app.models import Files, Explanations, User, Scores
 from app.scoreapi.scores import setScoreDB, getCurrentExplanationVersion
+from tests.functional.test_set_role import loginHelper
 from datetime import date
 import os
 import fitz
@@ -18,8 +19,9 @@ def uploadFile(fileName, testClient):
             data: Data to upload this file with. 
             response: Response after the ai call.
             file: Database instance of the file we have uploaded. 
+            access_token: the access token
     '''
-    user = User.query.first()
+    user = User.query.filter_by(username='ad').first()
     # Get the BASEDIR and set the fileDir with that:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, fileName)
@@ -32,7 +34,9 @@ def uploadFile(fileName, testClient):
         'date': date(2022, 5, 11)
     }
     # Create the response by means of the post request:
-    response = testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/fileapi/upload', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
     file = Files.query.filter_by(filename=fileName).first()
     return file

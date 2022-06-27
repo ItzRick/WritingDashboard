@@ -6,6 +6,7 @@ from datetime import datetime, date
 import os
 from werkzeug.utils import secure_filename
 import io
+from test_set_role import loginHelper
 
 def testRetrieveListOfIds(testClient, initDatabaseEmpty):
     '''
@@ -21,6 +22,7 @@ def testRetrieveListOfIds(testClient, initDatabaseEmpty):
             courseCode: courseCode of the course for which we test to upload the current file.
             date1: date of the file which we are currently testing to upload.
             id1: id of the file we are testing the method with.
+            access_token: the access token
         Argument:
             response: the result by retrieving the list of file ids
     '''
@@ -41,7 +43,9 @@ def testRetrieveListOfIds(testClient, initDatabaseEmpty):
         'id': id1
     }
     # Upload this file:
-    testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    testClient.post('/fileapi/upload', data=data,
+                    headers={"Authorization": "Bearer " + access_token})
 
     # Create the response by means of the get request:
     response = testClient.get('/fileapi/searchId') 
@@ -64,6 +68,7 @@ def testRetrieveListOfIdsMultiple(testClient, initDatabaseEmpty):
             date1: date of the file which we are currently testing to upload.
             id1: id of the first file we are testing the method with.
             id2: id of the second file we are testing the method with. 
+            access_token: the access token
         Argument:
             response: the result by retrieving the list of file ids
     '''
@@ -84,7 +89,9 @@ def testRetrieveListOfIdsMultiple(testClient, initDatabaseEmpty):
         'id': id1
     }
     # Upload the file by means of a post request:
-    testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    testClient.post('/fileapi/upload', data=data,
+                    headers={"Authorization": "Bearer " + access_token})
     # Upload the second file:
     fileName = 'fake-text-stream1.txt'
     id2 = 2
@@ -97,7 +104,8 @@ def testRetrieveListOfIdsMultiple(testClient, initDatabaseEmpty):
         'id': id2
     }
     # Upload the file by means of a post request:
-    testClient.post('/fileapi/upload', data=data)
+    testClient.post('/fileapi/upload', data=data,
+                    headers={"Authorization": "Bearer " + access_token})
     
     # Create the response by means of the get request:
     response = testClient.get('/fileapi/searchId') 
@@ -158,7 +166,9 @@ def testRetrieveListOfIdsOneDeleted(testClient, initDatabaseEmpty):
         'id': id1
     }
     # Upload the file by means of a post request:
-    testClient.post('/fileapi/upload', data=data)
+    access_token = loginHelper(testClient, 'ad', 'min')
+    testClient.post('/fileapi/upload', data=data,
+                    headers={"Authorization": "Bearer " + access_token})
     fileName = 'fake-text-stream1.txt'
     id2 = 2
     data = {
@@ -170,12 +180,14 @@ def testRetrieveListOfIdsOneDeleted(testClient, initDatabaseEmpty):
         'id': id2
     }
     # Create the response by means of the post request:
-    testClient.post('/fileapi/upload', data=data)
+    testClient.post('/fileapi/upload', data=data,
+                    headers={"Authorization": "Bearer " + access_token})
     # Remove the file with the first file id:
     data1 = {
         'id': id1,
     }
-    testClient.delete('/fileapi/filedelete', data=data1)
+    testClient.delete('/fileapi/filedelete', data=data1,
+                       headers={"Authorization": "Bearer " + access_token})
 
     # Create the response by means of the get request:
     response = testClient.get('/fileapi/searchId') 

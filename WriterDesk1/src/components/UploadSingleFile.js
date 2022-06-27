@@ -17,6 +17,7 @@ import { AuthenticationService } from "../services/authenticationService";
 // tracking
 import { useContext } from 'react';
 import { TrackingContext } from '@vrbo/react-event-tracking';
+import { authHeader } from '../helpers/auth-header';
 
 /**
  * 
@@ -64,11 +65,12 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                 formData.append('date', date.toISOString().substring(0, 10));
                 formData.append('courseCode', course);
                 //add header
-                const headers = {
+                const authheader = authHeader();
+                const fileheader = {
                     Accept: 'application/json',
                     'Content-Type': 'multipart/form-data',
                 }
-
+                const headers = {headers: Object.assign(fileheader, authheader)};
                 //post the file
             axios.post(url, formData, headers)
             .then((response) => {

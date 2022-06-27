@@ -2,6 +2,7 @@ import { history } from "../helpers/history";
 import { Navigate, Outlet, useOutletContext } from "react-router-dom";
 import { AuthenticationService } from "./authenticationService";
 
+
 /**
  * Check role from user, and authenticate access token
  * 
@@ -9,7 +10,11 @@ import { AuthenticationService } from "./authenticationService";
  */
 const getRole = () => {
     AuthenticationService.checkAuth().catch(() => {
-        history.push("/Login");
+        if (AuthenticationService.getRole() != null){
+            AuthenticationService.logout(); 
+            history.push("/Login");
+            window.location.reload();
+        }
     });
     return AuthenticationService.getRole();
 }
@@ -23,7 +28,7 @@ const getRole = () => {
     const role = getRole();
     //set title in parent 'base'     
     const { setTitle } = useOutletContext();
-    return (role === 'student' || role === 'participant' || role === 'researcher' || role === 'admin') ? <Outlet context={{ setTitle }} /> : <Navigate to="/" />;
+    return (role === 'student' || role === 'participant' || role === 'researcher' || role === 'admin') ? <Outlet context={{ setTitle }} /> : <Navigate to="/Login" />;
 }
 
 /**
@@ -35,7 +40,7 @@ const ProtectedR = () => {
     const role = getRole()
     //set title in parent 'base' 
     const { setTitle } = useOutletContext();
-    return (role === 'researcher' || role === 'admin') ? <Outlet context={{ setTitle }} /> : <Navigate to="/" />;
+    return (role === 'researcher' || role === 'admin') ? <Outlet context={{ setTitle }} /> : <Navigate to="/Login" />;
 }
 
 /**
@@ -47,7 +52,7 @@ const ProtectedA = () => {
     const role = getRole();
     //set title in parent 'base' 
     const { setTitle } = useOutletContext();
-    return (role === 'admin') ? <Outlet context={{ setTitle }}/> : <Navigate to="/" />;
+    return (role === 'admin') ? <Outlet context={{ setTitle }}/> : <Navigate to="/Login" />;
 }
 
 export {ProtectedU, ProtectedR, ProtectedA};
