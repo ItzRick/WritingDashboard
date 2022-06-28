@@ -340,7 +340,7 @@ const Settings = () => {
                 />}
                 {successDeleteDialog && <AlertDialog title = "Successfully deleted account"
                     text = "Your account has been successfully deleted. You will be redirected to the login page."
-                    buttonAgree={<Button onClick={(e) => {window.location.reload()}}>Ok</Button>}
+                    buttonAgree={<Button onClick={(e) => {navigate("../Login", {replace: true});}}>Ok</Button>}
                 />}
             </div>
         </>
