@@ -25,7 +25,7 @@ import { authHeader } from "../helpers/auth-header";
 
 
 /**
- * Function to display the file that is clicked on. Use memo to prevent re-rendering document.
+ * Function to display the file that is clicked on. Use React.memo component to prevent re-rendering document.
  * @property {String} path - Path to the current file.
  * @property {String} type - File extension of the current file.
  * @property {String} fileId - ID of the current file.

@@ -259,10 +259,10 @@ const Documents = () => {
         }}}
         rows={tableData}
         columns={columns}
-        pageSize={15} rowsPerPageOptions={[15]}
+        pageSize={15}
+        rowsPerPageOptions={[15]}
         checkboxSelection
         onSelectionModelChange={e => setSelectedInstances(e)}
-         onFilterModelChange={e => console.log(e)}
         disableSelectionOnClick
         components={{
           NoRowsOverlay: () => (
