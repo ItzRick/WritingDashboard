@@ -51,6 +51,7 @@ const Users = () => {
     {
       field: 'username',
       headerName: 'Username',
+      width: 350,
       editable: false,
     },
     {

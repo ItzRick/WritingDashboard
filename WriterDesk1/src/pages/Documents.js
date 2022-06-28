@@ -76,8 +76,10 @@ const Documents = () => {
     },
     {
       field: 'scoreStyle',
-      headerName: 'Language and Style score',
+      headerName: 'Language & Style score',
       type: "number",
+      align:'left',
+      headerAlign: 'left',
       editable: false,
       flex: 1
     },
@@ -85,6 +87,8 @@ const Documents = () => {
       field: 'scoreCohesion',
       headerName: 'Cohesion score',
       type: "number",
+      align:'left',
+      headerAlign: 'left',
       editable: false,
       flex: 1
     },
@@ -92,13 +96,17 @@ const Documents = () => {
       field: 'scoreStructure',
       headerName: 'Structure score',
       type: "number",
+      align:'left',
+      headerAlign: 'left',
       editable: false,
       flex: 1
     },
     {
       field: 'scoreIntegration',
-      headerName: 'Source Integration and Content score',
+      headerName: 'Source Integration & Content score',
       type: "number",
+      align:'left',
+      headerAlign: 'left',
       editable: false,
       flex: 1
     },
@@ -243,12 +251,18 @@ const Documents = () => {
         />}
       <DataGrid
         style={{ maxHeight: '100%' }}
+        sx={{'& .MuiDataGrid-columnHeaderTitle': {
+                textOverflow: "clip",
+            overFlow: 'hidden',
+                whiteSpace: "break-spaces",
+                lineHeight: 1.4
+        }}}
         rows={tableData}
         columns={columns}
-        pageSize={15}
-        rowsPerPageOptions={[15]}
+        pageSize={15} rowsPerPageOptions={[15]}
         checkboxSelection
         onSelectionModelChange={e => setSelectedInstances(e)}
+         onFilterModelChange={e => console.log(e)}
         disableSelectionOnClick
         components={{
           NoRowsOverlay: () => (
