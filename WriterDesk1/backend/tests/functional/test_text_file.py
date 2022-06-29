@@ -64,7 +64,7 @@ def testGetDocxCorruptedFile(testClient):
 
 def testGetDocxInvalidFile(testClient):
     """
-        TTest if the getTXTText function retrieves the catched error from an nonextistent txt file.
+        Test if the getTXTText function retrieves the catched error from an nonextistent txt file.
         Attributes:
             dir_path: Path of the location where the file is stored.
             message: String that contains the output of the getTXTText function.
