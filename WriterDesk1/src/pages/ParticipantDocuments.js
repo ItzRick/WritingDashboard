@@ -24,6 +24,7 @@ import "../css/styles.css";
 import "../css/main.css";
 
 import AlertDialog from "../components/AlertDialog";
+import {authHeader} from "../helpers/auth-header";
 
 
 /**
@@ -220,7 +221,7 @@ const ParticipantDocuments = () => {
       sortingAttribute: '',
     }
     // Make the backend call and set the table data from the response data:
-    axios.get(url, { params })
+    axios.get(url, { params, headers: authHeader()})
       .then((response) => {
         setTableData(response.data)
       })
