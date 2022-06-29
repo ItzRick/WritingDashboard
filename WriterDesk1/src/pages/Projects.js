@@ -43,14 +43,14 @@ const Projects = () => {
 
         // Delete project from all tables in database and delete files from the server:
         axios.get('https://api.writingdashboard.xyz/projectapi/viewProjectsOfUser', {headers:authHeader()} ).then(response => {
-            //TODO: Set table data
             setTableData(response.data);
         });
     }
 
-    // upon first render, set the table data
+    /**
+     * upon first render, set the table data
+     */
     useEffect(() => {
-        // TODO: replace table data with real data
         setProjects()
     }, []);
 
