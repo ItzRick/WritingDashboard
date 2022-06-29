@@ -6,7 +6,7 @@ import {
 
 // routing
 import { useOutletContext, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import {memo, useEffect, useState} from 'react';
 import axios from 'axios';
 
 // show pdf
@@ -22,6 +22,26 @@ import { TrackingContext } from '@vrbo/react-event-tracking';
 
 // authentication
 import { authHeader } from "../helpers/auth-header";
+
+
+/**
+ * Function to display the file that is clicked on. Use React.memo component to prevent re-rendering document.
+ * @property {String} path - Path to the current file.
+ * @property {String} type - File extension of the current file.
+ * @property {String} fileId - ID of the current file.
+ * @property {String} fileName - Name of the current file.
+ * @returns AllPagesPDFViewer component
+ */
+const PDFViewer = memo((props) => {
+  return (
+    <AllPagesPDFViewer
+        pdf={`https://api.writingdashboard.xyz/fileapi/display?filepath=${props.path}&filetype=${props.type}`}
+        docId={props.fileId}
+        docName={props.fileName}
+      />
+  )
+})
+
 
 /**
  *
@@ -289,11 +309,7 @@ function Document() {
     <div>
       <div className="all-page-container" id="all-page-container" style={{ width: '50%' }}>
         {/** potentially convert document to pdf and show document on page */}
-        <AllPagesPDFViewer
-          pdf={`https://api.writingdashboard.xyz/fileapi/display?filepath=${path}&filetype=${type}`}
-          docId={location.state.fileId}
-          docName={location.state.fileName}
-        />
+        <PDFViewer fileName={location.state.fileName} fileId={location.state.fileId} path={path} type={type} />
         {highlights.map((highlight, i) =>
           <ClickableTextDiv
             key={highlight.explId} number={i}

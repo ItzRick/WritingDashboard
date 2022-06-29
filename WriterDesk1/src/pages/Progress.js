@@ -57,7 +57,7 @@ function Progress() {
     return (
         <>
             <div className='subTitle'>
-                <Typography variant='h5'>Average score per skill category</Typography>
+                <Typography variant='h5'>Average scores of the last 5 documents</Typography>
                 <div className="plotContainerAverage">
                     <Plot
                         data={[
