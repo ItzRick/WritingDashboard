@@ -17,7 +17,7 @@ def testGetPDFReferences(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'referenceFile.pdf')
 
-    text, references = getPDFText(fileDir, returnReferences=True)
+    isSuccesful, text, references = getPDFText(fileDir, returnReferences=True)
     assert text == '''Donec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. Phasellus rutrum molestie dictum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc faucibus lobortis tortor non hendrerit.'''
     assert references == '''A Framework for Personal Science - Quantified Self. (n.d.). Retrieved June 17, 2021, from https://quantifiedself.com/blog/personal-science/ \n\nBaumer, E. P. S. (2015). Reflective Informatics. 585–594. https://doi.org/10.1145/2702123.2702234 \n\nBaumer, E. P. S., Khovanskaya, V., Matthews, M., Reynolds, L., Sosik, V. S., & Gay, G. (2014). Reviewing reflection: On the use of reflection in interactive system design. Proceedings of the Conference on Designing Interactive Systems: Processes, Practices, Methods, and Techniques, DIS, 93–102. https://doi.org/10.1145/2598510.2598598'''
 
@@ -35,7 +35,7 @@ def testGetPDFImages(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'imageFile.pdf')
 
-    text = getPDFText(fileDir)
+    isSuccesful, text = getPDFText(fileDir)
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \n\nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra.'''
 
 def testGetPDFList(testClient):
@@ -52,7 +52,7 @@ def testGetPDFList(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'listFile.pdf')
 
-    text = getPDFText(fileDir)
+    isSuccesful, text = getPDFText(fileDir)
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \n\nLorum \n\nIpsum \n\nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra.'''
 
 def testGetPDFTable(testClient):
@@ -69,7 +69,7 @@ def testGetPDFTable(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'tableFile.pdf')
 
-    text = getPDFText(fileDir)
+    isSuccesful, text = getPDFText(fileDir)
     assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \n\nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra.'''
 
 def testGetPDFEmptyFile(testClient):
@@ -86,7 +86,7 @@ def testGetPDFEmptyFile(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'emptyFile.pdf')
 
-    text = getPDFText(fileDir)
+    isSuccesful, text = getPDFText(fileDir)
     assert text == ''
 
 
@@ -104,7 +104,7 @@ def testGetPDFCorruptedFile(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'corruptedFile.pdf')
 
-    text = getPDFText(fileDir)
+    isSuccesful, text = getPDFText(fileDir)
     assert text == ''
 
 
@@ -122,7 +122,7 @@ def testGetPDFInvalidFile(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'invalidFileName.pdf')
 
-    text = getPDFText(fileDir)
+    isSuccesful, text = getPDFText(fileDir)
     assert text == ''
 
 
@@ -140,7 +140,7 @@ def testGetPDFInvalidExtension(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'invalidFileExtension.docx')
 
-    text = getPDFText(fileDir)
+    isSuccesful, text = getPDFText(fileDir)
     assert text == ''
 
 def testSplitBlocks(testClient):

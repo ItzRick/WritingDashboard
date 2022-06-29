@@ -50,10 +50,10 @@ def getTXTText(path):
         fullText = ''.join(linesDocument)
     except Exception as e:
         # Invalid file or filename
-       return "Caught", repr(e), "when calling getTXTText"
+       return False, "Caught " + repr(e) + " when calling getTXTText."
     # Remove redundant newlines
     fullText = re.sub(r'\n+', '\n\n', fullText).strip()
-    return fullText
+    return True, fullText
 
 
 def getDOCXText(path):
@@ -98,13 +98,13 @@ def getDOCXText(path):
 
     except Exception as e:
         # Invalid file or filename
-        return "Caught", repr(e), "when calling getDOCXText"
+        return False, "Caught " + repr(e) + " when calling getDOCXText.", ""
 
     # Remove redundant newlines
     fullText = re.sub(r'\n+', '\n\n', fullText).strip()
     referencesText = re.sub(r'\n+', '\n\n', referencesText).strip()
 
-    return fullText, referencesText
+    return True, fullText, referencesText
 
 
 def subtractTextFromParagraph(para, referencesParagraph, fullText, referencesText):
