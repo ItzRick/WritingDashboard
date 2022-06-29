@@ -213,7 +213,6 @@ const ParticipantDocuments = () => {
     const url = 'https://api.writingdashboard.xyz/fileapi/fileretrieve';
     // id of current user
     const userId = location.state.userId;
-    console.log(userId)
     // The parameter, sortingAttribute need to be changed later:
     const params = {
       userId: userId,
