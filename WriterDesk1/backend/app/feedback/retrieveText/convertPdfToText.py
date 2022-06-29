@@ -87,7 +87,7 @@ def getPDFText(path, returnReferences=False, returnReferencesText=False, include
                 text = "".join([text, "\n", pageText])
     except Exception as e:
         # Invalid file or filename
-        print("caught", repr(e), "when calling getPDFText")
+        return "caught", repr(e), "when calling getPDFText"
 
     text = postProcessText(text, returnReferencesText)
     #Split references

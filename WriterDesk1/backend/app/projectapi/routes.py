@@ -148,7 +148,7 @@ def DeleteAllFilesFromProject(projectIds):
                 folderToRemove = os.path.join(current_app.config['UPLOAD_FOLDER'], str(user.userId))
                 shutil.rmtree(folderToRemove)  # Try to remove folder recursively
             except FileNotFoundError:
-                print('Folder not found')
+                return 'Folder not found'
     return 'success', 200
 
 @bp.route('/viewParticipantsOfUser', methods=["GET"])

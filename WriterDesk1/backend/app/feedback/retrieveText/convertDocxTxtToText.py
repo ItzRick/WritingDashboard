@@ -50,7 +50,7 @@ def getTXTText(path):
         fullText = ''.join(linesDocument)
     except Exception as e:
         # Invalid file or filename
-        print("caught", repr(e), "when calling getTXTText")
+       return "Caught", repr(e), "when calling getTXTText"
     # Remove redundant newlines
     fullText = re.sub(r'\n+', '\n\n', fullText).strip()
     return fullText
@@ -98,7 +98,7 @@ def getDOCXText(path):
 
     except Exception as e:
         # Invalid file or filename
-        print("caught", repr(e), "when calling getDOCXText")
+        return "Caught", repr(e), "when calling getDOCXText"
 
     # Remove redundant newlines
     fullText = re.sub(r'\n+', '\n\n', fullText).strip()
