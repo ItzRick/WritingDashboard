@@ -64,7 +64,6 @@ def fileUpload():
         extensionFilename = filename.split('.')[-1]
         # If the file is corrupt, that is the text extension is not the actual extension:
         if extension[1:] != extensionFilename:
-            print(extensionFilename, extension)
             return 'Corrupt file: ' + str(filename), 400
         # If the filetype is not accepted, indicate this by returning this in a message and a 400 code:
         if (not (isPdf or isDocx or isTxt)):
