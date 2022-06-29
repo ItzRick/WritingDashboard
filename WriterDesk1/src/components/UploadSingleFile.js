@@ -235,7 +235,10 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                         views={['year', 'month', 'day']}
                         value={date}
                         onChange={(newDate) => {
-                            setDate(newDate);
+                            var tempdate = new Date(newDate);
+                            // Transform date from GMT to UTC
+                            var date = new Date(tempdate.getTime() - (tempdate.getTimezoneOffset() * 60 * 1000));
+                            setDate(date);
                         }}
                         renderInput={(params) => <TextField {...params} sx={{minWidth: '80px'}}/>}
                     />
