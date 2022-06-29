@@ -105,7 +105,6 @@ root.render(
         <Routes>
           {/* public part of the router, accessible for public */}
           <Route path='/' element={<BaseOut />}>
-            <Route name='LandingPage' path='LandingPage' element={<LandingPage />} />
             <Route name='Login' path='Login' element={<Login />} />
             <Route name='SignUp' path='SignUp' element={<SignUp />} />
             <Route path='/' element={<LandingPage />} />

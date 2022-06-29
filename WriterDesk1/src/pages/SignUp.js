@@ -171,7 +171,7 @@ const SignUp = () => {
         <>
             <div className='parent'>
                 <div className='div1'>
-                    <IconButton style={{ float: 'left' }} component={Link} to='/LandingPage'>
+                    <IconButton style={{ float: 'left' }} component={Link} to='/'>
                         <img className='logo' src={logo} />
                     </IconButton>
                 </div>
