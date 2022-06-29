@@ -17,6 +17,7 @@ def getTXTText(path):
         Arguments: 
             path: absolute path of the .txt file that should be read. 
         Returns:
+            True, if the text has been succesfully extracted. False and a string with the error message when this is not the case.
             fullText: full text from the file we are currently reading.
     '''
     fullText = ""
@@ -50,10 +51,10 @@ def getTXTText(path):
         fullText = ''.join(linesDocument)
     except Exception as e:
         # Invalid file or filename
-        print("caught", repr(e), "when calling getTXTText")
+       return False, "Caught " + repr(e) + " when calling getTXTText."
     # Remove redundant newlines
     fullText = re.sub(r'\n+', '\n\n', fullText).strip()
-    return fullText
+    return True, fullText
 
 
 def getDOCXText(path):
@@ -71,6 +72,7 @@ def getDOCXText(path):
     Arguments:
         path: Path of docx file which will be extracted.
     Returns:
+        True, if the text has been succesfully extracted. False and a string with the error message when this is not the case.
         fullText: Text of docx file as a string (does not contain references).
         referencesText: Text of references from docx file as a string.
     """
@@ -98,13 +100,13 @@ def getDOCXText(path):
 
     except Exception as e:
         # Invalid file or filename
-        print("caught", repr(e), "when calling getDOCXText")
+        return False, "Caught " + repr(e) + " when calling getDOCXText.", ""
 
     # Remove redundant newlines
     fullText = re.sub(r'\n+', '\n\n', fullText).strip()
     referencesText = re.sub(r'\n+', '\n\n', referencesText).strip()
 
-    return fullText, referencesText
+    return True, fullText, referencesText
 
 
 def subtractTextFromParagraph(para, referencesParagraph, fullText, referencesText):

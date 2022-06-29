@@ -46,16 +46,19 @@ def genFeedback(file):
         references = ''
         # Retrieve the text from each fileType, and convert this file if required:
         if fileType == '.docx':
-            text, references = getDOCXText(path)
+            isSuccesful, text, references = getDOCXText(path)
             path = convertDocx(path)
             textStructure = text
         elif fileType == '.pdf':
-            textStructure = getPDFText(path, returnReferencesText=True)
-            text, references = getPDFText(path, returnReferences=True)
+            isSuccesful, textStructure = getPDFText(path, returnReferencesText=True)
+            isSuccesful, text, references = getPDFText(path, returnReferences=True)
         elif fileType == '.txt':
-            text = getTXTText(path)
+            isSuccesful, text = getTXTText(path)
             path = convertTxt(path)
             textStructure = text
+
+        if not isSuccesful:
+            return False, text
 
         # Create the feedbackEngines in a list, one for each skill category:
         feedbackEngines = [

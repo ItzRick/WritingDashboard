@@ -39,6 +39,7 @@ def getPDFText(path, returnReferences=False, returnReferencesText=False, include
         path: Path of pdf file which will be extracted
         returnReferences: True if the references should also be returned.
     Returns: 
+        True, if the text has been succesfully extracted. False and a string with the error message when this is not the case.
         text: Text of pdf file as a string.
         referenceText: Text with only the references form the pdf file. 
     """
@@ -87,7 +88,11 @@ def getPDFText(path, returnReferences=False, returnReferencesText=False, include
                 text = "".join([text, "\n", pageText])
     except Exception as e:
         # Invalid file or filename
-        print("caught", repr(e), "when calling getPDFText")
+        messageToReturn = "Caught " + repr(e) + " when calling getPDFText."
+        if returnReferences:
+            return False, messageToReturn, ""
+        else: 
+            return False, messageToReturn,
 
     text = postProcessText(text, returnReferencesText)
     #Split references
@@ -96,8 +101,8 @@ def getPDFText(path, returnReferences=False, returnReferencesText=False, include
         text = referenceSplit[0].strip()
         referenceText = referenceSplit[len(referenceSplit)-1]
     if returnReferences:
-        return text, referenceText
-    return text
+        return True, text, referenceText
+    return True, text
 
 
 def extractStringFromFile(path):
