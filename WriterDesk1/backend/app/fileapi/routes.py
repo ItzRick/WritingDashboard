@@ -36,6 +36,7 @@ def fileUpload():
             existing: current existing files with the same userId and fileName 
             associated in the database for the current file that is being handled.
             fileIds: ids of the file that have been uploaded.
+            extensionFilename: The extension as retrieved from the fileName.
     '''
     # Retrieve the files as send by the react frontend and give this to the fileUpload function,
     # which does all the work:
@@ -62,7 +63,7 @@ def fileUpload():
         extension = guess_extension(fileType)
         # Get the extension from the filename:
         extensionFilename = filename.split('.')[-1]
-        # If the file is corrupt, that is the text extension is not the actual extension:
+        # If the file is corrupt, that is the filename extension is not the actual extension:
         if extension[1:] != extensionFilename:
             return 'Corrupt file: ' + str(filename), 400
         # If the filetype is not accepted, indicate this by returning this in a message and a 400 code:
