@@ -36,6 +36,7 @@ def fileUpload():
             existing: current existing files with the same userId and fileName 
             associated in the database for the current file that is being handled.
             fileIds: ids of the file that have been uploaded.
+            extensionFilename: The extension as retrieved from the fileName.
     '''
     # Retrieve the files as send by the react frontend and give this to the fileUpload function,
     # which does all the work:
@@ -51,19 +52,23 @@ def fileUpload():
     dates = request.form.getlist('date')
     # Handle each file separately:
     for idx, file in enumerate(files):
+        # Run secure_filename on the file to protect against sql_injections etc and to make sure the filename does not
+        # contain any spaces:
+        filename = secure_filename(file.filename)
         # Get the filetype and check if this is one of the accepted filetypes:
         fileType = from_buffer(file.read(), mime = True)
         isPdf = (fileType == 'application/pdf')
         isDocx = (fileType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
         isTxt = (fileType == 'text/plain')
         extension = guess_extension(fileType)
-
+        # Get the extension from the filename:
+        extensionFilename = filename.split('.')[-1]
+        # If the file is corrupt, that is the filename extension is not the actual extension:
+        if extension[1:] != extensionFilename:
+            return 'Corrupt file: ' + str(filename), 400
         # If the filetype is not accepted, indicate this by returning this in a message and a 400 code:
         if (not (isPdf or isDocx or isTxt)):
-            return 'Incorrect filetype ' + str(idx + 1), 400
-        # Run secure_filename on the file to protect against sql_injections etc and to make sure the filename does not
-        # contain any spaces:
-        filename = secure_filename(file.filename)
+            return 'Incorrect filetype: ' + str(filename), 400
         # Get the path to save the file to, as indicated in the config and then having a subfolder for every user:
         userFileLocation = os.path.join(current_app.config['UPLOAD_FOLDER'], str(userId))
         fileLocation = os.path.join(userFileLocation, filename)
