@@ -6,9 +6,10 @@ def testGetPDFReferences(testClient):
     '''
         Test if references are split and returned when getPDFText() is called with returnReferences=True
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
-            text: string of text returned by getPDFText
+            dir_path: path of the directory that holds this file and the test pdf.
+            text: string of text returned by getPDFText.
             references: string containing references returned by getPDFText()
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
         Arguments:
             testClient: the test client we test this for
     '''
@@ -18,15 +19,17 @@ def testGetPDFReferences(testClient):
     fileDir = os.path.join(BASEDIR, 'referenceFile.pdf')
 
     isSuccesful, text, references = getPDFText(fileDir, returnReferences=True)
+    assert isSuccesful == True
     assert text == '''Donec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra. Phasellus rutrum molestie dictum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc faucibus lobortis tortor non hendrerit.'''
     assert references == '''A Framework for Personal Science - Quantified Self. (n.d.). Retrieved June 17, 2021, from https://quantifiedself.com/blog/personal-science/ \n\nBaumer, E. P. S. (2015). Reflective Informatics. 585–594. https://doi.org/10.1145/2702123.2702234 \n\nBaumer, E. P. S., Khovanskaya, V., Matthews, M., Reynolds, L., Sosik, V. S., & Gay, G. (2014). Reviewing reflection: On the use of reflection in interactive system design. Proceedings of the Conference on Designing Interactive Systems: Processes, Practices, Methods, and Techniques, DIS, 93–102. https://doi.org/10.1145/2598510.2598598'''
 
 def testGetPDFImages(testClient):
     '''
-        Test if images are ignored when getPDFText() is called
+        Test if images are ignored when getPDFText() is called.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
-            text: string of text returned by getPDFText
+            dir_path: path of the directory that holds this file and the test pdf.
+            text: string of text returned by getPDFText.
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
         Arguments:
             testClient: the test client we test this for
     '''
@@ -36,14 +39,19 @@ def testGetPDFImages(testClient):
     fileDir = os.path.join(BASEDIR, 'imageFile.pdf')
 
     isSuccesful, text = getPDFText(fileDir)
-    assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \n\nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra.'''
+    assert isSuccesful == True
+    assert text == ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum.'
+    ' Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. '
+    'Ut pulvinar diam ut dignissim malesuada. \n\nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non'
+    ' scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra.')
 
 def testGetPDFList(testClient):
     '''
-        Test if list symbols are removed when getPDFText() is called
+        Test if list symbols are removed when getPDFText() is called.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
-            text: string of text returned by getPDFText
+            dir_path: path of the directory that holds this file and the test pdf.
+            text: string of text returned by getPDFText.
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
         Arguments:
             testClient: the test client we test this for
     '''
@@ -53,14 +61,19 @@ def testGetPDFList(testClient):
     fileDir = os.path.join(BASEDIR, 'listFile.pdf')
 
     isSuccesful, text = getPDFText(fileDir)
-    assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \n\nLorum \n\nIpsum \n\nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra.'''
+    assert isSuccesful == True
+    assert text == ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum.'
+    ' Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada.'
+    ' \n\nLorum \n\nIpsum \n\nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum.'
+    ' Quisque condimentum cursus pharetra.')
 
 def testGetPDFTable(testClient):
     '''
-        Test if text from tables is removed when getPDFText() is called
+        Test if text from tables is removed when getPDFText() is called.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
-            text: string of text returned by getPDFText
+            dir_path: path of the directory that holds this file and the test pdf.
+            text: string of text returned by getPDFText.
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
         Arguments:
             testClient: the test client we test this for
     '''
@@ -70,14 +83,19 @@ def testGetPDFTable(testClient):
     fileDir = os.path.join(BASEDIR, 'tableFile.pdf')
 
     isSuccesful, text = getPDFText(fileDir)
-    assert text == '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada. \n\nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum. Quisque condimentum cursus pharetra.'''
+    assert isSuccesful == True
+    assert text == ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat laoreet lacus id elementum. '
+    'Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada.'
+    ' \n\nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum.'
+    ' Quisque condimentum cursus pharetra.')
 
 def testGetPDFEmptyFile(testClient):
     '''
-        Test if empty string is returned when getPDFText() is called on an empty file
+        Test if empty string is returned when getPDFText() is called on an empty file.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
-            text: string of text returned by getPDFText
+            dir_path: path of the directory that holds this file and the test pdf.
+            text: string of text returned by getPDFText.
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
         Arguments:
             testClient: the test client we test this for
     '''
@@ -87,15 +105,17 @@ def testGetPDFEmptyFile(testClient):
     fileDir = os.path.join(BASEDIR, 'emptyFile.pdf')
 
     isSuccesful, text = getPDFText(fileDir)
+    assert isSuccesful == True
     assert text == ''
 
 
 def testGetPDFCorruptedFile(testClient):
     '''
-        Test if empty string is returned when getPDFText() is called on a corrupted file
+        Test if an error message string is returned when getPDFText() is called on a corrupted file.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
-            text: string of text returned by getPDFText
+            dir_path: path of the directory that holds this file and the test pdf.
+            message: string of text returned by getPDFText.
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
         Arguments:
             testClient: the test client we test this for
     '''
@@ -104,16 +124,18 @@ def testGetPDFCorruptedFile(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'corruptedFile.pdf')
 
-    isSuccesful, text = getPDFText(fileDir)
-    assert text == ''
+    isSuccesful, message = getPDFText(fileDir)
+    assert isSuccesful == False
+    assert message == "Caught FileDataError('cannot open broken document') when calling getPDFText."
 
 
 def testGetPDFInvalidFile(testClient):
     '''
-        Test if empty string is returned when getPDFText() is called on a file with an invalid file name
+        Test if an error message string is returned when getPDFText() is called on a file with an invalid file name.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
-            text: string of text returned by getPDFText
+            dir_path: path of the directory that holds this file and the test pdf.
+            message: string of text returned by getPDFText.
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
         Arguments:
             testClient: the test client we test this for
     '''
@@ -122,16 +144,18 @@ def testGetPDFInvalidFile(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'invalidFileName.pdf')
 
-    isSuccesful, text = getPDFText(fileDir)
-    assert text == ''
+    isSuccesful, message = getPDFText(fileDir)
+    assert isSuccesful == False
+    assert 'Caught FileNotFoundError("no such file: ' in message
 
 
 def testGetPDFInvalidExtension(testClient):
     '''
-        Test if empty string is returned when getPDFText() is called on a file that is not a pdf
+        Test if an error message string is returned when getPDFText() is called on a file that is not a pdf.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
-            text: string of text returned by getPDFText
+            dir_path: path of the directory that holds this file and the test pdf.
+            message: string of text returned by getPDFText.
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
         Arguments:
             testClient: the test client we test this for
     '''
@@ -140,8 +164,9 @@ def testGetPDFInvalidExtension(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'invalidFileExtension.docx')
 
-    isSuccesful, text = getPDFText(fileDir)
-    assert text == ''
+    isSuccesful, message = getPDFText(fileDir)
+    assert isSuccesful == False
+    assert 'Caught FileNotFoundError("no such file: ' in message
 
 def testSplitBlocks(testClient):
     '''

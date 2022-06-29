@@ -39,6 +39,7 @@ def getPDFText(path, returnReferences=False, returnReferencesText=False, include
         path: Path of pdf file which will be extracted
         returnReferences: True if the references should also be returned.
     Returns: 
+        True, if the text has been succesfully extracted. False and a string with the error message when this is not the case.
         text: Text of pdf file as a string.
         referenceText: Text with only the references form the pdf file. 
     """

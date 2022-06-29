@@ -17,6 +17,7 @@ def getTXTText(path):
         Arguments: 
             path: absolute path of the .txt file that should be read. 
         Returns:
+            True, if the text has been succesfully extracted. False and a string with the error message when this is not the case.
             fullText: full text from the file we are currently reading.
     '''
     fullText = ""
@@ -71,6 +72,7 @@ def getDOCXText(path):
     Arguments:
         path: Path of docx file which will be extracted.
     Returns:
+        True, if the text has been succesfully extracted. False and a string with the error message when this is not the case.
         fullText: Text of docx file as a string (does not contain references).
         referencesText: Text of references from docx file as a string.
     """

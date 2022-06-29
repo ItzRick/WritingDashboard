@@ -308,6 +308,7 @@ class IntegrationContentFeedback(BaseFeedback):
                 tempPath: Path consisting of joining the basePath and 'temp', to create a temp folder.
                 filePath: Path consisting of joining this tempPath and 'temp.pdf' to create a temporary filepath.
                 userId: Id of the current user.
+                isSuccesful: Boolean to indicate if the text has been succesfully extracted from the pdf file.
             Arguments:
                 self: The current class object.
                 doi: doi link of the document we want to get the text from.
@@ -324,7 +325,10 @@ class IntegrationContentFeedback(BaseFeedback):
             os.makedirs(tempPath)
         # Try to download the file via the downloadDoi method, if this is possible extract the text using the getPDFText method. 
         if downloadDoi(doi, filePath):
-            text = getPDFText(filePath)
+            isSucceful, text = getPDFText(filePath)
+            # If the retrieval of text is not succesful, set the text to the empty string:
+            if not isSucceful: 
+                text == ''
         # Delete the file if it exists and delete the folder(s), so temp folder and user folder if it is empty:
         if os.path.exists(filePath):
             os.remove(filePath)
