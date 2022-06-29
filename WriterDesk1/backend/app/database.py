@@ -1,24 +1,7 @@
 import csv, os
 from app import db
-from app.models import User, Scores, Files, Projects, ParticipantToProject
+from app.models import User, Files, Projects, ParticipantToProject
 import csv, os
-
-
-# helper function, TODO remove before deploy
-
-def initialSetup():
-    db.session.close()
-    db.drop_all()
-    db.create_all()
-    # create admin user
-    u = User.query.filter_by(username='admin').first()
-    if u is None:
-        u = User(username='admin', password_plaintext='admin')
-    u.role = 'admin'
-    uploadToDatabase(u)
-
-    # comment out:
-    #   - loginapi > create_token() > initialSetup()
 
 def uploadToDatabase(toUpload):
     '''
