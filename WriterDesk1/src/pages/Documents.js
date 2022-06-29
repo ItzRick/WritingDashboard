@@ -4,6 +4,7 @@ import {
   IconButton,
   Stack,
   Tooltip,
+  LinearProgress, 
 } from "@mui/material";
 import {
   DeleteOutline,
@@ -46,6 +47,8 @@ const Documents = () => {
   const [showDeleteDialogMultiple, setShowDeleteDialogMultiple] = useState(false);  // Show dialog when deleting multiple files
 
   const [deleteId, setDeleteId] = useState();  // ID of file that is going to be deleted when pressing delete button
+  
+  const [progress, setProgress] = useState([]); 
 
   //set title in parent 'base': 
   const { setTitle } = useOutletContext();
@@ -129,6 +132,7 @@ const Documents = () => {
           <Tooltip title="Delete this document.">
             <IconButton onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton>
           </Tooltip>
+          <LinearProgress variant="determinate" value={10} />
         </div>;
       }
     }
