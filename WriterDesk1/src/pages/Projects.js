@@ -44,7 +44,6 @@ const Projects = () => {
         // Delete project from all tables in database and delete files from the server:
         axios.get('https://api.writingdashboard.xyz/projectapi/viewProjectsOfUser', {headers:authHeader()} ).then(response => {
             //TODO: Set table data
-            console.log(response.data)
             setTableData(response.data);
         });
     }

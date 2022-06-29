@@ -189,7 +189,6 @@ const Participants = () => {
         }
       })
       .catch(err => {
-        console.log('no success')
         console.log(err.response.projects);
       });
   }

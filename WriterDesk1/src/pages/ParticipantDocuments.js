@@ -24,6 +24,7 @@ import "../css/styles.css";
 import "../css/main.css";
 
 import AlertDialog from "../components/AlertDialog";
+import {authHeader} from "../helpers/auth-header";
 
 
 /**
@@ -213,14 +214,13 @@ const ParticipantDocuments = () => {
     const url = 'https://api.writingdashboard.xyz/fileapi/fileretrieve';
     // id of current user
     const userId = location.state.userId;
-    console.log(userId)
     // The parameter, sortingAttribute need to be changed later:
     const params = {
       userId: userId,
       sortingAttribute: '',
     }
     // Make the backend call and set the table data from the response data:
-    axios.get(url, { params })
+    axios.get(url, { params, headers: authHeader()})
       .then((response) => {
         setTableData(response.data)
       })
