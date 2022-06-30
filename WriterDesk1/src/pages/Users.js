@@ -14,7 +14,7 @@ import {
 import { useOutletContext } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 
 import RoleDialog from "./../components/RoleDialog";
 import BlueButton from './../components/BlueButton';

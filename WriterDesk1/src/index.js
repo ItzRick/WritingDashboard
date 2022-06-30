@@ -37,10 +37,6 @@ import ParticipantDocuments from './pages/ParticipantDocuments';
 // page just for admin
 import Users from './pages/Users';
 
-
-//testing page, to be removed later
-import TestingPage from './pages/TestingPage';
-
 // tracking
 import TrackingWrapper from "./services/TrackingWrapper";
 
@@ -133,10 +129,6 @@ root.render(
               <Route name='Users' path='Users' element={<Users />} />
             </Route>
             <Route path='/' element={<Main />} />
-
-
-            {/* Testing Page, for checking out new stuff */}
-            <Route name='TestingPage' path='TestingPage' element={<TestingPage />} />
           </Route>
 
 

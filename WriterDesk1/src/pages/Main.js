@@ -2,10 +2,8 @@ import './../css/App.css';
 
 // materials 
 import {
-  Button,
   Typography
 } from "@mui/material";
-import chartImg from '../images/chartImage.png';
 import BlueButton from "./../components/BlueButton";
 
 // routing
