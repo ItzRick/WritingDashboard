@@ -26,7 +26,7 @@ const BlueButton = ({ children, idStr = '', pathName = '', onClick = () => { }, 
     const handleClick = () => {
         // check if tc provider is available
         if (tc.hasProvider) {
-            if (pathName == '') {
+            if (pathName === '') {
                 // if pathname is '', it is not a link
                 // send button data
                 tc.trigger({
