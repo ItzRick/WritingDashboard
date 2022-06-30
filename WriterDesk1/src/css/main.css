@@ -200,7 +200,3 @@ button {
     margin-bottom: 1vh;
 }
 
-
-div[role="tooltip"] {
-  top: -70px !important;
-}
