@@ -115,6 +115,33 @@ def testNotAdmin(testClient, initDatabase):
     assert response.status_code == 403
     assert response.data == b'Method only accessible for admin users'
 
+def testAdminSingleUser(testClient, initDatabase):
+    '''
+        Test whether the correct error is thrown when trying to to delete the last admin 
+        using the deleteUserAdmin api call.
+        Attributes:
+            user: the user to be deleted
+            userID: id belonging to user
+            access_token: the access token
+            response: the response of the api call
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for.
+    '''
+    del initDatabase
+    user = User.query.filter_by(username='ad').first()
+    # get his user id
+    userId = user.id
+
+    assert User.query.filter_by(id=userId).first() is not None
+
+    # get access token for Pietje Bell
+    access_token = loginHelper(testClient, 'ad', 'min')
+
+    response = testClient.post('/usersapi/deleteUserAdmin', json={'userID': userId},
+                               headers={"Authorization": "Bearer " + access_token})
+    assert response.status_code == 404
+    assert response.data == b'Last admin can not be deleted!'
 
 def testAdmin(testClient, initDatabase):
     '''

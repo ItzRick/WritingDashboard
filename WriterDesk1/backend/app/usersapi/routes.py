@@ -45,17 +45,25 @@ def deleteUserAdmin():
         The function can only be used when signed in as an user with the admin role.
         Attributes:
             userID: userId supplied by the front-end
+            user: The user corresponding to the given userID.
         Return:
             Returns a string saying the account is deleted with a 200 code.
             error message:
                 403, when calling this function while not singed is as an admin.
                 404, when trying to delete an user that does not exist.
+                404, when trying to delete the last admin account.
     '''
     if current_user.role != 'admin':
         return 'Method only accessible for admin users', 403
+    # Get the userID and try to retrieve the user from the database:
     userID = request.json.get("userID", None)
-    if User.query.filter_by(id=userID).first() is None:
+    user = User.query.filter_by(id=userID).first()
+    # If the user does not exist:
+    if user is None:
         return 'User does not exist', 404
+    # Test if we are trying to delete the last admin:
+    if len(User.query.filter_by(role="admin").all()) == 1 and user.role == 'admin':
+        return 'Last admin can not be deleted!', 404
     deleteUser(userID)
     return 'Account deleted!', 200
 

@@ -109,7 +109,7 @@ def testOneParticipantResearcher(testClient, initDatabase):
 
     # make the csv file as String
     firstRow = 'clickId,userId,timestamp,url,eventType,actionId'
-    secondRow = str(participantClick.clickId) + ',' + str(participantClick.userId) + ',' + participantClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick.url + ',' + participantClick.eventType + ',' + (participantClick.actionId or '')
+    secondRow = str(0) + ',' + str(participantClick.userId) + ',' + participantClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick.url + ',' + participantClick.eventType + ',' + (participantClick.actionId or '')
     participantsClickData = firstRow + '\n' + secondRow + '\n'
     assert response.data == participantsClickData.encode('utf-8')
 
@@ -198,8 +198,8 @@ def testTwoParticipantsResearcher(testClient, initDatabase):
 
     # make the csv file as String
     firstRow = 'clickId,userId,timestamp,url,eventType,actionId'
-    secondRow = str(participantClick.clickId) + ',' + str(participantClick.userId) + ',' + participantClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick.url + ',' + participantClick.eventType + ',' + (participantClick.actionId or '')
-    thirdRow = str(participantClick1.clickId) + ',' + str(participantClick1.userId) + ',' + participantClick1.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick1.url + ',' + participantClick1.eventType + ',' + (participantClick1.actionId or '')
+    secondRow = str(0) + ',' + str(participantClick.userId) + ',' + participantClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick.url + ',' + participantClick.eventType + ',' + (participantClick.actionId or '')
+    thirdRow = str(0) + ',' + str(participantClick1.userId) + ',' + participantClick1.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick1.url + ',' + participantClick1.eventType + ',' + (participantClick1.actionId or '')
     participantsClickData = firstRow + '\n' + secondRow + '\n' + thirdRow + '\n'
     assert response.data == participantsClickData.encode('utf-8')
 
@@ -306,7 +306,7 @@ def testOneParticipantAdmin(testClient, initDatabase):
 
     # make the csv file as String
     firstRow = 'clickId,userId,timestamp,url,eventType,actionId'
-    secondRow = str(participantClick.clickId) + ',' + str(participantClick.userId) + ',' + participantClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick.url + ',' + participantClick.eventType + ',' + (participantClick.actionId or '')
+    secondRow = str(0) + ',' + str(participantClick.userId) + ',' + participantClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick.url + ',' + participantClick.eventType + ',' + (participantClick.actionId or '')
     participantsClickData = firstRow + '\n' + secondRow + '\n'
     assert response.data == participantsClickData.encode('utf-8')
 
@@ -393,7 +393,7 @@ def testTwoParticipantsAdmin(testClient, initDatabase):
 
     # make the csv file as String
     firstRow = 'clickId,userId,timestamp,url,eventType,actionId'
-    secondRow = str(participantClick.clickId) + ',' + str(participantClick.userId) + ',' + participantClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick.url + ',' + participantClick.eventType + ',' + (participantClick.actionId or '')
-    thirdRow = str(participantClick1.clickId) + ',' + str(participantClick1.userId) + ',' + participantClick1.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick1.url + ',' + participantClick1.eventType + ',' + (participantClick1.actionId or '')
+    secondRow = str(0) + ',' + str(participantClick.userId) + ',' + participantClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick.url + ',' + participantClick.eventType + ',' + (participantClick.actionId or '')
+    thirdRow = str(0) + ',' + str(participantClick1.userId) + ',' + participantClick1.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + participantClick1.url + ',' + participantClick1.eventType + ',' + (participantClick1.actionId or '')
     participantsClickData = firstRow + '\n' + secondRow + '\n' + thirdRow + '\n'
     assert response.data == participantsClickData.encode('utf-8')
