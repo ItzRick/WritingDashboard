@@ -91,7 +91,7 @@ const Participants = () => {
   useEffect(() => {
     setTitle('Participants');
     getParticpantsAndProjects();
-  });
+  }, []);
 
   // project in project add
   const [projectAdd, setProjectAdd] = useState('');

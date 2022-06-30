@@ -228,7 +228,7 @@ const ParticipantDocuments = () => {
 
   useEffect(() => {
     setData();
-  });
+  }, []);
 
   return (
     <>
