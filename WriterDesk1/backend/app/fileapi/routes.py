@@ -1,7 +1,7 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify, send_file
-from app.models import Files, User, ParticipantToProject, Projects
+from app.models import Files, User, ParticipantToProject, Projects, Scores
 from app.fileapi import bp
 from app.fileapi.convert import convertDocx, convertTxt, removeConvertedFiles
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
@@ -140,6 +140,19 @@ def fileRetrieve():
     for file in files:
         file['date'] = file.get('date').strftime('%d/%m/%y')
 
+    # Get the progress by looking at which scores are yet generated:
+    for file in files: 
+        # Get the score for the current file:
+        score = Scores.query.filter_by(fileId=file['id']).first()
+        # Initialize the progress to 0:
+        progress = 0
+        # If we have a score, we add 25% for each score more than 0:
+        if score != None:
+            for scoreInstance in score.scoreColumns:
+                if scoreInstance >= 0:
+                    progress += 25
+        file['progress'] = progress
+
     # Return http response with list as json in response body
     return jsonify(files)
 
@@ -268,3 +281,26 @@ def displayFile():
         return send_file(newPath)
     # The file has not been converted, send the original file.
     return send_file(filepath)
+    
+@bp.route('/getProgress', methods= ['GET'])
+def getProgress():
+    '''
+        Function to convert a document of type docx or txt to a document of
+        type pdf. And returns this file.
+        Attributes:
+            filepath: the path to the document to be converted.
+            filetype: the type of the document to be converted.
+            pdf: used in making a pdf from a txt file.
+        Return:
+            Take the converted document from the disk and send it.
+    '''
+    fileId = request.args.get('fileId')
+    score = Scores.query.filter_by(fileId=fileId).first()
+    if score == None:
+        return str(0), 200
+    progress = 0
+    for scoreInstance in score.scoreColumns:
+        if scoreInstance >= 0:
+            progress += 25
+    return str(progress), 200
+

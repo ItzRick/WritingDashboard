@@ -4,6 +4,7 @@ import {
   IconButton,
   Stack,
   Tooltip,
+  LinearProgress, 
 } from "@mui/material";
 import {
   DeleteOutline,
@@ -15,7 +16,7 @@ import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 
 // routing
 import { useOutletContext, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
 
@@ -37,10 +38,12 @@ const Documents = () => {
 
 
   // State to keep track of the data inside the table:
-  const [tableData, setTableData] = useState([])
+  const [tableData, setTableData] = useState([]);
+//   Reference for the timer, to be able to stop the setinterval:
+  const timer = useRef(null);
 
   // State to keep track of the IDs of the instances that are currently selected:
-  const [selectedInstances, setSelectedInstances] = useState([])
+  const [selectedInstances, setSelectedInstances] = useState([]);
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);  // Show dialog when deleting single file
   const [showDeleteDialogMultiple, setShowDeleteDialogMultiple] = useState(false);  // Show dialog when deleting multiple files
@@ -122,13 +125,19 @@ const Documents = () => {
       sortable: false,
       flex: 1,
       renderCell: (params) => {
+        const text =`Feedback generation of the file: ${params.row.filename} is at ${params.row.progress}%`
         return <div>
           <Tooltip title="View the feedback of this document.">
-            <IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
+            <IconButton disabled={params.row.progress!==100} onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
           </Tooltip>
           <Tooltip title="Delete this document.">
             <IconButton onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton>
           </Tooltip>
+          {params.row.progress < 100 && 
+          <Tooltip title={text}>
+          <LinearProgress variant="determinate" value={params.row.progress} />
+          </Tooltip>
+          }
         </div>;
       }
     }
@@ -213,7 +222,7 @@ const Documents = () => {
   }
 
   /**
-   * Make the backend call, to et the data in the tableData state.
+   * Make the backend call, to set the data in the tableData state.
    * 
    */
   const setData = () => {
@@ -233,8 +242,60 @@ const Documents = () => {
       })
   }
 
-  useEffect(() => {
+   /**
+   * Make the backend call, to et the data in the tableData state, which repeats until all feedback
+   * has been generated for the current user.
+   * 
+   */
+  const setDataRepeat = () => {
+    //   The backend url:
+    const url = 'https://api.writingdashboard.xyz/fileapi/fileretrieve';
+    // id of current user
+    const userId = AuthenticationService.getCurrentUserId();
+    // The parameter, sortingAttribute need to be changed later:
+    const params = {
+      userId: userId,
+      sortingAttribute: '',
+    }
+    // Make the backend call and set the table data from the response data:
+    axios.get(url, {params, headers: authHeader() })
+      .then((response) => {
+        setTableData(response.data)
+        // Load the received data in a local variable:
+        const tempData = response.data;
+        // Initialize toRepeat to false, if for any file the feedback has not been generated
+        // (progress for that file is less than 100), set toRepeat to true, to indicate that we
+        // need to look for more feedback in 5 seconds.
+        let toRepeat = Boolean(false);
+        tempData.forEach(element => {
+            if (element.progress < 100) {
+                toRepeat = Boolean(true);
+            }
+        })
+        // If we do not repeat this, make sure we make no extra call in 5 seconds:
+        if (!toRepeat) {
+            clearInterval(timer.current);
+        }
+      })
+  }
+
+  /**
+   * Call the setDataRepeat function every 5 seconds until all feedback has been generated.
+   * The first call is manually done with setData.
+   */
+  const updateTableData = () => {
+    // Manually call setData:
     setData();
+    // Make a call to the setDataRepeat function every 5 seconds until stopped.
+    timer.current = setInterval(() => setDataRepeat(), 5000);
+  }
+
+  useEffect(() => {
+    updateTableData();
+    // Clear the setInterval when we leave this page:
+    return () => {
+        clearInterval(timer.current);
+    };
   }, []);
 
   return (

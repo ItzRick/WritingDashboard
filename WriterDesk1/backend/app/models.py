@@ -172,6 +172,14 @@ class Scores(db.Model):
     # Feedbackversion is a numeric value, with 2 decimal numbers and 5 numbers in total.
     feedbackVersion  = db.Column(db.Numeric(5,2), unique=False, default=None)
 
+    @property
+    def scoreColumns(self):
+        result = []
+        for c in inspect(self).attrs.keys():
+            if c != 'fileId' and c != 'feedbackVersion' and c!= 'scoredFile': 
+                result.append(getattr(self, c))
+        return result
+
     def __repr__(self):
         return '<Scores {}>'.format(self.fileId)
 
