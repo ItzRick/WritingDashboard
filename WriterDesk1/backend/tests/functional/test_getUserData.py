@@ -108,7 +108,7 @@ def testOneUser(testClient, initDatabase):
 
     # make the csv file as String
     firstRow = 'clickId,userId,timestamp,url,eventType,actionId'
-    secondRow = str(userClick.clickId) + ',' + str(userClick.userId) + ',' + userClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + userClick.url + ',' + userClick.eventType + ',' + (userClick.actionId or '')
+    secondRow = str(0) + ',' + str(userClick.userId) + ',' + userClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + userClick.url + ',' + userClick.eventType + ',' + (userClick.actionId or '')
     usersClickData = firstRow + '\n' + secondRow + '\n'
     assert response.data == usersClickData.encode('utf-8')
 
@@ -197,8 +197,8 @@ def testTwoUsers(testClient, initDatabase):
 
     # make the csv file as String
     firstRow = 'clickId,userId,timestamp,url,eventType,actionId'
-    secondRow = str(userClick.clickId) + ',' + str(userClick.userId) + ',' + userClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + userClick.url + ',' + userClick.eventType + ',' + (userClick.actionId or '')
-    thirdRow = str(userClick1.clickId) + ',' + str(userClick1.userId) + ',' + userClick1.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + userClick1.url + ',' + userClick1.eventType + ',' + (userClick1.actionId or '')
+    secondRow = str(0) + ',' + str(userClick.userId) + ',' + userClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + userClick.url + ',' + userClick.eventType + ',' + (userClick.actionId or '')
+    thirdRow = str(0) + ',' + str(userClick1.userId) + ',' + userClick1.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + userClick1.url + ',' + userClick1.eventType + ',' + (userClick1.actionId or '')
     usersClickData = firstRow + '\n' + secondRow + '\n' + thirdRow + '\n'
     assert response.data == usersClickData.encode('utf-8')
 
