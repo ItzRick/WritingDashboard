@@ -158,7 +158,7 @@ const Documents = () => {
    * @param {event} e: event data pushed with the call, not required
    * @param {params} params: params of the row where the current file that is removed is in, to be able to remove the correct file.
    */
-  const showDeleteFileDialog = (e, params) => {
+  const showDeleteFileDialog = (_e, params) => {
     setDeleteId(params.id)  // Set id to be deleted
     setShowDeleteDialog(true);  // Show confirmation dialog
   }
