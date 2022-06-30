@@ -42,7 +42,7 @@ const Projects = () => {
     const setProjects = () => {
 
         // Delete project from all tables in database and delete files from the server:
-        axios.get('https://localhost:5000/projectapi/viewProjectsOfUser', {headers:authHeader()} ).then(response => {
+        axios.get('https://api.writingdashboard.xyz/projectapi/viewProjectsOfUser', {headers:authHeader()} ).then(response => {
             //TODO: Set table data
             setTableData(response.data);
         });
@@ -112,13 +112,13 @@ const Projects = () => {
         const formData = new FormData();
         formData.append('projectName', projectName);  // Add input name to form
         // Create project request
-        axios.post(`https://localhost:5000/projectapi/setProject`, formData, {headers: authHeader()}).then(response => {
+        axios.post(`https://api.writingdashboard.xyz/projectapi/setProject`, formData, {headers: authHeader()}).then(response => {
             const data = {
                 "nrOfParticipants": numberOfParticipants,  // Add input of numberOfParticipants
                 "projectid": response.data,  // Get project id from response
             }
             // Add participants request
-            axios.post(`https://localhost:5000/projectapi/addParticipants`, data, {headers: authHeader()}).then(response => {
+            axios.post(`https://api.writingdashboard.xyz/projectapi/addParticipants`, data, {headers: authHeader()}).then(response => {
                 const fileName = response.headers["custom-filename"];
                 fileDownload(response.data, fileName);
                 setProjects()
@@ -141,7 +141,7 @@ const Projects = () => {
         const headers = authHeader() // Authentication header of current user
 
         // Delete project from all tables in database and delete files from the server:
-        axios.delete('https://localhost:5000/projectapi/deleteProject',  {headers, data: formData} ).then(response => {
+        axios.delete('https://api.writingdashboard.xyz/projectapi/deleteProject',  {headers, data: formData} ).then(response => {
             setProjects()
         });
     }
@@ -172,7 +172,7 @@ const Projects = () => {
         const headers = authHeader() // Authentication header of current user
 
         // Delete projects from all tables in database and delete files from the server:
-        axios.delete('https://localhost:5000/projectapi/deleteProject', { data: formData }).then(response => {
+        axios.delete('https://api.writingdashboard.xyz/projectapi/deleteProject', { data: formData }).then(response => {
             setProjects()
         });
     }
