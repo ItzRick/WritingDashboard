@@ -184,18 +184,21 @@ const Users = () => {
                      buttonAgree={<Button style={{color: "red"}} onClick={(e) => {deleteUser(deleteId)}}>Yes</Button>}
                      buttonCancel={<Button onClick={(_e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
         />}
-        {showFailPopup && <AlertDialog title = "Failure!" 
+
+    {showFailPopup && <AlertDialog title = "Failure!" 
                         text = {failText}
                         buttonAgree={<Button onClick={(_e) => {setShowFailPopup(false)}}>OK</Button>}
                     />}
-      <BlueButton idStr='downloadUserDataSelectedUsers' onClick={() => {handleUserDataSelected()}}>Download user data of selected users</BlueButton>
-      <div style={{ height: '80vh', maxHeight: '400px' }} >
+      <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
+        <BlueButton idStr='downloadUserDataSelectedUsers' onClick={() => {handleUserDataSelected()}}>Download user data of selected users</BlueButton>
+      </div>
+      <div style={{ height: '80vh' }} >
         <DataGrid
           style={{ maxHeight: '100%' }}
           rows={tableData}
           columns={columns}
-          pageSize={15}
-          rowsPerPageOptions={[15]}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
           checkboxSelection
           onSelectionModelChange={e => setSelectedInstances(e)}
           disableSelectionOnClick
