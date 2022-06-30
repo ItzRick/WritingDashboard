@@ -93,10 +93,6 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                   }
                 axios.post(generateUrl, {}, config)
                 .catch((error) => {
-                    // If there is a failure generating the feedback, pass this to the popup:
-                    setFail((v) => (v+1))
-                    setFailedFiles((l) => l.concat([{'content':'Feedback failed to generate.','id':thisIndex}]))
-                    setSucc((v) => (v-1))
                     console.log(error.response.data);
                 });
               })
