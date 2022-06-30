@@ -63,44 +63,51 @@ def scrapePage(url):
         Arguments:
             url: Url we scrape the page from. 
         Returns:
-            output: Output of the text on the site corresponding to url. 
+            True, if the page has successfully been scraped, 
+            together with output: Output of the text on the site corresponding to url. 
+            False, if the page could not be scraped, together with an error message.
     '''
-    # Create the headers, which correspond to a firefox browser:
-    headers = {
-        'User-Agent': 'Mozilla/5.0',
-    }
-    # Retrieve the page corresponding to url:
-    r = requests.get(url, headers=headers)
-    # Create the BeautifulSoup object:
-    soup = BeautifulSoup(r.content, 'html.parser')
-    # Retrieve all text from this object:
-    text = soup.find_all(string=True)
-    # Create a output element:
-    output = ''
-    # Blacklist of HTML elements we do not want the text from:
-    blacklist = [
-        '[document]',
-        'noscript',
-        'style',
-        'header',
-        'html',
-        'meta',
-        'head', 
-        'input',
-        'script',
-        'link',
-        'button',
-        'form',
-        'label',
-        'amp-state', 
-        'footer',
-        # there may be more elements you don't want, such as "style", etc.
-    ]
+    # Try to scrape the page:
+    try:
+        # Create the headers, which correspond to a firefox browser:
+        headers = {
+            'User-Agent': 'Mozilla/5.0',
+        }
+        # Retrieve the page corresponding to url:
+        r = requests.get(url, headers=headers)
+        # Create the BeautifulSoup object:
+        soup = BeautifulSoup(r.content, 'html.parser')
+        # Retrieve all text from this object:
+        text = soup.find_all(string=True)
+        # Create a output element:
+        output = ''
+        # Blacklist of HTML elements we do not want the text from:
+        blacklist = [
+            '[document]',
+            'noscript',
+            'style',
+            'header',
+            'html',
+            'meta',
+            'head', 
+            'input',
+            'script',
+            'link',
+            'button',
+            'form',
+            'label',
+            'amp-state', 
+            'footer',
+            # there may be more elements you don't want, such as "style", etc.
+        ]
 
-    # For all object in the HTML source:
-    for t in text:
-        # If this element is not in the blacklist, add the text from this element to output:
-        if t.parent.name not in blacklist:
-            output += '{} '.format(t)
-
-    return output
+        # For all object in the HTML source:
+        for t in text:
+            # If this element is not in the blacklist, add the text from this element to output:
+            if t.parent.name not in blacklist:
+                output += '{} '.format(t)
+    # If this is unsuccessful, return the error message:
+    except Exception as e:
+        return False, str(e)
+    # Else, return the output:
+    return True, output
