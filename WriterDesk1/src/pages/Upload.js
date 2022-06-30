@@ -85,7 +85,7 @@ const Upload = () => {
     //   Side effect: when you update the code, the page renders again, but does not remove the first row
     useEffect(() => {
         addRow();
-    }, [addRow]);
+    });
 
     /**
      * upload all documents present in the UploadSingleFile objects in uploadSingleFiles
