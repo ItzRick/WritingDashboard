@@ -130,7 +130,7 @@ const Users = () => {
                      buttonAgree={<Button style={{color: "red"}} onClick={(e) => {deleteUser(deleteId)}}>Yes</Button>}
                      buttonCancel={<Button onClick={(e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
         />}
-      <BlueButton idStr='downloadUserData' onClick={() => {handleUserData()}}>Download user data</BlueButton>
+      <BlueButton idStr='downloadUserDataSelected' onClick={() => {handleUserData()}}>Download user data of selected</BlueButton>
       <div style={{ height: '80vh', maxHeight: '400px' }} >
         <DataGrid
           style={{ maxHeight: '100%' }}
