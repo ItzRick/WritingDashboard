@@ -1,17 +1,12 @@
 import os
 from flask import request, jsonify
-from app import db
 
-from app.database import getUsers, getParticipantsWithProjectsByResearcher
-from app.models import User, Projects, ParticipantToProject
+from app.database import getUsers, getParticipantsWithProjectsByResearcher, removeFromDatabase
+from app.models import User, Projects, Files
 from app.usersapi import bp
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import current_user
 from flask import request
-
-from app.database import removeFromDatabase
-from app.fileapi.routes import fileDelete
-from app.models import Files, Explanations, Scores, ParticipantToProject, Projects
 
 
 @bp.route('/users', methods=['GET'])
@@ -82,24 +77,25 @@ def deleteUserResearcher():
                 403, when trying to delete an user that is a participant but does not belong to
                 a project owned by the currently singed in user.
     '''
+    # method only for admin and researcher
     if current_user.role != 'researcher' and current_user.role != 'admin':
         return 'Method only accessible for researcher and admin users', 403
+    # retrieve userId from frontend
     userID = request.json.get("userID", None)
-
+    # check if user exists
     if User.query.filter_by(id=userID).first() is None:
         return 'User does not exist', 404
     user = User.query.filter_by(id=userID).first()
+    # check if user.role is participant
     if user.role != 'participant':
         return 'Target user is not an participant', 403
-    projectID = ParticipantToProject.query.filter_by(userId=user.id).first().projectId
-    project = Projects.query.filter_by(id=projectID).first()
-    # loops over the projects owned by the currently signed in user and checks whether the user to
-    # be deleted is related to one of them, if not an error is thrown.
-    for researcherProject in Projects.query.filter_by(userId=current_user.id):
-        if project.projectName == researcherProject.projectName:
-            deleteUser(userID)
-            return 'Account deleted!', 200
-    return 'Participant is not created by this researcher', 403
+    # check if userId is in project of current_user 
+    if User.query.filter_by(id=userID).filter(User.participants.has(userId=current_user.id)).first() is None:
+        return 'Participant is not created by this researcher', 403
+
+    # delete participant
+    deleteUser(userID)
+    return 'Account deleted!', 200
 
 
 @bp.route('/deleteUserSelf', methods=['POST'])

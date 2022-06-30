@@ -1,7 +1,7 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify, send_file
-from app.models import Files, User, ParticipantToProject, Projects
+from app.models import Files, User, Projects
 from app.fileapi import bp
 from app.fileapi.convert import convertDocx, convertTxt, removeConvertedFiles
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
@@ -129,9 +129,8 @@ def fileRetrieve():
             return 'You must be researcher or admin, or retrieve your own data', 403
         # now, some researcher or admin tries to access other userFiles, check if this is its participant
 
-        # get projectId of this participant
-        ptp = ParticipantToProject.query.filter_by(userId=userId).first()
-        if ptp is None or ptp.projectId is None or Projects.query.filter_by(id=ptp.projectId).first() is None:
+        #ParticipantToProject.query.filter_by(userId=userId).first()
+        if User.query.filter_by(id=userId).filter(User.participants.has(userId=current_user.id)).first() is None:
             return 'You can only retrieve data from your participants or yourself', 403
     sortingAttribute = request.args.get('sortingAttribute')
     files = getFilesByUser(userId, sortingAttribute)

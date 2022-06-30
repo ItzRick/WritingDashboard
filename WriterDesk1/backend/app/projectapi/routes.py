@@ -4,7 +4,7 @@ import shutil
 from app.projectapi import bp
 
 from flask import request, jsonify, current_app
-from app.models import Projects, User, ParticipantToProject
+from app.models import Projects, User
 
 from app.database import removeFromDatabase, getProjectsByResearcher, recordsToCsv, getParticipantsWithProjectsByResearcher
 from app import generateParticipants as gp
@@ -77,8 +77,7 @@ def setProject():
     projectName = request.form.get('projectName')
 
     # Check if current user has rights to create a project
-    if User.query.filter_by(id=current_user.id).first().role == 'student' \
-            or User.query.filter_by(id=current_user.id).first().role == 'participant':
+    if current_user.role == 'student' or current_user.role == 'participant':
         return 'User is not admin or researcher', 400
 
     # Create Projects object
@@ -142,7 +141,7 @@ def deleteAllFilesFromProject(projectIds):
 
     for projectId in projectIds:
         # Retrieve users of project with project id
-        users = ParticipantToProject.query.filter_by(projectId=projectId).all()
+        users = Projects.query.filter_by(id=projectId).first().participants
         for user in users:
             folderToRemove = os.path.join(current_app.config['UPLOAD_FOLDER'], str(user.userId))
             # If the folder exists:
@@ -150,6 +149,7 @@ def deleteAllFilesFromProject(projectIds):
                 shutil.rmtree(folderToRemove)  # Try to remove folder recursively
 
 @bp.route('/viewParticipantsOfUser', methods=["GET"])
+@jwt_required()
 def viewParticipantsOfUser():
     '''
     This function handles the showing the participants that

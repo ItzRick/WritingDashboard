@@ -1,6 +1,6 @@
 from app import db
-from app.models import User
-from app.database import postParticipant, postParticipantToProject
+from app.models import User, Projects
+from app.database import postParticipant
 import random, string
 from flask import current_app
 
@@ -22,17 +22,16 @@ def generateParticipants(nrOfParticipants, projectId):
 
     PASSWORD_LENGTH = current_app.config['PASSWORD_LENGTH']
     data = []
-    for participant in range(nrOfParticipants):
 
+    for _ in range(nrOfParticipants):
         # Generate password
         password = generateParticipantPassword(PASSWORD_LENGTH)
 
         # Post participant, raise error if this fails
         try:
-            user = postParticipant("username", password)
+            user = postParticipant("username", password, projectId)
             user.username = generateParticipantUsername(user.id)
             db.session.flush()
-            postParticipantToProject(user.id, projectId)
             data.append({'username': user.username, 'password': password})
         except Exception as e:
             db.session.rollback()

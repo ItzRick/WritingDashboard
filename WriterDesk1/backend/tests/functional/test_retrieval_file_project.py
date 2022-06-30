@@ -1,4 +1,4 @@
-from app.models import Files, User, Projects, ParticipantToProject
+from app.models import Files, User, Projects
 from app import db
 from datetime import datetime
 from werkzeug.utils import secure_filename
@@ -84,14 +84,14 @@ def testRetrieveFilesOfPart(testClient, initDatabase):
             userId: the user for which the files are retrieved
             sortingAttribute: the specified order of the retrieved files
             proj: project of ad
-            ptp: ParticipantToProject instance related to proj and user Pietje
             access_token: access token
             data: data to be sent to the api
             response: the result fo retrieving the files in the specified order
     '''
     del initDatabase
     # We define the user and sorting order
-    userId = User.query.filter_by(username='Pietje').first().id
+    Pietje = User.query.filter_by(username='Pietje').first()
+    userId = Pietje.id
     sortingAttribute = 'course.asc'
 
     adId = User.query.filter_by(username='ad').first().id
@@ -116,14 +116,7 @@ def testRetrieveFilesOfPart(testClient, initDatabase):
     assert proj.id is not None
 
     # add Pietje to project
-    ptp = ParticipantToProject(userId=userId, projectId=proj.id)
-    db.session.add(ptp)
-    db.session.commit()
-
-    ptp = ParticipantToProject.query.filter_by(userId=userId).first()
-    assert ptp is not None
-    assert ptp.projectId is not None
-    assert Projects.query.filter_by(id=proj.id).first() is not None
+    Pietje.projects = proj
 
     # get access token for the regular user
     access_token = loginHelper(testClient, 'ad', 'min')

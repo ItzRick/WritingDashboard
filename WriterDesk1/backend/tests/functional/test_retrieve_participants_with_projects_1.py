@@ -1,8 +1,9 @@
-from app.models import User, ParticipantToProject, Projects
+from app.models import User, Projects
 from app import db
 from werkzeug.security import check_password_hash
 
 import json
+from test_set_role import loginHelper
 
 
 def testRetrieveNoParticipants(testClient, initDatabaseEmpty): 
@@ -33,8 +34,11 @@ def testRetrieveNoParticipants(testClient, initDatabaseEmpty):
     researcher1.id = 201
     db.session.commit()
 
+    access_token = loginHelper(testClient, 'ad', 'min')
+
     # We try to retrieve the participants of the user
-    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
     
     # Check if the expected response has the correct status code    
     assert response.status_code == 404
@@ -75,8 +79,11 @@ def testRetrieveNoParticipantsOneProject(testClient, initDatabaseEmpty):
     db.session.add(project1)
     db.session.commit()
 
+    access_token = loginHelper(testClient, 'ad', 'min')
+
     # We try to retrieve the participants of the user
-    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
     
     # Check if the expected response has the correct status code    
     assert response.status_code == 404
@@ -120,15 +127,16 @@ def testRetrieveNoParticipantsBuExistOtherParticipants(testClient, initDatabaseE
     project1 = Projects(userId = 202, projectName = "Project1")
     project1.id = 10
     db.session.add(project1)
-    participant1 = User(username="Participant1", password_plaintext="password", role="participant")
+    participant1 = User(username="Participant1", password_plaintext="password", role="participant", project=project1.id)
     participant1.id = 200
     db.session.add(participant1)
-    connection = ParticipantToProject(200, 10)
-    db.session.add(connection)
     db.session.commit()
 
+    access_token = loginHelper(testClient, 'ad', 'min')
+
     # We try to retrieve the participants of the user
-    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
     
     # Check if the expected response has the correct status code    
     assert response.status_code == 404
@@ -166,25 +174,27 @@ def testRetrieveNoParticipantsButExistOwnProject(testClient, initDatabaseEmpty):
     # We do not add any projects to the database, nor participants, only the user themselves
     # We add a single project with a single user to the database, which is from the user
     researcher1 = User(username="Researcher1", password_plaintext="password2", role="researcher")
-    researcher1.id = 201
+    researcher1.id = userId
     db.session.add(researcher1)
     researcher2 = User(username="Researcher2", password_plaintext="password3", role="researcher")
     researcher2.id = 202
     db.session.add(researcher1)
-    project1 = Projects(userId = 201, projectName = "Project2")
+    project1 = Projects(userId = userId, projectName = "Project2")
     project1.id = 11
     db.session.add(project1)
     project2 = Projects(userId = 202, projectName = "Project1")
     project2.id = 10
     db.session.add(project2)
-    participant1 = User(username="Participant1", password_plaintext="password", role="participant")
+    participant1 = User(username="Participant1", password_plaintext="password", role="participant", project=project1.id)
     participant1.id = 200
     db.session.add(participant1)
-    connection = ParticipantToProject(200, 10)
-    db.session.add(connection)
     db.session.commit()
+
+    access_token = loginHelper(testClient, 'ad', 'min')
+
     # We try to retrieve the participants of the user
-    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
     
     # Check if the expected response has the correct status code    
     assert response.status_code == 404
@@ -226,14 +236,16 @@ def testRetrieveSingleProjectSingleUserOfUserNoOther(testClient, initDatabase):
     project1 = Projects(userId = 201, projectName = "Project1")
     project1.id = 10
     db.session.add(project1)
-    participant1 = User(username="Participant1", password_plaintext="password", role="participant")
+    participant1 = User(username="Participant1", password_plaintext="password", role="participant", project=project1.id)
     participant1.id = 200
     db.session.add(participant1)
-    connection = ParticipantToProject(200, 10)
-    db.session.add(connection)
     db.session.commit()
+
+    access_token = loginHelper(testClient, 'ad', 'min')
+
     # We try to retrieve the projects of the user
-    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # Check if the expected response has the correct status code
     assert response.status_code == 200
 
@@ -294,24 +306,22 @@ def testRetrieveSingleProjectMultipleParticipantsOfUserNoOther(testClient, initD
     project1 = Projects(userId = 201, projectName = "Project1")
     project1.id = 10
     db.session.add(project1)
-    participant1 = User(username="Participant1", password_plaintext="password", role="participant")
+    participant1 = User(username="Participant1", password_plaintext="password", role="participant", project=project1.id)
     participant1.id = 200
     db.session.add(participant1)
-    participant2 = User(username="Participant2", password_plaintext="password3", role="participant")
+    participant2 = User(username="Participant2", password_plaintext="password3", role="participant", project=project1.id)
     participant2.id = 203
     db.session.add(participant2)
-    participant3 = User(username="Participant3", password_plaintext="password4", role="participant")
+    participant3 = User(username="Participant3", password_plaintext="password4", role="participant", project=project1.id)
     participant3.id = 204
     db.session.add(participant3)
-    connection = ParticipantToProject(200, 10)
-    db.session.add(connection)
-    connection1 = ParticipantToProject(203, 10)
-    db.session.add(connection1)
-    connection2 = ParticipantToProject(204, 10)
-    db.session.add(connection2)
     db.session.commit()
+
+    access_token = loginHelper(testClient, 'ad', 'min')
+    
     # We try to retrieve the projects of the user
-    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data)
+    response = testClient.get('/projectapi/viewParticipantsOfUser', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
     # Check if the expected response has the correct status code
     assert response.status_code == 200
 

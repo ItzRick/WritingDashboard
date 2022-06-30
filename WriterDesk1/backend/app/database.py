@@ -1,6 +1,6 @@
 import csv, os
 from app import db
-from app.models import User, Files, Projects, ParticipantToProject
+from app.models import User, Files, Projects
 import csv, os
 
 def uploadToDatabase(toUpload):
@@ -128,7 +128,7 @@ def recordsToCsv(path, records):
             outCsv.writerow(record)
 
 
-def postParticipant(username, password):
+def postParticipant(username, password, projectId):
     '''
         This function handles the query that generates a partipant account. When
         there is no participant present in the database with the given username,
@@ -150,33 +150,10 @@ def postParticipant(username, password):
     # Add user to the database with participant role
     user = User(username=username, password_plaintext=password,
                 role="participant")
+    user.project = projectId
     db.session.add(user)
     db.session.flush()
     return user
-
-
-def postParticipantToProject(userId, projectId):
-    '''
-        This function handles the query that creates an entry in 
-        ParticipantToProject, to link a participant to a research project. When 
-        the project with projectId does not exist in the database, the function 
-        raises an exception.
-        Attributes:
-            project: query result to check if there exists a project with the 
-            given id.
-            dataTuple: object that is to be added to the database.
-        Arguments:
-            userId: id of the participant.
-            projectId: id of the research project.
-    '''
-    project = Projects.query.filter_by(id=projectId).all()
-    if len(project) == 0:
-        # Project does not exist in the database
-        raise Exception('Project does not exist')
-
-    dataTuple = ParticipantToProject(userId=userId, projectId=projectId)
-    db.session.add(dataTuple)
-    db.session.flush()
 
 def getProjectsByResearcher(user):
     '''
@@ -194,10 +171,10 @@ def getProjectsByResearcher(user):
         userId = proj.userId, 
         projectName = proj.projectName, 
         id = proj.id, 
-        partCount=ParticipantToProject.query.filter_by(projectId=proj.id).count()
+        partCount=User.query.filter_by(project=proj.id).count()
     ) for proj in projectList]
 
-def getParticipantsByResearcher(user):
+def getParticipantsByResearcher(researcherId):
     '''
         This function handles the query for retrieving a user's participants.
         Attributes:
@@ -209,18 +186,13 @@ def getParticipantsByResearcher(user):
         Arguments:
             user: id of the user whose participants need to be retrieved
         Return:
-            Returns list of participants of the given user
+            Returns dict of participants of the given user
     '''
-    # Get the query that gets the user information
-    userList = User.query.filter_by(id=user).subquery()
-    # Get the query that gets the projects of the user
-    projectList = Projects.query.join(userList, Projects.userId == userList.c.id).subquery()
-    # Get the query that gets the participant ids of the projects of the user
-    participantIdList = ParticipantToProject.query.join(projectList, ParticipantToProject.projectId == projectList.c.id).subquery()
-    # Get the participants of the projects of the user
-    participantList = User.query.join(participantIdList, User.id == participantIdList.c.userId).all()
-    # Return the information of the participants in all projects of the user
-    return [dict(role = part.role, id = part.id, username = part.username, passwordHash = part.passwordHash) for part in participantList]
+    projects = Projects.query.filter_by(userId=researcherId).all()
+    # Return for each set of participants related to a project, add the data to a dictionary
+    return [dict(role = part.role, id = part.id, username = part.username, passwordHash = part.passwordHash) 
+        for project in projects for part in project.participants]
+    
     
 def getParticipantsWithProjectsByResearcher(user):
     '''
@@ -240,8 +212,8 @@ def getParticipantsWithProjectsByResearcher(user):
     
     # for each participant add the related project name and projectId 
     for participant in participants:
-        projectParticipantConnection = ParticipantToProject.query.filter_by(userId=participant['id']).first()
-        projectid = projectParticipantConnection.projectId
+        projectParticipantConnection = User.query.filter_by(id=participant['id']).first()
+        projectid = projectParticipantConnection.project
         project = Projects.query.filter_by(id=projectid).first()
         projectname = project.projectName
         participant['projectid'] = projectid

@@ -1,8 +1,8 @@
 import os
-from datetime import datetime, date
+from datetime import date
 
 from app import db
-from app.models import User, Files, Explanations, Projects, ParticipantToProject, Scores
+from app.models import User, Files, Explanations, Projects, Scores
 from app.usersapi.routes import deleteUser
 from werkzeug.utils import secure_filename
 
@@ -28,7 +28,6 @@ def testDeleteUser(testClient, initDatabase):
             projectID: id belonging to project
             participant: participant user in project
             participantID: id belonging to participant
-            participantToProject: participantToProject entry relating participant to project
             scores: scores of file
             access_token: the access token
         Arguments:
@@ -66,11 +65,8 @@ def testDeleteUser(testClient, initDatabase):
     project = Projects(userId=userID, projectName='test')
     db.session.add(project)
     projectID = Projects.query.filter_by(userId=userID).first().id
-    participant = User(username='Kevin', role='participant', password_plaintext='test')
+    participant = User(username='Kevin', role='participant', password_plaintext='test', project=projectID)
     db.session.add(participant)
-    participantID = User.query.filter_by(username='Kevin').first().id
-    participantToProject = ParticipantToProject(userId=participantID, projectId=projectID)
-    db.session.add(participantToProject)
     scores = Scores(fileId=fileID)
     db.session.add(scores)
     db.session.commit()
@@ -82,9 +78,8 @@ def testDeleteUser(testClient, initDatabase):
     assert Explanations.query.filter_by(fileId=fileID).first() is None
     assert Projects.query.filter_by(userId=userID).first() is None
     assert User.query.filter_by(username='Kevin').first() is None
-    assert ParticipantToProject.query.filter_by(userId=participantID).first() is None
     assert Scores.query.filter_by(fileId=fileID).first() is None
-    assert User.query.filter_by(id=participantID).first() is None
+    """assert User.query.filter_by(id=participantID).first() is None"""
 
 
 def testNotAdmin(testClient, initDatabase):
@@ -189,7 +184,7 @@ def testResearcher(testClient, initDatabase):
     '''
         Test if we can remove a participant user from the database using the deleteUserResearcher api call.
         We also create a participant user that belongs to a project that the user to be deleted owns.
-        This participant and the participantToProject entry should also get deleted.
+        This participant entry should also get deleted.
         After we have removed this user, we check whether the response is correct.
         We also test whether the correct error is thrown when trying to delete a non existent participant and when
         trying to delete a participant that does not belong to a project owned by the logged in researcher.
@@ -204,8 +199,6 @@ def testResearcher(testClient, initDatabase):
             participantID: id belonging to participant
             urelatedParticipant: participant user in unrelatedProject
             unrelatedParticipantID: id belonging to unrelatedParticipant
-            participantToProject: participantToProject entry relating participant to project
-            unrelatedParticipantToProject: participantToProject entry relating unrelatedParticipant to unrelatedProject
             access_token: the access token
             response: the response of the api call
         Arguments:
@@ -217,22 +210,17 @@ def testResearcher(testClient, initDatabase):
     # get his user id
     userId = user.id
     project = Projects(userId=userId, projectName='test')
-    db.session.add(project)
     unrelatedProject = Projects(userId=-1, projectName='test2')
+    db.session.add(project)
     db.session.add(unrelatedProject)
-    projectID = Projects.query.filter_by(userId=userId).first().id
-    unrelatedProjectID = Projects.query.filter_by(userId=-1).first().id
-    participant = User(username='Kevin', role='participant', password_plaintext='test')
+    projectID = Projects.query.filter_by(projectName='test').first().id
+    unrelatedProjectID = Projects.query.filter_by(projectName='test2').first().id
+    participant = User(username='Kevin', role='participant', password_plaintext='test', project=projectID)
     db.session.add(participant)
     participantID = User.query.filter_by(username='Kevin').first().id
-    unrelatedParticipant = User(username='David', role='participant', password_plaintext='test')
+    unrelatedParticipant = User(username='David', role='participant', password_plaintext='test', project=unrelatedProjectID)
     db.session.add(unrelatedParticipant)
     unrelatedParticipantID = User.query.filter_by(username='David').first().id
-    participantToProject = ParticipantToProject(userId=participantID, projectId=projectID)
-    db.session.add(participantToProject)
-    unrelatedParticipantToProject = ParticipantToProject(userId=unrelatedParticipantID,
-                                                         projectId=unrelatedProjectID)
-    db.session.add(unrelatedParticipantToProject)
     db.session.commit()
 
     assert User.query.filter_by(id=userId).first() is not None

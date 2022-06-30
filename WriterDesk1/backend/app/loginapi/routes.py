@@ -12,6 +12,7 @@ from app.database import postUser
 from app.extensions import jwt
 from app.models import User
 
+from app.ATP.initialiseATP import initialiseATP
 
 @bp.route('/login', methods=['POST'])
 def create_token():
@@ -28,6 +29,7 @@ def create_token():
             Returns access_token used for authentication and user_id from user attribute when username and password corresponds to database
             Otherwise returns Unauthorized response status code
     '''
+    # initialiseATP(False)
     username = request.json.get("username", None)
     password = request.json.get("password", None)
     user = User.query.filter_by(username=username).first() # Get user from database corresponding to username

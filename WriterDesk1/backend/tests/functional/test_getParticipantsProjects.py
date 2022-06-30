@@ -1,6 +1,6 @@
-from app.models import User, Projects, ParticipantToProject
+from app.models import User, Projects
 import json
-from app.database import postParticipant, postParticipantToProject, uploadToDatabase
+from app.database import postParticipant, uploadToDatabase
 
 from test_set_role import loginHelper
 
@@ -85,26 +85,20 @@ def testWithProjectsPartPro(testClient, initDatabase):
     project1 = Projects(adId, projectName1)
     uploadToDatabase(project1)
     pid1 = Projects.query.filter_by(projectName=projectName1).first().id
-
-    # create 2 participants
-    pName1 = 'testPart1'
-    pName2 = 'testPart2'
-    postParticipant(pName1, 'pass')
-    uid1 = User.query.filter_by(username=pName1).first().id
-    postParticipant(pName2, 'pass')
-    uid2 = User.query.filter_by(username=pName2).first().id
-
-    # add participant1 to the project1
-    postParticipantToProject(uid1, pid1)
-
+    
     # create different project for different user (Pietje)
     projectName2 = "Project2"
     project2 = Projects(pietId, projectName2)
     uploadToDatabase(project2)
     pid2 = Projects.query.filter_by(projectName=projectName2).first().id
 
-    # add participant2 to that project2
-    postParticipantToProject(uid2, pid2)
+    # create 2 participants
+    pName1 = 'testPart1'
+    pName2 = 'testPart2'
+    postParticipant(pName1, 'pass', pid1)
+    uid1 = User.query.filter_by(username=pName1, project=pid1).first().id
+    postParticipant(pName2, 'pass', pid2)
+    uid2 = User.query.filter_by(username=pName2, project=pid2).first().id
     
     # Retrieve the participants of all projects related to admin
     response = testClient.get('/usersapi/getParticipantsProjects', headers={"Authorization": "Bearer " + access_token})

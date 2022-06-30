@@ -18,13 +18,23 @@ class User(db.Model):
             trackable: whether or not the user wants to be tracked. 
     '''
     __tablename__ = "user"
-    role = db.Column(db.String(32))
-    id = db.Column(db.Integer, primary_key=True)
+    role = db.Column(db.String(32), default=None)
+    id = db.Column(db.Integer, db.ForeignKey('projects.userId'), primary_key=True, autoincrement=True)
     username = db.Column(db.String(120), index=True, unique=True)
     passwordHash = db.Column(db.String(128))
     trackable = db.Column(db.Boolean, default=True)
+    project = db.Column(db.Integer, db.ForeignKey('projects.id'))
 
-    def __init__(self, username: str, password_plaintext: str, role: str ='user', trackable: bool = True):
+    # relationships
+    creator = db.relationship('Projects', back_populates='creator', cascade='all,delete', 
+        primaryjoin='User.id == Projects.userId')
+    participants = db.relationship('Projects', back_populates='participants', 
+        primaryjoin='User.project == Projects.id')
+
+    file = db.relationship('Files', backref='owner', lazy='dynamic', cascade='all,delete')
+    click = db.relationship('Clicks', backref='clicker', lazy='dynamic', cascade='all,delete')
+    
+    def __init__(self, username: str, password_plaintext: str, role: str ='user', trackable: bool = True, project: int=None):
         ''' 
             Create new user, use set_password to create hashed password for plaintext password
             Arguments:
@@ -37,6 +47,7 @@ class User(db.Model):
         self.username = username
         self.set_password(password_plaintext)
         self.trackable = trackable
+        self.project = project
 
     # list of columns and relationships that should not get serialized
 
@@ -52,12 +63,6 @@ class User(db.Model):
     @staticmethod
     def serializeList(l):
         return [m.serializeUser() for m in l]
-
-    # relationships
-    file = db.relationship('Files', backref='owner', lazy='dynamic', cascade='all,delete')
-    project = db.relationship('Projects', backref='projectCreator', lazy='dynamic', cascade='all,delete')
-    participantToProject = db.relationship('ParticipantToProject', backref='linkedParticipant', cascade='all,delete')
-    click = db.relationship('Clicks', backref='clicker', lazy='dynamic', cascade='all,delete')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -112,42 +117,6 @@ class Files(db.Model):
 
     def __repr__(self):
         return '<Files {}>'.format(self.filename)
-
-class ParticipantToProject(db.Model):
-    '''
-        Model containing user id's and project id's, linking a participant to a research project.
-        Attributes:
-            userId: id of the participant
-            projectId: id of the research project
-            participant: User object linked by userId
-            project: Projects object linked by projectId
-    '''
-    __tablename__ = "participanttoproject"
-    userId = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, autoincrement=False)
-    projectId = db.Column(db.Integer, db.ForeignKey('projects.id'))
-
-    # relationships
-    participant = db.relationship('User', backref='participanttoproject', lazy=True, cascade='all,delete')
-
-    def __init__(self, userId: int, projectId: int):
-        '''
-            Create new tuple, linking a participant to a project
-            Arguments:
-                userId: id of the participant
-                projectId: id of the research project
-        '''
-        self.userId = userId
-        self.projectId = projectId
-
-    def serializeParticipantToProject(self):
-        dict = {}
-        for c in inspect(self).attrs.keys():
-            if not c == 'participant' and not c == 'project':
-                dict[c] =  getattr(self, c)
-        return dict
-
-    def __repr__(self):
-        return '<ParticipantToProject {}>'.format(self.userId)
 
 class Scores(db.Model):
     '''
@@ -232,11 +201,16 @@ class Projects(db.Model):
             participants: participants object linked by projectId
     '''
     __tablename__ = "projects"
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('user.project'), primary_key=True, autoincrement=True)
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))
     projectName = db.Column(db.String(256), index=True, unique=False, default='')
 
-    participants = db.relationship('ParticipantToProject', backref='projects', lazy='dynamic', cascade='all,delete')
+    # relationships
+    creator = db.relationship('User', back_populates='creator', cascade='all,delete',
+        primaryjoin='User.id == Projects.userId')
+    participants = db.relationship('User', back_populates='participants', cascade='all,delete',
+        primaryjoin='User.project == Projects.id')
+    
 
     def __init__(self, userId: int, projectName: str):
         ''' Create new tuple'''
