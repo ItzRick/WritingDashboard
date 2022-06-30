@@ -35,7 +35,7 @@ import { authHeader } from "../helpers/auth-header";
 const PDFViewer = memo((props) => {
   return (
     <AllPagesPDFViewer
-        pdf={`https://localhost:5000/fileapi/display?filepath=${props.path}&filetype=${props.type}`}
+        pdf={`https://api.writingdashboard.xyz/fileapi/display?filepath=${props.path}&filetype=${props.type}`}
         docId={props.fileId}
         docName={props.fileName}
       />
@@ -90,7 +90,7 @@ function Document() {
    */
   const fetchFilePath = (fileId) => {
     // Url of the server:
-    const url = 'https://localhost:5000/fileapi/getFileById';
+    const url = 'https://api.writingdashboard.xyz/fileapi/getFileById';
 
     // Make the call to the backend:
     axios.get(url, { params: { fileId: fileId }, headers: authHeader() })
@@ -107,7 +107,7 @@ function Document() {
    */
   const fetchScores = (fileId) => {
     // // Url of the server:
-    const url = 'https://localhost:5000/scoreapi/getScores';
+    const url = 'https://api.writingdashboard.xyz/scoreapi/getScores';
 
     // Make the call to the backend:
     axios.get(url, { params: { fileId: fileId }, headers: authHeader() })
@@ -125,7 +125,7 @@ function Document() {
    */
   const fetchExplanations = (fileId) => {
     // Url of the server:
-    const url = 'https://localhost:5000/scoreapi/getExplanationForFile';
+    const url = 'https://api.writingdashboard.xyz/scoreapi/getExplanationForFile';
 
     // Make the call to the backend:
     axios.get(url, { params: { fileId: fileId }, headers: authHeader() })
@@ -152,7 +152,7 @@ function Document() {
     let y = coords[1] + e.clientY - rect.top; // y-coordinate of click in document
 
     // Make the call to the backend:
-    axios.get('https://localhost:5000/scoreapi/getExplanationForFileAndCoordinates', { params: { fileId: fileID, x: x, y: y } })
+    axios.get('https://api.writingdashboard.xyz/scoreapi/getExplanationForFileAndCoordinates', { params: { fileId: fileID, x: x, y: y } })
       .then((response) => {
         // Set explanations to show explanation boxes
         setExplanations(response.data);
@@ -178,7 +178,7 @@ function Document() {
    */
   const showAllExplanationsOfType = (type) => {
     // Make the call to the backend
-    axios.get('https://localhost:5000/scoreapi/getExplanationForFileAndType', { params: { fileId: fileID, type: type } })
+    axios.get('https://api.writingdashboard.xyz/scoreapi/getExplanationForFileAndType', { params: { fileId: fileID, type: type } })
       .then((response) => {
         // Set explanations to show explanation boxes
         setExplanations(response.data);
