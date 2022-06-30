@@ -45,7 +45,9 @@ const Projects = () => {
         });
     }
 
-    // upon first render, set the table data
+    /**
+     * upon first render, set the table data
+     */
     useEffect(() => {
         setProjects()
     }, []);

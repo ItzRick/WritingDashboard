@@ -109,7 +109,6 @@ root.render(
             <Route name='SignUp' path='SignUp' element={<SignUp />} />
             <Route path='/' element={<LandingPage />} />
           </Route>
-          {/* TODO: add authentication */}
           {/* Private part of the router, requires authentication */}
           {/* provide trackingWrapper around the base, to serve as context for the application */}
           <Route path='/' element={<TrackingWrapper><Base /></TrackingWrapper>}>
