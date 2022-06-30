@@ -185,13 +185,6 @@ function Document() {
       })
   }
 
-  // tracking
-  const eventFields = {
-    location: 'searchbar',
-    name: 'SomeComponent'
-  };
-  const eventOptions = { asynchronous: 'true' };
-
 
   /**
    * Div that shows the explanation of a mistake being clicked

@@ -79,7 +79,7 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                 // Get the ids of the uploaded files from the backend:
                 let message = response.data
                 let ids = /\[(.*?)\]/.exec(message)[0];
-                ids = ids.replace(/[\[\]']+/g,'')
+                ids = ids.replace(/[[\]']+/g,'')
                 ids = ids.split(', ')
                 // Make a post request with the correct parameters:
                 let params = new URLSearchParams();

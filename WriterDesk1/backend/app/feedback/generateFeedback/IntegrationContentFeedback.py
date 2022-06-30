@@ -206,11 +206,13 @@ class IntegrationContentFeedback(BaseFeedback):
         count = 0
         # For each link in links:
         for link in links:
-            # Scrape the text of the page from this link:
-            text = scrapePage(link)
-            # Add the words from this text if they are not in englishStopwords and not in the set already and increment the count:
-            wordsReferences = self.wordsSource(text, wordsReferences)
-            count += 1
+            # Try to scrape the text of the page from this link:
+            isSuccesful, text = scrapePage(link)
+            # If this is succesful:
+            if isSuccesful:
+                # Add the words from this text if they are not in englishStopwords and not in the set already and increment the count:
+                wordsReferences = self.wordsSource(text, wordsReferences)
+                count += 1
         # For each link_doi in links_doi:
         for link_doi in links_doi:
             # Get the text of the pdf from this link via the textDoi method:
