@@ -297,7 +297,6 @@ class Clicks(db.Model):
     def serializeClick(self):
         dict = {}
         for c in inspect(self).attrs.keys():
-            # Count the clickId from 0:
             if not c == 'file' and not c == 'clicker':
                 dict[c] =  getattr(self, c)
         return dict
