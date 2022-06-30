@@ -249,7 +249,7 @@ const Documents = () => {
    */
   const setDataRepeat = () => {
     //   The backend url:
-    const url = 'https://localhost:5000/fileapi/fileretrieve';
+    const url = 'https://api.writingdashboard.xyz/fileapi/fileretrieve';
     // id of current user
     const userId = AuthenticationService.getCurrentUserId();
     // The parameter, sortingAttribute need to be changed later:
