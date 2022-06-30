@@ -5,10 +5,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 
-// routing
-import { Link, Outlet } from 'react-router-dom';
-
-
 /**
  * AlertDialog that is shown on top of page. This shows a dialog with a title and text and two buttons that can be clicked.
  * @property title - Title shown in the alert dialog

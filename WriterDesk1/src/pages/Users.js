@@ -11,10 +11,10 @@ import {
 } from "@mui/icons-material";
 
 // routing
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 
 import RoleDialog from "./../components/RoleDialog";
 import BlueButton from './../components/BlueButton';
@@ -23,6 +23,8 @@ import React from 'react';
 import "../css/styles.css";
 import "../css/main.css";
 import { authHeader } from "../helpers/auth-header";
+// Authentication service for the admin to be able to delete himself and logout:
+import { AuthenticationService } from '../services/authenticationService';
 import fileDownload from 'js-file-download';
 import AlertDialog from "../components/AlertDialog";
 
@@ -31,6 +33,11 @@ import AlertDialog from "../components/AlertDialog";
  * @returns Users Page
  */
 const Users = () => {
+    // Navigate element to be able to logout the current user:
+    const navigate = useNavigate();
+
+    const [showFailPopup, setShowFailPopup] = useState(false);
+    const [failText, setFailText] = useState("");
 
   /**
    * Delete the user corresponding to the userId.
@@ -41,9 +48,18 @@ const Users = () => {
       //   The backend url:
       const url = 'https://api.writingdashboard.xyz/usersapi/deleteUserAdmin';
       // Make the backend call and set the table data from the response data:
-      axios.post(url,{userID: userID},{headers: authHeader()}).then((_response) => {
+      axios.post(url,{userID: userID},{headers: authHeader()})
+      .then((_response) => {
         setData();
+        // If the admin has removed himself, logout:
+        if (AuthenticationService.getCurrentUserId() === userID) {
+            navigate("../Login", { replace: true });
+        }
       })
+      .catch((error) => {
+        setShowFailPopup(true);
+        setFailText(error.response.data);
+      });
   }
 
   // State to keep track of the data inside the table:
@@ -166,8 +182,13 @@ const Users = () => {
       {showDeleteDialog &&
         <AlertDialog title = "Delete user" text = "Are you sure you want to delete this user?"
                      buttonAgree={<Button style={{color: "red"}} onClick={(e) => {deleteUser(deleteId)}}>Yes</Button>}
-                     buttonCancel={<Button onClick={(e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
+                     buttonCancel={<Button onClick={(_e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
         />}
+
+    {showFailPopup && <AlertDialog title = "Failure!" 
+                        text = {failText}
+                        buttonAgree={<Button onClick={(_e) => {setShowFailPopup(false)}}>OK</Button>}
+                    />}
       <div style={{ textAlign: 'center', marginBottom: '1vh' }}>
         <BlueButton idStr='downloadUserDataSelectedUsers' onClick={() => {handleUserDataSelected()}}>Download user data of selected users</BlueButton>
       </div>
