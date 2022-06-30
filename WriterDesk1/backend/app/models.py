@@ -276,13 +276,33 @@ class Clicks(db.Model):
     def __repr__(self):
         return '<Clicks {}>'.format(self.userId, self.clickId)
 
+    def serializeClickIndex(self, index):
+        '''
+            Serialize the clickData with a given index.
+            arguments: 
+                self: Current database object.
+                index: Index of the current element in the final list.
+            returns: 
+                dict: Dictionary with all required elements of the current element.
+        '''
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            # Count the clickId from 0:
+            if c == 'clickId':
+                dict[c] = index
+            elif not c == 'file' and not c == 'clicker':
+                dict[c] =  getattr(self, c)
+        return dict
+
     def serializeClick(self):
         dict = {}
         for c in inspect(self).attrs.keys():
+            # Count the clickId from 0:
             if not c == 'file' and not c == 'clicker':
                 dict[c] =  getattr(self, c)
         return dict
 
     @staticmethod
     def serializeList(l):
-        return [m.serializeClick() for m in l]
+        # Use enumerate to correctly get the index of the clickdata.
+        return [m.serializeClickIndex(i) for i, m in enumerate(l)]
