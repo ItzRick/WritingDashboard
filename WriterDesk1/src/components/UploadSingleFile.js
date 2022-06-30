@@ -53,7 +53,7 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
         uploadFile() {
             if (file !== 'or drag it here.') {            
                 // url of the file api's upload function
-                const url = 'https://localhost:5000/fileapi/upload';
+                const url = 'https://api.writingdashboard.xyz/fileapi/upload';
                 // id of current user
                 const userId = AuthenticationService.getCurrentUserId();
 
@@ -84,7 +84,7 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                 // Make a post request with the correct parameters:
                 let params = new URLSearchParams();
                 ids.forEach(element => params.append("fileId", element));
-                let generateUrl = 'https://localhost:5000/feedback/generate';
+                let generateUrl = 'https://api.writingdashboard.xyz/feedback/generate';
                 const config = {
                     params: params,
                     headers: {

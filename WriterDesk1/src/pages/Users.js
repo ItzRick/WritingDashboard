@@ -39,7 +39,7 @@ const Users = () => {
   function deleteUser(userID) {
       setShowDeleteDialog(false);
       //   The backend url:
-      const url = 'https://localhost:5000/usersapi/deleteUserAdmin';
+      const url = 'https://api.writingdashboard.xyz/usersapi/deleteUserAdmin';
       // Make the backend call and set the table data from the response data:
       axios.post(url,{userID: userID},{headers: authHeader()}).then((_response) => {
         setData();
@@ -96,7 +96,7 @@ const Users = () => {
    */
   const setData = () => {
     //   The backend url:
-    const url = 'https://localhost:5000/usersapi/users';
+    const url = 'https://api.writingdashboard.xyz/usersapi/users';
     // Make the backend call and set the table data from the response data:
     axios.get(url,{headers: authHeader() })
       .then((response) => {
@@ -117,7 +117,7 @@ const Users = () => {
    * Download the user data of the selected users.
    */
   const handleUserDataSelected = () => {
-    const url = 'https://localhost:5000/clickapi/getUserData';
+    const url = 'api.writingdashboard.xyz/clickapi/getUserData';
     const params = new URLSearchParams();
     // add all selected users user ids to the params list
     for (let index in selectedInstances) {
@@ -143,7 +143,7 @@ const Users = () => {
    * @param {params} params: params of the row where the current user is, of which the userdata needs to be downloaded.
    */
   const handleUserDataSingle = (_event, params) => {
-    const url = 'https://localhost:5000/clickapi/getUserData';
+    const url = 'api.writingdashboard.xyz/clickapi/getUserData';
     const searchParams = new URLSearchParams();
     // add all selected users user ids to the params list
     searchParams.append("userId", params.row.id)
