@@ -11,7 +11,7 @@ import {
 } from "@mui/icons-material";
 
 // routing
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -23,6 +23,8 @@ import React from 'react';
 import "../css/styles.css";
 import "../css/main.css";
 import { authHeader } from "../helpers/auth-header";
+// Authentication service for the admin to be able to delete himself and logout:
+import { AuthenticationService } from '../services/authenticationService';
 import fileDownload from 'js-file-download';
 import AlertDialog from "../components/AlertDialog";
 
@@ -31,6 +33,8 @@ import AlertDialog from "../components/AlertDialog";
  * @returns Users Page
  */
 const Users = () => {
+    // Navigate element to be able to logout the current user:
+    const navigate = useNavigate();
 
   /**
    * Delete the user corresponding to the userId.
@@ -43,6 +47,10 @@ const Users = () => {
       // Make the backend call and set the table data from the response data:
       axios.post(url,{userID: userID},{headers: authHeader()}).then((_response) => {
         setData();
+        // If the admin has removed himself, logout:
+        if (AuthenticationService.getCurrentUserId() === userID) {
+            navigate("../Login", { replace: true });
+        }
       })
   }
 
