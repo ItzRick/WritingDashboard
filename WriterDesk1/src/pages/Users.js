@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import {
   DeleteOutline,
+  Download
 } from "@mui/icons-material";
 
 // routing
@@ -31,12 +32,16 @@ import AlertDialog from "../components/AlertDialog";
  */
 const Users = () => {
 
+  /**
+   * Delete the user corresponding to the userId.
+   * @param {userId} userId: The userId of the user that needs to be removed.
+   */
   function deleteUser(userID) {
       setShowDeleteDialog(false);
       //   The backend url:
       const url = 'https://api.writingdashboard.xyz/usersapi/deleteUserAdmin';
       // Make the backend call and set the table data from the response data:
-      axios.post(url,{userID: userID},{headers: authHeader()}).then((response) => {
+      axios.post(url,{userID: userID},{headers: authHeader()}).then((_response) => {
         setData();
       })
   }
@@ -47,7 +52,7 @@ const Users = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);  // Show dialog when deleting user
   const [deleteId, setDeleteId] = useState();  // ID that is going to be deleted when pressing delete button
 
-  const columns: GridColDef[] = [
+  const columns = [
     {
       field: 'username',
       headerName: 'Username',
@@ -75,14 +80,20 @@ const Users = () => {
       sortable: false,
       renderCell: (params) => {
         return (<div>
+          <Tooltip title="Download the userdata of this user.">
+            <IconButton onClick={(e) => { handleUserDataSingle(e, params) }}><Download /></IconButton>
+          </Tooltip>
           <Tooltip title="Delete this user.">
-            <IconButton onClick={(e) => { setDeleteId(params.row.id); setShowDeleteDialog(true); }}><DeleteOutline /></IconButton>
+            <IconButton onClick={() => { setDeleteId(params.row.id); setShowDeleteDialog(true); }}><DeleteOutline /></IconButton>
           </Tooltip>
         </div>);
       }
     }
   ];
 
+  /**
+   * Set the users in the table with an api call. 
+   */
   const setData = () => {
     //   The backend url:
     const url = 'https://api.writingdashboard.xyz/usersapi/users';
@@ -102,8 +113,11 @@ const Users = () => {
 
   const [selectedInstances, setSelectedInstances] = useState([]) // list of user ids of selected users
 
-  const handleUserData = () => {
-    const url = 'https://api.writingdashboard.xyz/clickapi/getUserData';
+  /**
+   * Download the user data of the selected users.
+   */
+  const handleUserDataSelected = () => {
+    const url = 'api.writingdashboard.xyz/clickapi/getUserData';
     const params = new URLSearchParams();
     // add all selected users user ids to the params list
     for (let index in selectedInstances) {
@@ -123,6 +137,30 @@ const Users = () => {
       })
   }
 
+  /**
+   * Download the user data of the user given by the params.
+   * @param {event} _event: event data pushed with the call, not required
+   * @param {params} params: params of the row where the current user is, of which the userdata needs to be downloaded.
+   */
+  const handleUserDataSingle = (_event, params) => {
+    const url = 'api.writingdashboard.xyz/clickapi/getUserData';
+    const searchParams = new URLSearchParams();
+    // add all selected users user ids to the params list
+    searchParams.append("userId", params.row.id)
+    const request = {
+      params: searchParams,
+      headers: authHeader()
+    };
+    axios.get(url, request)
+      .then((response) => {
+        const fileName = response.headers["custom-filename"];
+        fileDownload(response.data, fileName);
+      })
+      .catch(err => {
+        console.log(err.response.data)
+      })
+  }
+
   return (
     <>
       {showDeleteDialog &&
@@ -130,7 +168,7 @@ const Users = () => {
                      buttonAgree={<Button style={{color: "red"}} onClick={(e) => {deleteUser(deleteId)}}>Yes</Button>}
                      buttonCancel={<Button onClick={(e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
         />}
-      <BlueButton idStr='downloadUserData' onClick={() => {handleUserData()}}>Download user data</BlueButton>
+      <BlueButton idStr='downloadUserDataSelectedUsers' onClick={() => {handleUserDataSelected()}}>Download user data of selected users</BlueButton>
       <div style={{ height: '80vh', maxHeight: '400px' }} >
         <DataGrid
           style={{ maxHeight: '100%' }}
