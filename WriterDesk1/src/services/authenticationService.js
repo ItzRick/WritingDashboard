@@ -25,7 +25,7 @@ function login(username, password) {
     }).then(response => {
         localStorage.setItem('currentUser', JSON.stringify(response.data));
 
-        if (JSON.parse(localStorage.getItem('currentUser')).access_token == null || JSON.parse(localStorage.getItem('currentUser')).access_token == "undefined") {
+        if (JSON.parse(localStorage.getItem('currentUser')).access_token == null || JSON.parse(localStorage.getItem('currentUser')).access_token === "undefined") {
             return Promise.reject();
         }
     })

@@ -38,7 +38,7 @@ const AllPages = ({ pdf, docId=null, docName=null }) => {
   // execute handleTracker once upon load
   useEffect( () => {
     handleTracker()
-  }, []);
+  });
 
 
 

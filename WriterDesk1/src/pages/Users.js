@@ -98,7 +98,7 @@ const Users = () => {
   useEffect(() => {
     setTitle('Users');
     setData();
-  }, []);
+  });
 
   const [selectedInstances, setSelectedInstances] = useState([]) // list of user ids of selected users
 
