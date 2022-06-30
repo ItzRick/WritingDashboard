@@ -140,6 +140,19 @@ def fileRetrieve():
     for file in files:
         file['date'] = file.get('date').strftime('%d/%m/%y')
 
+    # Get the progress by looking at which scores are yet generated:
+    for file in files: 
+        # Get the score for the current file:
+        score = Scores.query.filter_by(fileId=file['id']).first()
+        # Initialize the progress to 0:
+        progress = 0
+        # If we have a score, we add 25% for each score more than 0:
+        if score != None:
+            for scoreInstance in score.scoreColumns:
+                if scoreInstance >= 0:
+                    progress += 25
+        file['progress'] = progress
+
     # Return http response with list as json in response body
     return jsonify(files)
 
