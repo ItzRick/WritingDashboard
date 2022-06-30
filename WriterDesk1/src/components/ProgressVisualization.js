@@ -28,7 +28,7 @@ const ProgressVisualization = () => {
    */
   const fetchFilesAndScores = () => {
     // Url of the server:
-    const url = 'https://api.writingdashboard.xyz/scoreapi/getFilesAndScoresByUser';
+    const url = 'https://localhost:5000/scoreapi/getFilesAndScoresByUser';
 
     // Make the backend call and set the documents variable:
     axios.get(url, {headers: authHeader()}).then((response) => {
