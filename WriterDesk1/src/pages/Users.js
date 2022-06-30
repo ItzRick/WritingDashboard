@@ -36,6 +36,9 @@ const Users = () => {
     // Navigate element to be able to logout the current user:
     const navigate = useNavigate();
 
+    const [showFailPopup, setShowFailPopup] = useState(false);
+    const [failText, setFailText] = useState("");
+
   /**
    * Delete the user corresponding to the userId.
    * @param {userId} userId: The userId of the user that needs to be removed.
@@ -45,13 +48,18 @@ const Users = () => {
       //   The backend url:
       const url = 'https://api.writingdashboard.xyz/usersapi/deleteUserAdmin';
       // Make the backend call and set the table data from the response data:
-      axios.post(url,{userID: userID},{headers: authHeader()}).then((_response) => {
+      axios.post(url,{userID: userID},{headers: authHeader()})
+      .then((_response) => {
         setData();
         // If the admin has removed himself, logout:
         if (AuthenticationService.getCurrentUserId() === userID) {
             navigate("../Login", { replace: true });
         }
       })
+      .catch((error) => {
+        setShowFailPopup(true);
+        setFailText(error.response.data);
+      });
   }
 
   // State to keep track of the data inside the table:
@@ -174,8 +182,12 @@ const Users = () => {
       {showDeleteDialog &&
         <AlertDialog title = "Delete user" text = "Are you sure you want to delete this user?"
                      buttonAgree={<Button style={{color: "red"}} onClick={(e) => {deleteUser(deleteId)}}>Yes</Button>}
-                     buttonCancel={<Button onClick={(e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
+                     buttonCancel={<Button onClick={(_e) => {setShowDeleteDialog(false)}}>Cancel</Button>}
         />}
+        {showFailPopup && <AlertDialog title = "Failure!" 
+                        text = {failText}
+                        buttonAgree={<Button onClick={(_e) => {setShowFailPopup(false)}}>OK</Button>}
+                    />}
       <BlueButton idStr='downloadUserDataSelectedUsers' onClick={() => {handleUserDataSelected()}}>Download user data of selected users</BlueButton>
       <div style={{ height: '80vh', maxHeight: '400px' }} >
         <DataGrid
