@@ -16,7 +16,6 @@ import AlertDialog from "../components/AlertDialog";
 // routing
 import { Link, useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { history } from '../helpers/history';
 
 // Signup request setup
 import axios from 'axios';
@@ -172,7 +171,7 @@ const SignUp = () => {
             <div className='parent'>
                 <div className='div1'>
                     <IconButton style={{ float: 'left' }} component={Link} to='/'>
-                        <img className='logo' src={logo} />
+                        <img className='logo' src={logo} alt='logo'/>
                     </IconButton>
                 </div>
                 <div className='div2'>

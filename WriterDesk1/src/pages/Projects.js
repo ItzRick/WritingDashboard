@@ -6,9 +6,7 @@ import {
     Tooltip,
 } from "@mui/material";
 import {
-    DeleteOutline,
-    Storage,
-    PersonSearch,
+    DeleteOutline
 } from "@mui/icons-material";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import BlueButton from './../components/BlueButton';
@@ -43,14 +41,12 @@ const Projects = () => {
 
         // Delete project from all tables in database and delete files from the server:
         axios.get('https://api.writingdashboard.xyz/projectapi/viewProjectsOfUser', {headers:authHeader()} ).then(response => {
-            //TODO: Set table data
             setTableData(response.data);
         });
     }
 
     // upon first render, set the table data
     useEffect(() => {
-        // TODO: replace table data with real data
         setProjects()
     }, []);
 
@@ -168,8 +164,6 @@ const Projects = () => {
         const formData = new FormData();
         // For each of the selected instances, add this id to the formdata:
         selectedInstances.forEach(id => formData.append('projectId', id));
-
-        const headers = authHeader() // Authentication header of current user
 
         // Delete projects from all tables in database and delete files from the server:
         axios.delete('https://api.writingdashboard.xyz/projectapi/deleteProject', { data: formData }).then(response => {
