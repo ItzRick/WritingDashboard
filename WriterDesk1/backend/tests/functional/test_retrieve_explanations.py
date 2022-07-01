@@ -1,7 +1,8 @@
-from app.models import Explanations
+from app.models import Explanations, Files
 import json
 from app import db
-from decimal import Decimal
+
+from test_set_role import loginHelper
 
 def testGetExplanationByFileAndTypeSingle(testClient, initDatabaseEmpty):
     '''
@@ -43,7 +44,6 @@ def testGetExplanationByFileAndTypeSingle(testClient, initDatabaseEmpty):
 
     # Check response
     assert json.loads(response.data) == expectedResponse
-
 
 def testGetExplanationByFileAndTypeMultiple(testClient, initDatabaseEmpty):
     '''
@@ -93,7 +93,6 @@ def testGetExplanationByFileAndTypeMultiple(testClient, initDatabaseEmpty):
     # Check response
     assert json.loads(response.data) == expectedResponse
 
-
 def testGetExplanationByFileAndTypeMultipleFiles(testClient, initDatabaseEmpty):
     '''
         Test to check if we can retrieve a single explanations when there are multiple
@@ -139,7 +138,6 @@ def testGetExplanationByFileAndTypeMultipleFiles(testClient, initDatabaseEmpty):
 
     # Check response
     assert json.loads(response.data) == expectedResponse
-
 
 def testGetExplanationByFileAndTypeMultipleTypes(testClient, initDatabaseEmpty):
     '''
@@ -187,7 +185,6 @@ def testGetExplanationByFileAndTypeMultipleTypes(testClient, initDatabaseEmpty):
     # Check response
     assert json.loads(response.data) == expectedResponse
 
-
 def testGetExplanationByFileAndTypeError(testClient, initDatabaseEmpty):
     '''
         Test to check if we retrieve a 400 error if there does not exist an explanation
@@ -218,3 +215,35 @@ def testGetExplanationByFileAndTypeError(testClient, initDatabaseEmpty):
 
     # Check response
     assert response.data == expectedResponse
+
+def testGetExplanationByFileErrorNoneAvailable(testClient, initDatabaseEmpty):
+    '''
+        Test to check if we retrieve a 400 error if there does not exist an explanation
+        in the database with the given fileId and type.
+        Attributes:
+            fileId: the id of the file, should not exist
+            data: The data sent with the request.
+            response: The response of the backend call.
+        Arguments:
+            testClient: The test client we test this for.
+            initDatabaseEmpty: The database instance we test this for.
+    '''
+    del initDatabaseEmpty
+    fileId = 630
+    assert Files.query.filter_by(id=fileId).first() is None
+
+    # Data for get request
+    data = {
+        'fileId': fileId,
+    }
+
+    # get access token for the regular user
+    access_token = loginHelper(testClient, 'ad', 'min')
+
+    # Retrieve the explanations for the given file and type
+    response = testClient.get('/scoreapi/getExplanationForFile', query_string=data, headers={"Authorization": "Bearer " + access_token})
+    # Check if we get the correct status_code:
+    assert response.status_code == 400
+
+    # Check response
+    assert response.data == b'No explanations found with matching fileId'
