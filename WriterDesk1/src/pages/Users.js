@@ -133,7 +133,7 @@ const Users = () => {
    * Download the user data of the selected users.
    */
   const handleUserDataSelected = () => {
-    const url = 'api.writingdashboard.xyz/clickapi/getUserData';
+    const url = 'https://api.writingdashboard.xyz/clickapi/getUserData';
     const params = new URLSearchParams();
     // add all selected users user ids to the params list
     for (let index in selectedInstances) {
@@ -159,7 +159,7 @@ const Users = () => {
    * @param {params} params: params of the row where the current user is, of which the userdata needs to be downloaded.
    */
   const handleUserDataSingle = (_event, params) => {
-    const url = 'api.writingdashboard.xyz/clickapi/getUserData';
+    const url = 'https://api.writingdashboard.xyz/clickapi/getUserData';
     const searchParams = new URLSearchParams();
     // add all selected users user ids to the params list
     searchParams.append("userId", params.row.id)

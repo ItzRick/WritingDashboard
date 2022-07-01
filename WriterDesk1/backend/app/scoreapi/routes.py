@@ -1,37 +1,7 @@
 from app.scoreapi import bp
-from app.scoreapi.scores import setScoreDB, setExplanationDB
 from flask import request, jsonify
 from app.models import Files, Scores, Explanations
-from app.database import uploadToDatabase, removeFromDatabase
 from flask_jwt_extended import jwt_required, current_user
-from sqlalchemy import func
-
-@bp.route('/setScore', methods = ['POST'])
-def setScore():
-    '''
-        This functions handles setting the score as requested by the frontend.
-        If the score is in [0..10], it sets the score. Scores are acurate to 2 decimal points
-        If the score is -1, it does not override the old score
-        If the score is something else, we set -2 to indicate a null value
-        Attributes:
-            fileId: Id of the file for which the score and explanation has to be set
-            scoreStyle: Score for Language and Style
-            scoreCohesion: Score for Cohesion
-            scoreStructure: Score for Structure
-            scoreIntegration: Score for Source Integration and Content
-    '''
-    # Get the data as sent by the react frontend:
-    fid = request.form.get('fileId')
-    scoreStyle = request.form.get('scoreStyle')
-    scoreCohesion = request.form.get('scoreCohesion')
-    scoreStructure = request.form.get('scoreStructure')
-    scoreIntegration = request.form.get('scoreIntegration')
-    feedbackVersion = request.form.get('feedbackVersion')
-
-    return setScoreDB(fid, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration, feedbackVersion)
-
-
-
 
 @bp.route('/getScores', methods = ['GET'])
 @jwt_required()
@@ -65,44 +35,6 @@ def getScores():
         'scoreStructure'   :scores.scoreStructure,
         'scoreIntegration' :scores.scoreIntegration
     }, 200
-
-
-@bp.route('/getExplanation', methods = ['GET'])
-@jwt_required()
-def getExplanation():
-    '''
-        This function handles returning a specific explanation of some file
-        Attributes: 
-            fileId: file id as given by the frontend
-            explId: explanation id as given by the frontend
-        Arguments:
-            fileId: file id
-            explId: explanation id
-            type: Explanation type, what type of mistake is explained,
-                    0=style, 1=cohesion, 2=structure, 3=integration
-            explanation: String containing a comment on a part of the text in the file
-            mistakeText: String, What text in the document is wrong
-            X1: X of the top right corner of the boxing rectangle
-            X2: X of the bottom left corner of the boxing rectangle
-            Y1: Y of the top right corner of the boxing rectangle
-            Y2: Y of the bottom left corner of the boxing rectangle
-            replacement1..3: Three possible replacements for the mistakeText
-        returns:
-            explanation and code
-    '''
-    # get fileId from request
-    fileId = request.args.get('fileId')
-    explId = request.args.get('explId')
-
-    # get explanation
-    explanation = Explanations.query.filter_by(fileId=fileId, explId=explId).first()
-
-    # Check if the fileId and explId exists in Explanation
-    if explanation is None:
-        return 'No explanation found with matching fileId and explId', 400
-
-    # return explanation
-    return explanation.serialize, 200
 
 @bp.route('/getAvgScores', methods = ['GET'])
 @jwt_required()
@@ -227,50 +159,6 @@ def getExplanationForFile():
     explanations = Explanations.query.filter_by(fileId=fileId).all()
     # return scores
     return jsonify([i.serialize for i in explanations]), 200
-
-
-@bp.route('/setExplanation', methods = ['POST'])
-def setExplanation():
-    '''
-        This functions handles setting the explanation to the database
-
-        Attributes:
-            fileId: Id for the file
-            explId: Id for the explanation, if -1, create new explanation
-            type: Explanation type, what type of mistake is explained,
-                    0=style, 1=cohesion, 2=structure, 3=integration
-            explanation: String containing a comment on a part of the text in the file
-            mistakeText: String, What text in the document is wrong
-            X1: X of the top right corner of the boxing rectangle
-            X2: X of the bottom left corner of the boxing rectangle
-            Y1: Y of the top right corner of the boxing rectangle
-            Y2: Y of the bottom left corner of the boxing rectangle
-            replacement1..3: Three possible replacements for the mistakeText
-        returns:
-            return code
-    '''
-    # Get the data as sent by the react frontend:
-    fileId = request.form.get('fileId')
-    explId = request.form.get('explId')
-    type = request.form.get('type')
-    explanation = request.form.get('explanation')
-    mistakeText = request.form.get('mistakeText')
-    X1          = request.form.get('X1')
-    X2          = request.form.get('X2')
-    Y1          = request.form.get('Y1')
-    Y2          = request.form.get('Y2')
-    replacement1= request.form.get('replacement1')
-    replacement2= request.form.get('replacement2')
-    replacement3= request.form.get('replacement3')
-
-    # Make the call to the backend function and retrieve if this is successful or not and the message:
-    isSuccessful, message = setExplanationDB(fileId, explId, type, explanation, mistakeText, X1, X2, Y1, Y2, replacement1, replacement2, replacement3)
-
-    # Return message and the correct status code:
-    if isSuccessful:
-        return message, 200
-    else:
-        return message, 400
 
 
 @bp.route('/getExplanationForFileAndType', methods=['GET'])
