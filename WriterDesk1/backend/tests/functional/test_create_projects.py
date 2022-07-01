@@ -74,7 +74,6 @@ def testAddToDatabaseMultiple(testClient, initDatabase):
     assert project2.projectName == 'Project2'
     assert project2.userId == User.query.filter_by(username='ad').first().id
 
-
 def testAddToDatabaseEmptyProjectName(testClient, initDatabase):
     '''
         Test if we can add a project to the database with empty project name. We first check if the project does not exist yet.
@@ -128,3 +127,29 @@ def testAddToDatabaseEmptyUserId(testClient, initDatabase):
 
     # Check if the project is still not added to the database:
     assert Projects.query.filter_by(projectName='Project1').first() is None
+
+def testSetProjectNoAdmin(testClient, initDatabase):
+    '''
+        Test if we can add a project as someone who is not an admin or researcher
+        Arguments:
+            testClient: The test client we test this for.
+            initDatabase: The database instance we test this for.
+        Attributes:
+            response: The response of the setProject backend call
+            access_token: Access token for user ad min
+    '''
+    del initDatabase
+    # Check if the project is not yet in the database:
+    assert Projects.query.filter_by(projectName='').first() is None
+    # check whether Pietje is a regular user
+    assert User.query.filter_by(username='Pietje').first().role not in ['admin', 'researcher']
+
+
+    # get access token for ad min
+    access_token = loginHelper(testClient, 'Pietje', 'Bell')
+
+    # Add the project to the database
+    response = testClient.post('/projectapi/setProject', data={'projectName': '12'}, headers = {"Authorization": "Bearer " + access_token})
+
+    # Check if we get rejected
+    assert response.status_code == 400

@@ -77,8 +77,7 @@ def setProject():
     projectName = request.form.get('projectName')
 
     # Check if current user has rights to create a project
-    if User.query.filter_by(id=current_user.id).first().role == 'student' \
-            or User.query.filter_by(id=current_user.id).first().role == 'participant':
+    if current_user.role != 'admin' and current_user.role != 'researcher':
         return 'User is not admin or researcher', 400
 
     # Create Projects object
