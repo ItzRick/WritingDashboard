@@ -2,6 +2,7 @@ from app import generateParticipants as gp
 from app import db
 from app.models import User, ParticipantToProject, Projects
 from test_set_role import loginHelper
+import pytest
 
 def testGenerateParticipants(testClient, initDatabase):
     '''
@@ -97,6 +98,25 @@ def testGenerateParticipantPassword(testClient, initDatabase):
     assert any(x.islower() for x in password) 
     assert any(x.isdigit() for x in password)
 
+def testGenerateParticipantPasswordInvalidLength(testClient, initDatabase):
+    '''
+        Test if generateParticipantPassword() correctly raises an exception when the given password length is too short.
+        Attributes:
+            password: string returned by generateParticipantPassword
+        Arguments:
+            testClient: the test client we test this for
+            initDatabase: the database instance we test this for
+    '''
+
+    del testClient, initDatabase
+
+    # Generate a password with length < 8
+    with pytest.raises(Exception) as e:
+        password = gp.generateParticipantPassword(7)
+
+    # Check for the correct error message
+    assert str(e.value) == "Password should be at least 8 characters long"
+
 def testAddParticipantsValid(testClient, initDatabase):
     '''
         Test if adding participants works correctly with an existing project.
@@ -133,7 +153,7 @@ def testAddParticipantsValid(testClient, initDatabase):
     ptp = ParticipantToProject.query.filter_by(projectId=project.id).all()
     assert len(ptp) == 2
 
-def testAddParticipantsInvalid(testClient, initDatabase):
+def testAddParticipantsInvalidProject(testClient, initDatabase):
     '''
         Test if adding participants fails correctly with a non-existing project.
         Attributes:
