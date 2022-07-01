@@ -66,44 +66,6 @@ def getScores():
         'scoreIntegration' :scores.scoreIntegration
     }, 200
 
-
-@bp.route('/getExplanation', methods = ['GET'])
-@jwt_required()
-def getExplanation():
-    '''
-        This function handles returning a specific explanation of some file
-        Attributes: 
-            fileId: file id as given by the frontend
-            explId: explanation id as given by the frontend
-        Arguments:
-            fileId: file id
-            explId: explanation id
-            type: Explanation type, what type of mistake is explained,
-                    0=style, 1=cohesion, 2=structure, 3=integration
-            explanation: String containing a comment on a part of the text in the file
-            mistakeText: String, What text in the document is wrong
-            X1: X of the top right corner of the boxing rectangle
-            X2: X of the bottom left corner of the boxing rectangle
-            Y1: Y of the top right corner of the boxing rectangle
-            Y2: Y of the bottom left corner of the boxing rectangle
-            replacement1..3: Three possible replacements for the mistakeText
-        returns:
-            explanation and code
-    '''
-    # get fileId from request
-    fileId = request.args.get('fileId')
-    explId = request.args.get('explId')
-
-    # get explanation
-    explanation = Explanations.query.filter_by(fileId=fileId, explId=explId).first()
-
-    # Check if the fileId and explId exists in Explanation
-    if explanation is None:
-        return 'No explanation found with matching fileId and explId', 400
-
-    # return explanation
-    return explanation.serialize, 200
-
 @bp.route('/getAvgScores', methods = ['GET'])
 @jwt_required()
 def getAverageScores():
