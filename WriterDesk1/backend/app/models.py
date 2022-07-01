@@ -283,7 +283,7 @@ class Clicks(db.Model):
         self.actionId = actionId
 
     def __repr__(self):
-        return '<Clicks {}>'.format(self.userId, self.clickId)
+        return '<Clicks {} {}>'.format(self.userId, self.clickId)
 
     def serializeClickIndex(self, index):
         '''
