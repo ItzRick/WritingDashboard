@@ -16,7 +16,7 @@ def test_convertDocx(testClient):
     '''
     del testClient
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
-    fileLoc = os.path.join(BASEPATH, 'test_convertDocx.docx')
+    fileLoc = os.path.join(BASEPATH, 'testFiles', 'test_convertDocx.docx')
     # the pdf file is in the same location but the extension is different
     head, tail = os.path.split(fileLoc)
     convertedFileLoc = os.path.join(head, 'converted', tail.replace(".docx", ".pdf"))
@@ -47,7 +47,7 @@ def test_convertTxt(testClient):
     '''
     del testClient
     BASEPATH = os.path.abspath(os.path.dirname(__file__))
-    fileLoc = os.path.join(BASEPATH, 'test_convertTxt.txt')
+    fileLoc = os.path.join(BASEPATH, 'testFiles', 'test_convertTxt.txt')
     # the pdf file is in the same location but the extension is different
     head, tail = os.path.split(fileLoc)
     convertedFileLoc = os.path.join(head, 'converted', tail.replace(".txt", ".pdf"))

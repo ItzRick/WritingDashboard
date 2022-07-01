@@ -24,7 +24,7 @@ def test_docx(testClient, initDatabase):
 
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileName = 'test_docx.docx'
-    fileDir = os.path.join(BASEDIR, fileName)
+    fileDir = os.path.join(BASEDIR, 'testFiles', fileName)
     # Get the path of the converted file:
     head, tail = os.path.split(fileDir)
     convertedFileLoc = os.path.join(head, 'converted', tail.replace(".docx", ".pdf"))
@@ -69,7 +69,7 @@ def test_txt(testClient, initDatabase):
     
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileName = 'test_txt.txt'
-    fileDir = os.path.join(BASEDIR, fileName)
+    fileDir = os.path.join(BASEDIR, 'testFiles', fileName)
     # Get the path of the converted file:
     head, tail = os.path.split(fileDir)
     convertedFileLoc = os.path.join(head, 'converted', tail.replace(".txt", ".pdf"))
@@ -110,7 +110,7 @@ def test_pdf(testClient, initDatabase):
 
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileName = 'test_pdf.pdf'
-    fileDir = os.path.join(BASEDIR, fileName)
+    fileDir = os.path.join(BASEDIR, 'testFiles', fileName)
     # put the data needed for the display function in a dictionary
     data = {
         'filepath': fileDir,

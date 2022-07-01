@@ -16,7 +16,7 @@ def testGetPDFReferences(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'referenceFile.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'referenceFile.pdf')
 
     isSuccesful, text, references = getPDFText(fileDir, returnReferences=True)
     assert isSuccesful == True
@@ -36,7 +36,7 @@ def testGetPDFImages(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'imageFile.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'imageFile.pdf')
 
     isSuccesful, text = getPDFText(fileDir)
     assert isSuccesful == True
@@ -58,7 +58,7 @@ def testGetPDFList(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'listFile.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'listFile.pdf')
 
     isSuccesful, text = getPDFText(fileDir)
     assert isSuccesful == True
@@ -80,7 +80,7 @@ def testGetPDFTable(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'tableFile.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'tableFile.pdf')
 
     isSuccesful, text = getPDFText(fileDir)
     assert isSuccesful == True
@@ -102,7 +102,7 @@ def testGetPDFEmptyFile(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'emptyFile.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'emptyFile.pdf')
 
     isSuccesful, text = getPDFText(fileDir)
     assert isSuccesful == True
@@ -122,7 +122,7 @@ def testGetPDFCorruptedFile(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'corruptedFile.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'corruptedFile.pdf')
 
     isSuccesful, message = getPDFText(fileDir)
     assert isSuccesful == False
@@ -142,7 +142,7 @@ def testGetPDFInvalidFile(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'invalidFileName.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'invalidFileName.pdf')
 
     isSuccesful, message = getPDFText(fileDir)
     assert isSuccesful == False
@@ -162,7 +162,7 @@ def testGetPDFInvalidExtension(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'invalidFileExtension.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'invalidFileExtension.docx')
 
     isSuccesful, message = getPDFText(fileDir)
     assert isSuccesful == False
@@ -181,7 +181,7 @@ def testSplitBlocks(testClient):
     
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'multitasking.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'multitasking.pdf')
 
     doc = fitz.open(fileDir)
     blocks = doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"]
@@ -202,7 +202,7 @@ def testGetFrequencyX(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'multitasking.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'multitasking.pdf')
 
     doc = fitz.open(fileDir)
     counter = getFrequencyX(doc)
@@ -236,7 +236,7 @@ def testGetLineText(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'multitasking.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'multitasking.pdf')
 
     doc = fitz.open(fileDir)
     line = doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"][0]["lines"][0]
@@ -285,7 +285,7 @@ def testGetBlockText(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'multitasking.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'multitasking.pdf')
 
     doc = fitz.open(fileDir)
     block = splitBlocks(doc[0].get_text("dict", flags = fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES & fitz.TEXT_INHIBIT_SPACES & fitz.TEXT_DEHYPHENATE)["blocks"])[0]
@@ -305,7 +305,7 @@ def testIsBlockTable(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'tableFile.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'tableFile.pdf')
 
     doc = fitz.open(fileDir)
     xNormal = getFrequencyX(doc).most_common(1)[0][0]
