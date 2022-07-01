@@ -233,6 +233,8 @@ def testResearcher(testClient, initDatabase):
             unrelatedParticipantID: id belonging to unrelatedParticipant
             participantToProject: participantToProject entry relating participant to project
             unrelatedParticipantToProject: participantToProject entry relating unrelatedParticipant to unrelatedProject
+            student: student user
+            studentID: id belonging to student
             access_token: the access token
             response: the response of the api call
         Arguments:
@@ -260,6 +262,9 @@ def testResearcher(testClient, initDatabase):
     unrelatedParticipantToProject = ParticipantToProject(userId=unrelatedParticipantID,
                                                          projectId=unrelatedProjectID)
     db.session.add(unrelatedParticipantToProject)
+    student = User(username='Timmy', role='student', password_plaintext='test')
+    db.session.add(student)
+    studentID = User.query.filter_by(username='Timmy').first().id
     db.session.commit()
 
     assert User.query.filter_by(id=userId).first() is not None
@@ -272,6 +277,12 @@ def testResearcher(testClient, initDatabase):
                                headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 404
     assert response.data == b'User does not exist'
+
+    response = testClient.post('/usersapi/deleteUserResearcher', json={'userID': studentID},
+                               headers={"Authorization": "Bearer " + access_token})
+    assert response.status_code == 403
+    assert response.data == b'Target user is not an participant'
+    assert User.query.filter_by(id=studentID).first() is not None
 
     response = testClient.post('/usersapi/deleteUserResearcher', json={'userID': participantID},
                                headers={"Authorization": "Bearer " + access_token})
