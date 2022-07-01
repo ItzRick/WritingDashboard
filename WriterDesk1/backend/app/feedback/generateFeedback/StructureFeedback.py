@@ -61,10 +61,7 @@ class StructureFeedback(BaseFeedback):
 
         # Take the average score of each submethod of getting scores for the 
         # structure writing skill and round it to one decimal behind the comma.
-        if len(scores) > 0:
-            score = sum(scores) / len(scores)
-        else:
-            score = 10
+        score = sum(scores) / len(scores)
 
         self.scoreStructure = Decimal(score).quantize(
             Decimal('0.1'), rounding=ROUND_HALF_UP)
@@ -152,7 +149,7 @@ class StructureFeedback(BaseFeedback):
         if len(paragraphScores) > 0:
             score = sum(paragraphScores) / len(paragraphScores)
         else:
-            score = 10
+            score = 0
 
         scoreRounded = Decimal(score).quantize(
             Decimal('0.1'), rounding=ROUND_HALF_UP)

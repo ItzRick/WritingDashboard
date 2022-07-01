@@ -218,4 +218,38 @@ def testRetrieveOnlyProjectsOfUser(testClient, initDatabase):
     # Check if the expected response is correct:
     assert json.loads(response.data) == expected_response
 
+def testRetrieveOnlyProjectsOfUser(testClient, initDatabase): 
+    '''
+        This tests checks that multiple projects are given when the 
+        specified user, here with user id 200, has multiple projects.
+        Their projects are not the only ones in the database.
+        Attributes: 
+            access_token: access token for ad min
+            adId: userId of the admin
+            project1: new project
+            project2: new project
+            project3: new project
+            response: the result of retrieving the files in the specified order
+            expected_response: response we expected
+        Arguments: 
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+    del initDatabase
+    # get access token for ad min
+    access_token = loginHelper(testClient, 'Pietje', 'Bell')
+    pietId = User.query.filter_by(username='Pietje').first().id
 
+    # We add multiple projects to the database, which are not all from the user
+    project1 = Projects(pietId, "Project1")
+    db.session.add(project1)
+    db.session.commit()
+
+    # We try to retrieve the projects of the user
+    response = testClient.get('/projectapi/viewProjectsOfUser', headers = {"Authorization": "Bearer " + access_token})
+
+    # Check if the expected response has the correct status code    
+    assert response.status_code == 403
+
+    # Check if the expected response is correct:
+    assert response.data == b'Method only accessible for researcher and admin users'
