@@ -73,7 +73,7 @@ def testParticipantToProjectSerialize(testClient, initDatabaseEmpty):
         has been uploaded to the database.
         Attributes: 
             participantProject: an instance of the ParticipantToProject class we add to the database.
-            participantsProjectsRetrieved: one ParticpantProject as retrieved from the database.
+            participantsProjectsRetrieved: one ParticipantProject as retrieved from the database.
             participantProjectSerialized: This retrieved project serialized with the serializeParticipantToProject method.
         Arguments:
             testClient:  The test client we test this for.
