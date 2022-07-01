@@ -139,6 +139,7 @@ class ParticipantToProject(db.Model):
         self.userId = userId
         self.projectId = projectId
 
+    @staticmethod
     def serializeParticipantToProject(self):
         dict = {}
         for c in inspect(self).attrs.keys():
@@ -147,7 +148,7 @@ class ParticipantToProject(db.Model):
         return dict
 
     def __repr__(self):
-        return '<ParticipantToProject {}>'.format(self.userId)
+        return '<ParticipantToProject {} {}>'.format(self.userId, self.projectId)
 
 class Scores(db.Model):
     '''
@@ -181,7 +182,7 @@ class Scores(db.Model):
         return result
 
     def __repr__(self):
-        return '<Scores {}>'.format(self.fileId)
+        return '<Scores {} {}>'.format(self.fileId, self.feedbackVersion)
 
 class Explanations(db.Model):
     '''

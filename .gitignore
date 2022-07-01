@@ -108,7 +108,6 @@ ENV/
 /node_modules
 /.pnp
 .pnp.js
-**/package-lock.json
 
 # testing
 /coverage
@@ -128,5 +127,4 @@ yarn-debug.log*
 yarn-error.log*
 
 **/saved_documents
-WriterDesk1/package-lock.json
-**/.vscode
+**/package-lock.json
