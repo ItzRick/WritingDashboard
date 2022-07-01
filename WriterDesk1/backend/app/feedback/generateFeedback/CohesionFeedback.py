@@ -62,6 +62,8 @@ class CohesionFeedback(BaseFeedback):
                         TTRScore and connectivesScore, rounded to 2 decimals. This
                         is the final score that the user will get.
                 explanations: List, with the explanations as they will be added to the database.
+                None, if text string is empty or if text string doesn't contain
+                        any words/tokens.
         """
         # Download the nltk libraries required for this function:
         downloadNltkCohesion()
@@ -204,6 +206,8 @@ class CohesionFeedback(BaseFeedback):
                 indexScore: float, calculated by dividing numberOfConnectives by
                         the size of tokens (the total number of tokens/words) in 
                         the text.
+                None, if text string is empty or if text string doesn't contain
+                        any words/tokens.
         """
 
         # If the text string is empty the function returns null.
@@ -303,6 +307,8 @@ class CohesionFeedback(BaseFeedback):
                 mostCommon: list containing the three most used words in the text
                         as strings (if there are less than three then that many),
                         to be used in generateFeedback.
+                None, if text string is empty or if text string doesn't contain
+                        any words/tokens.
         """
         # If the text string is empty the function returns null.
         if text == "":
