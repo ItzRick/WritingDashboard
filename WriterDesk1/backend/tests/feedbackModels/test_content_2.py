@@ -224,7 +224,6 @@ def testGetWordsSources(testClient):
             feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
-            englishStopwords: English stopwords downloaded from nltk from conftest.py.
     '''
     del testClient
     links_doi = ['https://doi.org/10.1103/PhysRev.82.554.2']
@@ -261,7 +260,6 @@ def testSourceIntegarationCorrect(testClient, englishStopwords):
             feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
-            englishStopwords: English stopwords downloaded from nltk from conftest.py.
     '''
     del testClient, englishStopwords
     userId = 123
@@ -279,7 +277,7 @@ def testSourceIntegarationCorrect(testClient, englishStopwords):
 def testSourceIntegarationWrong(testClient):
     '''
         Test the combined sourceIntegration method, on a toy text and toy references, which is a reference without a link.
-         Attributes:
+        Attributes:
             references: Toy references string to test this method on.
             text: 'Toy text to test this method on.
             userId: Temporary userId.
@@ -289,7 +287,6 @@ def testSourceIntegarationWrong(testClient):
             feedbackObject: Object to create feedback for the source integration and content writing category.
         Arguments:
             testClient:  The test client we test this for.
-            englishStopwords: English stopwords downloaded from nltk from conftest.py.
     '''
     del testClient
     userId = 123
@@ -303,3 +300,21 @@ def testSourceIntegarationWrong(testClient):
     assert score == 10
     assert explanation == [[-1, 1, -1, -1, 3, explanationText, '', []]]
     assert feedbackObject.explanation == explanationText
+
+def testDoiDownloadUnsuccessful(testClient):
+    '''
+        Test if we get an empty string if we retrieve the text from a paper using the textDoi method, 
+        using an url on which a paper can not be correctly downloaded.
+        Attributes:
+            userId: Temporary userId.
+            feedbackObject: Object to create feedback for the source integration and content writing category.
+            doi: link to this doi paper, from which we can not successfully retrieve this paper and text.
+        Arguments:
+            testClient:  The test client we test this for.
+    '''
+    del testClient
+    userId = 123
+    feedbackObject = IntegrationContentFeedback('', '', 1, userId, '')
+    doi = 'https://doi.org/10.1007/s12555-018-0134-6'
+    text = feedbackObject.textDoi(doi)
+    assert text == ''
