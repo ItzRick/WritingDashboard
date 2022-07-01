@@ -72,12 +72,8 @@ class CohesionFeedback(BaseFeedback):
         if self.text == "":
             return None
 
-        # If getTTRScore returns None the function returns None.
-        if self.getTTRScore(self.text) == None:
-            return None
-
-        # If getConnectiveScore returns None the function returns None.
-        if self.getConnectiveScore(self.text) == None:
+        # If getTTRScore or getConnectiveScore returns None the function returns None.
+        if self.getTTRScore(self.text) == None or self.getConnectiveScore(self.text) == None:
             return None
 
         # Retrieve variables from getTTRScore and getConnectiveScore.
