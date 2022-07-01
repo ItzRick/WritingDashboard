@@ -219,3 +219,29 @@ def testRetrieveOnlyProjectsOfUser(testClient, initDatabase):
     assert json.loads(response.data) == expected_response
 
 
+def testRetrieveProjectsError(testClient, initDatabase):
+    '''
+        This tests checks that we get a 403 error when the current user is not an admin.
+        Attributes:
+            access_token: access token for Pietje Bell
+            response: the response of the viewProjectsOfUser function
+            expected_response: response we expected
+        Arguments:
+            testClient:  the test client we test this for.
+            initDatabase: the database instance we test this for.
+    '''
+    del initDatabase
+    # get access token for ad min
+    access_token = loginHelper(testClient, 'Pietje', 'Bell')
+
+    # We try to retrieve the projects of the user
+    response = testClient.get('/projectapi/viewProjectsOfUser', headers = {"Authorization": "Bearer " + access_token})
+
+    # Check if the expected response has the correct status code
+    assert response.status_code == 403
+
+    # Create the expected response:
+    expected_response = b'Method only accessible for researcher and admin users'
+
+    # Check if the expected response is correct:
+    assert response.data == expected_response
