@@ -1,37 +1,7 @@
 from app.scoreapi import bp
-from app.scoreapi.scores import setScoreDB, setExplanationDB
 from flask import request, jsonify
 from app.models import Files, Scores, Explanations
-from app.database import uploadToDatabase, removeFromDatabase
 from flask_jwt_extended import jwt_required, current_user
-from sqlalchemy import func
-
-@bp.route('/setScore', methods = ['POST'])
-def setScore():
-    '''
-        This functions handles setting the score as requested by the frontend.
-        If the score is in [0..10], it sets the score. Scores are acurate to 2 decimal points
-        If the score is -1, it does not override the old score
-        If the score is something else, we set -2 to indicate a null value
-        Attributes:
-            fileId: Id of the file for which the score and explanation has to be set
-            scoreStyle: Score for Language and Style
-            scoreCohesion: Score for Cohesion
-            scoreStructure: Score for Structure
-            scoreIntegration: Score for Source Integration and Content
-    '''
-    # Get the data as sent by the react frontend:
-    fid = request.form.get('fileId')
-    scoreStyle = request.form.get('scoreStyle')
-    scoreCohesion = request.form.get('scoreCohesion')
-    scoreStructure = request.form.get('scoreStructure')
-    scoreIntegration = request.form.get('scoreIntegration')
-    feedbackVersion = request.form.get('feedbackVersion')
-
-    return setScoreDB(fid, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration, feedbackVersion)
-
-
-
 
 @bp.route('/getScores', methods = ['GET'])
 @jwt_required()
