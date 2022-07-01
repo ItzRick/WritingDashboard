@@ -25,6 +25,22 @@ def testGenerateFeedbackZeroWords(testClient, downloadNltk):
     score = feedbackObject.genFeedback()
     assert score == None
 
+def testGenerateFeedbackSpace(testClient, downloadNltk):
+    '''
+        Test if a text with only a space character returns None.
+        Arguments: 
+            testClient: The test client we test this for.
+            downloadNltk: Function needed to download nltk corpora used in this
+                    method.
+        Attributes: 
+            score: The score given for the cohesion score.
+            feedbackObject: Object to generate the feedback for the cohesion.
+    '''
+    del testClient, downloadNltk
+    feedbackObject = CohesionFeedback(' ', '', 1, 1, '')
+    score = feedbackObject.genFeedback()
+    assert score == None
+
 def testOneWordTextFirst(testClient, downloadNltk):
     '''
         Test if a text consisting of only one word which is not a connective
