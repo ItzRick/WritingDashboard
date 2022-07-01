@@ -64,7 +64,7 @@ class StructureFeedback(BaseFeedback):
         if len(scores) > 0:
             score = sum(scores) / len(scores)
         else:
-            score = 10
+            score = 0
 
         self.scoreStructure = Decimal(score).quantize(
             Decimal('0.1'), rounding=ROUND_HALF_UP)
@@ -152,7 +152,7 @@ class StructureFeedback(BaseFeedback):
         if len(paragraphScores) > 0:
             score = sum(paragraphScores) / len(paragraphScores)
         else:
-            score = 10
+            score = 0
 
         scoreRounded = Decimal(score).quantize(
             Decimal('0.1'), rounding=ROUND_HALF_UP)
