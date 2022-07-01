@@ -65,8 +65,17 @@ class CohesionFeedback(BaseFeedback):
         """
         # Download the nltk libraries required for this function:
         downloadNltkCohesion()
-        # If the text string is empty the function returns null.
+        
+        # If the text string is empty the function returns None.
         if self.text == "":
+            return None
+
+        # If getTTRScore returns None the function returns None.
+        if self.getTTRScore(self.text) == None:
+            return None
+
+        # If getConnectiveScore returns None the function returns None.
+        if self.getConnectiveScore(self.text) == None:
             return None
 
         # Retrieve variables from getTTRScore and getConnectiveScore.
@@ -81,10 +90,8 @@ class CohesionFeedback(BaseFeedback):
 
         # Generate string that contains the most used words.
         # Initially these are the 3 most used words, if there are less words in 
-        # text then those are the most used words.
-        if len(mostCommon) == 0:
-            mostCommonFeedback = "None"
-        elif len(mostCommon) == 1:
+        # text then those are the most used words.     
+        if len(mostCommon) == 1:
             mostCommonFeedback = "\"" + mostCommon[0] + "\"."
         elif len(mostCommon) == 2: 
             mostCommonFeedback = "\"" + mostCommon[0] + "\" and \"" + mostCommon[1] + "\"."
@@ -211,6 +218,10 @@ class CohesionFeedback(BaseFeedback):
         # Function that splits text into tokens.
         tokens = nltk.word_tokenize(text.lower())
 
+        # If the text doesn't contain any words the function returns null.
+        if len(tokens) == 0:
+            return None
+
         # Check how many connectives are in the text by checking if each token is 
         # in connectivesCheck. 
         # There are also connectives consisting of multiple words, this is at most
@@ -302,6 +313,10 @@ class CohesionFeedback(BaseFeedback):
 
         # Function that splits text into tokens.
         tokens = nltk.word_tokenize(text)    
+
+        # If the text doesn't contain any words the function returns null.
+        if len(tokens) == 0:
+            return None
 
         # Only keep words in token list.
         # (get rid of things like dots or comma's)
