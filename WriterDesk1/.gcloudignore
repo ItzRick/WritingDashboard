@@ -19,4 +19,10 @@ src/
 ssl/
 .vscode/
 backend/
+.pytest_cache/
+__pycache__/
+cypress/
+Files/
+htmlcov/
 public/
+venv/

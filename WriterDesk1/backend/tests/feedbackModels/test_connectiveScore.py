@@ -8,6 +8,20 @@ from app.feedback.generateFeedback.CohesionFeedback import CohesionFeedback
     inserted into a 2nd order polynomial to achieve a score. 
 '''
 
+def testConSpace(testClient):
+    '''
+        Test if a text with just a space character returns None.
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes:             
+            score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
+    '''
+    del testClient
+    feedbackObject = CohesionFeedback(' ', '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(" ")
+    assert score == None
+
 def testConZeroWords(testClient):
     '''
         Test if a text with zero words returns None.
@@ -268,6 +282,31 @@ def test_con_windowsize_min_score(testClient):
     del testClient
     text = "They are very big. "*15 + "although although although"
     index = 3/63
+    expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
+    feedbackObject = CohesionFeedback(text, '', 1, 1, '')
+    score = feedbackObject.getConnectiveScore(text)
+    assert score == (expected, index)
+
+def test_con_consisting_of_two_words(testClient): 
+    '''
+        Test if a text with a connective that consists out of 2 words correct
+        score despite the connective being two tokens long.
+        There is 1 connectives and 7 words within the text, 
+        thus the index score should be 1/7.
+        We then insert this index score into the 2nd order polynomial to get
+        the expected score.
+        Arguments: 
+            testClient: The test client we test this for.            
+        Attributes: 
+            text: Input text for the test.
+            index: Expected index score.
+            expected: Expected connective score.
+            score: The scores given for the connective and index score.
+            feedbackObject: Object to generate the feedback for the cohesion.
+    '''
+    del testClient
+    text = "Well, at least he brought me lunch..."
+    index = 1/7
     expected = round(max(-3.5 + 300*index - 1666.667*index**2, 0), 2)
     feedbackObject = CohesionFeedback(text, '', 1, 1, '')
     score = feedbackObject.getConnectiveScore(text)

@@ -10,6 +10,20 @@ from string import ascii_lowercase
     and windowsize is 50 or if there are less than 50 tokens, the
     number of tokens.
 '''
+def testTTRSpace(testClient, downloadNltk):
+    '''
+        Test if a text with only a space character returns None.
+        Arguments: 
+            testClient: The test client we test this for.
+            downloadNltk: Function needed to download nltk corpora used in this
+                    method.
+        Attributes: 
+            score: The score given for the TTR score.
+    '''
+    del testClient, downloadNltk
+    feedbackObject = CohesionFeedback(' ', '', 1, 1, '')
+    score = feedbackObject.getTTRScore(" ")
+    assert score == None
 
 def testTTRZeroWords(testClient, downloadNltk):
     '''

@@ -55,7 +55,7 @@ def testAdminOneClick(testClient, initDatabase):
 
     # make the csv file as String
     firstRow = 'clickId,userId,timestamp,url,eventType,actionId'
-    secondRow = str(adminClick.clickId) + ',' + str(adminClick.userId) + ',' + adminClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + adminClick.url + ',' + adminClick.eventType + ',' + (adminClick.actionId or '')
+    secondRow = str(0) + ',' + str(adminClick.userId) + ',' + adminClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + adminClick.url + ',' + adminClick.eventType + ',' + (adminClick.actionId or '')
     adminClickData = firstRow + '\n' + secondRow + '\n'
     assert response.data == adminClickData.encode('utf-8')
 
@@ -122,8 +122,8 @@ def testAdminTwoClicks(testClient, initDatabase):
 
     # make the csv file as String
     firstRow = 'clickId,userId,timestamp,url,eventType,actionId'
-    secondRow = str(adminClick.clickId) + ',' + str(adminClick.userId) + ',' + adminClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + adminClick.url + ',' + adminClick.eventType + ',' + (adminClick.actionId or '')
-    thirdRow = str(adminClick1.clickId) + ',' + str(adminClick1.userId) + ',' + adminClick1.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + adminClick1.url + ',' + adminClick1.eventType + ',' + (adminClick1.actionId or '')
+    secondRow = str(0) + ',' + str(adminClick.userId) + ',' + adminClick.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + adminClick.url + ',' + adminClick.eventType + ',' + (adminClick.actionId or '')
+    thirdRow = str(1) + ',' + str(adminClick1.userId) + ',' + adminClick1.timestamp.strftime('%Y-%m-%d %H:%M:%S.%f') + ',' + adminClick1.url + ',' + adminClick1.eventType + ',' + (adminClick1.actionId or '')
     adminClickData = firstRow + '\n' + secondRow + '\n' + thirdRow + '\n'
     assert response.data == adminClickData.encode('utf-8')
 

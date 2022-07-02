@@ -276,7 +276,7 @@ def testSourceIntegarationCorrect(testClient, englishStopwords):
     assert explanation == [[-1, 1, -1, -1, 3, explanationText, '', []]]
     assert feedbackObject.explanation == explanationText
 
-def testSourceIntegarationWrong(testClient, englishStopwords):
+def testSourceIntegarationWrong(testClient):
     '''
         Test the combined sourceIntegration method, on a toy text and toy references, which is a reference without a link.
          Attributes:
@@ -295,7 +295,7 @@ def testSourceIntegarationWrong(testClient, englishStopwords):
     userId = 123
     references = 'This is a reference'
     text = 'This is a very nice text with a single paragraph, which is of course a negligible text.'
-    feedbackObject = IntegrationContentFeedback(text, references, 1, 1, '')
+    feedbackObject = IntegrationContentFeedback(text, references, 1, userId, '')
     score, explanation = feedbackObject.genFeedback()
     explanationText = ('Your score for source integration and content is 10. You only used 1 sources ' + 
     'in 1 paragraphs of text. Try adding more sources. Writing Dashboard Could not check if text from the sources ' + 

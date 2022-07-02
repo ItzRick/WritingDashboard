@@ -59,9 +59,16 @@ class LanguageStyleFeedback(BaseFeedback):
             occurrenceCount = 0  # Number of occurrences of a mistake
             occurrenceInContext = 0  # Final count of occurrences of a mistake
 
+            context = match.context
+
+            # Remove starting and ending ...
+            if context[:3] == '...':
+                context = context[3:]
+            if context[-3:] == '...':
+                context = context[:-3]
+
             # Find all occurrences of a mistake in the context
-            for wordMatch in re.finditer(match.matchedText.lower().replace('(', '\(').replace(')', '\)'),
-                                        match.context.lower()):
+            for wordMatch in re.finditer(re.escape(match.matchedText.lower()), context.lower()):
                 if (wordMatch.start() > prevMatchEnd):
                     # Mistake overlaps previous mistake and does not count to occurrences
 
@@ -70,14 +77,6 @@ class LanguageStyleFeedback(BaseFeedback):
                     else:
                         occurrenceCount += 1
                 prevMatchEnd = wordMatch.end()
-
-            context = match.context
-
-            # Remove starting and ending ...
-            if context[:3] == '...':
-                context = context[3:]
-            if context[-3:] == '...':
-                context = context[:-3]
 
             # Append matched text, context, occurrence in context, explanation, and top 3 replacements to a list
             self.explanationsList.append([match.matchedText, context, occurrenceInContext, match.message, match.replacements[:3]])
@@ -167,6 +166,7 @@ class LanguageStyleFeedback(BaseFeedback):
                 # it gets added to a list that contains all specific words found in
                 # that sentence
                 wordsInSentence = []
+
                 for sentenceFound in sentenceInstances:
                     for wordFound in wordInstances:
                         if sentenceFound.contains(wordFound):

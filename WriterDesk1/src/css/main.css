@@ -157,6 +157,11 @@ button {
     color: #BDB8AD;
     border-color: black;
     margin-right: 1vw;
+    width: 18vw;
+    min-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .graph2 {
@@ -194,3 +199,4 @@ button {
     text-align: center;
     margin-bottom: 1vh;
 }
+

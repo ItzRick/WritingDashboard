@@ -11,6 +11,7 @@ def testGetDocxHeading(testClient):
             fileDir: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
             references: String that contains the references extracted from the docx file.
+            isSuccesful: Boolean value to indicate if the text has been successfully extracted.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -18,7 +19,8 @@ def testGetDocxHeading(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'headingTest.docx')
 
-    text, references = getDOCXText(fileDir)
+    isSuccesful, text, references = getDOCXText(fileDir)
+    isSuccesful == True
     assert text == 'This is some text.\n\nMore text.'
     assert references == ''
 
@@ -31,6 +33,7 @@ def testGetDocxReferences(testClient):
             fileDir: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
             references: String that contains the references extracted from the docx file.
+            isSuccesful: Boolean value to indicate if the text has been successfully extracted.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -38,7 +41,8 @@ def testGetDocxReferences(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'referencesTest.docx')
 
-    text, references = getDOCXText(fileDir)
+    isSuccesful, text, references = getDOCXText(fileDir)
+    isSuccesful == True
     assert text == 'Text.\n\nMore text.\n\nNew text.'
     assert references == 'Reference 1\n\nReference 2\n\nReference 1\n\nReference 2'
 
@@ -51,6 +55,7 @@ def testGetDocxImages(testClient):
             fileDir: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
             references: String that contains the references extracted from the docx file.
+            isSuccesful: Boolean value to indicate if the text has been successfully extracted.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -58,7 +63,8 @@ def testGetDocxImages(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'imagesTest.docx')
 
-    text, references = getDOCXText(fileDir)
+    isSuccesful, text, references = getDOCXText(fileDir)
+    isSuccesful == True
     assert text == 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa.'
     assert references == ''
 
@@ -71,6 +77,7 @@ def testGetDocxTextboxes(testClient):
             fileDir: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
             references: String that contains the references extracted from the docx file.
+            isSuccesful: Boolean value to indicate if the text has been successfully extracted.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -78,7 +85,8 @@ def testGetDocxTextboxes(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'textboxTest.docx')
 
-    text, references = getDOCXText(fileDir)
+    isSuccesful, text, references = getDOCXText(fileDir)
+    isSuccesful == True
     assert text == 'This is text outside a textbox.'
     assert references == ''
 
@@ -91,6 +99,7 @@ def testGetDocxEmptyFile(testClient):
             fileDir: Path of the location where the file is stored.
             text: String that contains the output of the getDOCXText function.
             references: String that contains the references extracted from the docx file.
+            isSuccesful: Boolean value to indicate if the text has been successfully extracted.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -98,19 +107,21 @@ def testGetDocxEmptyFile(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'emptyFile.docx')
 
-    text, references = getDOCXText(fileDir)
+    isSuccesful, text, references = getDOCXText(fileDir)
+    isSuccesful == True
     assert text == ''
     assert references == ''
 
 
 def testGetDocxCorruptedFile(testClient):
     """
-        Test if the getDOCXText function outputs an empty string when using a corrupted file.
+        Test if the getDOCXText function outputs the correct error message when using a corrupted file.
         Attributes:
             BASEDIR: Path of the folder where all files are stores
             fileDir: Path of the location where the file is stored.
-            text: String that contains the output of the getDOCXText function.
+            message: String that contains the output of the getDOCXText function.
             references: String that contains the references extracted from the docx file.
+            isSuccesful: Boolean value to indicate if the text has been successfully extracted.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -118,19 +129,21 @@ def testGetDocxCorruptedFile(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'corruptedFile.docx')
 
-    text, references = getDOCXText(fileDir)
-    assert text == ''
+    isSuccesful, message, references = getDOCXText(fileDir)
+    isSuccesful == False
+    assert 'Caught PackageNotFoundError' in message
     assert references == ''
 
 
 def testGetDocxInvalidFile(testClient):
     """
-        Test if the getDOCXText function outputs an empty string when using a file path that does not exist.
+        Test if the getDOCXText function outputs the correct error message when using a file path that does not exist.
         Attributes:
             BASEDIR: Path of the folder where all files are stores
             fileDir: Path of the location where the file is stored.
-            text: String that contains the output of the getDOCXText function.
+            message: String that contains the output of the getDOCXText function.
             references: String that contains the references extracted from the docx file.
+            isSuccesful: Boolean value to indicate if the text has been successfully extracted.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -138,19 +151,21 @@ def testGetDocxInvalidFile(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'invalidFileName.docx')
 
-    text, references = getDOCXText(fileDir)
-    assert text == ''
+    isSuccesful, message, references = getDOCXText(fileDir)
+    isSuccesful == False
+    assert 'Caught PackageNotFoundError' in message
     assert references == ''
 
 
 def testGetDocxInvalidExtension(testClient):
     """
-        Test if the getDOCXText function outputs an empty string when using a file that is not a docx file.
+        Test if the getDOCXText function outputs the correct error message when using a file that is not a docx file.
         Attributes:
             BASEDIR: Path of the folder where all files are stores
             fileDir: Path of the location where the file is stored.
-            text: String that contains the output of the getDOCXText function.
+            message: String that contains the output of the getDOCXText function.
             references: String that contains the references extracted from the docx file.
+            isSuccesful: Boolean value to indicate if the text has been successfully extracted.
         Arguments:
             testClient:  The test client we test this for.
     """
@@ -158,8 +173,9 @@ def testGetDocxInvalidExtension(testClient):
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileDir = os.path.join(BASEDIR, 'invalidFileExtension.pdf')
 
-    text, references = getDOCXText(fileDir)
-    assert text == ''
+    isSuccesful, message, references = getDOCXText(fileDir)
+    isSuccesful == False
+    assert 'Caught PackageNotFoundError' in message
     assert references == ''
 
 

@@ -292,3 +292,30 @@ def test_2_paragraphs_large_same_content(testClient):
     assert list(feedbackObject.explanationsDict.keys()) == [testTextPart2]
     assert list(feedbackObject.explanationsDict.values()) == [
         'This paragraph is too long, try to make paragraphs with approximately 200 words.']
+
+def test_empty_scores_list(testClient):
+    '''
+        Test if a text that has the scores list empty returns 0 as
+        the score. The explanations will also be empty
+        Attributes:
+            testText: the text the function is run on.
+            score: the score given for the structure writing skill.
+            explanations: the explanations given for this text for the structure
+            writing skill.
+            feedbackObject: Object of the StructureFeedback class, to calculate scores for the Structure writing skill.
+        Arguments:
+            testClient: the test client we test this for.
+    '''
+    del testClient
+    # make a text that will return the scores list as empty
+    testText = 'empty scores list.'
+    # retrieve the scores and explanations by running the function on the text
+    feedbackObject = StructureFeedback(testText, '', 1, 1, '')
+    score = feedbackObject.genFeedback()[0]
+    explanations = feedbackObject.genFeedback()[1]
+    # the score should be 0 and there should be no explanations
+    assert score == Decimal(0).quantize(
+        Decimal('0.1'), rounding=ROUND_HALF_UP)
+    assert explanations == []
+    assert list(feedbackObject.explanationsDict.keys()) == []
+    assert list(feedbackObject.explanationsDict.values()) == []

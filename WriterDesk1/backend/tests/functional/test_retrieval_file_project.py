@@ -143,6 +143,7 @@ def testRetrieveFilesOfPart(testClient, initDatabase):
                         date='12/02/80',
                         fileType='.pdf',
                         path='C:/normal/path/File-5.pdf', 
+                        progress=0,
                         userId=userId, 
                         filename='File-5.pdf', 
                         id=105
@@ -151,6 +152,7 @@ def testRetrieveFilesOfPart(testClient, initDatabase):
                         date='06/05/20',
                         fileType='.pdf',
                         path='C:/normal/path/File-4.pdf', 
+                        progress=0,
                         userId=userId, 
                         filename='File-4.pdf', 
                         id=104
@@ -159,6 +161,7 @@ def testRetrieveFilesOfPart(testClient, initDatabase):
                         date='12/02/19',
                         fileType='.pdf',
                         path='C:/normal/path/File-1.pdf', 
+                        progress=0,
                         userId=userId, 
                         filename='File-1.pdf', 
                         id=101
@@ -167,6 +170,7 @@ def testRetrieveFilesOfPart(testClient, initDatabase):
                         date='12/02/99',
                         fileType='.pdf',
                         path='C:/normal/path/File-3.pdf', 
+                        progress=0,
                         userId=userId, 
                         filename='File-3.pdf', 
                         id=103

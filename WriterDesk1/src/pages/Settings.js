@@ -42,7 +42,6 @@ const Settings = () => {
         // Call getTrackable function to show radio button correctly
         getTrackable();
         setUserRole(AuthenticationService.getRole())
-        console.log(AuthenticationService.getRole());
     }, []);
 
     // Create states for the old password, new Password (including conformation) and states for success or error messages.
@@ -55,8 +54,9 @@ const Settings = () => {
     const [trackableValue, setTrackableValue] = useState('');  // Value for radio buttons to accept or refuse data, can be 'yes' or 'no'.
 
     const [accountDeletionPopup, setAccountDeletionPopup] = useState(false)
+    const [successDeleteDialog, setSuccessDeleteDialog] = useState(false); // Alert that account is successfully deleted.
 
-    /* 
+    /*
      * Check if password input is valid.
      * According to URC 1.2-1.5, a valid password has at least 8 characters,
      * with at least 1 lowercase character, uppercase character and number.
@@ -105,8 +105,10 @@ const Settings = () => {
         const url = 'https://api.writingdashboard.xyz/usersapi/deleteUserSelf';
         // Make the backend call and set the table data from the response data:
         axios.post(url,{},{headers: authHeader()}).then((response) => {
+            setAccountDeletionPopup(false);
+            setSuccessDeleteDialog(true);
         })
-        window.location.reload();
+
         return false;
 	}
 
@@ -129,7 +131,7 @@ const Settings = () => {
               setTrackableValue(response.data)
           })
     }
-    
+
     /*
      * Do POST request containing new and old password variables, recieve status of response.
      */
@@ -176,7 +178,7 @@ const Settings = () => {
     // whether or not the information about the user data is shown.
     const [showUserDataPopup, setShowUserDataPopup] = useState(false)
 
-    
+
     // Set password from textfield for email change
     const [passwordForEmail, setPasswordForEmail] = useState("");
     // Set username from textfield
@@ -197,7 +199,7 @@ const Settings = () => {
         return "";
     }
 
-    /** 
+    /**
      * Check if username input is valid.
      * @returns helper text for username textfield
      */
@@ -263,9 +265,9 @@ const Settings = () => {
                 <br /> <br />
                 <div>
                     <Typography sx={{alignSelf: 'center', alignContent:'inline'}}>
-                        View the <a className='userDataLinkPopup' onClick={() => {setShowUserDataPopup(true)}} >user data agreement</a>.
+                        View the <button className='userDataLinkPopup' onClick={() => {setShowUserDataPopup(true)}} >user data agreement</button>.
                     </Typography>
-                    {showUserDataPopup && <AlertDialog title = "User data agreement" 
+                    {showUserDataPopup && <AlertDialog title = "User data agreement"
                         text = "The data conditions allow the application to record user data. The user data includes the URL of the page, the location on the screen, and the timestamp of each click from the user.  The user data is only used to improve the automatic feedback generated within the application. If the purpose of the data changes, the application will ask the user again for permission to save their user data. This data does not include necessary sign-up information, such as the university email address and the password, since that is saved to ensure the functionalities of the application. The sign-up information is not used for any other purposes than logging into the application. The application is still fully available when refusing the data conditions. If the user refuses permission, no user data will be recorded of this user until the moment that they accept the data settings in the future. If the user accepts the permission at first but later revokes the permission, their recorded user data is deleted and no user data will be recorded of this user, until the moment that they accept the data settings in the future. Users can retrieve the recorded user data so far at any time. Users can ask questions regarding their data by sending a mail to i.l.h.rutten@student.tue.nl; a response will be provided within a month."
                         buttonAgree={<Button onClick={() => {setShowUserDataPopup(false)}}>I understand</Button>}
                     />}
@@ -273,23 +275,23 @@ const Settings = () => {
                 <br />
                 <BlueButton idStr='downloadMyUserData' onClick={() => {handleOwnUserData()}}>Download my user data</BlueButton>
                 <br />
+                <br />
                 <Typography variant='h5' style={{color: '#44749D'}}>
                     Change password
                 </Typography>
                 <br />
-                <TextField value = {oldPassword} onChange={(e) => {setOldPassword(e.target.value); 
-                setFormError(""); setSuccessMessage("")}} id='currPass' label='Insert current password.' 
-                variant='outlined' type = 'password' style={{marginBottom: '1vw'}} />
+                <TextField value = {oldPassword} onChange={(e) => {setOldPassword(e.target.value);
+                setFormError(""); setSuccessMessage("")}} id='currPass' label='Insert current password.'
+                variant='outlined' type = 'password' style={{width: '260px'}} helperText={' '}/>
                 <br />
-                <TextField value = {newPassword} onChange={(e) => {setNewPassword(e.target.value); 
+                <TextField value = {newPassword} onChange={(e) => {setNewPassword(e.target.value);
                 setFormError(""); setSuccessMessage("")}} id='newPass' label='Insert new password.' variant='outlined' type='password'
-                style={{marginBottom: '1vw'}} 
-                error={checkPassword() !== ""} helperText={checkPassword() !== "" ? checkPassword() : " "}
+                error={checkPassword() !== ""} style={{width: '260px'}} helperText={checkPassword() !== "" ? checkPassword() : " "}
                 />
                 <br />
-                <TextField value = {newPasswordConfirm} onChange={(e) => {setNewPasswordConfirm(e.target.value); 
-                setFormError(""); setSuccessMessage("")}} id='newPass2' label='Insert new password again.' 
-                variant='outlined' type='password' style={{marginBottom: '1vw'}}
+                <TextField value = {newPasswordConfirm} onChange={(e) => {setNewPasswordConfirm(e.target.value);
+                setFormError(""); setSuccessMessage("")}} id='newPass2' label='Insert new password again.'
+                variant='outlined' type='password' style={{width: '260px'}}
                 error={confirmPassword() !== ""} helperText={confirmPassword() !== "" ? confirmPassword() : " "}
                 />
                 <br />
@@ -304,18 +306,18 @@ const Settings = () => {
                         Change email
                     </Typography>
                     <br />
-                    <TextField value = {passwordForEmail} onChange={(e) => {setPasswordForEmail(e.target.value); 
-                    setFormError(""); setSuccessMessage("")}} id='currPass' label='Insert password.' 
-                    variant='outlined' type = 'password' style={{marginBottom: '1vw'}} />
+                    <TextField value = {passwordForEmail} onChange={(e) => {setPasswordForEmail(e.target.value);
+                    setFormMailError(""); setSuccessMailMessage("")}} id='currPass' label='Insert password.'
+                    variant='outlined' type = 'password' style={{width: '260px'}} helperText={' '}/>
                     <br />
                     <TextField id='changeEmail' label='Insert new username.' variant='outlined'
-                        value={username} onChange={(e) => {setUsername(e.target.value); setFormError("")}}
-                        error={checkUsername() !== ""} helperText={checkUsername() !== "" ? checkUsername() : " "}
+                        value={username} onChange={(e) => {setUsername(e.target.value); setFormMailError(""); setSuccessMailMessage("")}}
+                        error={checkUsername() !== ""} style={{width: '260px'}} helperText={checkUsername() !== "" ? checkUsername() : " "}
                     />
                     <br />
-                    <TextField id='changeEmail2' label='Repeat new username.' variant='outlined' style={{marginBottom: '1vw'}}
-                        value={usernameConfirm} onChange={(e) => {setUsernameConfirm(e.target.value); setFormError("")}} 
-                        error={confirmUsername() !== ""} helperText={confirmUsername() !== "" ? confirmUsername() : " "}
+                    <TextField id='changeEmail2' label='Repeat new username.' variant='outlined'
+                        value={usernameConfirm} onChange={(e) => {setUsernameConfirm(e.target.value); setFormMailError(""); setSuccessMailMessage("")}}
+                        error={confirmUsername() !== ""} style={{width: '260px'}} helperText={confirmUsername() !== "" ? confirmUsername() : " "}
                     />
                     <br />
                     <BlueButton idStr='updateEmail' variant='contained' onClick={changeEmail}>Update email</BlueButton>
@@ -330,10 +332,15 @@ const Settings = () => {
                 </Typography>
                 <br />
                 <BlueButton idStr='DeleteMyAccount' variant='contained' onClick={(e) => {setAccountDeletionPopup(true)}}>I want to delete my account.</BlueButton>
-                {accountDeletionPopup && <AlertDialog title = "Account deletion" 
+                <br /><br />
+                {accountDeletionPopup && <AlertDialog title = "Account deletion"
                     text = "Are you sure you want to delete your account?"
                     buttonAgree={<Button onClick={(e) => {deleteUser()}} style={{color: "red"}}>Yes, I want to delete my account!</Button>}
                     buttonCancel={<Button onClick={(e) => {setAccountDeletionPopup(false)}}>Cancel</Button>}
+                />}
+                {successDeleteDialog && <AlertDialog title = "Successfully deleted account"
+                    text = "Your account has been successfully deleted. You will be redirected to the login page."
+                    buttonAgree={<Button onClick={(e) => {navigate("../Login", {replace: true});}}>Ok</Button>}
                 />}
             </div>
         </>

@@ -77,8 +77,7 @@ def setProject():
     projectName = request.form.get('projectName')
 
     # Check if current user has rights to create a project
-    if User.query.filter_by(id=current_user.id).first().role == 'student' \
-            or User.query.filter_by(id=current_user.id).first().role == 'participant':
+    if current_user.role != 'admin' and current_user.role != 'researcher':
         return 'User is not admin or researcher', 400
 
     # Create Projects object
@@ -116,7 +115,7 @@ def deleteProject():
         if current_user.id != Projects.query.filter_by(id=projectId).first().userId:
             return 'Project is not related to current user', 400
 
-    DeleteAllFilesFromProject(projectIds)  # Remove all files corresponding to the project ids from the server
+    deleteAllFilesFromProject(projectIds)  # Remove all files corresponding to the project ids from the server
 
     for projectId in projectIds:
         # Retrieve the row that needs to be removed
@@ -128,7 +127,7 @@ def deleteProject():
     return 'success', 200
 
 
-def DeleteAllFilesFromProject(projectIds):
+def deleteAllFilesFromProject(projectIds):
     '''
         This function handles the deletion of files corresponding to all users from a project.
         Attributes:
@@ -144,12 +143,10 @@ def DeleteAllFilesFromProject(projectIds):
         # Retrieve users of project with project id
         users = ParticipantToProject.query.filter_by(projectId=projectId).all()
         for user in users:
-            try:
-                folderToRemove = os.path.join(current_app.config['UPLOAD_FOLDER'], str(user.userId))
+            folderToRemove = os.path.join(current_app.config['UPLOAD_FOLDER'], str(user.userId))
+            # If the folder exists:
+            if os.path.isdir(folderToRemove):
                 shutil.rmtree(folderToRemove)  # Try to remove folder recursively
-            except FileNotFoundError:
-                print('Folder not found')
-    return 'success', 200
 
 @bp.route('/viewParticipantsOfUser', methods=["GET"])
 def viewParticipantsOfUser():

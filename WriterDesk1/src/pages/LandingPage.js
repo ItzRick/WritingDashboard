@@ -28,7 +28,7 @@ const LandingPage = () => {
           display: 'inline-flex',
         }}>
           <Typography className='titleChild' variant='h2'> Writing </Typography>
-          <img className='logo titleChild' src={logo} />
+          <img className='logo titleChild' src={logo} alt='' />
           <Typography variant='h2' className='titleChild'> Dashboard </Typography>
         </Box>
       </Box>

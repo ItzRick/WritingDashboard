@@ -23,13 +23,10 @@ def testRetrieveFileSingle(testClient, initDatabaseEmpty):
     data = {'fileId': 200}  # Define file id
 
     # Add file to the database
-    try:
-        file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', fileType='.pdf',
-                     date=datetime(2019, 2, 12), userId=100, courseCode='2IPE0', id=200)
-        db.session.add(file)
-        db.session.commit()
-    except:
-        db.session.rollback()
+    file = Files(path='C:/normal/path/File-1.pdf', filename='File-1.pdf', fileType='.pdf',
+                    date=datetime(2019, 2, 12), userId=100, courseCode='2IPE0', id=200)
+    db.session.add(file)
+    db.session.commit()
 
     # Retrieve the file with the given file id
     access_token = loginHelper(testClient, 'ad', 'min')

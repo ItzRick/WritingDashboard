@@ -79,7 +79,7 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                 // Get the ids of the uploaded files from the backend:
                 let message = response.data
                 let ids = /\[(.*?)\]/.exec(message)[0];
-                ids = ids.replace(/[\[\]']+/g,'')
+                ids = ids.replace(/[[\]']+/g,'')
                 ids = ids.split(', ')
                 // Make a post request with the correct parameters:
                 let params = new URLSearchParams();
@@ -93,13 +93,13 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                   }
                 axios.post(generateUrl, {}, config)
                 .catch((error) => {
-                    setFail((v) => (v+1))
-                    setFailedFiles((l) => l.concat([{'content':'Corrupted File','id':thisIndex}]))
-                    setSucc((v) => (v-1))
                     console.log(error.response.data);
                 });
               })
             .catch((error) => {
+                // If the backend call has a failure, pass this to the popup:
+                setFail((v) => (v+1))
+                setFailedFiles((l) => l.concat([{'content':error.response.data,'id':thisIndex}]))
                 console.log(error.response.data);
             });
             } else {
@@ -213,7 +213,10 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                     onDragEnter={(event) => event.preventDefault()}
                     onDragOver={(event) => event.preventDefault()}
                     onDrop={onFileDrop}>
-                    <BlueButton idStr='ChooseAFile' onClick={() => fileInput.current.click()} addStyle={{ mr: '8px'}}>Choose a file</BlueButton>
+                    <BlueButton idStr='ChooseAFile' onClick={() => fileInput.current.click()} addStyle={{ mr: '8px', width: '8vw',
+                        minWidth: '50px', whiteSpace: 'nowrap', overflow: 'hidden', fontSize: '0.8vw'}}>
+                        Choose a file
+                    </BlueButton>
                     <input
                         ref={fileInput}
                         type="file"
@@ -224,7 +227,7 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                     />
                     {file.name !== undefined ? file.name : 'or drag it here.'}
                 </div>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider dateAdapter={AdapterDayjs} width={'5px'}>
                     <DatePicker
                         disableFuture
                         label="Date"
@@ -232,24 +235,16 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                         views={['year', 'month', 'day']}
                         value={date}
                         onChange={(newDate) => {
-                            setDate(newDate);
+                            var tempdate = new Date(newDate);
+                            // Transform date from GMT to UTC
+                            var date = new Date(tempdate.getTime() - (tempdate.getTimezoneOffset() * 60 * 1000));
+                            setDate(date);
                         }}
-                        renderInput={(params) => <TextField {...params} />}
+                        renderInput={(params) => <TextField {...params} sx={{minWidth: '80px'}}/>}
                     />
                 </LocalizationProvider>
-                <TextField label='course'
-                           id='course'
-                           variant='outlined'
-                           value={course}
-                           onChange={event => setCourse(event.target.value)} />
-                <Button
-                    id='remove'
-                    variant='contained'
-                    sx={{ bgcolor: 'red', color: 'button.text' }}
-                    value={thisIndex}
-                    onClick={removeInstance}>Remove</Button>
-                <TextField id='course' label='Course ID' inputProps={{ maxLength: 16 }} variant='outlined' value={course} onChange={event => setCourse(event.target.value)} />
-                <Button id='remove' variant='contained' sx={{ bgcolor: 'buttonWarning.main', color: 'buttonWarning.text', ml: '5px',}} value={thisIndex} onClick={removeInstance}>Remove</Button>
+                <TextField label='Course ID' inputProps={{ maxLength: 16 }} variant='outlined' value={course} sx={{minWidth: '80px'}} onChange={event => setCourse(event.target.value)} />
+                <Button variant='contained' sx={{ bgcolor: 'buttonWarning.main', color: 'buttonWarning.text', ml: '5px',}} value={thisIndex} onClick={removeInstance}>Remove</Button>
             </div>
             {displayAlertType ? <Alert severity="error">Upload a file with a .txt, .pdf or .docx filetype!</Alert> : null}
             {displayAlertSize ? <Alert severity="error">The uploaded file was too big, upload a file that is not larger than 10 MB!</Alert> : null}

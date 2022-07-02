@@ -57,25 +57,60 @@ def testUploadTextFileIncorrect(testClient, initDatabase):
             fileDir: Location of the file we are testing the upload of.
             data: The data we are trying to test the upload with.
             response: Response of the post request.
-            access_token: the access token
+            access_token: the access token.
+            fileName: The filename of the file we test this with.
         Arguments:
             testClient:  The test client we test this for.
             initDatabase: the database instance we test this for. 
     '''
     del initDatabase
-    # Get the location of this specific file:
+    # Get the location and filename of this specific file:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'SEP202122Q4.xlsx')
+    fileName = 'SEP202122Q4.xlsx'
+    fileDir = os.path.join(BASEDIR, fileName)
     # Create the data packet:
     data = {
-        'files': (open(fileDir, 'rb'), fileDir)
+        'files': (open(fileDir, 'rb'), fileName)
     }
     # Create push request:
     access_token = loginHelper(testClient, 'ad', 'min')
     response = testClient.post('/fileapi/upload', data=data,
                                 headers={"Authorization": "Bearer " + access_token})
-    # Check if the response is indeed of code 400 and has as text 'incorrect filetype 1':
-    assert response.data == b'Incorrect filetype 1'
+    # Check if the response is indeed of code 400 and has as text 'Incorrect filetype: SEP202122Q4.xlsx':
+    assert response.data == f'Incorrect filetype: {fileName}'.encode('utf-8')
+    assert response.status_code == 400
+
+def testUploadTextFileCorrupt(testClient, initDatabase):
+    '''
+        Test if a corrupt file of does indeed not get accepted by the server. 
+        In this case this is tested with a corrupt .txt file.
+        Attributes:
+            BASEDIR: Location of the conftest.py file.
+            fileDir: Location of the file we are testing the upload of.
+            data: The data we are trying to test the upload with.
+            response: Response of the post request.
+            access_token: the access token.
+            fileName: The filename of the file we test this with.
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for. 
+    '''
+    del initDatabase
+    # Get the location and filename of this specific file:
+    fileName = 'file_corrupt.txt'
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, fileName)
+    # Create the data packet:
+    data = {
+        'files': (open(fileDir, 'rb'), fileName)
+    }
+    # Create push request:
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.post('/fileapi/upload', data=data,
+                                headers={"Authorization": "Bearer " + access_token})
+    # Check if the response is indeed of code 400 and has as text 'Corrupt file: file_corrupt.txt':
+    
+    assert response.data == f'Corrupt file: {fileName}'.encode('utf-8')
     assert response.status_code == 400
 
 def testUploadTextFileNoFile(testClient, initDatabase):

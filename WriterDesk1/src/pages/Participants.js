@@ -14,11 +14,11 @@ import {
   FormatAlignJustify,
   DeleteOutline,
 } from "@mui/icons-material";
-import { DataGrid, GridColDef, GridToolbarContainer } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import BlueButton from './../components/BlueButton';
 
 // routing
-import { useOutletContext, Link, useNavigate } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 // Signup request setup
@@ -115,9 +115,7 @@ const Participants = () => {
       "nrOfParticipants": participantCount,
       "projectid": projectAdd,
     }
-    const headers = {
-      "Content-Type": "application/json"
-    }
+
     axios.post(`${BASE_URL}/addParticipants`, data, { headers: authHeader() }).then(response => {
       // Post request is successful, participants are registered
 
@@ -189,7 +187,6 @@ const Participants = () => {
         }
       })
       .catch(err => {
-        console.log('no success')
         console.log(err.response.projects);
       });
   }
@@ -240,9 +237,7 @@ const Participants = () => {
     setShowDeleteDialogMultiple(false);  // Don't show dialog anymore
     // // Url of the server:
     const url = 'https://api.writingdashboard.xyz/usersapi/deleteUserResearcher'
-    // Create a new formdata:
-    const formData = new FormData();
-    // For each of the selected instances, add this id to the formdata:
+    // For each of the selected instances, add this id to the data:
     selectedInstances.forEach(id => {
       const data = {
           "userID": id

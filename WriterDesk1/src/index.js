@@ -37,10 +37,6 @@ import ParticipantDocuments from './pages/ParticipantDocuments';
 // page just for admin
 import Users from './pages/Users';
 
-
-//testing page, to be removed later
-import TestingPage from './pages/TestingPage';
-
 // tracking
 import TrackingWrapper from "./services/TrackingWrapper";
 
@@ -98,19 +94,16 @@ const theme = createTheme({
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(     
-  <React.StrictMode>
     <ThemeProvider theme={theme}>
       {/* Router encapsules the application */}
       <BrowserRouter history={history}>
         <Routes>
           {/* public part of the router, accessible for public */}
           <Route path='/' element={<BaseOut />}>
-            <Route name='LandingPage' path='LandingPage' element={<LandingPage />} />
             <Route name='Login' path='Login' element={<Login />} />
             <Route name='SignUp' path='SignUp' element={<SignUp />} />
             <Route path='/' element={<LandingPage />} />
           </Route>
-          {/* TODO: add authentication */}
           {/* Private part of the router, requires authentication */}
           {/* provide trackingWrapper around the base, to serve as context for the application */}
           <Route path='/' element={<TrackingWrapper><Base /></TrackingWrapper>}>
@@ -136,17 +129,12 @@ root.render(
               <Route name='Users' path='Users' element={<Users />} />
             </Route>
             <Route path='/' element={<Main />} />
-
-
-            {/* Testing Page, for checking out new stuff */}
-            <Route name='TestingPage' path='TestingPage' element={<TestingPage />} />
           </Route>
 
 
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
-  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,7 +1,7 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app, request, session, jsonify, send_file
-from app.models import Files, User, ParticipantToProject, Projects
+from app.models import Files, User, ParticipantToProject, Projects, Scores
 from app.fileapi import bp
 from app.fileapi.convert import convertDocx, convertTxt, removeConvertedFiles
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
@@ -36,6 +36,7 @@ def fileUpload():
             existing: current existing files with the same userId and fileName 
             associated in the database for the current file that is being handled.
             fileIds: ids of the file that have been uploaded.
+            extensionFilename: The extension as retrieved from the fileName.
     '''
     # Retrieve the files as send by the react frontend and give this to the fileUpload function,
     # which does all the work:
@@ -51,19 +52,23 @@ def fileUpload():
     dates = request.form.getlist('date')
     # Handle each file separately:
     for idx, file in enumerate(files):
+        # Run secure_filename on the file to protect against sql_injections etc and to make sure the filename does not
+        # contain any spaces:
+        filename = secure_filename(file.filename)
         # Get the filetype and check if this is one of the accepted filetypes:
         fileType = from_buffer(file.read(), mime = True)
         isPdf = (fileType == 'application/pdf')
         isDocx = (fileType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
         isTxt = (fileType == 'text/plain')
         extension = guess_extension(fileType)
-
+        # Get the extension from the filename:
+        extensionFilename = filename.split('.')[-1]
+        # If the file is corrupt, that is the filename extension is not the actual extension:
+        if extension[1:] != extensionFilename:
+            return 'Corrupt file: ' + str(filename), 400
         # If the filetype is not accepted, indicate this by returning this in a message and a 400 code:
         if (not (isPdf or isDocx or isTxt)):
-            return 'Incorrect filetype ' + str(idx + 1), 400
-        # Run secure_filename on the file to protect against sql_injections etc and to make sure the filename does not
-        # contain any spaces:
-        filename = secure_filename(file.filename)
+            return 'Incorrect filetype: ' + str(filename), 400
         # Get the path to save the file to, as indicated in the config and then having a subfolder for every user:
         userFileLocation = os.path.join(current_app.config['UPLOAD_FOLDER'], str(userId))
         fileLocation = os.path.join(userFileLocation, filename)
@@ -134,6 +139,19 @@ def fileRetrieve():
     # Put dates in format
     for file in files:
         file['date'] = file.get('date').strftime('%d/%m/%y')
+
+    # Get the progress by looking at which scores are yet generated:
+    for file in files: 
+        # Get the score for the current file:
+        score = Scores.query.filter_by(fileId=file['id']).first()
+        # Initialize the progress to 0:
+        progress = 0
+        # If we have a score, we add 25% for each score more than 0:
+        if score != None:
+            for scoreInstance in score.scoreColumns:
+                if scoreInstance >= 0:
+                    progress += 25
+        file['progress'] = progress
 
     # Return http response with list as json in response body
     return jsonify(files)
@@ -263,3 +281,4 @@ def displayFile():
         return send_file(newPath)
     # The file has not been converted, send the original file.
     return send_file(filepath)
+

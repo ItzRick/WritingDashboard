@@ -139,6 +139,7 @@ class ParticipantToProject(db.Model):
         self.userId = userId
         self.projectId = projectId
 
+    @staticmethod
     def serializeParticipantToProject(self):
         dict = {}
         for c in inspect(self).attrs.keys():
@@ -147,7 +148,7 @@ class ParticipantToProject(db.Model):
         return dict
 
     def __repr__(self):
-        return '<ParticipantToProject {}>'.format(self.userId)
+        return '<ParticipantToProject {} {}>'.format(self.userId, self.projectId)
 
 class Scores(db.Model):
     '''
@@ -172,8 +173,16 @@ class Scores(db.Model):
     # Feedbackversion is a numeric value, with 2 decimal numbers and 5 numbers in total.
     feedbackVersion  = db.Column(db.Numeric(5,2), unique=False, default=None)
 
+    @property
+    def scoreColumns(self):
+        result = []
+        for c in inspect(self).attrs.keys():
+            if c != 'fileId' and c != 'feedbackVersion' and c!= 'scoredFile': 
+                result.append(getattr(self, c))
+        return result
+
     def __repr__(self):
-        return '<Scores {}>'.format(self.fileId)
+        return '<Scores {} {}>'.format(self.fileId, self.feedbackVersion)
 
 class Explanations(db.Model):
     '''
@@ -274,7 +283,25 @@ class Clicks(db.Model):
         self.actionId = actionId
 
     def __repr__(self):
-        return '<Clicks {}>'.format(self.userId, self.clickId)
+        return '<Clicks {} {}>'.format(self.userId, self.clickId)
+
+    def serializeClickIndex(self, index):
+        '''
+            Serialize the clickData with a given index.
+            arguments: 
+                self: Current database object.
+                index: Index of the current element in the final list.
+            returns: 
+                dict: Dictionary with all required elements of the current element.
+        '''
+        dict = {}
+        for c in inspect(self).attrs.keys():
+            # Count the clickId from 0:
+            if c == 'clickId':
+                dict[c] = index
+            elif not c == 'file' and not c == 'clicker':
+                dict[c] =  getattr(self, c)
+        return dict
 
     def serializeClick(self):
         dict = {}
@@ -285,4 +312,5 @@ class Clicks(db.Model):
 
     @staticmethod
     def serializeList(l):
-        return [m.serializeClick() for m in l]
+        # Use enumerate to correctly get the index of the clickdata.
+        return [m.serializeClickIndex(i) for i, m in enumerate(l)]
