@@ -2,7 +2,7 @@ from app import generateParticipants as gp
 from app import db
 from app.models import User, ParticipantToProject, Projects
 from test_set_role import loginHelper
-import pytest
+from pytest import raises
 
 def testGenerateParticipants(testClient, initDatabase):
     '''
@@ -103,6 +103,7 @@ def testGenerateParticipantPasswordInvalidLength(testClient, initDatabase):
         Test if generateParticipantPassword() correctly raises an exception when the given password length is too short.
         Attributes:
             password: string returned by generateParticipantPassword
+            e: exception raised by generateParticipantPassword
         Arguments:
             testClient: the test client we test this for
             initDatabase: the database instance we test this for
@@ -111,7 +112,7 @@ def testGenerateParticipantPasswordInvalidLength(testClient, initDatabase):
     del testClient, initDatabase
 
     # Generate a password with length < 8
-    with pytest.raises(Exception) as e:
+    with raises(Exception) as e:
         password = gp.generateParticipantPassword(7)
 
     # Check for the correct error message

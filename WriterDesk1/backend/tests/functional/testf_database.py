@@ -4,7 +4,7 @@ from app import db
 from datetime import datetime
 import os
 from flask import current_app
-import pytest
+from pytest import raises
 
 def testValidFile(testClient, initDatabase):
     '''
@@ -339,6 +339,7 @@ def testPostExistingParticipant(testClient, initDatabase):
         Attributes:
             existingUser: user added to database, so it exists already when calling postParticipant()
             user: returned user from postParticipant()
+            e: exception raised by postParticipant()
         Arguments:
             testClient: the test client we test this for
             initDatabase: the database instance we test this for
@@ -352,7 +353,7 @@ def testPostExistingParticipant(testClient, initDatabase):
     db.session.commit()
 
     # Try to add a new participant with username 'par_existing@tue.nl' to the database 
-    with pytest.raises(Exception) as e:
+    with raises(Exception) as e:
         user = postParticipant("par_existing@tue.nl", "TestPass1")
     # Check for the correct error message
     assert str(e.value) == "User exists already"

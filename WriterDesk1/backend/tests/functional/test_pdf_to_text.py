@@ -2,6 +2,27 @@ from app.feedback.retrieveText.convertPdfToText import getPDFText, splitBlocks, 
 import os
 import fitz
 
+def testGetPDFContinuedSentence(testClient):
+    '''
+        Test if text of pages is concatenated correctly when getPDFText() is called 
+        on a file with sentences spread over multiple pages.
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf.
+            text: string of text returned by getPDFText.
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
+        Arguments:
+            testClient: the test client we test this for
+    '''
+
+    del testClient
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'continuedSentenceFile.pdf')
+
+    isSuccesful, text = getPDFText(fileDir)
+    assert isSuccesful == True
+    assert text == ('This is the last sentence of the first page, but it is so long that the sentence is continued'
+    ' further on the next page.')
+
 def testGetPDFReferences(testClient):
     '''
         Test if references are split and returned when getPDFText() is called with returnReferences=True
@@ -66,6 +87,25 @@ def testGetPDFList(testClient):
     ' Nunc sagittis commodo ipsum, a scelerisque odio viverra ac. Nullam id congue leo, condimentum hendrerit nibh. Ut pulvinar diam ut dignissim malesuada.'
     ' \n\nLorum \n\nIpsum \n\nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum.'
     ' Quisque condimentum cursus pharetra.')
+
+def testGetPDFListNotIncluded(testClient):
+    '''
+        Test if list lines are removed completely when getPDFText() is called with includeLists=False.
+        Attributes: 
+            dir_path: path of the directory that holds this file and the test pdf.
+            text: string of text returned by getPDFText.
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
+        Arguments:
+            testClient: the test client we test this for
+    '''
+
+    del testClient
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'notIncludeListFile.pdf')
+
+    isSuccesful, text = getPDFText(fileDir, includeLists=False)
+    assert isSuccesful == True
+    assert text == ('This should be the only text.')
 
 def testGetPDFTable(testClient):
     '''
