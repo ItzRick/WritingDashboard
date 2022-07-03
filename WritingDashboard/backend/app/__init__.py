@@ -6,6 +6,7 @@ from flask_cors import CORS
 from flask_caching import Cache
 from app.extensions import jwt
 from language_tool_python import LanguageTool
+from os import getenv
 
 
 
@@ -19,7 +20,7 @@ languageToolEn = LanguageTool('en-US')
 def create_app(config_class=Config):
     app = Flask(__name__)
     # Prevent CORS errors, make sure we can retrieve things from the react front-end without errors:
-    CORS(app, origins=['https://localhost', 'writingdashboard.xyz', 'https://writingdashboard.xyz'], expose_headers=["custom-filename"])
+    CORS(app, origins=[getenv('FRONTEND_URL')], expose_headers=["custom-filename"])
     # Retrieve stuff from the config file:
     app.config.from_object(config_class)
     # Start the database:

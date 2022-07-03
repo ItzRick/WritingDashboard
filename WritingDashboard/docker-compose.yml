@@ -7,9 +7,14 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      $PORT: 433
+      PORT: 8080
+      URL: localhost
     ports:
-      - 433:433
+      - 8080:8080
+    depends_on:
+      - api
+    links:
+      - "api"
   api: 
     ports:
       - 5000:5000
@@ -26,6 +31,7 @@ services:
       NUMWORKERS: 3
       NUMTHREADS: 3
       PORT: 5000
+      FRONTEND_URL: http://localhost:8080
   db:
     environment:
       POSTGRES_USER: writingdashboard
