@@ -128,3 +128,4 @@ yarn-error.log*
 
 **/saved_documents
 **/package-lock.json
+**/node_modules
