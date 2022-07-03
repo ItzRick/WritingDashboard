@@ -1,9 +1,8 @@
 import os
 from datetime import date
 from app.models import Scores, Files
-from werkzeug.utils import secure_filename
+from app import db
 import json
-from decimal import Decimal
 from test_set_role import loginHelper
 
 def uploadFile(testClient):
@@ -43,24 +42,45 @@ def uploadFile(testClient):
     assert response.data == f'Uploaded file with ids: [{file.id}]'.encode('utf-8')
     assert file.courseCode == courseCode
     return response, file
-
-def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructure, scoreIntegration):
+    
+def testGetScore(testClient, initDatabase):
     '''
-        A general method to test retrieving a score.
-        Check if the file related to fileId has scores and if they equal the given scores
-        Attributes: 
-            data: The data we are trying to test the getScore with.
-            response: Response of the get request.
-            dataResponse: response data, i.e. the score
-            access_token: the access token
-        Arguments:
-            testClient:  The test client we test this for.
+        Method to test normal behavior of getScores
+        Atrributes:
             fileId: fileId of file related to this test
             scoreStyle: language and style score
             scoreCohesion: cohesion score
             scoreStructure: structure score
             scoreIntegration: source integration and content score
+            Score: score data value
+            data: The data we are trying to test the getScore with.
+            response: Response of the get request.
+            dataResponse: response data, i.e. the score
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for.
+
     '''
+    del initDatabase
+
+    fileId = 100
+    scoreStyle = 6
+    scoreCohesion = 7
+    scoreStructure = 1
+    scoreIntegration = 1
+    feedbackVersion = 12
+    # create score item in the database
+    score = Scores(
+        fileId = fileId,
+        scoreStyle = scoreStyle,
+        scoreCohesion = scoreCohesion,
+        scoreStructure = scoreStructure,
+        scoreIntegration = scoreIntegration,
+        feedbackVersion = feedbackVersion
+    )
+    db.session.add(score)
+    db.session.commit()
+
     # data for get request
     data = {
         'fileId':fileId,
@@ -79,3 +99,53 @@ def generalGetScore(testClient, fileId, scoreStyle, scoreCohesion, scoreStructur
     assert float(dataResponse['scoreStructure']) == scoreStructure
     assert float(dataResponse['scoreIntegration']) == scoreIntegration
     
+def testGetScore400(testClient, initDatabase):
+    '''
+        Method to test normal behavior of getScores
+        Atrributes:
+            fileId: fileId of file related to this test
+            scoreStyle: language and style score
+            scoreCohesion: cohesion score
+            scoreStructure: structure score
+            scoreIntegration: source integration and content score
+            Score: score data value
+            data: The data we are trying to test the getScore with.
+            response: Response of the get request.
+            dataResponse: response data, i.e. the score
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: the database instance we test this for.
+
+    '''
+    del initDatabase
+
+    fileId = 100
+    scoreStyle = 6
+    scoreCohesion = 7
+    scoreStructure = 1
+    scoreIntegration = 1
+    feedbackVersion = 12
+    # create score item in the database
+    score = Scores(
+        fileId = fileId,
+        scoreStyle = scoreStyle,
+        scoreCohesion = scoreCohesion,
+        scoreStructure = scoreStructure,
+        scoreIntegration = scoreIntegration,
+        feedbackVersion = feedbackVersion
+    )
+    db.session.add(score)
+    db.session.commit()
+
+    # data for get request
+    data = {
+        'fileId':101,
+    }
+
+    # Retrieve the files from the specified user
+    access_token = loginHelper(testClient, 'ad', 'min')
+    response = testClient.get('/scoreapi/getScores', query_string=data,
+                                headers={"Authorization": "Bearer " + access_token})
+    # Check if we get the correct status_code:
+    assert response.status_code == 400
+    assert response.data == b'No score found with matching fileId'
