@@ -3,6 +3,8 @@ from app import db
 from app.models import User, ParticipantToProject, Projects
 from test_set_role import loginHelper
 from pytest import raises
+from flask import current_app
+from os.path import exists, join
 
 def testGenerateParticipants(testClient, initDatabase):
     '''
@@ -148,6 +150,13 @@ def testAddParticipantsValid(testClient, initDatabase):
     }
     access_token = loginHelper(testClient, 'Pietje', 'Bell')
     response = testClient.post('/projectapi/addParticipants', json=data, headers={"Content-Type": "application/json", "Authorization": "Bearer " + access_token})
+    
+    # Loop through generator to reach the removal of the file
+    for i in response.response:
+        pass
+
+    # Check if file was removed
+    assert not exists(join(current_app.config['UPLOAD_FOLDER'], str(user.id), "downloadParticipants.csv"))
 
     # Check if particpants were added
     assert response.status_code == 200
