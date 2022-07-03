@@ -88,7 +88,9 @@ def initDatabase(testClient):
         Afterwards, the database is empties again, so no entries can influence a next test run. This is run each time
         a test case is run, so that one test case does not influence the database of another test case. 
     '''
+    del testClient
     # Create the database:
+    db.session.close()
     db.drop_all()
     db.create_all()
 
@@ -126,7 +128,10 @@ def initDatabaseEmpty(testClient):
         Afterward the test case, the database is empties again, so no entries can influence a next test run. This is run each time
         a test case is run, so that one test case does not influence the database of another test case. 
     '''
+    del testClient
     # Create the database:
+    db.session.close()
+    db.drop_all()
     db.create_all()
 
     admin = User('ad', 'min')
@@ -138,7 +143,7 @@ def initDatabaseEmpty(testClient):
     yield   # This is where the testing happens!
     
     # Empties the database after the application has finished testing:
-    db.session.commit()
+    db.session.close()
     db.drop_all()
 
 @pytest.fixture(scope='module')
