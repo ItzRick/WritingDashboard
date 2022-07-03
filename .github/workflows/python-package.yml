@@ -29,7 +29,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install pytest pytest-cov
-        if [ -f WriterDesk1/requirements.txt ]; then pip install -r WriterDesk1/requirements.txt; fi
+        if [ -f WritingDashboard/requirements.txt ]; then pip install -r WritingDashboard/requirements.txt; fi
     - name: Test with pytest
       run: |
         pytest
