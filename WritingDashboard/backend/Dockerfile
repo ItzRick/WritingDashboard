@@ -2,8 +2,6 @@
 FROM openjdk:11-slim-bullseye
 COPY --from=python:3.10-slim-bullseye / /
 
-EXPOSE 5000
-
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1
 
@@ -24,11 +22,15 @@ RUN rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY . .
 
-ENV DATABASE_URL postgresql+psycopg2://writingdashboard:6yE-N0vv~?(trP:B@172.30.32.4:5432/writingdashboard
+# ENV DATABASE_URL postgresql+psycopg2://writingdashboard:6yE-N0vv~?(trP:B@172.30.32.4:5432/writingdashboard
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
+# RUN flask db upgrade
+
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD gunicorn -b :$PORT --workers=3 --threads=3 wsgi:app
+# CMD gunicorn -b :$PORT --workers=$NUMWORKERS --threads=$NUMTHREADS wsgi:app
+# ENTRYPOINT ["./docker-entrypoint.sh"]
+CMD ./docker-entrypoint.sh

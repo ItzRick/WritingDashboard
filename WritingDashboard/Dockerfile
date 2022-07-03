@@ -14,6 +14,6 @@ FROM nginx:1.23
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 COPY --from=build-stage /app/build .
-COPY ./default.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx.conf /etc/nginx/conf.d/configfile.template
 EXPOSE $PORT
 CMD sh -c "envsubst '\$PORT' < /etc/nginx/conf.d/configfile.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
