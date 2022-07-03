@@ -2,14 +2,37 @@ from app.feedback.retrieveText.convertPdfToText import getPDFText, splitBlocks, 
 import os
 import fitz
 
+def testGetPDFContinuedSentence(testClient):
+    '''
+        Test if text of pages is concatenated correctly when getPDFText() is called 
+        on a file with sentences spread over multiple pages.
+        Attributes: 
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
+            text: string of text returned by getPDFText
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved
+        Arguments:
+            testClient: the test client we test this for
+    '''
+
+    del testClient
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'continuedSentenceFile.pdf')
+
+    isSuccesful, text = getPDFText(fileDir)
+    assert isSuccesful == True
+    assert text == ('This is the last sentence of the first page, but it is so long that the sentence is continued'
+    ' further on the next page.')
+
 def testGetPDFReferences(testClient):
     '''
         Test if references are split and returned when getPDFText() is called with returnReferences=True
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf.
-            text: string of text returned by getPDFText.
-            references: string containing references returned by getPDFText()
-            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
+            text: string of text returned by getPDFText
+            references: string containing references returned by getPDFText
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved
         Arguments:
             testClient: the test client we test this for
     '''
@@ -27,9 +50,10 @@ def testGetPDFImages(testClient):
     '''
         Test if images are ignored when getPDFText() is called.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf.
-            text: string of text returned by getPDFText.
-            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
+            text: string of text returned by getPDFText
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved
         Arguments:
             testClient: the test client we test this for
     '''
@@ -49,9 +73,10 @@ def testGetPDFList(testClient):
     '''
         Test if list symbols are removed when getPDFText() is called.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf.
-            text: string of text returned by getPDFText.
-            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
+            text: string of text returned by getPDFText
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved
         Arguments:
             testClient: the test client we test this for
     '''
@@ -67,13 +92,34 @@ def testGetPDFList(testClient):
     ' \n\nLorum \n\nIpsum \n\nDonec fringilla risus nec lacus sollicitudin aliquam. Suspendisse non scelerisque leo. Sed malesuada arcu vel erat ultricies rutrum.'
     ' Quisque condimentum cursus pharetra.')
 
+def testGetPDFListNotIncluded(testClient):
+    '''
+        Test if list lines are removed completely when getPDFText() is called with includeLists=False.
+        Attributes: 
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
+            text: string of text returned by getPDFText
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved
+        Arguments:
+            testClient: the test client we test this for
+    '''
+
+    del testClient
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'notIncludeListFile.pdf')
+
+    isSuccesful, text = getPDFText(fileDir, includeLists=False)
+    assert isSuccesful == True
+    assert text == ('This should be the only text.')
+
 def testGetPDFTable(testClient):
     '''
         Test if text from tables is removed when getPDFText() is called.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf.
-            text: string of text returned by getPDFText.
-            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
+            text: string of text returned by getPDFText
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved
         Arguments:
             testClient: the test client we test this for
     '''
@@ -93,9 +139,10 @@ def testGetPDFEmptyFile(testClient):
     '''
         Test if empty string is returned when getPDFText() is called on an empty file.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf.
-            text: string of text returned by getPDFText.
-            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
+            text: string of text returned by getPDFText
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved
         Arguments:
             testClient: the test client we test this for
     '''
@@ -113,9 +160,10 @@ def testGetPDFCorruptedFile(testClient):
     '''
         Test if an error message string is returned when getPDFText() is called on a corrupted file.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf.
-            message: string of text returned by getPDFText.
-            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
+            message: string of text returned by getPDFText
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved
         Arguments:
             testClient: the test client we test this for
     '''
@@ -133,9 +181,10 @@ def testGetPDFInvalidFile(testClient):
     '''
         Test if an error message string is returned when getPDFText() is called on a file with an invalid file name.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf.
-            message: string of text returned by getPDFText.
-            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
+            message: string of text returned by getPDFText
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved
         Arguments:
             testClient: the test client we test this for
     '''
@@ -153,9 +202,10 @@ def testGetPDFInvalidExtension(testClient):
     '''
         Test if an error message string is returned when getPDFText() is called on a file that is not a pdf.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf.
-            message: string of text returned by getPDFText.
-            isSuccesful: Boolean value to indicate if the text has been successfully retrieved.
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
+            message: string of text returned by getPDFText
+            isSuccesful: Boolean value to indicate if the text has been successfully retrieved
         Arguments:
             testClient: the test client we test this for
     '''
@@ -170,9 +220,10 @@ def testGetPDFInvalidExtension(testClient):
 
 def testSplitBlocks(testClient):
     '''
-        Test if splitBlocks() splits blocks correctly when they contain empty lines
+        Test if splitBlocks() splits blocks correctly when they contain empty lines.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
             doc: document opened with Pymupdf
             blocks: blocks on the first page of the opened document
         Arguments:
@@ -191,9 +242,10 @@ def testSplitBlocks(testClient):
 
 def testGetFrequencyX(testClient):
     '''
-        Test if getFrequencyX() counts frequencies of x-coordinates correctly
+        Test if getFrequencyX() counts frequencies of x-coordinates correctly.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
             doc: document opened with Pymupdf
             counter: Counter object returned by getFrequencyX()
         Arguments:
@@ -210,7 +262,7 @@ def testGetFrequencyX(testClient):
 
 def testPostProcessText(testClient):
     '''
-        Test if postProcessText() removes references, hyphenations and empty lines correctly
+        Test if postProcessText() removes references, hyphenations and empty lines correctly.
         Attributes: 
             inputText: text that will be processed
             output: text returned by postProcessText()
@@ -225,9 +277,10 @@ def testPostProcessText(testClient):
 
 def testGetLineText(testClient):
     '''
-        Test if getLineText() retrieves text from lines correctly
+        Test if getLineText() retrieves text from lines correctly.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
             doc: document opened with Pymupdf
             line: first line from first block of opened document
         Arguments:
@@ -244,7 +297,7 @@ def testGetLineText(testClient):
 
 def testFilterLineList(testClient):
     '''
-        Test if filterLineList() removes list symbols correctly
+        Test if filterLineList() removes list symbols correctly.
         Attributes: 
             inputText: text that will be processed
             output: text returned by filterLineList()
@@ -259,7 +312,7 @@ def testFilterLineList(testClient):
 
 def testFilterLineNoLetters(testClient):
     '''
-        Test if filterLineNoLetters() removes empty lines without letters correctly
+        Test if filterLineNoLetters() removes empty lines without letters correctly.
         Attributes: 
             inputText: text that will be processed
             output: text returned by filterLineNoLetters()
@@ -274,9 +327,10 @@ def testFilterLineNoLetters(testClient):
 
 def testGetBlockText(testClient):
     '''
-        Test if getBlockText() retrieves text from blocks correctly
+        Test if getBlockText() retrieves text from blocks correctly.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
             doc: document opened with Pymupdf
             block: first block of opened document
         Arguments:
@@ -293,9 +347,10 @@ def testGetBlockText(testClient):
 
 def testIsBlockTable(testClient):
     '''
-        Test if isBlockTable() identifies potential table blocks correctly
+        Test if isBlockTable() identifies potential table blocks correctly.
         Attributes: 
-            dir_path: path of the directory that holds this file and the test pdf
+            BASEDIR: path of the directory that holds this file
+            fileDir: path of the directory that holds the test pdf
             doc: document opened with Pymupdf
             xNormal: x-coordinate of normal text in the document
             blocks: blocks of opened document
@@ -319,7 +374,7 @@ def testIsBlockTable(testClient):
 
 def testIsTextCaption(testClient):
     '''
-        Test if isTextCaption() identifies captions correctly
+        Test if isTextCaption() identifies captions correctly.
         Attributes: 
             inputText: text without caption that will be checked
             inputCaption: text with caption that will be checked

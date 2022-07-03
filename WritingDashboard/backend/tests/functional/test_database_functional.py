@@ -4,6 +4,7 @@ from app import db
 from datetime import datetime
 import os
 from flask import current_app
+from pytest import raises
 
 def testValidFile(testClient, initDatabase):
     '''
@@ -331,6 +332,31 @@ def testPostParticipant(testClient, initDatabase):
     assert len(users) == 1
     assert users[0].check_password("TestPassword1")
     assert user.id == users[0].id
+
+def testPostExistingParticipant(testClient, initDatabase):
+    '''
+        Test if postParticipant() correctly raises an exception when trying to add a user to the database that already exists.
+        Attributes:
+            existingUser: user added to database, so it exists already when calling postParticipant()
+            user: returned user from postParticipant()
+            e: exception raised by postParticipant()
+        Arguments:
+            testClient: the test client we test this for
+            initDatabase: the database instance we test this for
+    '''
+
+    del testClient, initDatabase
+    
+    # Add user with username 'par_existing@tue.nl'
+    existingUser = User(username="par_existing@tue.nl", password_plaintext="TestPass1", role="participant")
+    db.session.add(existingUser)
+    db.session.commit()
+
+    # Try to add a new participant with username 'par_existing@tue.nl' to the database 
+    with raises(Exception) as e:
+        user = postParticipant("par_existing@tue.nl", "TestPass1")
+    # Check for the correct error message
+    assert str(e.value) == "User exists already"
 
 def testPostParticipantToProject(testClient, initDatabase):
     '''

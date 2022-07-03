@@ -104,69 +104,6 @@ def getPDFText(path, returnReferences=False, returnReferencesText=False, include
         return True, text, referenceText
     return True, text
 
-
-def extractStringFromFile(path):
-    """
-    Retrieves text from a pdf, docx or txt file at path and returns a string with the text.
-    If file at path has a different extension, a type error is thrown
-    Attributes:
-        name: Name of file at path without file extension
-        fileExtension: File extension of file at path
-        text: String of text extracted from file at path
-    Arguments:
-        path: Path of file which will be extracted
-    Returns:
-        text: Text of file as a string
-    """
-
-    name, fileExtension = os.path.splitext(path)
-    text = ""
-
-    if fileExtension == ".txt":
-        text = getTXTText(path)
-    elif fileExtension == ".pdf":
-        text = getPDFText(path)
-    elif fileExtension == ".docx":
-        text = getDOCXText(path)
-    else:
-        raise TypeError("File type is not pdf, docx or txt")
-    return text
-
-def convertStringToTXT(string, path):
-    """
-    Writes string to txt file at path.
-    If this is not possible an exception is thrown.
-    Arguments:
-        string: String to write
-        path: Path of file to which the string is written
-    """
-
-    try:
-        with open(path, 'w') as f:
-            f.write(string)
-    except Exception as e:
-        raise ValueError("Couldn't write to txt")
-
-def convertFileToTXT(pathIn, pathOut):
-    """
-    Retrieves text from a pdf, docx or txt file at path as string and writes to txt file at pathOut.
-    If input file has a wrong type, a type error is thrown. 
-    If writing to output file fails, a value error is thrown.
-    Attributes:
-        string: String of text extracted from file at pathIn
-    Arguments: 
-        pathIn: Path of file which will be extracted
-        pathOut: Path of file to which result will be written
-    """
-
-    try:
-        string = extractStringFromFile(pathIn)
-        convertStringToTXT(string, pathOut)
-    except TypeError as e:
-        raise TypeError(e.args[0])
-    except ValueError as e:
-        raise ValueError(e.args[0])
-
 def splitBlocks(blocks):
     """
     Splits blocks with empty lines into separate blocks, as they are separate paragraphs.
