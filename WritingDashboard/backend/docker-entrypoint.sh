@@ -1,7 +1,7 @@
 #!/bin/sh
 flask db upgrade
 # If the ADMIN_USERNAME and ADMIN_PASSWORD environment variabels are set, create an admin account:
-if ! [ -z "$ADMIN_USERNAME" ] || [ -z "$ADMIN_PASSWORD" ]; then
+if ! [ -z "${ADMIN_USERNAME}" ] && ! [ -z "${ADMIN_PASSWORD}" ]; then
 echo "creating admin"
 touch addAdmin.py
 cat >> addAdmin.py << EOF
