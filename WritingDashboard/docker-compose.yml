@@ -7,10 +7,12 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      PORT: 8080
-      URL: localhost
+      PORTHTTP: 80
+      PORT: 443
+      URL: writingdashboard.xyz
     ports:
-      - 8080:8080
+      - 80:80
+      - 443:443
     depends_on:
       - api
     links:
