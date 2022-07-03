@@ -32,7 +32,8 @@ services:
       DATABASE_URL: postgresql+psycopg2://writingdashboard:6yE-N0vv~?(trP:B@db:5432/writingdashboard
       NUMWORKERS: 3
       NUMTHREADS: 3
-      FRONTEND_URL: http://localhost:8080
+      ADMIN_USERNAME:
+      ADMIN_PASSWORD:
   db:
     environment:
       POSTGRES_USER: writingdashboard
