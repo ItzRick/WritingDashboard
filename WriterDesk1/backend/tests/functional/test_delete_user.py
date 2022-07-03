@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, date
+from datetime import date
 
 from app import db
 from app.models import User, Files, Explanations, Projects, ParticipantToProject, Scores
@@ -321,3 +321,4 @@ def testDeleteSelf(testClient, initDatabase):
                                headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
     assert response.data == b'Account deleted!'
+

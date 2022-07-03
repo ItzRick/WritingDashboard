@@ -153,7 +153,7 @@ def setExplanationDB(fileId, type, explanation, explId = -1, mistakeText = '', X
     # upload
     uploadToDatabase(explanationIndb)
 
-    return True, 'successfully uploaded Explanations'
+    return True, 'Successfully uploaded Explanations'
 
 def getExplanationsFileType(fileId, explType):
     '''

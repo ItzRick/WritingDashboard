@@ -269,7 +269,7 @@ def testRecordsToCsv(testClient, initDatabase):
 
     # Get location of test csv file
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    testFilePath = os.path.join(BASEDIR, 'testcsv.csv')
+    testFilePath = os.path.join(BASEDIR, 'testFiles', 'testcsv.csv')
 
     # Get content from new csv file and test csv file
     with open(path, 'r', encoding="utf-8-sig") as csv1, open(testFilePath, 'r', encoding="utf-8-sig") as csv2:
