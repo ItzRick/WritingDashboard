@@ -245,7 +245,7 @@ def testRemoveFileWithoutAccessToken (testClient, initDatabase):
     '''
         A method to test if a user is able to delete a file from an other user. Expect a 403 status code
         Attributes: 
-            BASEDIR: Location of the conftest.py file.
+            BASEDIR: Location of the current file.
             fileDir: Location of the file we are testing the upload of.
             data: The data we are trying to test the upload with.
             response: Response of the post request.
@@ -255,7 +255,6 @@ def testRemoveFileWithoutAccessToken (testClient, initDatabase):
             initDatabase: Database for test
     '''
     del initDatabase
-    ### This part is already from test case test_upload_1 
     # Define variables
     fileName='SEP_1.pdf'
     date1=date(2019, 2, 12)
@@ -284,7 +283,6 @@ def testRemoveFileWithoutAccessToken (testClient, initDatabase):
     # See if the correct data has been added to the database which we retrieve by the filename:
     file = Files.query.filter_by(filename=secure_filename(fileName)).first()
     assert file.filename == fileName
-    ###
 
     # Define a string with the id to use in response2
     data1 = {
@@ -298,12 +296,13 @@ def testRemoveFileWithoutAccessToken (testClient, initDatabase):
     response = testClient.delete('/fileapi/filedelete', data=data1,
                                     headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 403
+    assert response.data == b'Unauthorized'
 
 def testRemoveNonExistingFile (testClient, initDatabase):
     '''
         A method to test if a user is able to delete a file that doesn't exist on path; Expect a 404 statuscode
         Attributes: 
-            BASEDIR: Location of the conftest.py file.
+            BASEDIR: Location of the current file.
             fileDir: Location of the file we are testing the upload of.
             data: The data we are trying to test the upload with.
             response: Response of the post request.
