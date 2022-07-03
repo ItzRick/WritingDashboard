@@ -67,7 +67,7 @@ def testUploadTextFileIncorrect(testClient, initDatabase):
     # Get the location and filename of this specific file:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
     fileName = 'SEP202122Q4.xlsx'
-    fileDir = os.path.join(BASEDIR, fileName)
+    fileDir = os.path.join(BASEDIR, 'testFiles', fileName)
     # Create the data packet:
     data = {
         'files': (open(fileDir, 'rb'), fileName)
@@ -99,7 +99,7 @@ def testUploadTextFileCorrupt(testClient, initDatabase):
     # Get the location and filename of this specific file:
     fileName = 'file_corrupt.txt'
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, fileName)
+    fileDir = os.path.join(BASEDIR, 'testFiles', fileName)
     # Create the data packet:
     data = {
         'files': (open(fileDir, 'rb'), fileName)

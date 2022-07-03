@@ -1,6 +1,6 @@
 from app.feedback.feedback import genFeedback
 from app.models import Files, Explanations, User, Scores
-from app.scoreapi.scores import setScoreDB, getCurrentExplanationVersion
+from app.scoreapi.scores import setScoreDB
 from tests.functional.test_set_role import loginHelper
 from datetime import date
 import os
@@ -24,7 +24,7 @@ def uploadFile(fileName, testClient):
     user = User.query.filter_by(username='ad').first()
     # Get the BASEDIR and set the fileDir with that:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, fileName)
+    fileDir = os.path.join(BASEDIR, 'testFiles', fileName)
     # Create the data packet:
     data = {
         'files': (open(fileDir, 'rb'), fileName),

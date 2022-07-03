@@ -17,7 +17,7 @@ def testGetDocxHeading(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'headingTest.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'headingTest.docx')
 
     isSuccesful, text, references = getDOCXText(fileDir)
     isSuccesful == True
@@ -39,7 +39,7 @@ def testGetDocxReferences(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'referencesTest.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'referencesTest.docx')
 
     isSuccesful, text, references = getDOCXText(fileDir)
     isSuccesful == True
@@ -61,7 +61,7 @@ def testGetDocxImages(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'imagesTest.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'imagesTest.docx')
 
     isSuccesful, text, references = getDOCXText(fileDir)
     isSuccesful == True
@@ -83,7 +83,7 @@ def testGetDocxTextboxes(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'textboxTest.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'textboxTest.docx')
 
     isSuccesful, text, references = getDOCXText(fileDir)
     isSuccesful == True
@@ -105,7 +105,7 @@ def testGetDocxEmptyFile(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'emptyFile.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'emptyFile.docx')
 
     isSuccesful, text, references = getDOCXText(fileDir)
     isSuccesful == True
@@ -127,7 +127,7 @@ def testGetDocxCorruptedFile(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'corruptedFile.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'corruptedFile.docx')
 
     isSuccesful, message, references = getDOCXText(fileDir)
     isSuccesful == False
@@ -149,7 +149,7 @@ def testGetDocxInvalidFile(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'invalidFileName.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'invalidFileName.docx')
 
     isSuccesful, message, references = getDOCXText(fileDir)
     isSuccesful == False
@@ -171,7 +171,7 @@ def testGetDocxInvalidExtension(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'invalidFileExtension.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'invalidFileExtension.pdf')
 
     isSuccesful, message, references = getDOCXText(fileDir)
     isSuccesful == False
@@ -194,7 +194,7 @@ def testSubtractTextFromParagraphSingle(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'paragraphtestsingle.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'paragraphtestsingle.docx')
     doc = docx.Document(fileDir)
 
     para = doc.paragraphs[0]  # First paragraph of document
@@ -218,7 +218,7 @@ def testSubtractTextFromParagraphSingleRefs(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'paragraphtestsingle.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'paragraphtestsingle.docx')
     doc = docx.Document(fileDir)
 
     para = doc.paragraphs[0]  # First paragraph of document
@@ -242,7 +242,7 @@ def testSubtractTextFromParagraphMultiple(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'paragraphtestmultiple.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'paragraphtestmultiple.docx')
     doc = docx.Document(fileDir)
 
     para1 = doc.paragraphs[0]  # First paragraph of document
@@ -271,7 +271,7 @@ def testSubtractTextFromParagraphTextbox(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'paragraphtesttextbox.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'paragraphtesttextbox.docx')
     doc = docx.Document(fileDir)
 
     para = doc.paragraphs[0]  # First paragraph of document
@@ -296,7 +296,7 @@ def testSubtractTextFromParagraphAppend(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'paragraphtestsingle.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'paragraphtestsingle.docx')
     doc = docx.Document(fileDir)
 
     para = doc.paragraphs[0]  # First paragraph of document
@@ -321,7 +321,7 @@ def testSubtractTextFromParagraphAppendRefs(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'paragraphtestsingle.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'paragraphtestsingle.docx')
     doc = docx.Document(fileDir)
 
     para = doc.paragraphs[0]  # First paragraph of document
@@ -346,7 +346,7 @@ def testSubtractTextFromParagraphAppendBoth(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'paragraphtestmultiple.docx')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'paragraphtestmultiple.docx')
     doc = docx.Document(fileDir)
 
     para1 = doc.paragraphs[0]  # First paragraph of document

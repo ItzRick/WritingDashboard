@@ -1,4 +1,4 @@
-from test_genFeedback import uploadFile
+from test_genFeedback_1 import uploadFile
 from app.models import Files, Scores, Explanations
 import fitz
 from tests.functional.test_set_role import loginHelper

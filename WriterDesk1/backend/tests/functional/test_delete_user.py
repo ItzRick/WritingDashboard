@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, date
+from datetime import date
 
 from app import db
 from app.models import User, Files, Explanations, Projects, ParticipantToProject, Scores
@@ -41,7 +41,7 @@ def testDeleteUser(testClient, initDatabase):
     userID = User.query.filter_by(username='John').first().id
     # Get the BASEDIR and set the fileDir with that:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'SEP_1.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'SEP_1.pdf')
     # Create the data packet:
     data = {
         'files': (open(fileDir, 'rb'), 'SEP_1.pdf'),
@@ -321,3 +321,4 @@ def testDeleteSelf(testClient, initDatabase):
                                headers={"Authorization": "Bearer " + access_token})
     assert response.status_code == 200
     assert response.data == b'Account deleted!'
+

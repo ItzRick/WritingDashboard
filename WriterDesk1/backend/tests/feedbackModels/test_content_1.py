@@ -47,7 +47,7 @@ def testCountParagraphsThree(testClient):
     feedbackObject = IntegrationContentFeedback(text, '', 1, 1, '')
     assert feedbackObject.countParagraphs(text) == 3
 
-def testWordsSources(testClient, englishStopwords):
+def testWordsSources(testClient):
     '''
         Test the wordsSource method on a single string of words, which mimics a source text.
         Attributes: 
@@ -99,7 +99,7 @@ def testWordsSourcesMultiple(testClient, englishStopwords):
     wordsWoStopwords = feedbackObject.wordsSource(textSecond, wordsWoStopwordsInitial)
     assert wordsWoStopWordsExpectedSecond == wordsWoStopwords
 
-def testWordsText(testClient, englishStopwords):
+def testWordsText(testClient):
     '''
         Test the wordsText method on a text of words, which mimics a source texts.
         Attributes: 
@@ -122,7 +122,7 @@ def testWordsText(testClient, englishStopwords):
     assert count == 13
     assert wordsDict == expectedDictWords
 
-def testWordsTextSecond(testClient, englishStopwords):
+def testWordsTextSecond(testClient):
     '''
         Test the wordsText method on a small text, consisting of 1 paragraph.
         Attributes: 

@@ -16,7 +16,7 @@ def testGetTxtFile(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'normalFile.txt')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'normalFile.txt')
 
     isSuccesful, actualOutput = getTXTText(fileDir)
     assert isSuccesful == True
@@ -36,7 +36,7 @@ def testGetDocxEmptyFile(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'emptyFile.txt')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'emptyFile.txt')
 
     isSuccesful, message = getTXTText(fileDir)
     assert isSuccesful == False
@@ -55,7 +55,7 @@ def testGetDocxCorruptedFile(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'corruptedFile.txt')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'corruptedFile.txt')
 
     isSuccesful, message =  getTXTText(fileDir)
     assert isSuccesful == False
@@ -74,7 +74,7 @@ def testGetDocxInvalidFile(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'invalidFileName.txt')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'invalidFileName.txt')
 
     isSuccesful, message = getTXTText(fileDir)
     assert isSuccesful == False
@@ -93,7 +93,7 @@ def testGetDocxInvalidExtension(testClient):
     """
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'invalidFileExtension.doc')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'invalidFileExtension.doc')
 
     isSuccesful, message = getTXTText(fileDir)
     assert isSuccesful == False

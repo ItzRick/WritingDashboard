@@ -69,7 +69,7 @@ def testRouteRemoveFileFromDatabase(testClient, initDatabaseEmpty):
 
     # Get the BASEDIR and set the fileDir with that:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, fileName)
+    fileDir = os.path.join(BASEDIR, 'testFiles', fileName)
     # Create the data packet:
     data = {
         'files': (open(fileDir, 'rb'), fileName),
@@ -135,7 +135,7 @@ def testRouteRemoveFileFromDatabaseMultiple(testClient, initDatabaseEmpty):
 
     # Get the BASEDIR and set the fileDir with that:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, fileName1)
+    fileDir = os.path.join(BASEDIR, 'testFiles', fileName1)
     # Create the data packet:
     data = {
         'files': (open(fileDir, 'rb'), fileName1),
@@ -163,7 +163,7 @@ def testRouteRemoveFileFromDatabaseMultiple(testClient, initDatabaseEmpty):
 
     # Get the BASEDIR and set the fileDir with that:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, fileName2)
+    fileDir = os.path.join(BASEDIR, 'testFiles', fileName2)
     # Create the data packet:
     data = {
         'files': (open(fileDir, 'rb'), fileName2),
@@ -264,7 +264,7 @@ def testRemoveFileWithoutAccessToken (testClient, initDatabase):
 
     # Get the BASEDIR and set the fileDir with that:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, fileName)
+    fileDir = os.path.join(BASEDIR, 'testFiles', fileName)
     # Create the data packet:
     data = {
         'files': (open(fileDir, 'rb'), fileName),
