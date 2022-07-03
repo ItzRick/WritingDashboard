@@ -1,5 +1,5 @@
 from distutils.command.upload import upload
-from app.models import Files
+from app.models import Files, User
 from app.database import uploadToDatabase, getFilesByUser, removeFromDatabase
 from app import db
 from datetime import datetime, date
@@ -240,3 +240,105 @@ def testRouteRemoveNonexistingFileFromDatabase(testClient, initDatabaseEmpty):
 
     # Check that the correct error message is given 
     assert response2.status_code == 404
+
+def testRemoveFileWithoutAccessToken (testClient, initDatabase):
+    '''
+        A method to test if a user is able to delete a file from an other user. Expect a 403 status code
+        Attributes: 
+            BASEDIR: Location of the current file.
+            fileDir: Location of the file we are testing the upload of.
+            data: The data we are trying to test the upload with.
+            response: Response of the post request.
+            access_token: Access token used in header of requests
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: Database for test
+    '''
+    del initDatabase
+    # Define variables
+    fileName='SEP_1.pdf'
+    date1=date(2019, 2, 12)
+    userId = 123
+    courseCode = '2IPE0'
+    id1 = 1
+
+    # Get the BASEDIR and set the fileDir with that:
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, fileName)
+    # Create the data packet:
+    data = {
+        'files': (open(fileDir, 'rb'), fileName),
+        'id': id1,
+        'fileName': fileName,
+        'courseCode': courseCode,
+        'userId': userId,
+        'date': date1
+    }
+
+    # Create the response by means of the post request:
+    access_token = loginHelper(testClient, 'ad', 'min')
+    testClient.post('/fileapi/upload', data=data,
+                    headers={"Authorization": "Bearer " + access_token})
+
+    # See if the correct data has been added to the database which we retrieve by the filename:
+    file = Files.query.filter_by(filename=secure_filename(fileName)).first()
+    assert file.filename == fileName
+
+    # Define a string with the id to use in response2
+    data1 = {
+        'id': id1,
+    }
+
+    # access token of user who is not owner of the file
+    access_token = loginHelper(testClient, 'Donald', 'Duck')
+
+    # Delete the file, without use of authorization header
+    response = testClient.delete('/fileapi/filedelete', data=data1,
+                                    headers={"Authorization": "Bearer " + access_token})
+    assert response.status_code == 403
+    assert response.data == b'Unauthorized'
+
+def testRemoveNonExistingFile (testClient, initDatabase):
+    '''
+        A method to test if a user is able to delete a file that doesn't exist on path; Expect a 404 statuscode
+        Attributes: 
+            BASEDIR: Location of the current file.
+            fileDir: Location of the file we are testing the upload of.
+            data: The data we are trying to test the upload with.
+            response: Response of the post request.
+            access_token: Access token used in header of requests
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabase: Database for test
+    '''
+    del initDatabase
+    # Define variables
+    fileName='SEP_1.pdf'
+    date1=date(2019, 2, 12)
+    userId = User.query.filter_by(username='ad').first().id
+    courseCode = '2IPE0'
+
+    # Add new file row to database without uploading file
+    file = Files(path= '/SEP/Files/NonExisting.pdf', filename= fileName, userId = userId, courseCode = courseCode, date = date1, fileType ='.pdf')
+    db.session.add(file)
+    db.session.commit
+
+    # See if the correct data has been added to the database which we retrieve by the filename:
+    file = Files.query.filter_by(filename=fileName).first()
+
+    assert file.filename == fileName
+
+    # Define a string with the id to use in response2
+    data1 = {
+        'id': file.id,
+    }
+
+    # access token of user who is not owner of the file
+    access_token = loginHelper(testClient, 'ad', 'min')
+    
+    # Delete the file
+    response = testClient.delete('/fileapi/filedelete', data=data1,
+                                    headers={"Authorization": "Bearer " + access_token})
+    # Get 404 as file doesn't exist on path
+    assert response.status_code == 404
+    assert response.data == b'file does not exist'
