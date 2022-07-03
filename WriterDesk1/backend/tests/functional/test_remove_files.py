@@ -341,3 +341,4 @@ def testRemoveNonExistingFile (testClient, initDatabase):
                                     headers={"Authorization": "Bearer " + access_token})
     # Get 404 as file doesn't exist on path
     assert response.status_code == 404
+    assert response.data == b'file does not exist'
