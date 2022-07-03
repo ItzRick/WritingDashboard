@@ -1,4 +1,4 @@
-from app.scoreapi.scores import setExplanationDB, removeExplanationsAndScores, setScoreDB
+from app.scoreapi.scores import setExplanationDB, removeExplanationsAndScores, setScoreDB, removeExplanationsFileType
 from app.models import Files, Explanations, Scores
 from decimal import Decimal
 
@@ -115,7 +115,34 @@ def testRemoveExplanationsAndScores(testClient, initDatabase):
     mistakeText = 'mistake', X1 = -1, X2 = -1, Y1 = -1, Y2 = -1, replacement1 = '', replacement2 = '', 
     replacement3 = '', feedbackVersion = 0.01)
     assert len(Explanations.query.filter_by(fileId=file.id).all()) == 1
-    # Call the removeExplanationsAndScores method and check if the scores and files have been successfully removed:
+    # Call the removeExplanationsAndScores method and check if the scores and explanations have been successfully removed:
     removeExplanationsAndScores(file.id)
     assert len(Scores.query.filter_by(fileId=file.id).all()) == 0
     assert len(Explanations.query.filter_by(fileId=file.id).all()) == 0
+
+def testRemoveExplanationsFileTypes(testClient, initDatabase):
+    '''
+        Test if the removeExplanationsFileType method removes all explanations of a certain type corresponding to a file.
+        Attributes:
+            file: An instance of the Files class as uploaded to the database.
+        Arguments:
+            testClient:  The test client we test this for.
+            initDatabaseEmpty: the database instance we test this for.
+    '''
+    del testClient, initDatabase
+    # Retrieve a file from the database:
+    file = Files.query.first()
+    # Upload two explanations for this file:
+    setExplanationDB(fileId = file.id, type = 0, explanation = 'explanation', explId = -1, 
+    mistakeText = 'mistake', X1 = -1, X2 = -1, Y1 = -1, Y2 = -1, replacement1 = '', replacement2 = '', 
+    replacement3 = '', feedbackVersion = 0.01)
+    setExplanationDB(fileId = file.id, type = 1, explanation = 'explanation', explId = -1, 
+    mistakeText = 'mistake', X1 = -1, X2 = -1, Y1 = -1, Y2 = -1, replacement1 = '', replacement2 = '', 
+    replacement3 = '', feedbackVersion = 0.01)
+    # Check if there are 1 explanation of type 0 and two in total:
+    assert len(Explanations.query.filter_by(fileId=file.id).all()) == 2
+    assert len(Explanations.query.filter_by(fileId=file.id, type=0).all()) == 1
+    # Call the removeExplanationsAndScores method and check if the explanations have been successfully removed:
+    removeExplanationsFileType(file.id, 0)
+    assert len(Explanations.query.filter_by(fileId=file.id).all()) == 1
+    assert len(Explanations.query.filter_by(fileId=file.id, type=0).all()) == 0
