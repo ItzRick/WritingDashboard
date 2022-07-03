@@ -129,3 +129,4 @@ yarn-error.log*
 **/saved_documents
 **/package-lock.json
 **/.vscode
+**/node_modules
