@@ -15,7 +15,7 @@ WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 COPY --from=build-stage /app/build .
 COPY ./nginx.conf /etc/nginx/conf.d/configfile.template
-COPY ./cert.pem /etc/nginx/certs/cert.pem
-COPY ./key.pem /etc/nginx/certs/key.pem
+COPY ./${SSL_KEY} /etc/nginx/certs/${SSL_KEY}
+COPY ./${SSL_CERT} /etc/nginx/certs/${SSL_CERT}
 EXPOSE $PORT
-CMD sh -c "envsubst '\$PORT, \$URL, \$PORTHTTP' < /etc/nginx/conf.d/configfile.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+CMD sh -c "envsubst '\$PORT, \$URL, \$PORTHTTP, \$SSL_KEY, \$SSL_CERT, ' < /etc/nginx/conf.d/configfile.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"

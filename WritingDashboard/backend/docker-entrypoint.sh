@@ -1,3 +1,3 @@
 #!/bin/sh
 flask db upgrade
-gunicorn -b :${PORT} --workers=${NUMWORKERS} --threads=${NUMTHREADS} wsgi:app
+gunicorn -b :5000 --workers=${NUMWORKERS} --threads=${NUMTHREADS} wsgi:app
