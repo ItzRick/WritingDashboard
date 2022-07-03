@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 
 services:
   frontend:
@@ -7,6 +7,13 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      NODE_ENV: production
+      $PORT: 433
     ports:
-      - 3000:3000
+      - 433:433
+  api: 
+    image: api
+    build: 
+      context: ./backend
+      dockerfile: ./backend/Dockerfile
+    environment:
+
