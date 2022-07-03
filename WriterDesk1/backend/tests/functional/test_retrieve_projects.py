@@ -218,12 +218,12 @@ def testRetrieveOnlyProjectsOfUser(testClient, initDatabase):
     # Check if the expected response is correct:
     assert json.loads(response.data) == expected_response
 
-def testRetrieveOnlyProjectsOfUser(testClient, initDatabase): 
+def testRetrieveOnlyProjectsOfUser(testClient, initDatabase):
     '''
-        This tests checks that multiple projects are given when the 
+        This tests checks that multiple projects are given when the
         specified user, here with user id 200, has multiple projects.
         Their projects are not the only ones in the database.
-        Attributes: 
+        Attributes:
             access_token: access token for ad min
             adId: userId of the admin
             project1: new project
@@ -231,9 +231,9 @@ def testRetrieveOnlyProjectsOfUser(testClient, initDatabase):
             project3: new project
             response: the result of retrieving the files in the specified order
             expected_response: response we expected
-        Arguments: 
+        Arguments:
             testClient:  the test client we test this for.
-            initDatabase: the database instance we test this for. 
+            initDatabase: the database instance we test this for.
     '''
     del initDatabase
     # get access token for ad min
@@ -248,7 +248,7 @@ def testRetrieveOnlyProjectsOfUser(testClient, initDatabase):
     # We try to retrieve the projects of the user
     response = testClient.get('/projectapi/viewProjectsOfUser', headers = {"Authorization": "Bearer " + access_token})
 
-    # Check if the expected response has the correct status code    
+    # Check if the expected response has the correct status code
     assert response.status_code == 403
 
     # Check if the expected response is correct:
