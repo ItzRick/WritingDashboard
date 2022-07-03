@@ -264,7 +264,7 @@ def testRemoveFileWithoutAccessToken (testClient, initDatabase):
 
     # Get the BASEDIR and set the fileDir with that:
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, fileName)
+    fileDir = os.path.join(BASEDIR, 'testFiles', fileName)
     # Create the data packet:
     data = {
         'files': (open(fileDir, 'rb'), fileName),
