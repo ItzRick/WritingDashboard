@@ -1,4 +1,4 @@
-describe('Test the participants page', () => {
+describe('Test the users page', () => {
     beforeEach(() => {
         cy.visit('https://localhost:3000/Login')
         cy.get('[id="username"]')

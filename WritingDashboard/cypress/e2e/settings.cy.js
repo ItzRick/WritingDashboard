@@ -1,4 +1,4 @@
-describe('Test the projects page', () => {
+describe('Test the settings page', () => {
     beforeEach(() => {
         cy.visit('https://localhost:3000/Login')
         cy.get('[id="username"]')
@@ -6,15 +6,15 @@ describe('Test the projects page', () => {
         cy.get('[id="password"]')
             .type('AdminPass1')
         cy.get('[id="login"]').click()
-        cy.get('[id="Projects"]').click()
+        cy.get('[id="Settings"]').click()
       })
 
     it('Checks if all elements are present.', () => {
-        cy.contains('Add project')
-        cy.contains('Projects')
-        cy.contains('Project name')
-        cy.contains('Nr. of participants')
-        cy.contains('Actions')
+        cy.contains('Settings')
+        cy.contains('Data setting')
+        cy.contains('Change password')
+        cy.contains('Change email')
+        cy.contains('Delete account')
     })
 
   })
