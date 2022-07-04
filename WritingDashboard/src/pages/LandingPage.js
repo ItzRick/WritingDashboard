@@ -36,9 +36,9 @@ const LandingPage = () => {
       <Typography variant='h5'>Improve your academic writing.</Typography>
       <br />
       <div className='center'>
-        <BlueButton pathName='/Login'>Log in</BlueButton>
+        <BlueButton idStr='login' pathName='/Login'>Log in</BlueButton>
         <div className='filler'></div>
-        <BlueButton pathName='/SignUp'>Sign up</BlueButton>
+        <BlueButton idStr='signup' pathName='/SignUp'>Sign up</BlueButton>
       </div>
       <br /><br />
       <div className='center'>
