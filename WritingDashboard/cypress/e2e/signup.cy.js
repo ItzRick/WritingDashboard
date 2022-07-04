@@ -133,4 +133,23 @@ describe('Test the signup page', () => {
         cy.contains('Log in')
     })
 
+    it('Checks if we can create and delete an account'), () => {
+        cy.get('[id="email"]').type('validemail@student.tue.nl')
+        cy.get('[id="email2"]').type('validemail@student.tue.nl')
+        cy.get('[id="password"]').type('validPassword1')
+        cy.get('[id="password2"]').type('validPassword1')
+        cy.get('[id="necData"]').click()
+        cy.get('[id="signup"]').click()
+        cy.get('[id="ok"]').click()
+        cy.url().should('include', '/Login')
+        cy.get('[id="username"]').type('validemail@student.tue.nl')
+        cy.get('[id="password"]').type('validPassword1')
+        cy.get('[id="login"]').click()
+        cy.url().should('include', '/Main')
+        cy.get('[id="settings"]').click()
+        cy.get('[id="delete"]').click()
+        cy.get('[id="yes"]').click()
+        cy.url().should('include', '/Login')
+    }
+
   })

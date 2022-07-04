@@ -211,7 +211,7 @@ const SignUp = () => {
                             />}
                         </div>
                         <div style={{display: 'flex', alignSelf: 'flex-end', verticalAlign: 'middle'}}>
-                            <Checkbox sx={{alignSelf: 'center'}} onChange={(e) => {setAcceptNeceData(e.target.checked)}} />
+                            <Checkbox id='necData' sx={{alignSelf: 'center'}} onChange={(e) => {setAcceptNeceData(e.target.checked)}} />
                             <Typography sx={{alignSelf: 'center', alignContent:'inline'}}>
                             I allow the storage and execution of <button className='userDataLinkPopup' onClick={() => {setShowNeceDataPopup(true)}} >necessary application data</button>.
                             </Typography>
