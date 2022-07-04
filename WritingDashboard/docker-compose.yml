@@ -19,6 +19,7 @@ services:
       - api
     links:
       - "api"
+    restart: always
   api: 
     image: api
     depends_on:
@@ -28,6 +29,7 @@ services:
       dockerfile: ./Dockerfile
     links:
       - "db"
+    restart: always
     environment:
       DATABASE_URL: postgresql+psycopg2://writingdashboard:6yE-N0vv~?(trP:B@db:5432/writingdashboard
       NUMWORKERS: 3
@@ -39,5 +41,6 @@ services:
       POSTGRES_USER: writingdashboard
       POSTGRES_PASSWORD: 6yE-N0vv~?(trP:B
       POSTGRES_DB: writingdashboard
+    restart: always
     image: postgres:14-bullseye
 
