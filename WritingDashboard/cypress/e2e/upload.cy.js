@@ -33,6 +33,12 @@ describe('Test the upload page', () => {
 
         cy.visit('localhost:3000/documents');
         cy.contains('test.txt');
+        cy.get('[id="deletetest.txt"]').click()
+        cy.get('[id="cancel"]').click()
+        cy.contains('test.txt')
+        cy.get('[id="deletetest.txt"]').click()
+        cy.get('[id="agree"]').click()
+        cy.contains('test.txt').should('not.exist')
     });
 });
 
