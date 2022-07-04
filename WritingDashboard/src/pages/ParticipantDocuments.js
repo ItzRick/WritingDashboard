@@ -116,10 +116,10 @@ const ParticipantDocuments = () => {
         // actions
         return <div>
           <Tooltip title="View the feedback of this document.">
-            <IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
+            <IconButton {'navigate' + params.row.filename} onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
           </Tooltip>
           <Tooltip title="Delete this document.">
-            <IconButton onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton>
+            <IconButton {'delete' + params.row.filename} onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton>
           </Tooltip>
         </div>;
       }
