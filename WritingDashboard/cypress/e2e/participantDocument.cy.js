@@ -28,6 +28,7 @@ describe('Test if researcher can see participant documents', () => {
             .type('researcher@tue.nl')
         cy.get('[id="password"]').type('ResearcherPass1')
         cy.get('[id="login"]').click()
+        cy.get('[id="Participants"]').click()
         cy.get('[id="documentspar_3"]').click()
         cy.get('id="deletetest.txt"]').click()
     })
