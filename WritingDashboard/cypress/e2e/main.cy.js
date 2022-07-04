@@ -1,6 +1,9 @@
 describe('Test the homepage', () => {
     beforeEach(() => {
         cy.visit('localhost:3000/Login')
+        Cypress.on('uncaught:exception', (err, runnable) => {
+            return false
+        })
         cy.get('[id="username"]')
             .type('admin@tue.nl')
         cy.get('[id="password"]')
