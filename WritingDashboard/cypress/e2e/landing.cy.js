@@ -64,7 +64,7 @@ describe('Test the loginpage', () => {
             .type('admin')
         cy.get('[id="password"]')
             .type('admin')
-        cy.get('[id="loginButton"]')
+        cy.get('[id="login"]')
             .click()
         cy.url().should('include', '/Main')
     })
