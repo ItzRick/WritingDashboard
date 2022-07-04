@@ -2,9 +2,9 @@ describe('Test the feedback models page', () => {
     beforeEach(() => {
         cy.visit('https://localhost:3000/Login')
         cy.get('[id="username"]')
-            .type('admin')
+            .type('admin@tue.nl')
         cy.get('[id="password"]')
-            .type('admin')
+            .type('AdminPass1')
         cy.get('[id="login"]').click()
         cy.get('[id="Feedback Models"]').click()
       })
