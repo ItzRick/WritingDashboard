@@ -32,7 +32,7 @@ function FeedbackModels() {
   return (
     <>
       <div className='vertCenter' style={{textAlign: 'center', display:'inline-block'}}>
-          To change the feedback model, go to <Link href='https://github.com/ItzRick/WritingDashboard'>https://github.com/ItzRick/WritingDashboard</Link>, 
+          To change the feedback model, go to <Link id='link' href='https://github.com/ItzRick/WritingDashboard'>https://github.com/ItzRick/WritingDashboard</Link>,
           create a new branch and change the code there. To change the feedback model, go to the WriterDesk1/backend/app/feedback/generateFeedback folder
           and change any of the feedbackmodels. These models are located inside the CohesionFeedback, IntegrationContentFeedback, LanguageStyleFeedback
           and StructureFeedback folders. It may also be necessary to make changes to the BaseFeedback class. Do not forget to change the feedbackversion 
