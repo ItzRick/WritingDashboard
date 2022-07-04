@@ -33,10 +33,6 @@ def addParticipantsToExistingProject():
     nrOfParticipants = int(request.json.get("nrOfParticipants", None))
     projectId = int(request.json.get("projectid", None))
 
-    # Check if current user exists
-    if User.query.filter_by(id=current_user.id).first() is None:
-        return 'user not found', 404
-
     # Try to register new user in database
     try:
         data = gp.generateParticipants(nrOfParticipants, projectId)
