@@ -1,7 +1,7 @@
 describe('Test the loginpage', () => {
     beforeEach(() => {
         cy.visit('https://localhost:3000/')
-        cy.get('[id="loginButton"]')
+        cy.get('[id="login"]')
         .click()
       })
 
@@ -46,7 +46,7 @@ describe('Test the loginpage', () => {
         .should('have.value', 'test')
         cy.contains('label', 'Password')
 
-        cy.get('[id="loginButton"]')
+        cy.get('[id="login"]')
         .contains('Log in')
         .click()
         cy.contains('Invalid username and/or password')
