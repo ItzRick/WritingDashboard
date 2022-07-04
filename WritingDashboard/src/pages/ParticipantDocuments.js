@@ -234,8 +234,8 @@ const ParticipantDocuments = () => {
     <>
       {showDeleteDialog &&
         <AlertDialog title="Delete file" text="Are you sure you want to delete this file?"
-          buttonAgree={<Button style={{ color: "red" }} onClick={(e) => { deleteFile(e, deleteId) }}>Yes</Button>}
-          buttonCancel={<Button onClick={(e) => { setShowDeleteDialog(false) }}>Cancel</Button>}
+          buttonAgree={<Button id='agree' style={{ color: "red" }} onClick={(e) => { deleteFile(e, deleteId) }}>Yes</Button>}
+          buttonCancel={<Button id='disagree' onClick={(e) => { setShowDeleteDialog(false) }}>Cancel</Button>}
         />}
       {showDeleteDialogMultiple &&
         <AlertDialog title="Delete files" text="Are you sure you want to delete the selected files?"
