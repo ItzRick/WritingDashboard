@@ -15,19 +15,19 @@ describe('Test the homepage', () => {
     })
 
     it('Checks if we can go to the documents page.', () => {
-        cy.get('ViewDocuments').click()
+        cy.get('[id="ViewDocuments"]').click()
         cy.url().should('include', '/Documents')
         cy.contains('Documents')
     })
 
     it('Checks if we can go to the progress page.', () => {
-        cy.get('progressLink').click()
+        cy.get('[id="progressLink"]').click()
         cy.url().should('include', '/Progress')
         cy.contains('Progress')
     })
 
     it('Checks if we can go to the upload page.', () => {
-        cy.get('[id="upload"]').click()
+        cy.get('[id="UploadDocument"]').click()
         cy.url().should('include', '/Upload')
         cy.contains('Upload')
     })

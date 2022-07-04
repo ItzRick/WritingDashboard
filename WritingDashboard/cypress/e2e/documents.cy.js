@@ -28,8 +28,8 @@ describe('Test the documents page', () => {
 
     it('Checks if we can go to the document page and delete a file.', () => {
         cy.get('[id="Upload"]').click()
-        cy.get('[id="add"]').click()
-        cy.get('[id="remove"]').eq(1).click()
+        cy.get('[id="AddUploadRow"]').click()
+        cy.get('[id="RemoveUploadRow"]').eq(1).click()
         cy.fixture('test.txt').then(fileContent => {
             cy.get('input[type="file"]').attachFile('test.txt');
             cy.get('[id="course"]')
