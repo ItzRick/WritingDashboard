@@ -11,7 +11,7 @@ describe('Test the progress page', () => {
 
     it('Checks if all elements are present.', () => {
         cy.contains('Progress')
-        cy.contains('Average score per skill category')
+        cy.contains('Average scores of the last 5 documents')
         cy.contains('Progress over time')
     })
 

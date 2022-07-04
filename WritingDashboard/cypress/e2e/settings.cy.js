@@ -6,7 +6,7 @@ describe('Test the settings page', () => {
         cy.get('[id="password"]')
             .type('AdminPass1')
         cy.get('[id="login"]').click()
-        cy.get('[id="Settings"]').click()
+        cy.get('[id="settings"]').click()
       })
 
     it('Checks if all elements are present.', () => {

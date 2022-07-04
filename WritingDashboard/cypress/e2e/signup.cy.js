@@ -1,7 +1,7 @@
 describe('Test the signup page', () => {
     beforeEach(() => {
         cy.visit('localhost:3000/')
-        cy.get('[id="signupButton"]')
+        cy.get('[id="signup"]')
         .click()
       })
 
@@ -13,10 +13,10 @@ describe('Test the signup page', () => {
         cy.contains('Sign Up')
 
         cy.get('[id="email"]')
-        cy.contains('label', 'example@mail.com')
+        cy.contains('label', 'example@tue.nl')
 
         cy.get('[id="email2"]')
-        cy.contains('label', 'example@mail.com')
+        cy.contains('label', 'example@tue.nl')
 
         cy.get('[id="password"]')
         cy.contains('label', 'Password')
@@ -29,12 +29,12 @@ describe('Test the signup page', () => {
         cy.get('[id="email"]')
         .type('test@student.tue.nl')
         .should('have.value', 'test@student.tue.nl')
-        cy.contains('label', 'example@mail.com')
+        cy.contains('label', 'example@tue.nl')
 
         cy.get('[id="email2"]')
         .type('test@student.tue.nl')
         .should('have.value', 'test@student.tue.nl')
-        cy.contains('label', 'example@mail.com')
+        cy.contains('label', 'example@tue.nl')
 
         cy.get('[id="password"]')
         .type('test')
@@ -133,13 +133,13 @@ describe('Test the signup page', () => {
         cy.contains('Log in')
     })
 
-    it('Checks if we can create and delete an account'), () => {
+    it('Checks if we can create and delete an account', () => {
         cy.get('[id="email"]').type('validemail@student.tue.nl')
         cy.get('[id="email2"]').type('validemail@student.tue.nl')
         cy.get('[id="password"]').type('validPassword1')
         cy.get('[id="password2"]').type('validPassword1')
         cy.get('[id="necData"]').click()
-        cy.get('[id="signup"]').click()
+        cy.get('[id="signButton"]').click()
         cy.get('[id="ok"]').click()
         cy.url().should('include', '/Login')
         cy.get('[id="username"]').type('validemail@student.tue.nl')
@@ -147,9 +147,10 @@ describe('Test the signup page', () => {
         cy.get('[id="login"]').click()
         cy.url().should('include', '/Main')
         cy.get('[id="settings"]').click()
-        cy.get('[id="delete"]').click()
-        cy.get('[id="yes"]').click()
+        cy.get('[id="DeleteMyAccount"]').click()
+        cy.get('[id="agree"]').click()
+        cy.get('[id="ok"]').click()
         cy.url().should('include', '/Login')
-    }
+    })
 
   })

@@ -210,6 +210,7 @@ const Base = ({
           <Typography variant="h6" component="div" sx={{ color: "appBar.text", }}> {title} </Typography>
           <Tooltip title="Settings">
             <IconButton
+              id='settings'
               sx={{
                 justifySelf: "flex-end",
                 color: "appBar.icon",
