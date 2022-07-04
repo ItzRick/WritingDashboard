@@ -17,7 +17,7 @@ def testGetPDFContinuedSentence(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'continuedSentenceFile.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'continuedSentenceFile.pdf')
 
     isSuccesful, text = getPDFText(fileDir)
     assert isSuccesful == True
@@ -106,7 +106,7 @@ def testGetPDFListNotIncluded(testClient):
 
     del testClient
     BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    fileDir = os.path.join(BASEDIR, 'notIncludeListFile.pdf')
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'notIncludeListFile.pdf')
 
     isSuccesful, text = getPDFText(fileDir, includeLists=False)
     assert isSuccesful == True

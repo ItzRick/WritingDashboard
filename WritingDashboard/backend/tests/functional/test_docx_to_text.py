@@ -20,7 +20,7 @@ def testGetDocxHeading(testClient):
     fileDir = os.path.join(BASEDIR, 'testFiles', 'headingTest.docx')
 
     isSuccesful, text, references = getDOCXText(fileDir)
-    isSuccesful == True
+    assert isSuccesful == True
     assert text == 'This is some text.\n\nMore text.'
     assert references == ''
 
@@ -42,7 +42,7 @@ def testGetDocxReferences(testClient):
     fileDir = os.path.join(BASEDIR, 'testFiles', 'referencesTest.docx')
 
     isSuccesful, text, references = getDOCXText(fileDir)
-    isSuccesful == True
+    assert isSuccesful == True
     assert text == 'Text.\n\nMore text.\n\nNew text.'
     assert references == 'Reference 1\n\nReference 2\n\nReference 1\n\nReference 2'
 
@@ -64,7 +64,7 @@ def testGetDocxImages(testClient):
     fileDir = os.path.join(BASEDIR, 'testFiles', 'imagesTest.docx')
 
     isSuccesful, text, references = getDOCXText(fileDir)
-    isSuccesful == True
+    assert isSuccesful == True
     assert text == 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa.'
     assert references == ''
 
@@ -86,7 +86,7 @@ def testGetDocxTextboxes(testClient):
     fileDir = os.path.join(BASEDIR, 'testFiles', 'textboxTest.docx')
 
     isSuccesful, text, references = getDOCXText(fileDir)
-    isSuccesful == True
+    assert isSuccesful == True
     assert text == 'This is text outside a textbox.'
     assert references == ''
 
@@ -108,7 +108,7 @@ def testGetDocxEmptyFile(testClient):
     fileDir = os.path.join(BASEDIR, 'testFiles', 'emptyFile.docx')
 
     isSuccesful, text, references = getDOCXText(fileDir)
-    isSuccesful == True
+    assert isSuccesful == True
     assert text == ''
     assert references == ''
 
@@ -130,7 +130,7 @@ def testGetDocxCorruptedFile(testClient):
     fileDir = os.path.join(BASEDIR, 'testFiles', 'corruptedFile.docx')
 
     isSuccesful, message, references = getDOCXText(fileDir)
-    isSuccesful == False
+    assert isSuccesful == False
     assert 'Caught PackageNotFoundError' in message
     assert references == ''
 
@@ -152,7 +152,7 @@ def testGetDocxInvalidFile(testClient):
     fileDir = os.path.join(BASEDIR, 'testFiles', 'invalidFileName.docx')
 
     isSuccesful, message, references = getDOCXText(fileDir)
-    isSuccesful == False
+    assert isSuccesful == False
     assert 'Caught PackageNotFoundError' in message
     assert references == ''
 
@@ -174,9 +174,31 @@ def testGetDocxInvalidExtension(testClient):
     fileDir = os.path.join(BASEDIR, 'testFiles', 'invalidFileExtension.pdf')
 
     isSuccesful, message, references = getDOCXText(fileDir)
-    isSuccesful == False
+    assert isSuccesful == False
     assert 'Caught PackageNotFoundError' in message
     assert references == ''
+
+def testGetDocxBreakLines(testClient):
+    """
+        Test if the getDOCXText function handles forced linebreaks successfully.
+        Attributes:
+            BASEDIR: Path of the folder where the current files is stored.
+            fileDir: Path of the location where the file is stored.
+            text: String that contains the output of the getDOCXText function.
+            references: String that contains the references extracted from the docx file.
+            isSuccesful: Boolean value to indicate if the text has been successfully extracted.
+        Arguments:
+            testClient:  The test client we test this for.
+    """
+    del testClient
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    fileDir = os.path.join(BASEDIR, 'testFiles', 'test_line_break.docx')
+    
+    isSuccesful, text, references = getDOCXText(fileDir)
+
+    assert isSuccesful == True
+    assert text == 'This is some \n\nnice text'
+    assert references == 'This is some more \n\nnice text'
 
 
 def testSubtractTextFromParagraphSingle(testClient):

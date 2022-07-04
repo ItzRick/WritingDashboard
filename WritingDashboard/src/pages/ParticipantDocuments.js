@@ -157,7 +157,7 @@ const ParticipantDocuments = () => {
     setShowDeleteDialog(false);  // Don't show dialog anymore
 
     //   Url of the server:
-    const url = 'https://api.writingdashboard.xyz/fileapi/filedelete'
+    const url = '/api/fileapi/filedelete'
     // Formdata for the backend call, to which the id has been added:
     const formData = new FormData();
     formData.append('id', fileId);
@@ -175,7 +175,7 @@ const ParticipantDocuments = () => {
     setShowDeleteDialogMultiple(false);  // Don't show confirmation dialog anymore
 
     // Url of the server:
-    const url = 'https://api.writingdashboard.xyz/fileapi/filedelete'
+    const url = '/api/fileapi/filedelete'
     // Create a new formdata:
     const formData = new FormData();
     // For each of the selected instances, add this id to the formdata:
@@ -192,7 +192,7 @@ const ParticipantDocuments = () => {
   const generateFeedback = () => {
     let params = new URLSearchParams();
     selectedInstances.forEach(id => params.append("fileId", id));
-    let generateUrl = 'https://api.writingdashboard.xyz/feedback/generate';
+    let generateUrl = '/api/feedback/generate';
     const config = {
       params: params,
       headers: {
@@ -211,7 +211,7 @@ const ParticipantDocuments = () => {
    */
   const setData = () => {
     //   The backend url:
-    const url = 'https://api.writingdashboard.xyz/fileapi/fileretrieve';
+    const url = '/api/fileapi/fileretrieve';
     // id of current user
     const userId = location.state.userId;
     // The parameter, sortingAttribute need to be changed later:
