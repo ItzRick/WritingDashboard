@@ -24,8 +24,7 @@ describe('Test the feedback models page', () => {
     })
 
     it('Checks if we can go to the github page', () => {
-        cy.get('[id="link"]').click()
-        cy.url().should('include', 'github')
+        cy.get('[id="link"]')
     })
 
   })

@@ -228,7 +228,7 @@ const SignUp = () => {
                     <BlueButton idStr='signButton' onClick={handleClick}>Sign Up</BlueButton>
                     {loginAllowed && <AlertDialog title = "Account created" 
                         text = "You have successfully created an account. Press 'OK' to be directed to the login page."
-                        buttonAgree={<Button onClick={navig}>OK</Button>}
+                        buttonAgree={<Button id='ok' onClick={navig}>OK</Button>}
                     />}
                 </div>
                 <div className='div3'>

@@ -19,7 +19,7 @@ describe('Test the upload page', () => {
         cy.contains('Remove')
 
         cy.get('[id="courseId"]')
-        cy.contains('label', 'course')
+        cy.contains('label', 'Course ID')
     })
 
     it('Testing file upload', () => {

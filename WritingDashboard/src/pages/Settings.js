@@ -335,12 +335,12 @@ const Settings = () => {
                 <br /><br />
                 {accountDeletionPopup && <AlertDialog title = "Account deletion"
                     text = "Are you sure you want to delete your account?"
-                    buttonAgree={<Button onClick={(e) => {deleteUser()}} style={{color: "red"}}>Yes, I want to delete my account!</Button>}
-                    buttonCancel={<Button onClick={(e) => {setAccountDeletionPopup(false)}}>Cancel</Button>}
+                    buttonAgree={<Button id='agree' onClick={(e) => {deleteUser()}} style={{color: "red"}}>Yes, I want to delete my account!</Button>}
+                    buttonCancel={<Button id='disagree' onClick={(e) => {setAccountDeletionPopup(false)}}>Cancel</Button>}
                 />}
                 {successDeleteDialog && <AlertDialog title = "Successfully deleted account"
                     text = "Your account has been successfully deleted. You will be redirected to the login page."
-                    buttonAgree={<Button onClick={(e) => {navigate("../Login", {replace: true});}}>Ok</Button>}
+                    buttonAgree={<Button id='ok' onClick={(e) => {navigate("../Login", {replace: true});}}>Ok</Button>}
                 />}
             </div>
         </>
