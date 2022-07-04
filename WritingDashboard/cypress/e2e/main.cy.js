@@ -5,12 +5,24 @@ describe('Test the homepage', () => {
             .type('admin')
         cy.get('[id="password"]')
             .type('admin')
-        cy.get('[id="loginButton"]').click()
+        cy.get('[id="login"]').click()
       })
 
     it('Checks if all elements are present.', () => {
         cy.contains('Upload a document')
-        cy.contains('Recent files')
+        cy.contains('View documents')
+        cy.contains('Progress')
+    })
+
+    it('Checks if we can go to the documents page.', () => {
+        cy.get('ViewDocuments').click()
+        cy.url().should('include', '/Documents')
+        cy.contains('Documents')
+    })
+
+    it('Checks if we can go to the progress page.', () => {
+        cy.get('progressLink').click()
+        cy.url().should('include', '/Progress')
         cy.contains('Progress')
     })
 
