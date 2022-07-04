@@ -78,7 +78,7 @@ const Login = () => {
                     </div>
                     <br />
                     {formError && <Typography color="red">Invalid username and/or password</Typography>}
-                    <Button variant="contained" sx={{bgcolor: 'button.main', color: 'button.text'}} onClick={handleClick}>Log in</Button>
+                    <Button id='login' variant="contained" sx={{bgcolor: 'button.main', color: 'button.text'}} onClick={handleClick}>Log in</Button>
                 </div>
                 <div className='div3'>
                     <br />

@@ -211,7 +211,7 @@ const SignUp = () => {
                             />}
                         </div>
                         <div style={{display: 'flex', alignSelf: 'flex-end', verticalAlign: 'middle'}}>
-                            <Checkbox sx={{alignSelf: 'center'}} onChange={(e) => {setAcceptNeceData(e.target.checked)}} />
+                            <Checkbox id='necData' sx={{alignSelf: 'center'}} onChange={(e) => {setAcceptNeceData(e.target.checked)}} />
                             <Typography sx={{alignSelf: 'center', alignContent:'inline'}}>
                             I allow the storage and execution of <button className='userDataLinkPopup' onClick={() => {setShowNeceDataPopup(true)}} >necessary application data</button>.
                             </Typography>
@@ -228,7 +228,7 @@ const SignUp = () => {
                     <BlueButton idStr='signButton' onClick={handleClick}>Sign Up</BlueButton>
                     {loginAllowed && <AlertDialog title = "Account created" 
                         text = "You have successfully created an account. Press 'OK' to be directed to the login page."
-                        buttonAgree={<Button onClick={navig}>OK</Button>}
+                        buttonAgree={<Button id='ok' onClick={navig}>OK</Button>}
                     />}
                 </div>
                 <div className='div3'>

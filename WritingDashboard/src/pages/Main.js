@@ -47,7 +47,7 @@ const Main = () => {
       <div className='home4'>
         <div className='subTitle'>
           <br />
-          <Typography className='progressLink' style={{ fontSize: 'calc(1vw + 12px)', color: '#44749D' }}
+          <Typography id='progressLink' className='progressLink' style={{ fontSize: 'calc(1vw + 12px)', color: '#44749D' }}
             component={Link} to='/Progress' onClick={() => {
               if (tc.hasProvider) {
                 tc.trigger({

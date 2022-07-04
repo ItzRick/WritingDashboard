@@ -63,10 +63,10 @@ const Participants = () => {
         // action buttons
         return (<div>
           <Tooltip title="View the documents of this participant.">
-            <IconButton onClick={(e) => { navigateToPartDoc(e, params) }} ><FormatAlignJustify /></IconButton>
+            <IconButton id={'documents' + params.row.username} onClick={(e) => { navigateToPartDoc(e, params) }} ><FormatAlignJustify /></IconButton>
           </Tooltip>
           <Tooltip title="Delete this participant.">
-            <IconButton onClick={(e) => { showdeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton>
+            <IconButton id={'delete' + params.row.username} onClick={(e) => { showdeleteProjectDialog(e, params) }}><DeleteOutline /></IconButton>
           </Tooltip>
           </div>);
       }

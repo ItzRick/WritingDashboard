@@ -116,10 +116,10 @@ const ParticipantDocuments = () => {
         // actions
         return <div>
           <Tooltip title="View the feedback of this document.">
-            <IconButton onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
+            <IconButton id={'navigate' + params.row.filename} onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
           </Tooltip>
           <Tooltip title="Delete this document.">
-            <IconButton onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton>
+            <IconButton id={'delete' + params.row.filename} onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton>
           </Tooltip>
         </div>;
       }
@@ -234,13 +234,13 @@ const ParticipantDocuments = () => {
     <>
       {showDeleteDialog &&
         <AlertDialog title="Delete file" text="Are you sure you want to delete this file?"
-          buttonAgree={<Button style={{ color: "red" }} onClick={(e) => { deleteFile(e, deleteId) }}>Yes</Button>}
-          buttonCancel={<Button onClick={(e) => { setShowDeleteDialog(false) }}>Cancel</Button>}
+          buttonAgree={<Button id='agree' style={{ color: "red" }} onClick={(e) => { deleteFile(e, deleteId) }}>Yes</Button>}
+          buttonCancel={<Button id='disagree' onClick={(e) => { setShowDeleteDialog(false) }}>Cancel</Button>}
         />}
       {showDeleteDialogMultiple &&
         <AlertDialog title="Delete files" text="Are you sure you want to delete the selected files?"
-          buttonAgree={<Button style={{ color: "red" }} onClick={(e) => { deleteAllFiles() }}>Yes</Button>}
-          buttonCancel={<Button onClick={(e) => { setShowDeleteDialogMultiple(false) }}>Cancel</Button>}
+          buttonAgree={<Button id='agree' style={{ color: "red" }} onClick={(e) => { deleteAllFiles() }}>Yes</Button>}
+          buttonCancel={<Button id='disagree' onClick={(e) => { setShowDeleteDialogMultiple(false) }}>Cancel</Button>}
         />}
       <DataGrid
         style={{ maxHeight: '100%' }}

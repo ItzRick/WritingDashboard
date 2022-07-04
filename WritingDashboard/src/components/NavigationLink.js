@@ -58,6 +58,7 @@ const NavigationLink = ({ text, Icon, open, allowed = false, pageLink }) => {
             >
 
                 <ListItem button
+                    id={text}
                     sx={{
                         minHeight: 48,
                         px: 2.5,
