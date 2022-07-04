@@ -133,9 +133,9 @@ All routes.py files need to be checked, since these are all made from scratch. T
 * ./backend/app/scoreapi/routes.py
 * ./backend/app/usersapi/routes.py
 
-The files ./backend/config.py and ./backend/app/\_init\_.py are automatically generated but have been adjusted and should thus be checked.
+The files ./backend/config.py and ./backend/app/\_init\_.py are generated from a template, but have been adjusted and should thus be checked.
 
-All files within ./backend/app/feedback/generateFeedback is made from scratch. This means that all files need to be checked (except for the aforementioned .txt file). These files are:
+All files within ./backend/app/feedback/generateFeedback are made from scratch. These files contain various classes to calculate the feedback, so the scores and explanations for uploaded documents. Everything to generate this feedback is contained within these classes. This means that all files need to be checked (except for the aforementioned .txt file). These files are:
 * ./backend/app/feedback/generateFeedback/BaseFeedback.py
 * ./backend/app/feedback/generateFeedback/CohesionFeedback.py
 * ./backend/app/feedback/generateFeedback/IntegrationContentFeedback.py
