@@ -1,7 +1,7 @@
 describe('Test the signup page', () => {
     beforeEach(() => {
         cy.visit('localhost:3000/')
-        cy.get('[id="signupButton"]')
+        cy.get('[id="signup"]')
         .click()
       })
 
