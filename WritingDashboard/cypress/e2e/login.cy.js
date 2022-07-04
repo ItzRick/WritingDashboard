@@ -1,6 +1,6 @@
 describe('Test the login page', () => {
     beforeEach(() => {
-        cy.visit('https://localhost:3000/')
+        cy.visit('localhost:3000/')
         cy.get('[id="login"]')
         .click()
       })
