@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 
 services:
   frontend:
@@ -7,6 +7,40 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      NODE_ENV: production
+      PORTHTTP: 80
+      PORT: 443
+      URL: writingdashboard.xyz
+      SSL_KEY: key.pem
+      SSL_CERT: cert.pem
     ports:
-      - 3000:3000
+      - 80:80
+      - 443:443
+    depends_on:
+      - api
+    links:
+      - "api"
+    restart: always
+  api: 
+    image: api
+    depends_on:
+      - db
+    build: 
+      context: ./backend
+      dockerfile: ./Dockerfile
+    links:
+      - "db"
+    restart: always
+    environment:
+      DATABASE_URL: postgresql+psycopg2://writingdashboard:6yE-N0vv~?(trP:B@db:5432/writingdashboard
+      NUMWORKERS: 3
+      NUMTHREADS: 3
+      ADMIN_USERNAME:
+      ADMIN_PASSWORD:
+  db:
+    environment:
+      POSTGRES_USER: writingdashboard
+      POSTGRES_PASSWORD: 6yE-N0vv~?(trP:B
+      POSTGRES_DB: writingdashboard
+    restart: always
+    image: postgres:14-bullseye
+

@@ -32,7 +32,7 @@ import AlertDialog from "./AlertDialog";
  */
 const ChangeRole = (userId, newRole) => {
     // url for request
-    const url = 'https://api.writingdashboard.xyz/loginapi/setRole';
+    const url = '/api/loginapi/setRole';
 
     // data for request
     const formData = new FormData();
