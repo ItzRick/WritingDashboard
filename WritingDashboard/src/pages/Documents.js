@@ -128,10 +128,10 @@ const Documents = () => {
         const text =`Feedback generation of the file: ${params.row.filename} is at ${params.row.progress}%`
         return <div>
           <Tooltip title="View the feedback of this document.">
-            <IconButton disabled={params.row.progress!==100} onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
+            <IconButton id={'navigate' + params.row.filename} disabled={params.row.progress!==100} onClick={(e) => { navigateToDoc(e, params) }} ><Grading /></IconButton>
           </Tooltip>
           <Tooltip title="Delete this document.">
-            <IconButton onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton>
+            <IconButton id={'delete' + params.row.filename} onClick={(e) => { showDeleteFileDialog(e, params) }}  ><DeleteOutline /></IconButton>
           </Tooltip>
           {params.row.progress < 100 && 
           <Tooltip title={text}>
@@ -334,7 +334,7 @@ const Documents = () => {
           Toolbar: () => (
             <GridToolbarContainer>
               <Tooltip title="Delete selected documents.">
-                <IconButton onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton>
+                <IconButton id='delete' onClick={(e) => {setShowDeleteDialogMultiple(true)}}><DeleteOutline /></IconButton>
               </Tooltip>
               <Tooltip title="Refresh the documents overview.">
                 <IconButton onClick={setData} ><Refresh /></IconButton>
