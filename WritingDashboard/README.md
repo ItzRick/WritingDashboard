@@ -157,4 +157,5 @@ The following files are made from scratch and should be checked:
 * ./backend/app/generateParticipants.py
 * ./backend/app/models.py
 
-Convert.py converst pdf and docx documents to text documents, scores.py determines all scores of the writing skills and generateParticipants.py makes participants. Database.py manages the database, storing and getting information in  and from it. Then models.py makes different kinds of models for the rest of the code. These models help make the code a lot more readable and organized.
+Convert.py converts txt and docx documents to pdf documents and removes files that have been converted to pdf from the folder the files have been converted to, scores.py stores all the scores and explanations of the writing skills and makes retrieving them possible as well, lastly generateParticipants.py makes participants. Database.py manages the database, storing and getting information in and from it. 
+Then models.py contains the database models. These reflect to the tables of the database and makes the interaction from the backend to the database a lot more organized and easier.
