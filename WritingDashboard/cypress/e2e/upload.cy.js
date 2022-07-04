@@ -2,7 +2,7 @@ import 'cypress-file-upload';
 
 describe('Test the upload page', () => {
     beforeEach(() => {
-        cy.visit('https://localhost:3000/Login')
+        cy.visit('localhost:3000/Login')
         cy.get('[id="username"]')
             .type('admin@tue.nl')
         cy.get('[id="password"]')

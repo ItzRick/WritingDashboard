@@ -1,6 +1,6 @@
 describe('Test the frontpage', () => {
     beforeEach(() => {
-        cy.visit('https://localhost:3000/')
+        cy.visit('localhost:3000/')
       })
     it('Checks if the name is on the site', () => {
         cy.contains('Writing')
