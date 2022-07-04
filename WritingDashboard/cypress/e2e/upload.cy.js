@@ -18,20 +18,20 @@ describe('Test the upload page', () => {
         cy.contains('Add')
         cy.contains('Remove')
 
-        cy.get('[id="course"]')
+        cy.get('[id="courseId"]')
         cy.contains('label', 'course')
     })
 
     it('Testing file upload', () => {
-        cy.get('[id="add"]').click()
-        cy.get('[id="remove"]').eq(1).click()
+        cy.get('[id="AddUploadRow"]').click()
+        cy.get('[id="RemoveUploadRow"]').eq(1).click()
         cy.fixture('test.txt').then(fileContent => {
         cy.get('input[type="file"]').attachFile('test.txt');
-        cy.get('[id="course"]')
+        cy.get('[id="courseId"]')
             .type('test');
-        cy.get('[id="upload"]').click();
+        cy.get('[id="uploadYourDocument(s)"]').click();
 
-        cy.visit('https://localhost:3000/documents');
+        cy.visit('localhost:3000/documents');
         cy.contains('test.txt');
     });
 });
