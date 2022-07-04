@@ -50,8 +50,8 @@
     "yallist": "^4.0.0"
   },
   "scripts": {
-    "start": "set HTTPS=true&&set SSL_CRT_FILE=backend/cert.pem&&set SSL_KEY_FILE=backend/key.pem&&react-scripts start",
-    "start-backend": "cd backend && flask run --no-debugger --reload --cert=cert.pem --key=key.pem",
+    "start": "react-scripts start",
+    "start-backend": "cd backend && flask run --no-debugger --reload",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
