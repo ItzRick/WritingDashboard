@@ -61,9 +61,9 @@ describe('Test the loginpage', () => {
     //Requires the database to have an user with both the username and password set to admin
     it('Checks whether we can log in.', () => {
         cy.get('[id="username"]')
-            .type('admin')
+            .type('admin@tue.nl')
         cy.get('[id="password"]')
-            .type('admin')
+            .type('AdminPass1')
         cy.get('[id="login"]')
             .click()
         cy.url().should('include', '/Main')
