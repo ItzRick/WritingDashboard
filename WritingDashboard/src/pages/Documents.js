@@ -302,13 +302,13 @@ const Documents = () => {
     <>
       {showDeleteDialog &&
         <AlertDialog title="Delete file" text="Are you sure you want to delete this file?"
-          buttonAgree={<Button style={{ color: "red" }} onClick={(e) => { deleteFile(e, deleteId) }}>Yes</Button>}
-          buttonCancel={<Button onClick={(e) => { setShowDeleteDialog(false) }}>Cancel</Button>}
+          buttonAgree={<Button id='agree' style={{ color: "red" }} onClick={(e) => { deleteFile(e, deleteId) }}>Yes</Button>}
+          buttonCancel={<Button id='cancel' onClick={(e) => { setShowDeleteDialog(false) }}>Cancel</Button>}
         />}
       {showDeleteDialogMultiple &&
         <AlertDialog title="Delete files" text="Are you sure you want to delete the selected files?"
-          buttonAgree={<Button style={{ color: "red" }} onClick={(e) => { deleteAllFiles() }}>Yes</Button>}
-          buttonCancel={<Button onClick={(e) => { setShowDeleteDialogMultiple(false) }}>Cancel</Button>}
+          buttonAgree={<Button id='agree' style={{ color: "red" }} onClick={(e) => { deleteAllFiles() }}>Yes</Button>}
+          buttonCancel={<Button id='cancel' onClick={(e) => { setShowDeleteDialogMultiple(false) }}>Cancel</Button>}
         />}
       <DataGrid
         style={{ maxHeight: '100%' }}

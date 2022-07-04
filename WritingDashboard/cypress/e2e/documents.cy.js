@@ -1,3 +1,5 @@
+import 'cypress-file-upload';
+
 describe('Test the documents page', () => {
     beforeEach(() => {
         cy.visit('localhost:3000/Login')
@@ -6,7 +8,7 @@ describe('Test the documents page', () => {
         cy.get('[id="password"]')
             .type('AdminPass1')
         cy.get('[id="login"]').click()
-        cy.get('[id="Documents"]').click()
+        cy.get('[id="ViewDocuments"]').click()
       })
 
     it('Checks if we are on the correct page.', () => {
@@ -32,18 +34,18 @@ describe('Test the documents page', () => {
         cy.get('[id="RemoveUploadRow"]').eq(1).click()
         cy.fixture('test.txt').then(fileContent => {
             cy.get('input[type="file"]').attachFile('test.txt');
-            cy.get('[id="course"]')
+            cy.get('[id="courseId"]')
                 .type('test');
-            cy.get('[id="upload"]').click();
-            cy.visit('https://localhost:3000/Documents')
+            cy.get('[id="uploadYourDocument(s)"]').click();
+            cy.visit('localhost:3000/Documents')
             cy.get('[id="navigatetest.txt"]').click()
             cy.url().should('include', '/Document')
-            cy.visit('https://localhost:3000/Documents')
+            cy.visit('localhost:3000/Documents')
             cy.get('[id="deletetest.txt"]').click()
             cy.get('[id="cancel"]').click()
             cy.contains('test.txt')
             cy.get('[id="deletetest.txt"]').click()
-            cy.get('[id="yes"]').click()
+            cy.get('[id="agree"]').click()
             cy.contains('test.txt').should('not.exist')
         });
 

@@ -243,7 +243,7 @@ const UploadSingleFile = forwardRef(({ setFailedFiles, setSucc, setFail, setUplo
                         renderInput={(params) => <TextField {...params} sx={{minWidth: '80px'}}/>}
                     />
                 </LocalizationProvider>
-                <TextField id='CourseId' label='Course ID' inputProps={{ maxLength: 16 }} variant='outlined' value={course} sx={{minWidth: '80px'}} onChange={event => setCourse(event.target.value)} />
+                <TextField id='courseId' label='Course ID' inputProps={{ maxLength: 16 }} variant='outlined' value={course} sx={{minWidth: '80px'}} onChange={event => setCourse(event.target.value)} />
                 <Button id='RemoveUploadRow' variant='contained' sx={{ bgcolor: 'buttonWarning.main', color: 'buttonWarning.text', ml: '5px',}} value={thisIndex} onClick={removeInstance}>Remove</Button>
             </div>
             {displayAlertType ? <Alert severity="error">Upload a file with a .txt, .pdf or .docx filetype!</Alert> : null}
