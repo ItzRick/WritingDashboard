@@ -239,8 +239,8 @@ const ParticipantDocuments = () => {
         />}
       {showDeleteDialogMultiple &&
         <AlertDialog title="Delete files" text="Are you sure you want to delete the selected files?"
-          buttonAgree={<Button style={{ color: "red" }} onClick={(e) => { deleteAllFiles() }}>Yes</Button>}
-          buttonCancel={<Button onClick={(e) => { setShowDeleteDialogMultiple(false) }}>Cancel</Button>}
+          buttonAgree={<Button id='agree' style={{ color: "red" }} onClick={(e) => { deleteAllFiles() }}>Yes</Button>}
+          buttonCancel={<Button id='disagree' onClick={(e) => { setShowDeleteDialogMultiple(false) }}>Cancel</Button>}
         />}
       <DataGrid
         style={{ maxHeight: '100%' }}

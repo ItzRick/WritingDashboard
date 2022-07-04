@@ -30,6 +30,7 @@ describe('Test if researcher can see participant documents', () => {
         cy.get('[id="login"]').click()
         cy.get('[id="Participants"]').click()
         cy.get('[id="documentspar_3"]').click()
-        cy.get('id="deletetest.txt"]').click()
+        cy.get('[id="deletetest.txt"]').click()
+        cy.get('[id="agree"]').click()
     })
 })
