@@ -34,7 +34,7 @@ describe('Test the homepage', () => {
 
     it('Checks if basepage settings button allow us to go to the settings page', () => {
         cy.get('[id="settings"]').click()
-        cy.url().should('include', '/settings')
+        cy.url().should('include', '/Settings')
         cy.contains('Settings')
     })
 
